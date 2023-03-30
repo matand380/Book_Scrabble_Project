@@ -1,4 +1,4 @@
-package view.book_scrabble_project;
+package View;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

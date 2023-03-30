@@ -1,4 +1,4 @@
-package view.book_scrabble_project;
+package View;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
