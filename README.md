@@ -11,8 +11,8 @@
  * Demo video - will be added
  * Project presentation video - will be added
 
-## Project Timeline
-* The timeline will be described in Gantt at the bottom of the document.
+## Work Breakdown Structure
+* will be added
 
 ## Collaborators
 * [Dan Davidovich](https://github.com/Davidovichdan)
