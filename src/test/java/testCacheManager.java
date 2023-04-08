@@ -1,4 +1,17 @@
 public class testCacheManager {
+    /**
+     * The testCacheManager function tests the CacheManager class.
+     * It creates a new CacheManager object with 3 slots and an LRU replacement policy,
+     * then queries for three nonexistent keys. The result should be false for all of them,
+     * so if any are true it prints out an error message .
+     * Then it adds three keys to the cache manager and queries again; this time they should all be true,
+     * so if any are false it prints out another error message .
+     * Finally, it checks that when a key is added to a full cache manager (with no room left),
+     * the least recently used key is removed from the
+     *
+     *
+     * @return True if the test passes and false otherwise
+     */
     public static void testCacheManager() {
         CacheManager exists = new CacheManager(3, new LRU());
         boolean b = exists.query("a");
@@ -6,7 +19,7 @@ public class testCacheManager {
         b |= exists.query("c");
 
         if (b)
-            System.out.println("wrong result for CacheManager first queries (-5)");
+            System.out.println("wrong result for CacheManager first queries");
 
         exists.add("a");
         exists.add("b");
@@ -17,7 +30,7 @@ public class testCacheManager {
         b &= exists.query("c");
 
         if (!b)
-            System.out.println("wrong result for CacheManager second queries (-5)");
+            System.out.println("wrong result for CacheManager second queries");
 
         boolean bf = exists.query("d"); // false, LRU is "a"
         exists.add("d");
@@ -27,7 +40,7 @@ public class testCacheManager {
         bt &= exists.query("a"); // true, LRU is "b"
 
         if (bf || !bt)
-            System.out.println("wrong result for CacheManager last queries (-10)");
+            System.out.println("wrong result for CacheManager last queries");
 
     }
     public static void main(String[] args) {
