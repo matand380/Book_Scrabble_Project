@@ -5,8 +5,6 @@ public class testLRU {
      * The testLRU function tests the LRU class.
      * It adds four elements to the cache, and then removes one element from it.
      * If the removed element is not "b";, then an error message is printed out.
-
-     *
      *
      * @return "b";
 
@@ -19,7 +17,7 @@ public class testLRU {
         lru.add("a");
 
         if (!lru.remove().equals("b"))
-            System.out.println("wrong implementation for LRU (-10)");
+            System.out.println("wrong implementation for LRU");
     }
     public static void main(String[] args) {
         testLRU();
