@@ -1,14 +1,16 @@
-package test;
+package Model.GameData;
 
 import java.util.ArrayList;
 
 public class Board {
     Tile[][] mainBoard;
     char[][] scoreBoard;
-    int count = 0;
+    int wordCounter = 0;
     boolean wScount = false;
+    private static final int width = 15;
+    private static final int height = 15;
 
-    ArrayList<Word> wordOnBoard;
+    ArrayList<Word> wordOnBoard = new ArrayList<>();
 
     public Board() {
         mainBoard = new Tile[15][15];
@@ -96,36 +98,32 @@ public class Board {
     }
 
     public boolean boardLegal(Word w) {
-        boolean flag = true;
-        if (checkIfInside(w)) {
-            if (count == 0)
+        boolean gridLegal = checkIfInside(w);
+        boolean notRequireReplacement;
+        boolean tileConnected;
+        if (gridLegal) {
+            if (wordCounter == 0)
                 return checkFirstWord(w);
-            if (count >= 1) {
-                flag = checkNeighbors(w);
-                flag = checkIfConect(w);
-            }
-            if (w.isVertical() && flag) {
-                if (w.getRow() + w.getTiles().length <= 14) {
-                    return true;//check if the col+length or the row+length are outside the board
-                }
-            }
-            if (!w.isVertical() && flag) {
-                return w.getCol() + w.getTiles().length <= 14;
-            }
+            tileConnected = checkIfConnected(w);
+            notRequireReplacement = notRequireLetterReplacement(w);
+            return tileConnected && notRequireReplacement;
         }
         return false;
     }
+    private boolean checkIfInside(Word w) {
+        return w.getCol() < height && w.getRow() < width && w.getCol() >= 0 && w.getRow() >= 0;
+    }
 
     private boolean checkFirstWord(Word w) {
-        if (w.vertical && w.getRow() + w.getTiles().length <= 14) {
-            for (int i = 0; w.getCol() + i < 15; i++) {
+        if (w.isVertical() && w.getRow() + w.getTiles().length < width) {
+            for (int i = 0; w.getCol() + i < width; i++) {
                 if (scoreBoard[w.getRow() + i][w.getCol()] == 's') {
                     return true;
                 }
             }
         }
-        if (!w.vertical && w.getCol() + w.getTiles().length <= 14) {
-            for (int i = 0; w.getRow() + i < 15; i++) {
+        if (!w.isVertical() && w.getCol() + w.getTiles().length < height) {
+            for (int i = 0; w.getRow() + i < height; i++) {
                 if (scoreBoard[w.getRow()][w.getCol() + i] == 's') {
                     return true;
                 }
@@ -133,13 +131,7 @@ public class Board {
         }
         return false;
     }
-
-    private boolean checkIfInside(Word w) {
-        //check if the col or the row are outside the board
-        return w.getCol() <= 14 && w.getRow() <= 14 && w.getCol() >= 0 && w.getRow() >= 0;
-    }
-
-    private boolean checkIfConect(Word w) {
+    private boolean checkIfConnected(Word w) {
         int CurRow = w.getRow();
         int CurCol = w.getCol();
         for (int i = 0; i < w.getTiles().length; i++) {
@@ -159,21 +151,26 @@ public class Board {
         return false;
     }
 
-    private boolean checkNeighbors(Word w) {
-        if (w.isVertical()) {
-            for (int i = 0; i < w.getTiles().length; i++) {
-                if (w.getRow() + i + 1 <= 14 && mainBoard[w.getRow() + i + 1][w.getCol()] != null || w.getRow() + i - 1 >= 0 && mainBoard[w.getRow() + i - 1][w.getCol()] != null
-                        || w.getCol() + 1 <= 14 && mainBoard[w.getRow() + i][w.getCol() + 1] != null || w.getCol() - 1 >= 0 && mainBoard[w.getRow() + i][w.getCol() - 1] != null)
-                    return true;
+    private boolean notRequireLetterReplacement(Word word) {
+        int i;
+        if (word.isVertical()) {
+            for (i = 0; i < word.getTiles().length; i++) {
+                if (word.getTiles()[i] != null) {
+                    if (mainBoard[word.getRow() + i][word.getCol()] != null)
+                        return false;
+                } else if (word.getTiles()[i] == null && mainBoard[word.getRow() + i][word.getCol()] == null)
+                    return false;
             }
-        } else {
-            for (int i = 0; i < w.getTiles().length; i++) {
-                if (w.getCol() + i + 1 <= 14 && mainBoard[w.getRow()][w.getCol() + i + 1] != null || w.getCol() + i - 1 >= 0 && mainBoard[w.getRow()][w.getCol() + i - 1] != null
-                        || w.getRow() + 1 <= 14 && mainBoard[w.getRow() + 1][w.getCol() + i] != null || w.getRow() - 1 >= 0 && mainBoard[w.getRow() - 1][w.getCol() + i] != null)
-                    return true;
+        } else
+            for (i = 0; i < word.getTiles().length; i++) {
+                if (word.getTiles()[i] != null) {
+                    if (mainBoard[word.getRow()][word.getCol() + i] != null)
+                        return false;
+                } else if (word.getTiles()[i] == null && mainBoard[word.getRow()][word.getCol() + i] == null) {
+                    return false;
+                }
             }
-        }
-        return false;
+        return true;
     }
 
     private boolean dictionaryLegal(Word w) {
@@ -197,8 +194,7 @@ public class Board {
                     newWord[j] = mainBoard[w.getRow()][w.getCol() + j];
             }
         }
-        Word currectWord = new Word(newWord, w.getRow(), w.getCol(), w.isVertical());
-        return currectWord;
+        return new Word(newWord, w.getRow(), w.getCol(), w.isVertical());
     }
 
     private Word checkVerticalWord(int row, int col, Tile tile) {
@@ -228,32 +224,31 @@ public class Board {
 
     private Word checkHorizontalWord(int row, int col, Tile tile) {
         int curCol = col;
-        int colBegin;
-        while (curCol - 1 >= 0 && mainBoard[row][curCol - 1] != null) {
+        while (curCol > 0 && mainBoard[row][curCol - 1] != null) {
             curCol--;
         }
 
-        colBegin = curCol;
-        if (mainBoard[row][curCol] == null) curCol++;
+        int colBegin = curCol;
         ArrayList<Tile> temp = new ArrayList<>();
-        while (curCol < 15 && curCol < row && mainBoard[row][curCol] != null) {
+        while (curCol < mainBoard[row].length && mainBoard[row][curCol] != null) {
             temp.add(mainBoard[row][curCol]);
             curCol++;
         }
         temp.add(tile);
-        curCol = row + 1;
-        while (curCol < 15 && mainBoard[row][curCol] != null) {
+        curCol = col + 1;
+        while (curCol < mainBoard[row].length && mainBoard[row][curCol] != null) {
             temp.add(mainBoard[row][curCol]);
             curCol++;
         }
         Tile[] tiles = new Tile[temp.size()];
-        for (int j = 0; j < temp.size(); j++) tiles[j] = temp.get(j);
+        for (int j = 0; j < temp.size(); j++) {
+            tiles[j] = temp.get(j);
+        }
         return new Word(tiles, row, colBegin, false);
     }
 
-    public ArrayList<Word> getWord(Word w) {
+    public ArrayList<Word> getWords(Word w) {
         ArrayList<Word> newArrayWord = new ArrayList<Word>();
-        Tile[] newWord = new Tile[w.getTiles().length];
         newArrayWord.add(checkWordNull(w));
         if (!w.isVertical()) {
             for (int i = 0; i < w.getTiles().length; i++) {
@@ -274,7 +269,6 @@ public class Board {
             }
 
         }
-
         return newArrayWord;
     }
 
@@ -293,15 +287,13 @@ public class Board {
                     case 'p':
                         if (w.tiles[j] == null) {
                             sum += mainBoard[w.getRow() + j][w.col]._score * 2;
-                            continue;
                         } else {
                             sum += w.tiles[j]._score * 2;
-                            continue;
                         }
+                        continue;
                     case 'b':
                         if (w.tiles[j] == null) {
                             sum += mainBoard[w.getRow() + j][w.col]._score * 3;
-                            continue;
                         } else {
                             sum += w.tiles[j]._score * 3;
                             continue;
@@ -381,11 +373,11 @@ public class Board {
         int sum = 0;
         if (!dictionaryLegal(w)) return 0;
         if (!boardLegal(w)) return 0;
-        ArrayList<Word> newWord = getWord(w);
+        ArrayList<Word> newWord = getWords(w);
         for (Word word : newWord) {
             if (dictionaryLegal(word)) {
                 sum += getScore(word);
-                count++;
+                wordCounter++;
             } else return 0;
         }
         for (int i = 0; i < w.getTiles().length; i++) {
@@ -399,5 +391,6 @@ public class Board {
         }
         return sum;
     }
+
 }
 

@@ -1,4 +1,4 @@
-package test;
+package Model.GameData;
 
 import java.util.Arrays;
 import java.util.Objects;
