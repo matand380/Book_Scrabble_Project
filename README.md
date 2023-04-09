@@ -37,7 +37,7 @@ The following mitigation strategies will be implemented:
  
 <img width="1209" alt="צילום מסך 2023-04-09 ב-23 27 49" src="https://user-images.githubusercontent.com/73496652/230795013-478c38ad-7f3a-4a9f-a9c1-1b6f1614f604.png">
 
-# Book Scrabble Project - WBS
+## Book Scrabble Project - WBS
 
 <img width="1306" alt="Book Scrabble Project - WBS" src="https://user-images.githubusercontent.com/73496652/230796970-87e92d9d-6a0a-43d9-b460-12db800b3a1c.png">
 
