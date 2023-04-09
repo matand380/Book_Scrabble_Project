@@ -1,4 +1,4 @@
-package test;
+package Model.GameLogic;
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,9 +1,8 @@
-package test;
+package Model.GameLogic;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+
 
 public class LRU implements CacheReplacementPolicy {
 

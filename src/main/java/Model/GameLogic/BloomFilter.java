@@ -1,12 +1,11 @@
-package test;
+package Model.GameLogic;
 
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
-import java.util.Vector;
+
 
 public class BloomFilter {
 

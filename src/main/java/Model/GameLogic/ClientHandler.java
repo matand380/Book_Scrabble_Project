@@ -1,4 +1,4 @@
-package test;
+package Model.GameLogic;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -1,6 +1,5 @@
-package test;
+package Model.GameLogic;
 
-import java.math.BigInteger;
 import java.util.HashSet;
 
 public class CacheManager {

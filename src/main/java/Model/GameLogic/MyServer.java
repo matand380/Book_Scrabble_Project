@@ -1,11 +1,9 @@
-package test;
+package Model.GameLogic;
 
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public class MyServer {
