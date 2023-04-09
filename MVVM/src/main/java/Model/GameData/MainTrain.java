@@ -1,6 +1,6 @@
-package test;
+package Model.GameData;
 
-import test.Tile.Bag;
+import  Model.GameData.Tile.Bag;
 
 public class MainTrain {
 
