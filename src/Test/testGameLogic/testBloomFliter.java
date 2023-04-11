@@ -1,3 +1,5 @@
+package testGameLogic;
+
 import Model.GameLogic.BloomFilter;
 
 public class testBloomFliter {

@@ -1,4 +1,7 @@
+package testGameLogic;
 
+import Model.GameLogic.CacheReplacementPolicy;
+import Model.GameLogic.LRU;
 
 public class testLRU {
     /**

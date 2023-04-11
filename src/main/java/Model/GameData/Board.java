@@ -369,7 +369,7 @@ public class Board {
         return sum;
     }
 
-    int tryPlaceWord(Word w) {
+    public int tryPlaceWord(Word w) {
         int sum = 0;
         if (!dictionaryLegal(w)) return 0;
         if (!boardLegal(w)) return 0;

@@ -1,6 +1,4 @@
 package testGameData;
-
-import java.util.*;
 import Model.GameData.*;
 public class testBag {
     /**
@@ -13,8 +11,8 @@ public class testBag {
      * @return The number of points earned
      */
     public static void testBag() {
-        Bag b=Tile.Bag.getBag();
-        Bag b1=Tile.Bag.getBag();
+        Tile.Bag b=Tile.Bag.getBag();
+        Tile.Bag b1=Tile.Bag.getBag();
         if(b1!=b)
             System.out.println("your Bag in not a Singleton (-5)");
 

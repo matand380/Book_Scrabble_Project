@@ -1,3 +1,8 @@
+package testGameLogic;
+
+import Model.GameLogic.CacheReplacementPolicy;
+import Model.GameLogic.LFU;
+
 public class testLFU {
     /**
      * The testLFU function tests the LFU cache replacement policy.

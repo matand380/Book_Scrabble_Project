@@ -1,5 +1,11 @@
 package testGameData;//test the board class located in the model package
 
+import Model.GameData.Board;
+import Model.GameData.Tile;
+import Model.GameData.Word;
+
+import static Model.GameData.MainTrain.get;
+
 public class testBoard {
     /**
      * The testGameData.testBoard function tests the boardLegal and tryPlaceWord functions.
@@ -17,7 +23,7 @@ public class testBoard {
         if(b!=Board.getBoard())
             System.out.println("board should be a Singleton");
 
-        Bag bag = Bag.getBag();
+        Tile.Bag bag = Tile.Bag.getBag();
         Tile[] ts=new Tile[10];
         for(int i=0;i<ts.length;i++)
             ts[i]=bag.getRand();

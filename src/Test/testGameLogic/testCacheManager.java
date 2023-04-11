@@ -1,3 +1,8 @@
+package testGameLogic;
+
+import Model.GameLogic.CacheManager;
+import Model.GameLogic.LRU;
+
 public class testCacheManager {
     /**
      * The testCacheManager function tests the CacheManager class.

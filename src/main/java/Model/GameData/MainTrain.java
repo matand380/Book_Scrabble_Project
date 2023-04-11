@@ -39,7 +39,7 @@ public class MainTrain {
 
 
 
-	private static Tile[] get(String s) {
+	public static Tile[] get(String s) {
 		Tile[] ts=new Tile[s.length()];
 		int i=0;
 		for(char c: s.toCharArray()) {

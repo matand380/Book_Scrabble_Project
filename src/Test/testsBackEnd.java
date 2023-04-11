@@ -1,5 +1,5 @@
-import testGameData.testBag;
-import testGameData.testBoard;
+import testGameData.*;
+import testGameLogic.*;
 
 public class testsBackEnd {
     /**
@@ -9,7 +9,6 @@ public class testsBackEnd {
      * conditions are not met.
      *
      * @return Void
-     *
      */
     public static void main(String[] args) {
         new testLRU();

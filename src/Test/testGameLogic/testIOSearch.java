@@ -1,3 +1,5 @@
+import Model.GameLogic.IOSearcher;
+
 import java.io.FileWriter;
 import java.io.PrintWriter;
 

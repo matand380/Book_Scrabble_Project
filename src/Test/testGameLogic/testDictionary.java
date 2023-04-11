@@ -1,3 +1,5 @@
+import Model.GameLogic.Dictionary;
+
 public class testDictionary {
     /**
      * The testDictionary function tests the Dictionary class.

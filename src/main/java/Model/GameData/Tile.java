@@ -84,7 +84,7 @@ public class Tile {
             return null;
         }
 
-        Tile getTile(char c) {
+        public Tile getTile(char c) {
             if (size() > 0) {
                 if (c >= 'A' && c <= 'Z') {
                     int indexTile = c - 'A';
@@ -97,7 +97,7 @@ public class Tile {
             return null;
         }
 
-        void put(Tile t) {
+        public void put(Tile t) {
             if (size() < 98) {
                 if (t.letter >= 'A' && t.letter <= 'Z') {
                     int tileToInt = t.letter - 'A';
