@@ -1,3 +1,5 @@
+import Model.GameLogic.BloomFilter;
+
 public class testBloomFliter {
     /**
      * The testBloomFilter function tests the BloomFilter class.

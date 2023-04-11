@@ -1,4 +1,7 @@
-public class testsPatam1 {
+import testGameData.testBag;
+import testGameData.testBoard;
+
+public class testsBackEnd {
     /**
      * The main function is used to test the other classes in this package.
      * It creates an instance of each class and then calls its main function.

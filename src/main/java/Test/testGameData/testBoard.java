@@ -1,6 +1,8 @@
+package testGameData;//test the board class located in the model package
+
 public class testBoard {
     /**
-     * The testBoard function tests the boardLegal and tryPlaceWord functions.
+     * The testGameData.testBoard function tests the boardLegal and tryPlaceWord functions.
      * It first creates a new Board object, b, and checks to see if it is a singleton.
      * Then it creates an array of 10 tiles from the bag (ts) and uses them to create 6 words: w0-w6.
      * The first 5 words are illegal because they are out of bounds or overlap with other letters on the board;

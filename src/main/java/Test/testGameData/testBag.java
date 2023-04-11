@@ -1,9 +1,13 @@
+package testGameData;
+
+import java.util.*;
+import Model.GameData.*;
 public class testBag {
     /**
-     * The testBag function tests the Bag class to ensure that it is a singleton,
+     * The testGameData.testBag function tests the Bag class to ensure that it is a singleton,
      * and that its getRand function works properly.
      * It also checks to make sure that the put function works properly.
-     * The testBag function prints out an error message if any of these
+     * The testGameData.testBag function prints out an error message if any of these
      * conditions are not met.
      *
      * @return The number of points earned
