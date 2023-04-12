@@ -7,8 +7,7 @@ public class testsBackEnd {
      * It creates an instance of each class and then calls its main function.
      * The main function prints out an error message if any of these
      * conditions are not met.
-     *
-     * @return Void
+     * return Void
      */
     public static void main(String[] args) {
      new testLRU();
