@@ -8,7 +8,7 @@ public class Tile {
     final char letter;
     final int _score;
 
-    private Tile(char _letter, int _score) {
+    public Tile(char _letter, int _score) {
         this.letter = _letter;
         this._score = _score;
     }
