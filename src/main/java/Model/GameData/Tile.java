@@ -8,10 +8,30 @@ public class Tile {
     final char letter;
     final int _score;
 
+    /**
+     * The Tile function is a constructor for the Tile class.
+     * It takes in two parameters, a character and an integer.
+     * The character represents the letter of the tile, while
+     * the integer represents its score value.
+     *<p>
+     * @param _letter _letter Set the letter of the tile
+     * @param _score _score Set the score of a tile
+     *
+     */
     public Tile(char _letter, int _score) {
         this.letter = _letter;
         this._score = _score;
     }
+    /**
+     * The equals function is used to compare two objects.
+     * In this case, we are comparing two tiles.
+     * The function returns true if the letter and score of both tiles are equal, otherwise it returns false.
+     *<p>
+     * @param o o Compare the object passed in to the current instance of tile
+     *
+     * @return True if the two objects are equal
+     *
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -20,6 +40,16 @@ public class Tile {
         return letter == tile.letter && _score == tile._score;
     }
 
+    /**
+     * The hashCode function is used to generate a unique hash value for each
+     * instance of the Letter class. This function uses the Objects.hash() method,
+     * which takes in an arbitrary number of arguments and returns an integer that
+     * represents a unique hash code for all instances where the same arguments are passed in.
+     * <p>
+     *
+     * @return The letter and score of the tile
+     *
+     */
     @Override
     public int hashCode() {
         return Objects.hash(letter, _score);
@@ -32,6 +62,11 @@ public class Tile {
         Tile[] _tilesArray;
         private static Bag bagInstance = null;
 
+        /**
+         * The Bag function is a constructor that creates an array of 26 tiles, each with its own letter and point value.
+         * The function also creates an array of integers that keeps track of how many tiles are left in the bag for each letter.
+         *
+         */
         private Bag() {
             this._quantitiesCounter = new int[]{9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
             this._tilesArray = new Tile[26];
@@ -63,6 +98,12 @@ public class Tile {
             _tilesArray[25] = new Tile('Z', 10);
         }
 
+        /**
+         * The getRand function returns a random tile from the bag.
+         * <p>
+         * @return A random tile from the bag
+         *
+         */
         public Tile getRand() {
             if (size() > 0) {
                 int indexTile = new Random().nextInt(26);
@@ -84,6 +125,14 @@ public class Tile {
             return null;
         }
 
+        /**
+         * The getTile function returns a tile from the bag.
+         * <p>
+         * @param c c Determine the index of the tile in the array
+         *
+         * @return The tile that corresponds to the letter c
+         *
+         */
         public Tile getTile(char c) {
             if (size() > 0) {
                 if (c >= 'A' && c <= 'Z') {
@@ -97,6 +146,12 @@ public class Tile {
             return null;
         }
 
+        /**
+         * The put function adds a tile to the bag.
+         * <p>
+         * @param t t Determine the letter of the tile to be put into the bag
+         *
+         */
         public void put(Tile t) {
             if (size() < 98) {
                 if (t.letter >= 'A' && t.letter <= 'Z') {
@@ -107,6 +162,13 @@ public class Tile {
             }
         }
 
+        /**
+         * The size function returns the number of items in the bag.
+         * <p>
+         *
+         * @return The number of elements in the bag
+         *
+         */
         int size() {
             int count = 0;
             for (int quantity : _quantitiesCounter) {
@@ -115,10 +177,23 @@ public class Tile {
             return count;
         }
 
+        /**
+         * The getQuantities function returns a copy of the quantities array.
+         * <p>
+         * @return The quantities array
+         *
+         */
         public int[] getQuantities() {
             return this._quantitiesCounter.clone();
         }
 
+        /**
+         * The getBag function is a static function that returns the singleton instance of the Bag class.
+         * <p>
+         *
+         * @return A bag object
+         *
+         */
         public static Bag getBag() {
             if (bagInstance == null)
                 return bagInstance = new Bag();

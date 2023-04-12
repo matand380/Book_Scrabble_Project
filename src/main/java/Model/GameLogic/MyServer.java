@@ -37,7 +37,7 @@ public class MyServer {
                     }
                 }
             } catch (SocketTimeoutException e) {
-                e.printStackTrace();
+                //wait for another client
             }
         }
         server.close();
