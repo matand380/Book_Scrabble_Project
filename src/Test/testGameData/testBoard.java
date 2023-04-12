@@ -18,7 +18,7 @@ public class testBoard {
      * @return A score
 
      */
-    public static void testBoard() {
+    public void testBoard() {
         Board b = Board.getBoard();
         if(b!=Board.getBoard())
             System.out.println("board should be a Singleton");
@@ -81,7 +81,8 @@ public class testBoard {
             System.out.println("problem in placeWord for 5th word (should be 22)");
     }
     public static void main(String[] args) {
-        testBoard();
+        testBoard t = new testBoard();
+        t.testBoard();
         System.out.println("testsBoard-done");
     }
 }

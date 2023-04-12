@@ -4,6 +4,12 @@ import Model.GameLogic.CacheReplacementPolicy;
 import Model.GameLogic.LFU;
 
 public class testLFU {
+    public static void main(String[] args) {
+        testLFU t = new testLFU();
+        t.testLFU();
+        System.out.println("testLFU-done");
+    }
+
     /**
      * The testLFU function tests the LFU cache replacement policy.
      * It adds 5 elements to the cache, and then removes one element from it.
@@ -11,7 +17,7 @@ public class testLFU {
      *
      * @return "c" because it is the least frequently used element
      */
-    public static void testLFU() {
+    public void testLFU() {
         CacheReplacementPolicy lfu = new LFU();
         lfu.add("a");
         lfu.add("b");
@@ -19,11 +25,6 @@ public class testLFU {
         lfu.add("c");
         lfu.add("a");
 
-        if (!lfu.remove().equals("c"))
-            System.out.println("wrong implementation for LFU ");
-    }
-    public static void main(String[] args) {
-        testLFU();
-        System.out.println("testLFU-done");
+        if (!lfu.remove().equals("c")) System.out.println("wrong implementation for LFU ");
     }
 }

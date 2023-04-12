@@ -1,5 +1,5 @@
-import testGameData.*;
 import testGameLogic.*;
+import testGameData.*;
 
 public class testsBackEnd {
     /**
@@ -11,16 +11,17 @@ public class testsBackEnd {
      * @return Void
      */
     public static void main(String[] args) {
-        new testLRU();
+     new testLRU();
         new testDictionary();
         new testCacheManager();
-        new testBloomFliter();
+        new testBloomFilter();
         new testIOSearch();
         new testLFU();
         new testBag();
         new testBoard();
-        System.out.println("testsPatam1-done");
-
+        System.out.println("**********************************");
+        System.out.println("All tests of first stage are done");
+        System.out.println("**********************************");
     }
 }
 

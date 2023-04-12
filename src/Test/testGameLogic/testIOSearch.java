@@ -1,9 +1,21 @@
+package testGameLogic;
+
 import Model.GameLogic.IOSearcher;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
 public class testIOSearch {
+
+    public static void main(String[] args) {
+        try {
+            testIOSearch test = new testIOSearch();
+            test.testIOSearch();
+        } catch (Exception e) {
+            System.out.println("you got some exception ");
+        }
+        System.out.println("testIOSearch-done");
+    }
 
     /**
      * The testIOSearch function tests the IOSearcher class.
@@ -13,9 +25,8 @@ public class testIOSearch {
      *
      * @return False when the word is not found in any of the files and true if it is found
      * @throws Exception
-     *
      */
-    public static void testIOSearch() throws Exception {
+    public void testIOSearch() throws Exception {
         String words1 = "the quick brown fox \n jumps over the lazy dog";
         String words2 = "A Bloom filter is a space efficient probabilistic data structure, \n conceived by Burton Howard Bloom in 1970";
         PrintWriter out = new PrintWriter(new FileWriter("text1.txt"));
@@ -29,13 +40,5 @@ public class testIOSearch {
             System.out.println("oyur IOsearch did not found a word");
         if (IOSearcher.search("cat", "text1.txt", "text2.txt"))
             System.out.println("your IOsearch found a word that does not exist");
-    }
-    public static void main(String[] args) {
-        try {
-            testIOSearch();
-        } catch (Exception e) {
-            System.out.println("you got some exception ");
-        }
-        System.out.println("testIOSearch-done");
     }
 }

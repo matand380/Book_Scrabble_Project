@@ -4,6 +4,12 @@ import Model.GameLogic.CacheManager;
 import Model.GameLogic.LRU;
 
 public class testCacheManager {
+    public static void main(String[] args) {
+        testCacheManager t = new testCacheManager();
+        t.testCacheManager();
+        System.out.println("testCacheManager-done");
+    }
+
     /**
      * The testCacheManager function tests the CacheManager class.
      * It creates a new CacheManager object with 3 slots and an LRU replacement policy,
@@ -14,17 +20,15 @@ public class testCacheManager {
      * Finally, it checks that when a key is added to a full cache manager (with no room left),
      * the least recently used key is removed from the
      *
-     *
      * @return True if the test passes and false otherwise
      */
-    public static void testCacheManager() {
+    public void testCacheManager() {
         CacheManager exists = new CacheManager(3, new LRU());
         boolean b = exists.query("a");
         b |= exists.query("b");
         b |= exists.query("c");
 
-        if (b)
-            System.out.println("wrong result for CacheManager first queries");
+        if (b) System.out.println("wrong result for CacheManager first queries");
 
         exists.add("a");
         exists.add("b");
@@ -34,8 +38,7 @@ public class testCacheManager {
         b &= exists.query("b");
         b &= exists.query("c");
 
-        if (!b)
-            System.out.println("wrong result for CacheManager second queries");
+        if (!b) System.out.println("wrong result for CacheManager second queries");
 
         boolean bf = exists.query("d"); // false, LRU is "a"
         exists.add("d");
@@ -44,13 +47,8 @@ public class testCacheManager {
         exists.add("a");
         bt &= exists.query("a"); // true, LRU is "b"
 
-        if (bf || !bt)
-            System.out.println("wrong result for CacheManager last queries");
+        if (bf || !bt) System.out.println("wrong result for CacheManager last queries");
 
-    }
-    public static void main(String[] args) {
-        testCacheManager();
-        System.out.println("testCacheManager-done");
     }
 
 }
