@@ -11,11 +11,17 @@ public class Dictionary {
     CacheManager cacheWithLFU;
     BloomFilter filter;
 
+    /**
+     * The Dictionary function takes in a list of file names and reads them into the Bloom Filter.
+     * It also initializes the LRU and LFU caches, as well as their respective CacheManagers.
+     *<p>
+     * @param  fileName Pass in a variable number of arguments
+     *
+     *
+     */
     public Dictionary(String... fileName) {
         fileNames = new String[fileName.length];
-        for (int i = 0; i < fileName.length; i++) {
-            fileNames[i] = fileName[i];
-        }
+        System.arraycopy(fileName, 0, fileNames, 0, fileName.length);
         this.LRU = new LRU();
         this.cacheWithLRU = new CacheManager(400, LRU);
         this.LFU = new LFU();
@@ -39,6 +45,16 @@ public class Dictionary {
         }
     }
 
+    /**
+     * The query function takes a string as input and returns true if the word is in the dictionary, false otherwise.
+     * It first checks the LRU cache, then the LFU cache, and finally the Bloom Filter.
+     *<p>
+     *
+     * @param  word Query the cache and bloom filter
+     *
+     * @return True if the word is in the data structure
+     *
+     */
     public boolean query(String word) {
         if (cacheWithLRU.query(word))
             return true;
@@ -54,6 +70,17 @@ public class Dictionary {
     }
 
 
+    /**
+     * The challenge function takes a word as input and returns true if the word is found in any of the files
+     * that are being searched.
+     * If it is not found, then false is returned.
+
+     *
+     * @param word Search for the word in the file
+     *
+     * @return A boolean value
+     *
+     */
     public boolean challenge(String word) {
         boolean isFound;
 

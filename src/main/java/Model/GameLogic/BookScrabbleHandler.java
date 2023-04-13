@@ -11,6 +11,22 @@ public class BookScrabbleHandler implements ClientHandler {
     PrintWriter out;
     Scanner in;
 
+    /**
+     * The handleClient function is responsible for handling the client's request.
+     * It takes in an InputStream and OutputStream, which are used to communicate with the client.
+     * The function reads a line from the input stream, and then parses it into a String array of books.
+     * If the first character of this line is 'Q', then we call query on our DictionaryManager object with these books as parameters.
+     * If it returns true, we print &quot;true&quot; to our output stream; otherwise we print &quot;false&quot;.
+     * This indicates whether there exists a valid dictionary containing all of these words (in order).
+     * If the first character of this line is 'C', then we call challenge on our DictionaryManager object with these books as parameters.
+     * If it returns true, we print &quot;true&quot; to our output stream; otherwise we print &quot;false&quot;.
+     *
+     *<p>
+     *
+     * @param inFromclient inFromclient Read the input from the client
+     * @param outToClient outToClient Send the response to the client
+     *
+     */
     @Override
     public void handleClient(InputStream inFromclient, OutputStream outToClient) {
         in = new Scanner(inFromclient);
@@ -34,6 +50,12 @@ public class BookScrabbleHandler implements ClientHandler {
 
     }
 
+    /**
+     * The close function closes the input and output streams.
+     *<p>
+     *
+     *
+     */
     @Override
     public void close() {
         in.close();

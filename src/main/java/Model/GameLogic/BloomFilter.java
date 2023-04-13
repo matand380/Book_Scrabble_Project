@@ -19,6 +19,15 @@ public class BloomFilter {
 
     int size;
 
+    /**
+     * The BloomFilter function takes in a string and hashes it using the hash functions
+     * that were passed into the constructor. It then sets each of those bits to 1.
+     *<p>
+     * @param size size Set the size of the bitset
+     * @param hashFunctions hashFunctions Pass in a variable number of strings
+     *
+     *
+     */
     public BloomFilter(int size, String... hashFunctions) {
         this.size = size;
         bitSet = new BitSet();
@@ -33,6 +42,13 @@ public class BloomFilter {
         }
     }
 
+    /**
+        * The add function takes in a string and hashes it using the hash functions
+        * that were passed into the constructor. It then sets each of those bits to 1.
+        *<p>
+        * @param word word The word to be added to the bloom filter
+     *
+        */
     public void add(String word) {
 
         for (MessageDigest md: mdList)
@@ -46,6 +62,15 @@ public class BloomFilter {
 
     }
 
+    /**
+     * The contains function takes in a string and returns true if the bloom filter contains that string.
+     *<p>
+     *
+     * @param word word Get the hash value of a word
+     *
+     * @return True if the bloom filter contains the word
+     *
+     */
     public boolean contains(String word) {
 
         for (MessageDigest md: mdList)
@@ -59,6 +84,13 @@ public class BloomFilter {
         return true;
     }
 
+    /**
+     * The toString function returns a string representation of the BitSet.
+     *<p>
+     *
+     * @return A string of all the bits in the bitset
+     *
+     */
     @Override
     public String toString() {
         StringBuilder bitsString = new StringBuilder(bitSet.length());

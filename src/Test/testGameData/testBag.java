@@ -47,7 +47,7 @@ public class testBag {
 
         //test what happens when the bag is empty
         for (int k = 0; k < 100; k++) {
-            b.getRand();
+           b.getRand();
         }
         if (b.getRand() != null) System.out.println("your getRand is wrong when the bag is empty");
     }
