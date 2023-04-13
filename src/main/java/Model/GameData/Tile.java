@@ -169,7 +169,7 @@ public class Tile {
          * @return The number of elements in the bag
          *
          */
-        int size() {
+        public int size() {
             int count = 0;
             for (int quantity : _quantitiesCounter) {
                 count += quantity;
