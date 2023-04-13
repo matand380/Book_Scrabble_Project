@@ -1,7 +1,9 @@
 package Model.GameData;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 public class Tile {
     public
@@ -106,21 +108,19 @@ public class Tile {
          */
         public Tile getRand() {
             if (size() > 0) {
-                int indexTile = new Random().nextInt(26);
-                if (_quantitiesCounter[indexTile] != 0) {
-                    _quantitiesCounter[indexTile]--;
-                    return _tilesArray[indexTile];
-                } else {
-                    while (indexTile <= _defaultQuantities.length) {
-                        indexTile++;
-                        if (indexTile == _defaultQuantities.length)
-                            indexTile = _defaultQuantities[0];
-                        if (_quantitiesCounter[indexTile] != 0) {
-                            _quantitiesCounter[indexTile]--;
-                            return _tilesArray[indexTile];
-                        }
+                Random rand = new Random();
+                Set<Integer> nonEmptyIndices = new HashSet<>();
+                for (int i = 0; i < _quantitiesCounter.length; i++) {
+                    if (_quantitiesCounter[i] > 0) {
+                        nonEmptyIndices.add(i);
                     }
                 }
+                if (nonEmptyIndices.isEmpty()) {
+                    return null;
+                }
+                int randomIndex = (int) nonEmptyIndices.toArray()[rand.nextInt(nonEmptyIndices.size())];
+                _quantitiesCounter[randomIndex]--;
+                return _tilesArray[randomIndex];
             }
             return null;
         }
