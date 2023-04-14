@@ -15,8 +15,7 @@ public class testBag {
      * It also checks to make sure that the put function works properly.
      * The testGameData.testBag function prints out an error message if any of these
      * conditions are not met.
-     *
-     * @return The number of points earned
+     * return The number of points earned
      */
     public void testBag() {
         Tile.Bag b = Tile.Bag.getBag();
@@ -45,11 +44,16 @@ public class testBag {
         if (b.getTile('a') != null || b.getTile('$') != null || b.getTile('A') == null)
             System.out.println("your getTile is wrong (-2)");
 
-        //test what happens when the bag is empty
-        for (int k = 0; k < 100; k++) {
-           b.getRand();
+        //test what happens when we pull from the bag more than it has
+        int size=0;
+        for (int i = 0; i < 100; i++) {
+            b.getRand();
+            size=b.size();
         }
-        if (b.getRand() != null) System.out.println("your getRand is wrong when the bag is empty");
+        if(size!=0)
+            System.out.println("size is not 0 after we empty the bag");
+        if (b.getRand() != null)
+            System.out.println("getRand did not return null when the bag was empty");
     }
 
 }
