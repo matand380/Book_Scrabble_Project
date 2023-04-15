@@ -29,9 +29,6 @@ public void testConstructor(){
    public static void main(String[] args) {
         testPlayer t = new testPlayer();
         t.testConstructor();
-
-
-
         System.out.println("testPlayer-done");
 
     }
