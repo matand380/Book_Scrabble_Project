@@ -14,9 +14,7 @@ public class testBoard {
      * The first 5 words are illegal because they are out of bounds or overlap with other letters on the board;
      * however, w5 w6 should be legal because they do not overlap with any other letters on the board.
      * Next we check that all 5 illegal words return false when we call boardLegal on them.
-     *
-     * @return A score
-
+     * return A score
      */
     public void testBoard() {
         Board b = Board.getBoard();
@@ -79,6 +77,7 @@ public class testBoard {
         Word bit=new Word(get("BIT"), 10, 4, false);
         if(b.tryPlaceWord(bit)!=22)
             System.out.println("problem in placeWord for 5th word (should be 22)");
+
     }
     public static void main(String[] args) {
         testBoard t = new testBoard();
