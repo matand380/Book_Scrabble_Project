@@ -17,7 +17,7 @@ public class Player {
      * @param name Set the name of the player
      *
      */
-    Player(String name){
+    public Player(String name){
         this._name = name;
         this._score = 0;
         this._hand = new ArrayList<>();
@@ -69,7 +69,7 @@ public class Player {
     /**
      * The addTilesTo7 function adds tiles to the hand until it has 7 tiles.
      */
-    private void addTilesTo7() {
+    public void addTilesTo7() {
         while (_hand.size() < 7) {
             _hand.add(Tile.Bag.getBag().getRand());
         }
