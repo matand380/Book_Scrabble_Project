@@ -35,25 +35,25 @@ public class testBoard {
         Word w6=new Word(ts,7,0,false);
 
         if( b.boardLegal(w0))
-            System.out.println("your boardLegal function is wrong(w0): " + w0.toString() + " is out of bounds");
+            System.out.println("your boardLegal function is wrong(w0): " + w0 + " is out of bounds");
 
         if( b.boardLegal(w1))
-            System.out.println("your boardLegal function is wrong(w1): " + w1.toString() + " is out of bounds");
+            System.out.println("your boardLegal function is wrong(w1): " + w1 + " is out of bounds");
 
         if( b.boardLegal(w2))
-            System.out.println("your boardLegal function is wrong(w2): " + w2.toString() + " is out of bounds");
+            System.out.println("your boardLegal function is wrong(w2): " + w2 + " is out of bounds");
 
         if( b.boardLegal(w3))
-            System.out.println("your boardLegal function is wrong(w3): " + w3.toString() + " is out of bounds");
+            System.out.println("your boardLegal function is wrong(w3): " + w3 + " is out of bounds");
 
         if( b.boardLegal(w4))
-            System.out.println("your boardLegal function is wrong(w4): " + w4.toString() + " is out of bounds");
+            System.out.println("your boardLegal function is wrong(w4): " + w4 + " is out of bounds");
 
         if( !b.boardLegal(w5))
-            System.out.println("your boardLegal function is wrong(w5): " + w5.toString() + " is not out of bounds");
+            System.out.println("your boardLegal function is wrong(w5): " + w5 + " is not out of bounds");
 
         if( !b.boardLegal(w6))
-            System.out.println("your boardLegal function is wrong(w6): " + w6.toString() + " is not out of bounds");
+            System.out.println("your boardLegal function is wrong(w6): " + w6 + " is not out of bounds");
 
         for(Tile t : ts)
             bag.put(t);
