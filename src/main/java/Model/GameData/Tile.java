@@ -69,7 +69,7 @@ public class Tile {
          * The function also creates an array of integers that keeps track of how many tiles are left in the bag for each letter.
          *
          */
-        private Bag() {
+        public Bag() {
             this._quantitiesCounter = new int[]{9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
             this._tilesArray = new Tile[26];
             _tilesArray[0] = new Tile('A', 1);
@@ -198,6 +198,17 @@ public class Tile {
             if (bagInstance == null)
                 return bagInstance = new Bag();
             return bagInstance;
+        }
+
+        public void remove() {
+            //remove single tile from bag
+            for(int i = 0; i < _quantitiesCounter.length; i++) {
+                if(_quantitiesCounter[i] > 0) {
+                    _quantitiesCounter[i]--;
+                    break;
+                }
+            }
+
         }
     }
 }
