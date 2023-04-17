@@ -71,6 +71,8 @@ public class Player {
      */
     public void addTilesTo7() {
         while (_hand.size() < 7) {
+            if(Tile.Bag.getBag().size() == 0)
+                break;
             _hand.add(Tile.Bag.getBag().getRand());
         }
     }
