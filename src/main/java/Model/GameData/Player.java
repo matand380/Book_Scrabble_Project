@@ -27,7 +27,7 @@ public class Player {
      * The get_name function returns the name of the person.
      *<p>
      *
-     * @return The name of the student
+     * @return The name of the player
      *
      */
     public String get_name() {
