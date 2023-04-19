@@ -15,6 +15,7 @@
 * [Dan Davidovich](https://github.com/Davidovichdan)
 * [Eviatar Didon](https://github.com/Eviatar109)
 * [Matan Drabkin](https://github.com/matand380)
+* [Tal Avraham](https://github.com/Tavraham)
 
 ## Communication and Reporting
 Communication and reporting will be done through the following channels:
