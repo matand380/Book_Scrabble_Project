@@ -1,6 +1,8 @@
 package Model.GameData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Board {
     Tile[][] mainBoard;
@@ -402,9 +404,9 @@ public class Board {
      *
      */
     int getScore(Word w) {
-        int sum = 0;
-        sum += wordScore(w);
-        return sum;
+        int score = 0;
+        score += wordScore(w);
+        return score;
     }
 
     /**
@@ -458,7 +460,7 @@ public class Board {
                             y *= 2;
                         }
                     default: {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow() + j][w.col]._score;
+                        if (w.tiles[j] == null) sum += mainBoard[w.getRow() + j][w.col].getScore();
                         else sum += w.tiles[j]._score;
                     }
                 }
@@ -510,6 +512,60 @@ public class Board {
         sum *= r;
         return sum;
     }
+    //new method for wordScore function to make it more readable and easier to understand
+    //in this method, there are a bug that the score of the word is not calculated correctly in word 1 - 3
+    //the score of word 1 should be 14, but the score of word 1 is 12
+    //the score of word 2 should be 9, but the score of word 2 is 8
+    //the score of word 3 should be 25, but the score of word 3 is 24
+    // Matan - please fix this bug and make sure that the score of the word is calculated correctly in word 1 - 3
+   /* private int wordScore1(Word w) {
+        int score = 0;
+        int doubleLetterMultiplier = 1;
+        int tripleLetterMultiplier = 1;
+
+        for (int i = 0; i < w.getTiles().length; i++) {
+            Tile tile = w.getTiles()[i];
+            int col = w.getCol();
+            int row = w.getRow();
+
+            if (w.isVertical()) {
+                row += i;
+            } else {
+                col += i;
+            }
+
+            char scoreBoardTile = scoreBoard[row][col];
+
+            switch (scoreBoardTile) {
+                case 'p' -> {
+                    score += (w.getTiles()[i] == null ? (mainBoard[row][col].getScore() * 2) : (w.getTiles()[i].getScore() * 2));
+                }
+                case 'b' -> {
+                    score += (w.getTiles()[i] == null ? (mainBoard[row][col].getScore() * 3) : (w.getTiles()[i].getScore() * 3));
+                }
+                case 'y' -> {
+                    score += w.getTiles()[i] == null ? mainBoard[row][col].getScore() : w.getTiles()[i].getScore();
+                    doubleLetterMultiplier *= 2;
+                }
+                case 'r' -> {
+                    score += w.getTiles()[i] == null ? mainBoard[row][col].getScore() : w.getTiles()[i].getScore();
+                    tripleLetterMultiplier *= 3;
+                }
+                case 's' -> {
+                    if (!wScount) {
+                        doubleLetterMultiplier *= 2;
+                        wScount = true;
+                    }
+                }
+                default -> score += w.getTiles()[i] == null ? mainBoard[row][col].getScore() : w.getTiles()[i].getScore();
+            }
+        }
+
+        score *= doubleLetterMultiplier;
+        score *= tripleLetterMultiplier;
+
+        return score;
+    }*/
 
     /**
      * The tryPlaceWord function takes in a Word object and checks if the word is legal.

@@ -24,6 +24,9 @@ public class Tile {
         this.letter = _letter;
         this._score = _score;
     }
+    public int getScore(){
+        return _score;
+    }
     /**
      * The equals function is used to compare two objects.
      * In this case, we are comparing two tiles.
