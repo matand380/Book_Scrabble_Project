@@ -5,20 +5,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Board {
+    private static final int width = 15;
+    private static final int height = 15;
+    private static Board single_instance = null;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
     boolean wScount = false;
-    private static final int width = 15;
-    private static final int height = 15;
-
     ArrayList<Word> wordOnBoard = new ArrayList<>();
 
     /**
      * The Board function creates a new board object.
      * It initializes the mainBoard and scoreBoard arrays to null and 0 respectively.
      * It then sets the values of each tile in scoreBoard to their respective scores, as shown on a Scrabble board.
-     *
      */
     public Board() {
         mainBoard = new Tile[15][15];
@@ -93,15 +92,12 @@ public class Board {
 
     }
 
-    private static Board single_instance = null;
-
     /**
      * The getBoard function is a static function that returns the single instance of the Board class.
      * If there is no instance, it creates one and then returns it.
      * <p>
      *
      * @return The single instance of the board class
-     *
      */
     public static Board getBoard() {
         if (single_instance == null)
@@ -114,9 +110,7 @@ public class Board {
      * It is used to get the current state of the board.
      * <p>
      *
-     *
      * @return A copy of the mainboard array
-     *
      */
     Tile[][] getTiles() {
         return mainBoard.clone();
@@ -126,11 +120,10 @@ public class Board {
      * The boardLegal function checks if the word is legal to be placed on the board.
      * It first checks if it is inside the board, then it checks if it connects with other words.
      * If this is not true, then we check for letter replacement and return false otherwise.
-     *<p>
+     * <p>
+     *
      * @param w w Check if the word is inside the board
-     *
      * @return True if the word is legal and false otherwise
-     *
      */
     public boolean boardLegal(Word w) {
         boolean gridLegal = checkIfInside(w);
@@ -145,13 +138,13 @@ public class Board {
         }
         return false;
     }
+
     /**
      * The checkIfInside function checks if the word is inside the board.
      * <p>
+     *
      * @param w w Check if the word is inside the grid
-     *
      * @return A boolean
-     *
      */
     private boolean checkIfInside(Word w) {
         return w.getCol() < height && w.getRow() < width && w.getCol() >= 0 && w.getRow() >= 0;
@@ -163,9 +156,7 @@ public class Board {
      * <p>
      *
      * @param w w Check if the word is vertical or horizontal
-     *
      * @return True if the first word is placed
-     *
      */
     private boolean checkFirstWord(Word w) {
         if (w.isVertical() && w.getRow() + w.getTiles().length < width) {
@@ -184,14 +175,13 @@ public class Board {
         }
         return false;
     }
+
     /**
      * The checkIfConnected function checks if the word is connected to any other words on the board.
      * <p>
      *
      * @param w w Get the row and column of the word
-     *
      * @return True if the word is connected to another word on the board
-     *
      */
     private boolean checkIfConnected(Word w) {
         int CurRow = w.getRow();
@@ -220,11 +210,10 @@ public class Board {
      * a tile in that position on the mainBoard array or not. If there isn't one, then we know that
      * no letters need to be replaced for this particular word placement, and so we return true; otherwise,
      * we return false because at least one letter needs to be replaced for this particular word placement.
-     *<p>
+     * <p>
+     *
      * @param word word Pass the word that is being placed on the board
-     *
      * @return True if the word does not require letter replacement
-     *
      */
     private boolean notRequireLetterReplacement(Word word) {
         int i;
@@ -256,11 +245,10 @@ public class Board {
      * The checkWordNull function takes in a Word object and returns a new Word object.
      * The new word is the same as the old one, except that any null tiles are replaced with
      * tiles from the main board. This function is used to check if words are valid when they contain blanks.
-     *<p>
+     * <p>
+     *
      * @param w w Get the row and column of the word
-     *
      * @return A new word object with the same row, col and vertical as w
-     *
      */
     private Word checkWordNull(Word w) {
         Tile[] newWord = new Tile[w.getTiles().length];
@@ -285,13 +273,12 @@ public class Board {
     /**
      * The checkVerticalWord function checks the vertical word that is formed by placing a tile at
      * (row, col) on the board. It returns a Word object containing all the tiles in this word.
-     *<p>
-     * @param row row Determine the row of the tile that is being placed
-     * @param col col Determine the column of the tile that is being placed
+     * <p>
+     *
+     * @param row  row Determine the row of the tile that is being placed
+     * @param col  col Determine the column of the tile that is being placed
      * @param tile tile Add the tile that is being placed to the word
-     *
      * @return A word object
-     *
      */
     private Word checkVerticalWord(int row, int col, Tile tile) {
         int curCol = row;
@@ -321,15 +308,12 @@ public class Board {
 
     /**
      * The checkHorizontalWord function checks the horizontal word that is formed by a tile placed on the board.
-     *<p>
+     * <p>
      *
-     * @param row row Determine the row that the tile is being placed in
-     * @param col col Determine the column of the tile that is being placed
+     * @param row  row Determine the row that the tile is being placed in
+     * @param col  col Determine the column of the tile that is being placed
      * @param tile tile Add the tile to the word
-     *
      * @return A word object
-     *
-
      */
     private Word checkHorizontalWord(int row, int col, Tile tile) {
         int curCol = col;
@@ -363,11 +347,10 @@ public class Board {
      * ArrayList with only one element: w itself. Otherwise, if there are other words formed by placing w on the board,
      * then these additional words will be added to newArrayWord after being checked for validity using checkVerticalWord or
      * checkHorizontalWord.
-     *<p>
+     * <p>
+     *
      * @param w w Check if the word is vertical or horizontal
-     *
      * @return An arraylist of word objects
-     *
      */
     public ArrayList<Word> getWords(Word w) {
         ArrayList<Word> newArrayWord = new ArrayList<Word>();
@@ -396,12 +379,10 @@ public class Board {
 
     /**
      * The getScore function takes a Word object as an argument and returns the score of the all the words that are formed
-     *<p>
+     * <p>
      *
      * @param w w Pass the word that is being scored
-     *
      * @return The score of the all the words that are formed by placing the tiles from this word on the board
-     *
      */
     int getScore(Word w) {
         int score = 0;
@@ -416,156 +397,51 @@ public class Board {
      * If it is vertical, it loops through each tile in w's tiles array (which contains all of its letters) from index 0 to length-2 (inclusive).
      * For each letter in w's tiles array: 	If there is no letter at that position on mainBoard (i.e., if w has placed a new letter there),
      * then the score of that letter is multiplied by 2 or 3 depending on the value of the letter at that position on scoreBoard.
-     *<p>
+     * <p>
+     *
      * @param w w Get the row and column of the word
-     *
      * @return The score of a word
-     *
      */
+
     private int wordScore(Word w) {
-        int sum = 0;
-        int r = 1, y = 1;
-        if (w.vertical) {
-            for (int j = 0; j < w.tiles.length; j++) {
-                switch (scoreBoard[w.row + j][w.col]) {
-                    case 'p':
-                        if (w.tiles[j] == null) {
-                            sum += mainBoard[w.getRow() + j][w.col]._score * 2;
-                        } else {
-                            sum += w.tiles[j]._score * 2;
-                        }
-                        continue;
-                    case 'b':
-                        if (w.tiles[j] == null) {
-                            sum += mainBoard[w.getRow() + j][w.col]._score * 3;
-                        } else {
-                            sum += w.tiles[j]._score * 3;
-                            continue;
-                        }
-                    case 'y': {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow()][w.col + j]._score;
-                        else sum += w.tiles[j]._score;
-                        y *= 2;
-                        continue;
-                    }
-                    case 'r': {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow()][w.col + j]._score;
-                        else sum += w.tiles[j]._score;
-                        r *= 3;
-                        continue;
-                    }
-                    case 's':
-                        if (!wScount) {
-                            wScount = true;
-                            y *= 2;
-                        }
-                    default: {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow() + j][w.col].getScore();
-                        else sum += w.tiles[j]._score;
-                    }
-                }
-            }
-        } else {
-            for (int j = 0; j < w.tiles.length; j++) {
-                switch (scoreBoard[w.row][w.col + j]) {
-                    case 'p':
-                        if (w.tiles[j] == null) {
-                            sum += mainBoard[w.getRow()][w.col + j]._score * 2;
-                            continue;
-                        } else {
-                            sum += w.tiles[j]._score * 2;
-                            continue;
-                        }
-                    case 'b':
-                        if (w.tiles[j] == null) {
-                            sum += mainBoard[w.getRow()][w.col + j]._score * 3;
-                            continue;
-                        } else {
-                            sum += w.tiles[j]._score * 3;
-                            continue;
-                        }
-                    case 'y': {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow()][w.col + j]._score;
-                        else sum += w.tiles[j]._score;
-                        y *= 2;
-                        continue;
-                    }
-                    case 'r': {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow()][w.col + j]._score;
-                        else sum += w.tiles[j]._score;
-                        r *= 3;
-                        continue;
-                    }
-                    case 's':
-                        if (!wScount) {
-                            wScount = true;
-                            y *= 2;
-                        }
-                    default: {
-                        if (w.tiles[j] == null) sum += mainBoard[w.getRow()][w.col + j]._score;
-                        else sum += w.tiles[j]._score;
-                    }
-                }
-            }
-        }
-        sum *= y;
-        sum *= r;
-        return sum;
-    }
-    //new method for wordScore function to make it more readable and easier to understand
-    //in this method, there are a bug that the score of the word is not calculated correctly in word 1 - 3
-    //the score of word 1 should be 14, but the score of word 1 is 12
-    //the score of word 2 should be 9, but the score of word 2 is 8
-    //the score of word 3 should be 25, but the score of word 3 is 24
-    // Matan - please fix this bug and make sure that the score of the word is calculated correctly in word 1 - 3
-   /* private int wordScore1(Word w) {
         int score = 0;
-        int doubleLetterMultiplier = 1;
-        int tripleLetterMultiplier = 1;
+        int doubleWordMultiplier = 1;
+        int tripleWordMultiplier = 1;
 
         for (int i = 0; i < w.getTiles().length; i++) {
             Tile tile = w.getTiles()[i];
-            int col = w.getCol();
-            int row = w.getRow();
-
-            if (w.isVertical()) {
-                row += i;
-            } else {
-                col += i;
-            }
-
+            int col = w.getCol() + (w.isVertical() ? 0 : i);
+            int row = w.getRow() + (w.isVertical() ? i : 0);
+            int tileScore = tile != null ? tile.getScore() : mainBoard[row][col].getScore();
             char scoreBoardTile = scoreBoard[row][col];
 
             switch (scoreBoardTile) {
-                case 'p' -> {
-                    score += (w.getTiles()[i] == null ? (mainBoard[row][col].getScore() * 2) : (w.getTiles()[i].getScore() * 2));
-                }
-                case 'b' -> {
-                    score += (w.getTiles()[i] == null ? (mainBoard[row][col].getScore() * 3) : (w.getTiles()[i].getScore() * 3));
-                }
+                case 'p' -> score += (tileScore * 2);
+                case 'b' -> score += (tileScore * 3);
                 case 'y' -> {
-                    score += w.getTiles()[i] == null ? mainBoard[row][col].getScore() : w.getTiles()[i].getScore();
-                    doubleLetterMultiplier *= 2;
+                    score += tileScore;
+                    doubleWordMultiplier *= 2;
                 }
                 case 'r' -> {
-                    score += w.getTiles()[i] == null ? mainBoard[row][col].getScore() : w.getTiles()[i].getScore();
-                    tripleLetterMultiplier *= 3;
+                    score += tileScore;
+                    tripleWordMultiplier *= 3;
                 }
                 case 's' -> {
                     if (!wScount) {
-                        doubleLetterMultiplier *= 2;
+                        doubleWordMultiplier *= 2;
                         wScount = true;
                     }
+                    score += tileScore;
                 }
-                default -> score += w.getTiles()[i] == null ? mainBoard[row][col].getScore() : w.getTiles()[i].getScore();
+                default -> score += tileScore;
             }
         }
 
-        score *= doubleLetterMultiplier;
-        score *= tripleLetterMultiplier;
-
+        score *= doubleWordMultiplier;
+        score *= tripleWordMultiplier;
         return score;
-    }*/
+    }
+
 
     /**
      * The tryPlaceWord function takes in a Word object and checks if the word is legal.
@@ -573,14 +449,11 @@ public class Board {
      * <p>
      *
      * @param w w Determine if the word is legal on the board
-     *
      * @return The sum of the scores of all words formed by placing w on the board
-     *
      * @see #dictionaryLegal(Word)
      * @see #boardLegal(Word)
      * @see #getWords(Word)
      * @see #getScore(Word)
-
      */
     public int tryPlaceWord(Word w) {
         int sum = 0;
@@ -595,7 +468,7 @@ public class Board {
         }
         placeWord(w);
         return sum;
-        }
+    }
 
     /**
      * Places the tiles of the given word on the game board.
@@ -605,7 +478,7 @@ public class Board {
      * @param w the Word object representing the word to be placed on the board
      */
 
-   private void placeWord(Word w) {
+    private void placeWord(Word w) {
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;
