@@ -537,6 +537,11 @@ public class Board {
                 wordCounter++;
             } else return 0;
         }
+        placeWord(w);
+        return sum;
+        }
+
+   private void placeWord(Word w) {
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;
@@ -546,8 +551,7 @@ public class Board {
                 mainBoard[w.getRow()][w.col + i] = w.tiles[i];
             }
         }
-        return sum;
     }
-
 }
+
 

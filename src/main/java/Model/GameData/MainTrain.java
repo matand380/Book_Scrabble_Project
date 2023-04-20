@@ -128,7 +128,7 @@ public class MainTrain {
 			for (int j = 0; j < tiles[i].length; j++) {
 				sb.append(tiles[i][j] == null ? "-" : tiles[i][j].letter);
 				if (j < tiles[i].length - 1) {
-					sb.append(", ");
+					sb.append("  ");
 				}
 			}
 			sb.append("\n");
