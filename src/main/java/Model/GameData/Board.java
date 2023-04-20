@@ -390,19 +390,19 @@ public class Board {
         return score;
     }
 
-    /**
-     * The wordScore function takes a Word object as an argument and returns the score of that word.
-     * The function first initializes two variables, sum and r, to 0 and 1 respectively.
-     * It then checks if the word is vertical or horizontal by checking its boolean value in the Word class.
-     * If it is vertical, it loops through each tile in w's tiles array (which contains all of its letters) from index 0 to length-2 (inclusive).
-     * For each letter in w's tiles array: 	If there is no letter at that position on mainBoard (i.e., if w has placed a new letter there),
-     * then the score of that letter is multiplied by 2 or 3 depending on the value of the letter at that position on scoreBoard.
-     * <p>
-     *
-     * @param w w Get the row and column of the word
-     * @return The score of a word
-     */
 
+    /**
+     * The wordScore function takes in a Word object and returns the score of that word.
+     * The function first initializes the score to 0, then iterates through each tile in the word.
+     * For each tile, it checks if there is a multiplier on that space on the board (double or triple letter).
+     * If so, it multiplies by 2 or 3 respectively and adds to total score.
+     * It also checks for double/triple word multipliers.
+     *<p>
+     * @param  w Get the tiles, row and column of the word
+     *
+     * @return The score of the word multiplied by the doubleWordMultiplier and tripleWordMultiplier
+     *
+     */
     private int wordScore(Word w) {
         int score = 0;
         int doubleWordMultiplier = 1;
