@@ -541,6 +541,14 @@ public class Board {
         return sum;
         }
 
+    /**
+     * Places the tiles of the given word on the game board.
+     * If the word is vertical, the tiles are placed in a column starting at the given row and column position.
+     * If the word is horizontal, the tiles are placed in a row starting at the given row and column position.
+     *
+     * @param w the Word object representing the word to be placed on the board
+     */
+
    private void placeWord(Word w) {
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
