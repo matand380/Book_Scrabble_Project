@@ -8,6 +8,8 @@ public class Player {
     int _score;
     List<Tile> _hand;
 
+    public int _id;
+
     /**
      * The Player function is a constructor for the Player class.
      * It takes in a String name and sets it as the player's name,
@@ -75,5 +77,13 @@ public class Player {
                 break;
             _hand.add(Tile.Bag.getBag().getRand());
         }
+    }
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
     }
 }
