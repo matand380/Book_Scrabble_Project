@@ -464,6 +464,8 @@ public class Board {
             if (dictionaryLegal(word)) {
                 sum += getScore(word);
                 wordCounter++;
+                // FIXME: 28/04/2023 scenario: first and second words are dictionary legal, but third word is not.
+                //  the word counter will still be incremented and it should not be incremented.
             } else return 0;
         }
         placeWord(w);
