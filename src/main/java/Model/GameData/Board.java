@@ -1,8 +1,6 @@
 package Model.GameData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Board {
     private static final int width = 15;
@@ -463,11 +461,9 @@ public class Board {
         for (Word word : newWord) {
             if (dictionaryLegal(word)) {
                 sum += getScore(word);
-                wordCounter++;
-                // FIXME: 28/04/2023 scenario: first and second words are dictionary legal, but third word is not.
-                //  the word counter will still be incremented and it should not be incremented.
             } else return 0;
         }
+        wordCounter += newWord.size();
         placeWord(w);
         return sum;
     }

@@ -71,7 +71,7 @@ public class Player {
     /**
      * The addTilesTo7 function adds tiles to the hand until it has 7 tiles.
      */
-    public void addTilesTo7() {
+    public void completeTilesTo7() {
         while (_hand.size() < 7) {
             if(Tile.Bag.getBag().size() == 0)
                 break;
