@@ -25,7 +25,7 @@ public class BookScrabbleHandler implements ClientHandler {
      *
      * @param inFromclient inFromclient Read the input from the client
      * @param outToClient outToClient Send the response to the client
-     *
+
      */
     @Override
     public void handleClient(InputStream inFromclient, OutputStream outToClient) {
