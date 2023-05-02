@@ -12,6 +12,16 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     @Override
+    public void tryPlaceWord() {
+
+    }
+
+    @Override
+    public void challengeWord() {
+
+    }
+
+    @Override
     public void setCurrentPlayerIndex(int index) {
 
     }
