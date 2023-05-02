@@ -1,11 +1,15 @@
 package Model.GameData;
 
+import Model.BS_Host_Model;
+import Model.BS_Model;
 import  Model.GameData.Tile.Bag;
 import javafx.scene.transform.MatrixType;
 
 import java.text.Format;
 
 public class MainTrain {
+
+
 
 	public static void testBag() {
 		Bag b=Tile.Bag.getBag();
@@ -120,6 +124,9 @@ public class MainTrain {
 		testBag(); // 30 points
 		testBoard(); // 70 points
 		System.out.println("Game Data done");
+		BS_Host_Model host = new BS_Host_Model();
+		Board board = host.getBoardState();
+		System.out.println(formatTiles(board.getTiles()));
 	}
 
 	public static String formatTiles(Tile[][] tiles) {

@@ -1,15 +1,21 @@
 package Model.GameData;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-public class Tile {
+public class Tile implements Serializable {
     public
     final char letter;
     final int _score;
 
+
+    public Tile() {
+        this.letter = ' ';
+        this._score = 0;
+    }
     /**
      * The Tile function is a constructor for the Tile class.
      * It takes in two parameters, a character and an integer.
@@ -60,7 +66,7 @@ public class Tile {
         return Objects.hash(letter, _score);
     }
 
-    public static class Bag {
+    public static class Bag implements Serializable, ObjectFactory{
         public
         int[] _quantitiesCounter;
         final int[] _defaultQuantities = new int[]{9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
@@ -72,7 +78,7 @@ public class Tile {
          * The function also creates an array of integers that keeps track of how many tiles are left in the bag for each letter.
          *
          */
-        public Bag() {
+        private Bag() {
             this._quantitiesCounter = new int[]{9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
             this._tilesArray = new Tile[26];
             _tilesArray[0] = new Tile('A', 1);
@@ -212,6 +218,11 @@ public class Tile {
                 }
             }
 
+        }
+
+        @Override
+        public Bag create() {
+            return Bag.getBag();
         }
     }
 }

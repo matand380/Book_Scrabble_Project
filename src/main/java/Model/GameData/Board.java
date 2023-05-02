@@ -1,8 +1,11 @@
 package Model.GameData;
 
+import Model.GameLogic.CommunicationHandler;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable, ObjectFactory{
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
@@ -18,7 +21,7 @@ public class Board {
      * It initializes the mainBoard and scoreBoard arrays to null and 0 respectively.
      * It then sets the values of each tile in scoreBoard to their respective scores, as shown on a Scrabble board.
      */
-    public Board() {
+    private Board() {
         mainBoard = new Tile[15][15];
         for (int i = 0; i < 15; i++)
             for (int j = 0; j < 15; j++)
@@ -111,7 +114,7 @@ public class Board {
      *
      * @return A copy of the mainboard array
      */
-    Tile[][] getTiles() {
+    public Tile[][] getTiles() {
         return mainBoard.clone();
     }
 
@@ -497,6 +500,11 @@ public class Board {
                 mainBoard[w.getRow()][w.col + i] = w.tiles[i];
             }
         }
+    }
+
+    @Override
+    public  Board create() {
+        return getBoard();
     }
 }
 
