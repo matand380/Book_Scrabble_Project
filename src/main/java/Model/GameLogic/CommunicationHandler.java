@@ -16,8 +16,9 @@ public class CommunicationHandler implements ClientHandler {
     public CommunicationHandler() {
         creatorMap.put("Board", Board.getBoard());
         creatorMap.put("Bag", Tile.Bag.getBag());
-        creatorMap.put("Player", new Player("Player"));
-
+        creatorMap.put("Player", new Player());
+        creatorMap.put("Tile", new Tile());
+        creatorMap.put("Word", new Word());
     }
 
     @Override

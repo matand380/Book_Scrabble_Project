@@ -20,8 +20,8 @@ public class Player implements Serializable, ObjectFactory {
      * @param name Set the name of the player
      *
      */
-    public Player(String name){
-        this._name = name;
+    public Player(){
+        this._name = "Default";
         this._score = 0;
         this._hand = new ArrayList<>();
     }
@@ -35,6 +35,17 @@ public class Player implements Serializable, ObjectFactory {
      */
     public String get_name() {
         return _name;
+    }
+    /**
+     * The set_name function sets the name of the person.
+     *
+     *
+     * @param String name Set the name of the contact
+     *
+     * @return Nothing
+     */
+    public void set_name(String name) {
+        this._name = name;
     }
 
     /**
@@ -88,13 +99,21 @@ public class Player implements Serializable, ObjectFactory {
         this._id = _id;
     }
 
+    /**
+     * The getTileLottery function is used to get a random tile from the bag.
+     * @return The score of the tile that was randomly chosen from the bag
+     */
     public int getTileLottery() {
         tileLottery = Tile.Bag.getBag().getRand();
         return tileLottery.getScore();
     }
 
+    /**
+     * The create function is used to create a new instance of the Player class.
+     * @return A new player object
+     */
     @Override
     public Player create() {
-        return new Player("Player");
+        return new Player();
     }
 }

@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-public class Tile implements Serializable {
+public class Tile implements Serializable, ObjectFactory{
     public
     final char letter;
     final int _score;
@@ -64,6 +64,15 @@ public class Tile implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(letter, _score);
+    }
+
+    /**
+     * The create function is used to create a new instance of the Tile class.
+     * @return A tile object
+     */
+    @Override
+    public Object create() {
+        return new Tile();
     }
 
     public static class Bag implements Serializable, ObjectFactory{

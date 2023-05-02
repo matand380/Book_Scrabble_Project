@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Word implements Serializable {
+public class Word implements Serializable, ObjectFactory {
     Tile[] tiles;
     int row;
     int col;
@@ -26,6 +26,17 @@ public class Word implements Serializable {
         this.row = row;
         this.col = col;
         this.vertical = vertical;
+    }
+
+    /**
+     * The Word function is a default constructor that creates a new Word object.
+     * @return A word object
+     */
+    public Word() {
+        this.tiles = new Tile[0];
+        this.row = 0;
+        this.col = 0;
+        this.vertical = false;
     }
 
     /**
@@ -105,4 +116,12 @@ public class Word implements Serializable {
         return result;
     }
 
+    /**
+     * The create function is used to create a new instance of the Word class.
+     * @return A new word object with the parameters given
+     */
+    @Override
+    public Object create() {
+        return new Word(new Tile[0], 0, 0, false);
+    }
 }
