@@ -7,7 +7,7 @@ public class Player {
     String _name;
     int _score;
     List<Tile> _hand;
-
+    Tile tileLottery;
     public int _id;
 
     /**
@@ -85,5 +85,10 @@ public class Player {
 
     public void set_id(int _id) {
         this._id = _id;
+    }
+
+    public int getTileLottery() {
+        tileLottery = Tile.Bag.getBag().getRand();
+        return tileLottery.getScore();
     }
 }

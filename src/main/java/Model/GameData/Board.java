@@ -6,6 +6,7 @@ public class Board {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
+    public int passCounter = 0;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
@@ -441,6 +442,14 @@ public class Board {
     }
 
 
+    public int getPassCounter() {
+        return passCounter;
+    }
+
+    public void setPassCounter(int passCounter) {
+        this.passCounter = passCounter;
+    }
+
     /**
      * The tryPlaceWord function takes in a Word object and checks if the word is legal.
      * If it is, then it places the word on the board and returns the score of all the words formed by placing the word on the board.
@@ -454,6 +463,7 @@ public class Board {
      * @see #getScore(Word)
      */
     public int tryPlaceWord(Word w) {
+        setPassCounter(0);
         int sum = 0;
         if (!dictionaryLegal(w)) return 0;
         if (!boardLegal(w)) return 0;
