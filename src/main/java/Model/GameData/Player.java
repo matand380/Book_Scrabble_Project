@@ -7,7 +7,7 @@ public class Player {
     String _name;
     int _score;
     List<Tile> _hand;
-
+    Tile tileLottery;
     public int _id;
 
     /**
@@ -71,7 +71,7 @@ public class Player {
     /**
      * The addTilesTo7 function adds tiles to the hand until it has 7 tiles.
      */
-    public void addTilesTo7() {
+    public void completeTilesTo7() {
         while (_hand.size() < 7) {
             if(Tile.Bag.getBag().size() == 0)
                 break;
@@ -85,5 +85,10 @@ public class Player {
 
     public void set_id(int _id) {
         this._id = _id;
+    }
+
+    public int getTileLottery() {
+        tileLottery = Tile.Bag.getBag().getRand();
+        return tileLottery.getScore();
     }
 }
