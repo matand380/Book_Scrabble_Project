@@ -11,6 +11,8 @@ public interface BS_Model {
 
     // Methods for setting data in the model
     void passTurn();
+    void tryPlaceWord();
+    void challengeWord();
     void setCurrentPlayerIndex(int index);
     void setGameOver(boolean isGameOver);
 

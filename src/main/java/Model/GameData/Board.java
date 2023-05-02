@@ -448,6 +448,7 @@ public class Board {
 
     public void setPassCounter(int passCounter) {
         this.passCounter = passCounter;
+
     }
 
     /**
