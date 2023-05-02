@@ -16,21 +16,21 @@ public void testConstructor(){
         if(p.get_hand().size() != 0){
             System.out.println("testPlayer.testConstructor: failed");
         }
-        p.addTilesTo7();
+        p.completeTilesTo7();
         if(p.get_hand().size() != 7){
             System.out.println("testPlayer.testConstructor: failed");
         }
         List<Tile> hand = p.get_hand();
-        p.addTilesTo7();
+        p.completeTilesTo7();
         if(p.get_hand()!=hand){
             System.out.println("testPlayer.testConstructor: failed");
         }
     }
     public void testHandAfterDraw(){
         Player p = new Player("test");
-        p.addTilesTo7();
+        p.completeTilesTo7();
         List<Tile> hand = p.get_hand();
-        p.addTilesTo7();
+        p.completeTilesTo7();
         if(p.get_hand()!=hand){
             System.out.println("testPlayer.testConstructor: failed");
         }
@@ -38,14 +38,14 @@ public void testConstructor(){
         p.get_hand().remove(1);
         if(p.get_hand().size()!=5)
             System.out.println("after pulling 2 tiles from hand, hand size should be 5");
-        p.addTilesTo7();
+        p.completeTilesTo7();
         if(p.get_hand().size()!=7)
             System.out.println("after pulling 2 tiles from hand, hand size should be 7");
 
     }
     public void testHandDrawsFromEmptyBag(){
         Player test = new Player("test");
-        test.addTilesTo7();
+        test.completeTilesTo7();
         while(Tile.Bag.getBag().size()!=0){
             Tile.Bag.getBag().remove();
         }
@@ -55,7 +55,7 @@ public void testConstructor(){
         test.get_hand().remove(1);
         if(test.get_hand().size()!=5)
             System.out.println("after pulling 2 tiles from hand, hand size should be 0");
-        test.addTilesTo7();
+        test.completeTilesTo7();
     }
    public static void main(String[] args) {
         testPlayer t = new testPlayer();

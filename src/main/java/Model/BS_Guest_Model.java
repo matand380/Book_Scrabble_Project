@@ -1,11 +1,14 @@
 package Model;
 
+import Model.GameData.Board;
 import Model.GameData.Tile;
 
 import java.util.List;
 import java.util.Observable;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
+
+    Board board;
     @Override
     public void passTurn() {
 
@@ -42,8 +45,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public Tile[][] getBoardState() {
-        return new Tile[0][];
+    public Board getBoardState() {
+        return board.getBoard();
     }
 
     @Override

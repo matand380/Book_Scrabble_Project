@@ -1,9 +1,10 @@
 package Model.GameData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+public class Player implements Serializable, ObjectFactory {
     String _name;
     int _score;
     List<Tile> _hand;
@@ -90,5 +91,10 @@ public class Player {
     public int getTileLottery() {
         tileLottery = Tile.Bag.getBag().getRand();
         return tileLottery.getScore();
+    }
+
+    @Override
+    public Player create() {
+        return new Player("Player");
     }
 }
