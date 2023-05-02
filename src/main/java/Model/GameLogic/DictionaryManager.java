@@ -1,5 +1,5 @@
 package Model.GameLogic;
-
+import Model.GameData.*;
 
 import java.util.HashMap;
 import java.util.Map;
