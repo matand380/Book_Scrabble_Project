@@ -8,6 +8,7 @@ public class Board {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
+    public static int passCounter = 0;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
@@ -469,6 +470,7 @@ public class Board {
             } else return 0;
         }
         placeWord(w);
+        passCounter = 0;
         return sum;
     }
 
