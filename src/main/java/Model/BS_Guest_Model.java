@@ -2,16 +2,20 @@ package Model;
 
 import Model.GameData.Board;
 import Model.GameData.Tile;
+import Model.GameLogic.CommunicationHandler;
 
 import java.util.List;
 import java.util.Observable;
 
+import static java.lang.System.out;
+
 public class BS_Guest_Model extends Observable implements BS_Model {
 
     Board board;
+    CommunicationHandler communicationHandler = new CommunicationHandler();
     @Override
     public void passTurn() {
-
+        communicationHandler.outMessages("passTurn");
     }
 
     @Override
