@@ -11,8 +11,8 @@ import java.util.Map;
 public class CommunicationHandler implements ClientHandler {
 
 
-    Map<String, Runnable> inMessages = new HashMap<>();
-    Map<String, String> outMessages = new HashMap<>();
+    Map<String, Runnable> inMessagesMap = new HashMap<>();
+    Map<String, String> outMessagesMap = new HashMap<>();
 
     Map<String, ObjectFactory> creatorMap = new HashMap<>();
 
@@ -26,12 +26,12 @@ public class CommunicationHandler implements ClientHandler {
         creatorMap.put("Player", new Player());
         creatorMap.put("Tile", new Tile());
         creatorMap.put("Word", new Word());
-        inMessages.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
-        inMessages.put("tryPlaceWord", () -> BS_Host_Model.getModel().tryPlaceWord());
-        inMessages.put("challengeWord", () -> BS_Host_Model.getModel().challengeWord());
+        inMessagesMap.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
+        inMessagesMap.put("tryPlaceWord", () -> BS_Host_Model.getModel().tryPlaceWord());
+        inMessagesMap.put("challengeWord", () -> BS_Host_Model.getModel().challengeWord());
 
-        outMessages.put("isFound", "challengeFailed");
-        outMessages.put("isNotFound", "challengeSucceeded");
+        outMessagesMap.put("isFound", "challengeFailed");
+        outMessagesMap.put("isNotFound", "challengeSucceeded");
     }
 
     @Override
@@ -48,7 +48,7 @@ public class CommunicationHandler implements ClientHandler {
             Object object = in.readObject();
             if (object instanceof String) {
                 key = (String) object;
-                inMessages.get(key).run();
+                inMessages(key);
             } else if (object instanceof Tile[][]) {
                 boardTiles = (Tile[][]) object;
             } else if (object instanceof Board) {
@@ -71,6 +71,12 @@ public class CommunicationHandler implements ClientHandler {
 
     }
 
+    private void inMessages(String key) {
+        if (inMessagesMap.containsKey(key)) {
+            inMessagesMap.get(key).run();
+        }
+    }
+
     public Object getInstance(String key) {
         if (creatorMap.containsKey(key)) {
             return creatorMap.get(key).create();
@@ -80,23 +86,25 @@ public class CommunicationHandler implements ClientHandler {
 
     @Override
     public void close() {
+        try {
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     public void outMessages(String key) {
         if (key != null) {
             try {
-                out.writeObject(outMessages.get(key));
+                out.writeObject(outMessagesMap.get(key));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void inMassages(String key) {
-        inMessages.get(key).run();
-
-    }
 
 
 }
