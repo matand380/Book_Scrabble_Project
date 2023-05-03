@@ -124,7 +124,7 @@ public class MainTrain {
 		testBag(); // 30 points
 		testBoard(); // 70 points
 		System.out.println("Game Data done");
-		BS_Host_Model host = new BS_Host_Model();
+		BS_Host_Model host = BS_Host_Model.getModel();
 		Board board = host.getBoardState();
 		System.out.println(formatTiles(board.getTiles()));
 	}

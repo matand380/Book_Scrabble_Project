@@ -1,36 +1,50 @@
 package Model;
 
-import Model.GameData.Board;
-import Model.GameData.Player;
-import Model.GameData.Tile;
+import Model.GameData.*;
 import Model.GameLogic.CommunicationHandler;
+import Model.GameLogic.DictionaryManager;
 import Model.GameLogic.MyServer;
 
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 
 public class BS_Host_Model extends Observable implements BS_Model {
-
+    private static BS_Host_Model model_instance = null;
     CommunicationHandler communicationHandler = new CommunicationHandler();
     MyServer server;
     Board board;
     Tile.Bag bag;
     Player player;
+    private DictionaryManager dictionaryManager;
+    private List<Player> players;
+
+    private int currentPlayerIndex;
 
 
-    public BS_Host_Model() {
-         board = (Board) communicationHandler.getInstance("Board");
-            bag = (Tile.Bag) communicationHandler.getInstance("Bag");
-            player = (Player) communicationHandler.getInstance("Player");
+    private int maxScore;
+    private boolean isGameOver;
 
+
+    private BS_Host_Model() {
+        board = Board.getBoard();
+        bag = Tile.Bag.getBag();
+        players = new ArrayList<>();
+        dictionaryManager = DictionaryManager.get();
 
     }
 
-    public void hostPlayer(String name) {
-
-
+    public static BS_Host_Model getModel() {
+        if (model_instance == null)
+            return model_instance = new BS_Host_Model();
+        return model_instance;
     }
 
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    public void startNewGame() {
+
+    }
 
     @Override
     public void passTurn() {
@@ -49,11 +63,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public void setCurrentPlayerIndex(int index) {
-
-    }
-
-    @Override
-    public void setGameOver(boolean isGameOver) {
 
     }
 
@@ -93,7 +102,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     @Override
+    public void setGameOver(boolean isGameOver) {
+
+    }
+
+    @Override
     public boolean isConnected() {
         return false;
     }
+
+
 }
+
+

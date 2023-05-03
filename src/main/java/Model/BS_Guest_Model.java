@@ -1,7 +1,6 @@
 package Model;
 
-import Model.GameData.Board;
-import Model.GameData.Tile;
+import Model.GameData.*;
 import Model.GameLogic.CommunicationHandler;
 
 import java.util.List;
@@ -12,7 +11,17 @@ import static java.lang.System.out;
 public class BS_Guest_Model extends Observable implements BS_Model {
 
     Board board;
+    Tile.Bag bag;
+    Player player;
+
+
     CommunicationHandler communicationHandler = new CommunicationHandler();
+
+    BS_Guest_Model() {
+        board = (Board) communicationHandler.getInstance("Board");
+        bag = (Tile.Bag) communicationHandler.getInstance("Bag");
+        player = (Player) communicationHandler.getInstance("Player");
+    }
     @Override
     public void passTurn() {
         communicationHandler.outMessages("passTurn");
@@ -20,11 +29,13 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     @Override
     public void tryPlaceWord() {
-
+        communicationHandler.outMessages("tryPlaceWord");
     }
+
 
     @Override
     public void challengeWord() {
+        communicationHandler.outMessages("challengeWord");
 
     }
 
