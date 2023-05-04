@@ -124,11 +124,13 @@ public class MainTrain {
 	}
 
 	public static void main(String[] args) {
-		testBag(); // 30 points
-		testBoard(); // 70 points
-		System.out.println("Game Data done");
+//		testBag(); // 30 points
+//		testBoard(); // 70 points
+//		System.out.println("Game Data done");
 		BS_Host_Model host = BS_Host_Model.getModel();
 		BS_Guest_Model client = BS_Guest_Model.getModel();
+		client.setPlayerProperties("matan");
+		client.getCommunicationHandler().setCom();
 		client.passTurn(4);
 		client.getCommunicationHandler().inMessages();
 

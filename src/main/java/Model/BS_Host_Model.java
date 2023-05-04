@@ -1,16 +1,8 @@
 package Model;
 
 import Model.GameData.*;
-import Model.GameLogic.ClientHandler;
-import Model.GameLogic.DictionaryManager;
-import Model.GameLogic.HostCommunicationHandler;
-import Model.GameLogic.MyServer;
+import Model.GameLogic.*;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.util.*;
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -22,8 +14,17 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Tile.Bag bag;
     Player player;
     private DictionaryManager dictionaryManager;
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void addPlayer(Player p) {
+        this.players.add(p);
+    }
+
     private List<Player> players;
-    private int currentPlayerIndex;
+    public int currentPlayerIndex =0;
     private int maxScore;
     private boolean isGameOver;
 
@@ -40,7 +41,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
         MyServer server = new MyServer(port, communicationHandler);
         System.out.println("Server local ip: " + server.ip() + "\n" + "Server public ip: " + server.getPublicIp() + "\n" + "Server port: " + port);
         server.start();
-
+        Player player1 = new Player();
+        player1.set_name("player1");
+        Player player2 = new Player();
+        player2.set_name("player2");
+        players.add(player1);
+        players.add(player2);
+        currentPlayerIndex = 0;
 
     }
 
@@ -56,7 +63,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public void setNextPlayerIndex(int index) {
-        currentPlayerIndex = players.indexOf(currentPlayerIndex + 1) % players.size();
+        currentPlayerIndex = (index+1)%players.size();
 
     }
 
@@ -69,32 +76,37 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public void passTurn(int id) throws IOException {
-        setNextPlayerIndex(id);
+    public String passTurn(int id) {
+        setNextPlayerIndex(currentPlayerIndex);
         board.passCounter++;
         hasChanged();
         notifyObservers(getCurrentPlayerIndex());// notify host viewModel about current player
-        server.updateAll(String.valueOf(getCurrentPlayerIndex()));
+//        server.updateAll(String.valueOf(getCurrentPlayerIndex()));
+        return String.valueOf(getCurrentPlayerIndex());
+
 
     }
 
 
-    @Override
-    public void tryPlaceWord() {
-        int score = Board.getBoard().tryPlaceWord(new Word()); //change this
+
+    public void tryPlaceWord(Word word) {
+        int score = Board.getBoard().tryPlaceWord(word); //change this
         if (score > 0) {
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
             hasChanged();
+            notifyObservers("try successful");
             //update viewModel with new score and the currentPlayerWords
             //to be able to update the viewModel we send the name of the method that was called
 
+        } else {
+            hasChanged();
+            notifyObservers("try failed");
         }
-        notifyObservers("try successful");
     }
 
 
-    @Override
-    public void challengeWord() {
+    public void challengeWord(Word word) {
+
 
     }
 

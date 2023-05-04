@@ -3,30 +3,43 @@ package Model;
 import Model.GameData.*;
 import Model.GameLogic.ClientCommunicationHandler;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
 import java.util.Observable;
-
-import static java.lang.System.out;
+import java.util.Scanner;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
     Socket socket;
     Board board; //rethink if we need this
     Tile.Bag bag;//rethink if we need this
+
+    public void setPlayerProperties(String name) {
+       this.player.set_name(name);
+    }
+
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
 
     public ClientCommunicationHandler getCommunicationHandler() {
         return communicationHandler;
     }
 
-    ClientCommunicationHandler communicationHandler;
-    Tile[][] boardTiles;
-    private BS_Guest_Model() {
-        socket = new Socket();
+    ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
+    Tile[][] boardTiles = new Tile[15][15]; //should be updated by the host
+    private BS_Guest_Model()  {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the ip address of the server");
+        String ip = scanner.nextLine();
+        System.out.println("Please enter the port of the server");
+        int port = scanner.nextInt();
+        scanner.close();
+        try {
+            socket = new Socket(ip , port);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         player = new Player();
-         communicationHandler = new ClientCommunicationHandler();
-
     }
 
     public static BS_Guest_Model getModel() {
@@ -40,21 +53,23 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public Player getPlayer() {
+        communicationHandler.outMessages("addPlayer:"+player.get_name());
         return player;
     }
 
     @Override
-    public void passTurn(int id) {
+    public String passTurn(int id) {
         communicationHandler.outMessages("passTurn:"+id);
+        return null;
     }
 
-    @Override
-    public void tryPlaceWord() {
-        communicationHandler.outMessages("tryPlaceWord");
+    public void tryPlaceWord(String word, int x, int y, boolean isHorizontal) {
+        //concatenate the word with the x and y and isHorizontal
+        String message = word + ":" + x + ":" + y + ":" + isHorizontal;
+        communicationHandler.outMessages("tryPlaceWord:"+message);
     }
 
 
-    @Override
     public void challengeWord() {
         communicationHandler.outMessages("challengeWord");
 

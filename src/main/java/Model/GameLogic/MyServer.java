@@ -1,10 +1,7 @@
 package Model.GameLogic;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -53,25 +50,34 @@ public class MyServer {
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
                 try {
-//                    ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
-                    ch.handleOut(aClient.getOutputStream());
-                    ch.handleIn(aClient.getInputStream());
+
+                             try {
+                                 ch.handleClient(new ObjectInputStream(aClient.getInputStream()), new ObjectOutputStream(aClient.getOutputStream()));
+                             } catch (IOException e) {
+                                 throw new RuntimeException(e);
+                             }
+
+
+//                    ch.handleOut(aClient.getOutputStream());
+//                    ch.handleIn(aClient.getInputStream());
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    try {
-                        ch.close();
-                        aClient.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             } catch (SocketTimeoutException e) {
                 //wait for another client
             }
+
+        }
+        for (Socket client : clients) {
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         server.close();
     }
+
 
     /**
      * The start function creates a new thread and runs the runServer function in that thread.

@@ -21,10 +21,6 @@ public class HostCommunicationHandler implements ClientHandler {
 
     public HostCommunicationHandler() {
         //methods that can be invoked by the host
-//        invocationMap.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
-        invocationMap.put("tryPlaceWord", () -> BS_Host_Model.getModel().tryPlaceWord());
-        invocationMap.put("challengeWord", () -> BS_Host_Model.getModel().challengeWord());
-
 
         //host messages to guest
         outMessagesMap.put("isFound", "challengeFailed");
@@ -39,53 +35,37 @@ public class HostCommunicationHandler implements ClientHandler {
 
     }
 
-    @Override
-    public void handleIn(InputStream inputStream){
-        handleRequests(inputStream);
-    }
 
-    @Override
-    public void handleOut(OutputStream outputStream) {
-        try {
-            out = new ObjectOutputStream(outputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public String handleRequests(String key) {
+        String[] message = key.split(":");
+        String methodName = message[0];
 
-    }
-
-    public void handleResponses(String s) {
-
-    }
-
-    public void handleRequests(InputStream inputStream) {
-        String key;
-        try {
-            in = new ObjectInputStream(inputStream);
-            Object object = in.readObject();
-            if (object instanceof String) {
-                key = (String) object;
-                String[] message = key.split(":");
-                String methodName = message[0];
+        switch (methodName) {
+            case "passTurn":
                 int player_id = Integer.parseInt(message[1]);
-
-                switch (methodName) {
-                    case "passTurn":
-                         BS_Host_Model.getModel().passTurn(player_id);
-                    case "try":
-
-
+                return BS_Host_Model.getModel().passTurn(player_id);
+            case "addPlayer":
+                Player p = new Player();
+                p.set_name(message[1]);
+                BS_Host_Model.getModel().addPlayer(p);
+            case "tryPlaceWord":
+                String word = message[2];
+                int row = Integer.parseInt(message[3]);
+                int col = Integer.parseInt(message[4]);
+                String direction = message[5];
+                boolean isHorizontal = direction.equals("horizontal");
+                Tile[] tiles = new Tile[word.length()];
+                for (int i = 0; i < word.length(); i++) {
+                    //todo: think about this
                 }
-                if (invocationMap.containsKey(message[1])) {
-                    invocationMap.get(message[1]).run();
-                } else inMessages(key);
-            }
+                Word w = new Word(tiles, row, col, isHorizontal);
+                BS_Host_Model.getModel().tryPlaceWord(w);
 
-
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
         }
-
+        if (invocationMap.containsKey(message[1])) {
+            invocationMap.get(message[1]).run();
+        } else inMessages(key);
+        return methodName;
     }
 
 
@@ -95,6 +75,24 @@ public class HostCommunicationHandler implements ClientHandler {
 
     }
 
+
+    @Override
+    public void handleClient(ObjectInputStream inputStream, ObjectOutputStream outputStream) {
+        String s = null;
+        try {
+            s = (String) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String key = handleRequests(s);
+        try {
+            outputStream.writeObject(key);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
     @Override
     public void close() {

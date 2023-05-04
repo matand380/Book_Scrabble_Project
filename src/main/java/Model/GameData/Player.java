@@ -40,7 +40,7 @@ public class Player implements Serializable, ObjectFactory {
      * The set_name function sets the name of the person.
      *
      *
-     * @param String name Set the name of the contact
+     * @param  name Set the name of the contact
      *
      * @return Nothing
      */
