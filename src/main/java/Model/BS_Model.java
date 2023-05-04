@@ -4,16 +4,17 @@ package Model;
 import Model.GameData.*;
 import Model.GameLogic.*;
 
+import java.io.IOException;
 import java.util.List;
 
 
 public interface BS_Model {
 
     // Methods for setting data in the model
-    void passTurn();
+    void passTurn(int id) throws IOException;
     void tryPlaceWord();
     void challengeWord();
-    void setCurrentPlayerIndex(int index);
+    void setNextPlayerIndex(int index);
     void setGameOver(boolean isGameOver);
 
 

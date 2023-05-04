@@ -4,11 +4,15 @@ package Model.GameLogic;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 public class MyServer {
 
+    public List<Socket> clients;
     private int port;
     private ClientHandler ch;
     private volatile boolean stop;
@@ -16,16 +20,16 @@ public class MyServer {
     /**
      * The MyServer function is a constructor for the MyServer class.
      * It initializes the port and client handler of this server.
-     *<p>
-     * @param  port Define the port number that the server will be listening on
-     * @param  ch Pass the client handler object to the server class
+     * <p>
      *
-     *
+     * @param port Define the port number that the server will be listening on
+     * @param ch   Pass the client handler object to the server class
      */
     public MyServer(int port, ClientHandler ch) {
         this.port = port;
         this.ch = ch;
         this.stop = false;
+        this.clients = new ArrayList<>();
     }
 
     /**
@@ -34,6 +38,7 @@ public class MyServer {
      * Then, it enters an infinite loop that waits for clients to connect,
      * and when they do, it handles them using handleClient().
      * <p>
+     *
      * @throws Exception If an exception occurred
      */
     private void runServer() throws Exception {
@@ -44,10 +49,13 @@ public class MyServer {
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
+                clients.add(aClient);
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
                 try {
-                    ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+//                    ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+                    ch.handleOut(aClient.getOutputStream());
+                    ch.handleIn(aClient.getInputStream());
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -68,7 +76,6 @@ public class MyServer {
     /**
      * The start function creates a new thread and runs the runServer function in that thread.
      * This is done so that the server can continue to accept connections while it is processing requests.
-     *
      */
     public void start() {
         new Thread(() -> {
@@ -82,7 +89,6 @@ public class MyServer {
 
     /**
      * The stop function sets the stop variable to true, which will cause the run function to exit.
-     *
      */
     public void stop() {
         stop = true;
@@ -90,7 +96,6 @@ public class MyServer {
 
     /**
      * The close function stops the thread and closes the socket.
-     *
      */
     public void close() {
         stop();
@@ -131,6 +136,23 @@ public class MyServer {
             throw new RuntimeException(e);
         }
         return ip;
+    }
+
+    public void updateAll(String s) {
+        for (Socket client : clients) {
+            ObjectOutputStream out = null;
+            try {
+                out = new ObjectOutputStream(client.getOutputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                out.writeObject(s);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
     }
 }
 

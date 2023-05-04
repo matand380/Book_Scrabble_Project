@@ -1,14 +1,21 @@
 package Model;
 
 import Model.GameData.*;
+import Model.GameLogic.ClientHandler;
 import Model.GameLogic.DictionaryManager;
 import Model.GameLogic.HostCommunicationHandler;
 import Model.GameLogic.MyServer;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.*;
 
 public class BS_Host_Model extends Observable implements BS_Model {
     private static BS_Host_Model model_instance = null;
+    public ArrayList<Word> currentPlayerWords;
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
     MyServer server;
     Board board;
@@ -16,13 +23,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Player player;
     private DictionaryManager dictionaryManager;
     private List<Player> players;
-
     private int currentPlayerIndex;
-
-
     private int maxScore;
     private boolean isGameOver;
-
 
     private BS_Host_Model() {
         board = Board.getBoard();
@@ -47,6 +50,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return model_instance;
     }
 
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    @Override
+    public void setNextPlayerIndex(int index) {
+        currentPlayerIndex = players.indexOf(currentPlayerIndex + 1) % players.size();
+
+    }
+
     public int getMaxScore() {
         return maxScore;
     }
@@ -56,22 +69,32 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public void passTurn() {
+    public void passTurn(int id) throws IOException {
+        setNextPlayerIndex(id);
+        board.passCounter++;
+        hasChanged();
+        notifyObservers(getCurrentPlayerIndex());// notify host viewModel about current player
+        server.updateAll(String.valueOf(getCurrentPlayerIndex()));
 
     }
+
 
     @Override
     public void tryPlaceWord() {
+        int score = Board.getBoard().tryPlaceWord(new Word()); //change this
+        if (score > 0) {
+            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+            hasChanged();
+            //update viewModel with new score and the currentPlayerWords
+            //to be able to update the viewModel we send the name of the method that was called
 
+        }
+        notifyObservers("try successful");
     }
+
 
     @Override
     public void challengeWord() {
-
-    }
-
-    @Override
-    public void setCurrentPlayerIndex(int index) {
 
     }
 

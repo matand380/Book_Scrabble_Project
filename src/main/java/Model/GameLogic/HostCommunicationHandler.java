@@ -16,13 +16,12 @@ public class HostCommunicationHandler implements ClientHandler {
     Map<String, String> inMessagesMap = new HashMap<>();
 
 
-
     ObjectOutputStream out;
     ObjectInputStream in;
 
     public HostCommunicationHandler() {
         //methods that can be invoked by the host
-        invocationMap.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
+//        invocationMap.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
         invocationMap.put("tryPlaceWord", () -> BS_Host_Model.getModel().tryPlaceWord());
         invocationMap.put("challengeWord", () -> BS_Host_Model.getModel().challengeWord());
 
@@ -41,19 +40,60 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
     @Override
-    public void handleClient(InputStream inputStream, OutputStream outputStream) {
+    public void handleIn(InputStream inputStream){
+        handleRequests(inputStream);
+    }
+
+    @Override
+    public void handleOut(OutputStream outputStream) {
+        try {
+            out = new ObjectOutputStream(outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
+
+    public void handleResponses(String s) {
+
+    }
+
+    public void handleRequests(InputStream inputStream) {
+        String key;
+        try {
+            in = new ObjectInputStream(inputStream);
+            Object object = in.readObject();
+            if (object instanceof String) {
+                key = (String) object;
+                String[] message = key.split(":");
+                String methodName = message[0];
+                int player_id = Integer.parseInt(message[1]);
+
+                switch (methodName) {
+                    case "passTurn":
+                         BS_Host_Model.getModel().passTurn(player_id);
+                    case "try":
+
+
+                }
+                if (invocationMap.containsKey(message[1])) {
+                    invocationMap.get(message[1]).run();
+                } else inMessages(key);
+            }
+
+
+        } catch (ClassNotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     private void inMessages(String key) {
-        // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ","
-        // TODO: 03/05/2023 example: 1,tryPlaceWord, word, x, y, direction
+        // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ":"
+        // TODO: 03/05/2023 example: 1:tryPlaceWord:word:row:col:direction
 
-        if (invocationMap.containsKey(key)) {
-            invocationMap.get(key).run();
-        }
     }
-
 
 
     @Override
@@ -67,17 +107,15 @@ public class HostCommunicationHandler implements ClientHandler {
 
     }
 
-    public void outMessages(String key) {
+    public void outMessages(Object key) {
         if (key != null) {
-            try {
-                out.writeObject(outMessagesMap.get(key));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (key instanceof String) {
+                String message = (String) key;
             }
         }
+
+
     }
-
-
 }
 
 

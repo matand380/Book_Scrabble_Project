@@ -12,17 +12,21 @@ import static java.lang.System.out;
 public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
     Socket socket;
-    Board board;
-    Tile.Bag bag;
-    Player player;
-    ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
+    Board board; //rethink if we need this
+    Tile.Bag bag;//rethink if we need this
+    Player player; // TODO: 04/05/2023 implement player class and send it to the host
 
+    public ClientCommunicationHandler getCommunicationHandler() {
+        return communicationHandler;
+    }
+
+    ClientCommunicationHandler communicationHandler;
     Tile[][] boardTiles;
-
     private BS_Guest_Model() {
-        board = (Board) communicationHandler.getInstance("Board");
-        bag = (Tile.Bag) communicationHandler.getInstance("Bag");
-        player = (Player) communicationHandler.getInstance("Player");
+        socket = new Socket();
+        player = new Player();
+         communicationHandler = new ClientCommunicationHandler();
+
     }
 
     public static BS_Guest_Model getModel() {
@@ -31,9 +35,17 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return model_instance;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     @Override
-    public void passTurn() {
-        communicationHandler.outMessages("passTurn");
+    public void passTurn(int id) {
+        communicationHandler.outMessages("passTurn:"+id);
     }
 
     @Override
@@ -49,12 +61,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public void setCurrentPlayerIndex(int index) {
-
-    }
-
-    @Override
-    public void setGameOver(boolean isGameOver) {
+    public void setNextPlayerIndex(int index) {
 
     }
 
@@ -91,6 +98,11 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     @Override
     public boolean isGameOver() {
         return false;
+    }
+
+    @Override
+    public void setGameOver(boolean isGameOver) {
+
     }
 
     @Override

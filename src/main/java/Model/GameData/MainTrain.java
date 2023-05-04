@@ -1,5 +1,6 @@
 package Model.GameData;
 
+import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
 import Model.BS_Model;
 import  Model.GameData.Tile.Bag;
@@ -127,8 +128,10 @@ public class MainTrain {
 		testBoard(); // 70 points
 		System.out.println("Game Data done");
 		BS_Host_Model host = BS_Host_Model.getModel();
-		Board board = host.getBoardState();
-		System.out.println(formatTiles(board.getTiles()));
+		BS_Guest_Model client = BS_Guest_Model.getModel();
+		client.passTurn(4);
+		client.getCommunicationHandler().inMessages();
+
 	}
 
 	public static String formatTiles(Tile[][] tiles) {

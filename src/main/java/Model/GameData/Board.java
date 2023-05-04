@@ -1,6 +1,8 @@
 package Model.GameData;
 
 
+import Model.BS_Host_Model;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -466,7 +468,6 @@ public class Board implements Serializable, ObjectFactory{
      * @see #getScore(Word)
      */
     public int tryPlaceWord(Word w) {
-        setPassCounter(0);
         int sum = 0;
         if (!dictionaryLegal(w)) return 0;
         if (!boardLegal(w)) return 0;
@@ -478,6 +479,8 @@ public class Board implements Serializable, ObjectFactory{
         }
         wordCounter += newWord.size();
         placeWord(w);
+        setPassCounter(0);
+        BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;
     }
 

@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-public class BookScrabbleHandler implements ClientHandler {
+public class BookScrabbleHandler  {
 
     PrintWriter out;
     Scanner in;
@@ -27,7 +27,7 @@ public class BookScrabbleHandler implements ClientHandler {
      * @param outToClient outToClient Send the response to the client
 
      */
-    @Override
+
     public void handleClient(InputStream inFromclient, OutputStream outToClient) {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
@@ -56,7 +56,7 @@ public class BookScrabbleHandler implements ClientHandler {
      *
      *
      */
-    @Override
+
     public void close() {
         in.close();
         out.close();
