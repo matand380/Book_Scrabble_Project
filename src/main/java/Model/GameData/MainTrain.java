@@ -7,6 +7,8 @@ import javafx.scene.transform.MatrixType;
 
 import java.text.Format;
 
+import static java.lang.Thread.sleep;
+
 public class MainTrain {
 
 

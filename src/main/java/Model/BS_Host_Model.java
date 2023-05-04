@@ -35,6 +35,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
         Scanner scanner = new Scanner(System.in);
         int port = scanner.nextInt();
         MyServer server = new MyServer(port, communicationHandler);
+        System.out.println("Server local ip: " + server.ip() + "\n" + "Server public ip: " + server.getPublicIp() + "\n" + "Server port: " + port);
+        server.start();
+
 
     }
 

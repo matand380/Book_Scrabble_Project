@@ -39,9 +39,13 @@ public class MyServer {
     private void runServer() throws Exception {
         ServerSocket server = new ServerSocket(port);
         server.setSoTimeout(1000);
+        System.Logger logger = System.getLogger("MyServer");
+        logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
+                logger.log(System.Logger.Level.INFO, "New client connected");
+
                 try {
                     ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
                 } catch (Exception e) {
