@@ -11,8 +11,9 @@ import java.util.Map;
 public class HostCommunicationHandler implements ClientHandler {
 
 
-    Map<String, Runnable> inMessagesMap = new HashMap<>();
+    Map<String, Runnable> invocationMap = new HashMap<>();
     Map<String, String> outMessagesMap = new HashMap<>();
+    Map<String, String> inMessagesMap = new HashMap<>();
 
 
 
@@ -20,16 +21,22 @@ public class HostCommunicationHandler implements ClientHandler {
     ObjectInputStream in;
 
     public HostCommunicationHandler() {
+        //methods that can be invoked by the host
+        invocationMap.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
+        invocationMap.put("tryPlaceWord", () -> BS_Host_Model.getModel().tryPlaceWord());
+        invocationMap.put("challengeWord", () -> BS_Host_Model.getModel().challengeWord());
 
 
-        //host messages from guest to be executed
-        inMessagesMap.put("passTurn", () -> BS_Host_Model.getModel().passTurn());
-        inMessagesMap.put("tryPlaceWord", () -> BS_Host_Model.getModel().tryPlaceWord());
-        inMessagesMap.put("challengeWord", () -> BS_Host_Model.getModel().challengeWord());
         //host messages to guest
         outMessagesMap.put("isFound", "challengeFailed");
         outMessagesMap.put("isNotFound", "challengeSucceeded");
         outMessagesMap.put("isGameOver", "gameOver");
+
+        // TODO: 04/05/2023 the host needs to send the board, bag, and player to the guest
+
+
+        //guest messages to host
+
 
     }
 
@@ -42,8 +49,8 @@ public class HostCommunicationHandler implements ClientHandler {
         // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ","
         // TODO: 03/05/2023 example: 1,tryPlaceWord, word, x, y, direction
 
-        if (inMessagesMap.containsKey(key)) {
-            inMessagesMap.get(key).run();
+        if (invocationMap.containsKey(key)) {
+            invocationMap.get(key).run();
         }
     }
 

@@ -17,6 +17,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Player player;
     ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
 
+    Tile[][] boardTiles;
+
     private BS_Guest_Model() {
         board = (Board) communicationHandler.getInstance("Board");
         bag = (Tile.Bag) communicationHandler.getInstance("Bag");
@@ -94,5 +96,11 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     @Override
     public boolean isConnected() {
         return false;
+    }
+
+    public void setBoard(Tile[][] boardTiles) {
+        this.boardTiles = boardTiles;
+        setChanged();
+        notifyObservers();
     }
 }

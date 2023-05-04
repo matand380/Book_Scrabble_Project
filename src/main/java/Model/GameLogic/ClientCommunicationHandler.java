@@ -16,12 +16,13 @@ public class ClientCommunicationHandler implements ClientHandler {
     public ClientCommunicationHandler(){
         // TODO: 04/05/2023 implement client socket connection
 
-
         creatorMap.put("Board", Board.getBoard());
         creatorMap.put("Bag", Tile.Bag.getBag());
         creatorMap.put("Player", new Player());
         creatorMap.put("Tile", new Tile());
         creatorMap.put("Word", new Word());
+
+        // TODO: 04/05/2023 implement client messages to host - is it only String messages?
 
 
     }
@@ -42,8 +43,10 @@ public class ClientCommunicationHandler implements ClientHandler {
                 inMessages(key);
             } else if (object instanceof Tile[][]) {
                 boardTiles = (Tile[][]) object;
+                BS_Guest_Model.getModel().setBoard(boardTiles);
             } else if (object instanceof Board) {
                 board = (Board) object;
+
             } else if (object instanceof Tile.Bag) {
                 bag = (Tile.Bag) object;
             } else if (object instanceof Player) {
