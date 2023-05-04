@@ -1,15 +1,15 @@
 package Model;
 
 import Model.GameData.*;
-import Model.GameLogic.CommunicationHandler;
 import Model.GameLogic.DictionaryManager;
+import Model.GameLogic.HostCommunicationHandler;
 import Model.GameLogic.MyServer;
 
 import java.util.*;
 
 public class BS_Host_Model extends Observable implements BS_Model {
     private static BS_Host_Model model_instance = null;
-    CommunicationHandler communicationHandler = new CommunicationHandler();
+    HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
     MyServer server;
     Board board;
     Tile.Bag bag;
@@ -29,6 +29,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
         dictionaryManager = DictionaryManager.get();
+        // TODO: 04/05/2023 add in the view the option to choose the port number
+        //ask the host for port number
+        System.out.println("Enter port number: ");
+        Scanner scanner = new Scanner(System.in);
+        int port = scanner.nextInt();
+        MyServer server = new MyServer(port, communicationHandler);
 
     }
 
@@ -93,7 +99,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public boolean isHost() {
-        return false;
+        return true;
     }
 
     @Override

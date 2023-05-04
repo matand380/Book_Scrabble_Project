@@ -1,27 +1,34 @@
 package Model;
 
 import Model.GameData.*;
-import Model.GameLogic.CommunicationHandler;
+import Model.GameLogic.ClientCommunicationHandler;
 
+import java.net.Socket;
 import java.util.List;
 import java.util.Observable;
 
 import static java.lang.System.out;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
-
+    private static BS_Guest_Model model_instance = null;
+    Socket socket;
     Board board;
     Tile.Bag bag;
     Player player;
+    ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
 
-
-    CommunicationHandler communicationHandler = new CommunicationHandler();
-
-    BS_Guest_Model() {
+    private BS_Guest_Model() {
         board = (Board) communicationHandler.getInstance("Board");
         bag = (Tile.Bag) communicationHandler.getInstance("Bag");
         player = (Player) communicationHandler.getInstance("Player");
     }
+
+    public static BS_Guest_Model getModel() {
+        if (model_instance == null)
+            return model_instance = new BS_Guest_Model();
+        return model_instance;
+    }
+
     @Override
     public void passTurn() {
         communicationHandler.outMessages("passTurn");
