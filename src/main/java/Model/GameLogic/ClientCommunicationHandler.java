@@ -90,6 +90,12 @@ public class ClientCommunicationHandler implements ClientHandler {
 
     @Override
     public void close() {
+        try {
+            in.close();
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
