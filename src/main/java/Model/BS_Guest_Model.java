@@ -71,7 +71,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
 
     public void challengeWord() {
-        communicationHandler.outMessages("challengeWord");
+        String id = String.valueOf(player.get_id());
+        communicationHandler.outMessages("challengeWord:" + id + "0");
 
     }
 

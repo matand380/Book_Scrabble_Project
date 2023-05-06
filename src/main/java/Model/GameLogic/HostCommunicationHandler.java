@@ -4,7 +4,9 @@ import Model.BS_Host_Model;
 import Model.GameData.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -63,6 +65,8 @@ public class HostCommunicationHandler implements ClientHandler {
                 }
                 Word w = new Word(tiles, row, col, direction);
                 BS_Host_Model.getModel().tryPlaceWord(w);
+
+
 
         }
         return methodName;
