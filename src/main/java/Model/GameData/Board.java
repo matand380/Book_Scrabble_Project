@@ -478,7 +478,7 @@ public class Board implements Serializable, ObjectFactory{
             } else return 0;
         }
         wordCounter += newWord.size();
-        placeWord(w);
+        placeWord(w); // FIXME: 07/05/2023 put in independent method in board, should be activate after no one challenged
         setPassCounter(0);
         BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;

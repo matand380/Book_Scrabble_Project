@@ -21,7 +21,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     private BS_Host_Model() {
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
-        players = new ArrayList<>();
+        players = new ArrayList<>(); // TODO: 06/05/2023 after all players are added sent the order as indices to the players
         dictionaryManager = DictionaryManager.get();
         // TODO: 04/05/2023 add in the view the option to choose the port number
         //ask the host for port number
@@ -71,10 +71,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
     @Override
     public void setNextPlayerIndex(int index) {
         currentPlayerIndex = (index + 1) % players.size();
+        // TODO: 06/05/2023 send to all clients "nextPlayerIndex:"+getCurrentPlayerIndex());
+
     }
 
     public int getMaxScore() {
-        //
         int max = 0;
         for (Player p : players) {
             if (p.get_score() > max)
@@ -92,7 +93,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
         setNextPlayerIndex(currentPlayerIndex);
         board.passCounter++;
         hasChanged();
-        notifyObservers(getCurrentPlayerIndex());// notify host viewModel about current player
+        notifyObservers("passTurn:"+getCurrentPlayerIndex());// notify host viewModel about current player
+        // TODO: 06/05/2023 send to all clients "passTurn:"+getCurrentPlayerIndex());
 //        server.updateAll(String.valueOf(getCurrentPlayerIndex()));
         return String.valueOf(getCurrentPlayerIndex());
 
@@ -103,23 +105,37 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void tryPlaceWord(Word word) {
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
+            // TODO: 06/05/2023 challenge pop up if someone press challange activate challengeWord method
+            // TODO: 06/05/2023 if challenge is true fine the challenger, if false give challenger bonus;
+            // TODO: 07/05/2023 "challengeWord:"+id+":"+score(after fine or bonus)
+            //hasChanged();
+            //notifyObservers("challengeWord:"+id+":"+score);
+            //after challenge is done pass turn anyway
+            //hasChanged();
+            //notifyObservers("passTurn:"+getCurrentPlayerIndex());// notify host viewModel about current player
+
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+
             hasChanged();
-            System.out.println("try successful");
-            notifyObservers("try successful");
+            System.out.println("tryPlaceWord:"+currentPlayerIndex+":"+score);
+            notifyObservers("tryPlaceWord:"+currentPlayerIndex+":"+score);
+            // TODO: 06/05/2023 send this message to all clients
             //update viewModel with new score and the currentPlayerWords
             //to be able to update the viewModel we send the name of the method that was called
 
 
+
         } else {
             hasChanged();
-            notifyObservers("try failed");
+            notifyObservers("tryPlaceWord:"+currentPlayerIndex+":"+"0");
+            // TODO: 06/05/2023 send this message to all clients
         }
     }
 
 
     public void challengeWord(Word word) {
-
+        // TODO: 06/05/2023 activate the challenge word method in the board
+        // need to change challane in dictionary manager.
 
     }
 
