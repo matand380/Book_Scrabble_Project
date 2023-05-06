@@ -50,19 +50,22 @@ public class ClientCommunicationHandler {
         }
         String[] keyArray = key.split(":");
         String id = keyArray[1];
-        switch (keyArray[0]){
+        switch (keyArray[0]) {
             case "tryPlaceWord":
                 String score = keyArray[2];
-                if(score.equals("0")){
-                    if(Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id){
+                if (score.equals("0")) {
+                    if (Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id) {
                         BS_Guest_Model.getModel().hasChanged();
                         BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + id + ":" + "0");
                     }
-                }
-                else{
+                } else {
                     BS_Guest_Model.getModel().setPlayersScores(id, score);
                 }
             case "challenge":
+
+            case "passTurn":
+                BS_Guest_Model.getModel().hasChanged();
+                BS_Guest_Model.getModel().notifyObservers("passTurn:" + id);
 
 
         }
