@@ -42,13 +42,30 @@ public class ClientCommunicationHandler {
 
 
     public void inMessages() {
-        String id;
+        String key;
         try {
-            id = (String) in.readObject();
+            key = (String) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(id);
+        String[] keyArray = key.split(":");
+        String id = keyArray[1];
+        switch (keyArray[0]){
+            case "tryPlaceWord":
+                String score = keyArray[2];
+                if(score.equals("0")){
+                    if(Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id){
+                        BS_Guest_Model.getModel().hasChanged();
+                        BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + id + ":" + "0");
+                    }
+                }
+                else{
+                    BS_Guest_Model.getModel().setPlayersScores(id, score);
+                }
+            case "challenge":
+
+
+        }
         // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ","
         // TODO: 03/05/2023 example: 1,tryPlaceWord, word, x, y, direction
 

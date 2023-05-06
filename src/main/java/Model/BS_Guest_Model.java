@@ -5,6 +5,7 @@ import Model.GameLogic.ClientCommunicationHandler;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
     Socket socket;
+    String[] playersScores;
     Board board; //rethink if we need this
     Tile.Bag bag;//rethink if we need this
 
@@ -40,6 +42,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
             throw new RuntimeException(e);
         }
         player = new Player();
+        playersScores = new String[0];
     }
 
     public static BS_Guest_Model getModel() {
@@ -130,5 +133,11 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         this.boardTiles = boardTiles;
         setChanged();
         notifyObservers();
+    }
+
+    public void setPlayersScores(String id, String score) {
+        playersScores[Integer.parseInt(id)] += score;
+        setChanged();
+        notifyObservers("tryPlaceWord:" + id + ":" + score);
     }
 }
