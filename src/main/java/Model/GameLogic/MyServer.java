@@ -50,13 +50,12 @@ public class MyServer {
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
                 try {
-                             try {
-                                 ch.handleClient(new ObjectInputStream(aClient.getInputStream()), new ObjectOutputStream(aClient.getOutputStream()));
-                                 // TODO: 05/05/2023 implement it in thread
-                             } catch (IOException e) {
-                                 throw new RuntimeException(e);
-                             }
-
+                        try {
+                            ch.handleClient(new ObjectInputStream(aClient.getInputStream()), new ObjectOutputStream(aClient.getOutputStream()));
+                            // TODO: 05/05/2023 implement it in thread
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
 //                    ch.handleOut(aClient.getOutputStream());
 //                    ch.handleIn(aClient.getInputStream());

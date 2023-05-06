@@ -131,6 +131,8 @@ public class MainTrain {
 		BS_Guest_Model client = BS_Guest_Model.getModel();
 		client.setPlayerProperties("matan");
 		client.getCommunicationHandler().setCom();
+		client.tryPlaceWord("HORN",7,5,false);
+		client.getCommunicationHandler().inMessages();
 		client.passTurn(4);
 		client.getCommunicationHandler().inMessages();
 

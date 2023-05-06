@@ -63,10 +63,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return null;
     }
 
-    public void tryPlaceWord(String word, int x, int y, boolean isHorizontal) {
-        //concatenate the word with the x and y and isHorizontal
-        String message = word + ":" + x + ":" + y + ":" + isHorizontal;
-        communicationHandler.outMessages("tryPlaceWord:"+message);
+    public void tryPlaceWord(String word, int x, int y, boolean isVertical){
+        String message = word + ":" + x + ":" + y + ":" + isVertical;
+        String id = String.valueOf(player.get_id());
+        communicationHandler.outMessages("tryPlaceWord:"+id+":"+message);
     }
 
 

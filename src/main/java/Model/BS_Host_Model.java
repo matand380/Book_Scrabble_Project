@@ -8,26 +8,16 @@ import java.util.*;
 public class BS_Host_Model extends Observable implements BS_Model {
     private static BS_Host_Model model_instance = null;
     public ArrayList<Word> currentPlayerWords;
+    public int currentPlayerIndex = 0;
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
     MyServer server;
     Board board;
     Tile.Bag bag;
     Player player;
     private DictionaryManager dictionaryManager;
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void addPlayer(Player p) {
-        this.players.add(p);
-    }
-
     private List<Player> players;
-    public int currentPlayerIndex =0;
     private int maxScore;
     private boolean isGameOver;
-
     private BS_Host_Model() {
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
@@ -43,6 +33,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
         server.start();
         Player player1 = new Player();
         player1.set_name("player1");
+        List<Tile> hand = new ArrayList<>();
+        Tile h = bag.getTile('H');
+        Tile o = bag.getTile('O');
+        Tile r = bag.getTile('R');
+        Tile n = bag.getTile('N');
+        hand.add(h);
+        hand.add(o);
+        hand.add(r);
+        hand.add(n);
+        player1.get_hand().addAll(hand);
         Player player2 = new Player();
         player2.set_name("player2");
         players.add(player1);
@@ -57,13 +57,21 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return model_instance;
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void addPlayer(Player p) {
+        this.players.add(p);
+    }
+
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
     }
 
     @Override
     public void setNextPlayerIndex(int index) {
-        currentPlayerIndex = (index+1)%players.size();
+        currentPlayerIndex = (index + 1) % players.size();
 
     }
 
@@ -88,15 +96,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
 
-
     public void tryPlaceWord(Word word) {
-        int score = Board.getBoard().tryPlaceWord(word); //change this
+        int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
             hasChanged();
+            System.out.println("try successful");
             notifyObservers("try successful");
             //update viewModel with new score and the currentPlayerWords
             //to be able to update the viewModel we send the name of the method that was called
+
 
         } else {
             hasChanged();

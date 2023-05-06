@@ -48,23 +48,23 @@ public class HostCommunicationHandler implements ClientHandler {
                 Player p = new Player();
                 p.set_name(message[1]);
                 BS_Host_Model.getModel().addPlayer(p);
+                // TODO: 06/05/2023 un finished method
             case "tryPlaceWord":
+                String id = message[1];
                 String word = message[2];
                 int row = Integer.parseInt(message[3]);
                 int col = Integer.parseInt(message[4]);
-                String direction = message[5];
-                boolean isHorizontal = direction.equals("horizontal");
+                boolean direction = message[5].equals("isVertical");
+                char[] buildWord = word.toCharArray();
+                Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_id() == Integer.parseInt(id)).findFirst().get();
                 Tile[] tiles = new Tile[word.length()];
                 for (int i = 0; i < word.length(); i++) {
-                    //todo: think about this
+                    tiles[i] = current.charToTile(buildWord[i]);
                 }
-                Word w = new Word(tiles, row, col, isHorizontal);
+                Word w = new Word(tiles, row, col, direction);
                 BS_Host_Model.getModel().tryPlaceWord(w);
 
         }
-        if (invocationMap.containsKey(message[1])) {
-            invocationMap.get(message[1]).run();
-        } else inMessages(key);
         return methodName;
     }
 
