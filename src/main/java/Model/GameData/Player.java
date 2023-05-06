@@ -123,5 +123,6 @@ public class Player implements Serializable, ObjectFactory {
      */
     public boolean isRackEmpty(){
         return Tile.Bag.getBag().size() == 0 && _hand.isEmpty();
+
     }
 }
