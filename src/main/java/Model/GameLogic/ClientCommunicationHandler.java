@@ -48,7 +48,7 @@ public class ClientCommunicationHandler {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(id); //hear me?
+        System.out.println(id);
         // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ","
         // TODO: 03/05/2023 example: 1,tryPlaceWord, word, x, y, direction
 

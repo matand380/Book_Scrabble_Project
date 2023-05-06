@@ -14,8 +14,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Board board;
     Tile.Bag bag;
     Player player;
-    private final DictionaryManager dictionaryManager;
-    private final List<Player> players;
+    private  DictionaryManager dictionaryManager;
+    private  List<Player> players;
     private boolean isGameOver;
 
     private BS_Host_Model() {
@@ -74,6 +74,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     public int getMaxScore() {
+        //
         int max = 0;
         for (Player p : players) {
             if (p.get_score() > max)
