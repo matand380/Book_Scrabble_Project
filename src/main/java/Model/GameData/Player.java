@@ -116,4 +116,13 @@ public class Player implements Serializable, ObjectFactory {
     public Player create() {
         return new Player();
     }
+    /**
+     * The isRackEmpty function is used to check if the player's rack is empty and the bag is empty
+     * as well.
+     * @return True if the player's rack is empty, false otherwise
+     */
+    public boolean isRackEmpty(){
+        return Tile.Bag.getBag().size() == 0 && _hand.isEmpty();
+
+    }
 }

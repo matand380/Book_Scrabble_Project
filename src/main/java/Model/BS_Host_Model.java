@@ -14,10 +14,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Board board;
     Tile.Bag bag;
     Player player;
-    private DictionaryManager dictionaryManager;
-    private List<Player> players;
-    private int maxScore;
+    private final DictionaryManager dictionaryManager;
+    private final List<Player> players;
     private boolean isGameOver;
+
     private BS_Host_Model() {
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
@@ -52,8 +52,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     public static BS_Host_Model getModel() {
-        if (model_instance == null)
-            return model_instance = new BS_Host_Model();
+        if (model_instance == null) return model_instance = new BS_Host_Model();
         return model_instance;
     }
 
@@ -72,11 +71,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
     @Override
     public void setNextPlayerIndex(int index) {
         currentPlayerIndex = (index + 1) % players.size();
-
     }
 
     public int getMaxScore() {
-        return maxScore;
+        int max = 0;
+        for (Player p : players) {
+            if (p.get_score() > max)
+                max = p.get_score();
+        }
+        return max;
     }
 
     public void startNewGame() {
@@ -131,12 +134,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public Board getBoardState() {
-        return board.getBoard();
+        return Board.getBoard();
     }
 
     @Override
     public int[] getBagState() {
-        return bag.getBag()._quantitiesCounter;
+        return Tile.Bag.getBag()._quantitiesCounter;
     }
 
     @Override
