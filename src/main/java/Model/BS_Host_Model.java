@@ -85,9 +85,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return max;
     }
 
+    /**
+     * The startNewGame function is used to reset the game.
+     * It returns all of the tiles from each player's tileLottery back into the bag,
+     * and then completes each player's hand to 7 tiles.
+     */
     public void startNewGame() {
         //return all the tiles to the bag
         players.forEach(p -> bag.put(p.getTileLottery()));
+        players.forEach(p -> p.completeTilesTo7());
     }
 
     @Override
