@@ -102,6 +102,31 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
 
+    /**
+     * The tryPlaceWord function is used to try and place a word on the board.
+     * If the word can be placed, it will return true and add the score of that player.
+     * Otherwise, it will return false and not change anything.
+
+     *
+     * @param Word word Get the word that was placed on the board
+
+     *
+     * @return The score of the word if it was placed successfully
+     *
+     * @docauthor Trelent
+     */
+    /**
+     * The tryPlaceWord function is used to try and place a word on the board.
+     * If the word can be placed, it will return true and add the score of that player.
+     * Otherwise, it will return false and not change anything.
+
+     *
+     * @param Word word Pass the word that is being placed on the board
+     *
+     * @return The score of the word (if it is valid)
+     *
+     * @docauthor Trelent
+     */
     public void tryPlaceWord(Word word) {
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {

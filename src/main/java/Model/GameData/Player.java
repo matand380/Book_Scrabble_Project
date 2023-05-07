@@ -100,9 +100,9 @@ public class Player implements Serializable, ObjectFactory {
      *
      * @return The score of the tile that was randomly chosen from the bag
      */
-    public int getTileLottery() {
+    public Tile getTileLottery() {
         tileLottery = Tile.Bag.getBag().getRand();
-        return tileLottery.getScore();
+        return tileLottery;
     }
 
     /**
