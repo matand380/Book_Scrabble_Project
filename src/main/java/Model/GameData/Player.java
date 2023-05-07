@@ -91,16 +91,23 @@ public class Player implements Serializable, ObjectFactory {
         return _id;
     }
 
+    /**
+     * The set_id function sets the value of the _id variable.
+     * @param int _id Set the id of a particular row in the database
+     * @return A void, which means that it does not return anything
+     */
     public void set_id(int _id) {
         this._id = _id;
     }
 
+
     /**
      * The getTileLottery function is used to get a random tile from the bag.
      *
-     * @return The score of the tile that was randomly chosen from the bag
+     * @return A tile from the bag
      */
     public Tile getTileLottery() {
+
         tileLottery = Tile.Bag.getBag().getRand();
         return tileLottery;
     }
