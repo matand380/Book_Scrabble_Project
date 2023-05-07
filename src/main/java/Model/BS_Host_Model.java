@@ -4,6 +4,7 @@ import Model.GameData.*;
 import Model.GameLogic.*;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class BS_Host_Model extends Observable implements BS_Model {
     private static BS_Host_Model model_instance = null;
@@ -164,6 +165,17 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
+    /**
+     * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
+     * and then sets each player's ID to be equal to their index in the list.
+     * @return Void
+     */
+    public void sortAndSetID() {
+        players.sort((Comparator<? super Player>) player.getTileLottery());
+        IntStream.rangeClosed(0, players.size()).forEach(i -> players.set(i, player.set_id(i)));
+    }
+
+
     @Override
     public int getCurrentPlayerScore() {
         return 0;
@@ -208,6 +220,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public boolean isConnected() {
         return false;
     }
+
 
 
 }
