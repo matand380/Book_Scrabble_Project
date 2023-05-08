@@ -216,7 +216,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public boolean isGameOver() {
-        if(board.passCounter==4)
+        if(board.passCounter==getPlayers().size()) //all the players pass turns
             isGameOver=true;
         if(Tile.Bag.getBag().size()==0)
             for(Player p:players)
