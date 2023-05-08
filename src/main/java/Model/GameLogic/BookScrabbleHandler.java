@@ -32,7 +32,7 @@ public class BookScrabbleHandler  {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
         String line = in.nextLine();
-        String[] books = line.substring(1).split(":");
+        String[] books = line.substring(1).split(":"); // change from , to :
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.get().query(books)) {
                 out.println("true\n");
