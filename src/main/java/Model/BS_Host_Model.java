@@ -20,6 +20,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     private boolean isGameOver;
 
     private BS_Host_Model() {
+        setGameOver(false);
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
         players = new ArrayList<>(); // TODO: 06/05/2023 after all players are added sent the order as indices to the players
@@ -228,7 +229,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public void setGameOver(boolean isGameOver) {
-
+        this.isGameOver=isGameOver;
     }
 
     @Override
