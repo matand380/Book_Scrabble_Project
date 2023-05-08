@@ -65,7 +65,8 @@ public class HostCommunicationHandler implements ClientHandler {
                 }
                 Word w = new Word(tiles, row, col, direction);
                 BS_Host_Model.getModel().tryPlaceWord(w);
-
+            case "challengeWord":
+                //get from guest challengeWord:id:word (word is the word that the player wants to challenge)
 
 
         }

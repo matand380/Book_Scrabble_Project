@@ -149,7 +149,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * Otherwise, it will return false and not change anything.
 
      *
-     * @param Word word Pass the word that is being placed on the board
+     * @param  word Pass the word that is being placed on the board
      *
      * @return The score of the word (if it is valid)
      *
@@ -188,7 +188,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public void challengeWord(Word word) {
         // TODO: 06/05/2023 activate the challenge word method in the board
-        // need to change challane in dictionary manager.
+        // need to change challenge in dictionary manager.
 
     }
 

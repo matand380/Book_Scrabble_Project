@@ -76,7 +76,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public void challengeWord() {
         String id = String.valueOf(player.get_id());
         communicationHandler.outMessages("challengeWord:" + id + "0");
-
+        //send challengeWord:id:word (word is the word that the player wants to challenge)
     }
 
     @Override
@@ -118,6 +118,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public boolean isGameOver() {
         communicationHandler.outMessages("isGameOver:");
         // TODO get the answer from the server and return it
+        return false;
     }
 
     @Override

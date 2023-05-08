@@ -124,4 +124,17 @@ public class Word implements Serializable, ObjectFactory {
     public Object create() {
         return new Word(new Tile[0], 0, 0, false);
     }
+
+    public String toMessage(Word w){
+        StringBuilder sb = new StringBuilder();
+        for(Tile tile : w.tiles){
+            if(tile == null){
+                sb.append("_");
+                continue;
+            }
+            sb.append(tile.toString());
+        }
+        sb.append(":").append(w.row).append(":").append(w.col).append(":").append(w.vertical);
+        return sb.toString();
+    }
 }
