@@ -116,12 +116,13 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     @Override
     public boolean isGameOver() {
-        return false;
+        communicationHandler.outMessages("isGameOver:");
+        // TODO get the answer from the server and return it
     }
 
     @Override
     public void setGameOver(boolean isGameOver) {
-
+        communicationHandler.outMessages("setGameOver:"+isGameOver);
     }
 
     @Override
