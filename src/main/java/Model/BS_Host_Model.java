@@ -110,6 +110,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
 
     public void startNewGame() {
+        sortAndSetID();
         //return all the tiles to the bag
         players.forEach(p -> bag.put(p.getTileLottery()));
         players.forEach(p -> p.completeTilesTo7());
