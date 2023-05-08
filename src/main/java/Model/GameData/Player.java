@@ -94,7 +94,7 @@ public class Player implements Serializable, ObjectFactory {
     /**
      * The set_id function sets the value of the _id variable.
      *
-     * @param int _id Set the id of a particular row in the database
+     * @param _id Set the id of a particular row in the database
      * @return A void, which means that it does not return anything
      */
     public Player set_id(int _id) {

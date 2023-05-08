@@ -53,10 +53,27 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
-    public static BS_Host_Model getModel() {
-        if (model_instance == null) return model_instance = new BS_Host_Model();
-        return model_instance;
+
+    /**
+     * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
+     * If no instance exists, it creates one and then returns it.
+     *<p>
+     *
+     *
+     */
+    private static class HostModelHelper{
+        public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
+    public static BS_Host_Model getModel() {
+        return HostModelHelper.model_instance;
+    }
+
+
+//    public static BS_Host_Model getModel() {
+//        if (model_instance == null)
+//            return model_instance = new BS_Host_Model();
+//        return model_instance;
+//    }
 
     public List<Player> getPlayers() {
         return players;
@@ -91,6 +108,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * It returns all of the tiles from each player's tileLottery back into the bag,
      * and then completes each player's hand to 7 tiles.
      */
+
     public void startNewGame() {
         //return all the tiles to the bag
         players.forEach(p -> bag.put(p.getTileLottery()));
