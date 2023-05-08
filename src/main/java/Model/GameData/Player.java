@@ -24,6 +24,7 @@ public class Player implements Serializable, ObjectFactory {
         this._name = "Default";
         this._score = 0;
         this._hand = new ArrayList<>();
+        this.tileLottery = Tile.Bag.getBag().getRand();;
     }
 
     /**
@@ -110,7 +111,6 @@ public class Player implements Serializable, ObjectFactory {
      */
     public Tile getTileLottery() {
 
-        tileLottery = Tile.Bag.getBag().getRand();
         return tileLottery;
     }
 
