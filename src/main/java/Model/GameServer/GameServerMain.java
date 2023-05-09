@@ -6,6 +6,7 @@ public class GameServerMain {
         ClientHandler clientHandler = new BookScrabbleHandler();
         MyServer gameServer = new MyServer(8080, clientHandler);
         DictionaryManager dictionaryManager = DictionaryManager.get();
+
         gameServer.start();
 
     }
