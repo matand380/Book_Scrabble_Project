@@ -1,4 +1,4 @@
-package Model.GameServer;
+package Model.GameLogic;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

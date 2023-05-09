@@ -1,4 +1,4 @@
-package Model.GameServer;
+package Model.GameLogic;
 
 public interface CacheReplacementPolicy{
 	void add(String word);

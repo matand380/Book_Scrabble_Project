@@ -1,4 +1,4 @@
-package Model.GameServer;
+package Model.GameLogic;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;

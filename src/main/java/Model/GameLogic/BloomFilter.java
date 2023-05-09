@@ -1,4 +1,4 @@
-package Model.GameServer;
+package Model.GameLogic;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

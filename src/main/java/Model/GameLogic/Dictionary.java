@@ -1,4 +1,4 @@
-package Model.GameServer;
+package Model.GameLogic;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
