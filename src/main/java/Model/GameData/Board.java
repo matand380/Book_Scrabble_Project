@@ -242,7 +242,8 @@ public class Board implements Serializable, ObjectFactory{
 
     private boolean dictionaryLegal(Word w) {
         String stringWord = w.toMessage();
-        //BS_Host_Model.getModel().outMessages// (String)(Q:StringWord)
+        //BS_Host_Model.getModel().outMessages("Q:stringWord");
+
         return true;
     }
 
