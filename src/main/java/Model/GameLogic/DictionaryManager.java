@@ -46,7 +46,8 @@ public class DictionaryManager {
      * @return True, if the word is found in any of the books, otherwise it returns false
      *
      */
-    public boolean query(String... books) {
+    public boolean query(String... books) { //String word
+        //upload the books to the dictionary
         String word = books[books.length - 1];
         for (int i = 0; i < books.length - 1; i++) {
             if (!dictionaryMap.containsKey(books[i])) {

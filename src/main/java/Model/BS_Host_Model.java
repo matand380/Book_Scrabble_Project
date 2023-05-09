@@ -81,11 +81,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
 
-//    public static BS_Host_Model getModel() {
-//        if (model_instance == null)
-//            return model_instance = new BS_Host_Model();
-//        return model_instance;
-//    }
+    //    public static BS_Host_Model getModel() {
+    //        if (model_instance == null)
+    //            return model_instance = new BS_Host_Model();
+    //        return model_instance;
+    //    }
 
     public List<Player> getPlayers() {
         return players;
@@ -117,7 +117,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The startNewGame function is used to reset the game.
-     * It returns all of the tiles from each player's tileLottery back into the bag,
+     * It returns all the tiles from each player's tileLottery back into the bag,
      * and then completes each player's hand to 7 tiles.
      */
 
@@ -125,7 +125,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         sortAndSetID();
         //return all the tiles to the bag
         players.forEach(p -> bag.put(p.getTileLottery()));
-        players.forEach(p -> p.completeTilesTo7());
+        players.forEach(Player::completeTilesTo7);
     }
 
     @Override
@@ -153,7 +153,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
      *
      * @return The score of the word if it was placed successfully
      *
-     * @docauthor Trelent
      */
     /**
      * The tryPlaceWord function is used to try and place a word on the board.
@@ -165,12 +164,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
      *
      * @return The score of the word (if it is valid)
      *
-     * @docauthor Trelent
      */
     public void tryPlaceWord(Word word) {
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
-            // TODO: 06/05/2023 challenge pop up if someone press challange activate challengeWord method
+            // TODO: 06/05/2023 challenge pop up if someone press challenge activate challengeWord method
             // TODO: 06/05/2023 if challenge is true fine the challenger, if false give challenger bonus;
             // TODO: 07/05/2023 "challengeWord:"+id+":"+score(after fine or bonus)
             //hasChanged();
@@ -207,7 +205,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     /**
      * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
      * and then sets each player's ID to be equal to their index in the list.
-     * @return Void
+     * return Void
      */
     public void sortAndSetID() {
         players.sort((Comparator<? super Player>) player.getTileLottery());

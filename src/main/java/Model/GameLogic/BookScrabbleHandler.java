@@ -30,7 +30,10 @@ public class BookScrabbleHandler {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
         String line = in.nextLine();
-        String[] books = line.substring(1).split(":"); // change from , to :
+        String[] books = line.substring(1).split(":");
+        // TODO: 09/05/2023 need to load the books name from folder and add them to booksArray
+        // TODO: 09/05/2023 line[0] = Q\C, line[1] = Word books[0-n] = books name
+        // TODO: 09/05/2023 add the word to booksArray
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.get().query(books)) {
                 out.println("true\n");

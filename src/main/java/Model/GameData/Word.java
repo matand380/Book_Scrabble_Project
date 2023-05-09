@@ -125,16 +125,16 @@ public class Word implements Serializable, ObjectFactory {
         return new Word(new Tile[0], 0, 0, false);
     }
 
-    public String toMessage(Word w){
+    public String toMessage(){
         StringBuilder sb = new StringBuilder();
-        for(Tile tile : w.tiles){
+        for(Tile tile : this.tiles){
             if(tile == null){
                 sb.append("_");
                 continue;
             }
             sb.append(tile.toString());
         }
-        sb.append(":").append(w.row).append(":").append(w.col).append(":").append(w.vertical);
+        sb.append(":").append(this.row).append(":").append(this.col).append(":").append(this.vertical);
         return sb.toString();
     }
 }
