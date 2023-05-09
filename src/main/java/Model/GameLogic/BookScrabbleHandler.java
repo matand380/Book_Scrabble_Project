@@ -30,7 +30,9 @@ public class BookScrabbleHandler {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
         String line = in.nextLine();
-        String[] books = line.substring(1).split(":");
+        String word = line.substring(1).split(":")[1];
+        String[] books= null ;
+        books[books.length-1]=word;
         // TODO: 09/05/2023 need to load the books name from folder and add them to booksArray
         // TODO: 09/05/2023 line[0] = Q\C, line[1] = Word books[0-n] = books name
         // TODO: 09/05/2023 add the word to booksArray
