@@ -3,6 +3,8 @@ package Model;
 import Model.GameData.*;
 import Model.GameLogic.*;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -11,7 +13,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public ArrayList<Word> currentPlayerWords;
     public int currentPlayerIndex = 0;
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
-    MyServer server;
+    MyServer communicationServer;
+
+    Socket gameSocket;
     Board board;
     Tile.Bag bag;
     Player player;
@@ -20,19 +24,28 @@ public class BS_Host_Model extends Observable implements BS_Model {
     private boolean isGameOver;
 
     private BS_Host_Model() {
+
+        //Game data initialization
         setGameOver(false);
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
         players = new ArrayList<>(); // TODO: 06/05/2023 after all players are added sent the order as indices to the players
-        dictionaryManager = DictionaryManager.get();
         // TODO: 04/05/2023 add in the view the option to choose the port number
-        //ask the host for port number
-        System.out.println("Enter port number: ");
-        Scanner scanner = new Scanner(System.in);
-        int port = scanner.nextInt();
-        MyServer server = new MyServer(port, communicationHandler);
-        System.out.println("Server local ip: " + server.ip() + "\n" + "Server public ip: " + server.getPublicIp() + "\n" + "Server port: " + port);
-        server.start();
+
+        //Communication initialization
+        try {
+            gameSocket = new Socket("localhost" , 8080);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Enter port number for communication server: ");
+         Scanner scanner = new Scanner(System.in);
+         int port = scanner.nextInt();
+        communicationServer = new MyServer(port, communicationHandler);
+        System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
+        communicationServer.start();
+
+        //only for testing
         Player player1 = new Player();
         player1.set_name("player1");
         List<Tile> hand = new ArrayList<>();
