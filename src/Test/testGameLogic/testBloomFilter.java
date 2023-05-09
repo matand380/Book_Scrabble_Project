@@ -1,7 +1,5 @@
 package testGameLogic;
 
-import Model.GameLogic.BloomFilter;
-
 public class testBloomFilter {
     public static void main(String[] args) {
         testBloomFilter test = new testBloomFilter();

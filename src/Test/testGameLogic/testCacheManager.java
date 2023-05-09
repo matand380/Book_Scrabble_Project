@@ -1,8 +1,5 @@
 package testGameLogic;
 
-import Model.GameLogic.CacheManager;
-import Model.GameLogic.LRU;
-
 public class testCacheManager {
     public static void main(String[] args) {
         testCacheManager t = new testCacheManager();

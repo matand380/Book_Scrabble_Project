@@ -1,7 +1,5 @@
 package testGameLogic;
 
-import Model.GameLogic.Dictionary;
-
 public class testDictionary {
     public static void main(String[] args) {
         testDictionary t = new testDictionary();

@@ -1,8 +1,5 @@
 package testGameLogic;
 
-import Model.GameLogic.CacheReplacementPolicy;
-import Model.GameLogic.LRU;
-
 public class testLRU {
     public static void main(String[] args) {
         testLRU t = new testLRU();

@@ -19,7 +19,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Board board;
     Tile.Bag bag;
     Player player;
-    private  DictionaryManager dictionaryManager;
     private  List<Player> players;
     private boolean isGameOver;
 
