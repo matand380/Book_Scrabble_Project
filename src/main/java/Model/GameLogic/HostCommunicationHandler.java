@@ -82,16 +82,22 @@ public class HostCommunicationHandler implements ClientHandler {
 
 
     @Override
-    public void handleClient(ObjectInputStream inputStream, ObjectOutputStream outputStream) {
+    public void handleClient(InputStream inputStream, OutputStream outputStream) {
+        try {
+            in = new ObjectInputStream(inputStream);
+            out = new ObjectOutputStream(outputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         String s = null;
         try {
-            s = (String) inputStream.readObject();
+            s = (String) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         String key = handleRequests(s);
         try {
-            outputStream.writeObject(key);
+            out.writeObject(key);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -100,7 +106,7 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
     @Override
-    public void close() {
+    public void close() { // FIXME: 09/05/2023 closes the wrong streams
         try {
             in.close();
             out.close();

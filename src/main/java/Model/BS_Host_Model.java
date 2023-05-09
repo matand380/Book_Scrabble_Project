@@ -30,6 +30,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         bag = Tile.Bag.getBag();
         players = new ArrayList<>(); // TODO: 06/05/2023 after all players are added sent the order as indices to the players
         // TODO: 04/05/2023 add in the view the option to choose the port number
+        //TODO: 05/05/2023 change the singleton of guestModel, board, bag, dictionaryManger
 
         //Communication initialization
         try {

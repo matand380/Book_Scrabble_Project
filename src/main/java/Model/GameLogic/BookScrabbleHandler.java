@@ -4,7 +4,7 @@ package Model.GameLogic;
 import java.io.*;
 import java.util.Scanner;
 
-public class BookScrabbleHandler {
+public class BookScrabbleHandler implements ClientHandler {
 
     PrintWriter out;
     Scanner in;
@@ -26,11 +26,13 @@ public class BookScrabbleHandler {
 
      */
 
+    @Override
     public void handleClient(InputStream inFromclient, OutputStream outToClient) {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
         String line = in.nextLine();
         String word = line.substring(1).split(":")[1];
+        System.out.println(word);
         String[] books= null ;
         books[books.length-1]=word;
         // TODO: 09/05/2023 need to load the books name from folder and add them to booksArray
@@ -53,17 +55,8 @@ public class BookScrabbleHandler {
 
     }
 
-    public void handleClient(ObjectInputStream inputStream, ObjectOutputStream outputStream) {
 
-    }
-
-    /**
-     * The close function closes the input and output streams.
-     *<p>
-     *
-     *
-     */
-
+@Override
     public void close() {
         in.close();
         out.close();

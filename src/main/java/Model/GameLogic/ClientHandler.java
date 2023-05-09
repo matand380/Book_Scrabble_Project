@@ -9,6 +9,6 @@ public interface ClientHandler {
 //    void handleIn(InputStream inFromclient);
 //
 //    void handleOut(OutputStream outToClient);
-void handleClient(ObjectInputStream inputStream, ObjectOutputStream outputStream);
+void handleClient(InputStream inputStream, OutputStream outputStream);
     void close();
 }

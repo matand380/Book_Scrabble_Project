@@ -7,7 +7,7 @@ import java.util.List;
 public class testPlayer {
     //test constructor
 public void testConstructor(){
-        Player p = new Player("test");
+        Player p = new Player();
         if(!p.get_name().equals("test") || p.get_score() != 0 || p.get_hand().size() != 0){
             System.out.println("testPlayer.testConstructor: failed");
         }
@@ -27,7 +27,7 @@ public void testConstructor(){
         }
     }
     public void testHandAfterDraw(){
-        Player p = new Player("test");
+        Player p = new Player();
         p.completeTilesTo7();
         List<Tile> hand = p.get_hand();
         p.completeTilesTo7();
@@ -44,7 +44,7 @@ public void testConstructor(){
 
     }
     public void testHandDrawsFromEmptyBag(){
-        Player test = new Player("test");
+        Player test = new Player();
         test.completeTilesTo7();
         while(Tile.Bag.getBag().size()!=0){
             Tile.Bag.getBag().remove();
