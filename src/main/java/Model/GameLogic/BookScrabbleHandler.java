@@ -41,6 +41,7 @@ public class BookScrabbleHandler implements ClientHandler {
         booksList.add(word);
         String[] books = (String[]) booksList.toArray();
 
+
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.getDictionaryManager().query(books)) {
                 out.println("true\n");
