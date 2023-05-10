@@ -95,6 +95,12 @@ public class Board implements Serializable, ObjectFactory{
 
     }
 
+
+
+    private static class BoardHolder {
+        private static final Board board = new Board();
+    }
+
     /**
      * The getBoard function is a static function that returns the single instance of the Board class.
      * If there is no instance, it creates one and then returns it.
@@ -103,11 +109,8 @@ public class Board implements Serializable, ObjectFactory{
      * @return The single instance of the board class
      */
     public static Board getBoard() {
-        if (single_instance == null)
-            return single_instance = new Board();
-        return single_instance;
+        return BoardHolder.board;
     }
-
     /**
      * The getTiles function returns a copy of the mainBoard array.
      * It is used to get the current state of the board.
