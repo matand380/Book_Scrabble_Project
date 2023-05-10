@@ -33,11 +33,14 @@ public class BookScrabbleHandler implements ClientHandler {
         String line = in.nextLine();
         String word = line.substring(1).split(":")[1];
         System.out.println(word);
-        String[] books= null ;
+        //Creating a File object for directory
+        File directoryPath = new File("src/main/resources/books");
+        //List of all files and directories
+        String[] books=directoryPath.list();  ;
         books[books.length-1]=word;
-        // TODO: 09/05/2023 need to load the books name from folder and add them to booksArray
-        // TODO: 09/05/2023 line[0] = Q\C, line[1] = Word books[0-n] = books name
-        // TODO: 09/05/2023 add the word to booksArray
+        // TODO: 09/05/2023 need to load the books name from folder and add them to booksArray -done need to test it
+        // TODO: 09/05/2023 line[0] = Q\C, line[1] = Word books[0-n] = books name -done need to test it
+        // TODO: 09/05/2023 add the word to booksArray - done need to test it
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.get().query(books)) {
                 out.println("true\n");
