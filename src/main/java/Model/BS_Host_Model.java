@@ -5,6 +5,7 @@ import Model.GameLogic.*;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
@@ -14,7 +15,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public int currentPlayerIndex = 0;
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
     MyServer communicationServer;
-
     Socket gameSocket;
     Board board;
     Tile.Bag bag;
@@ -22,19 +22,19 @@ public class BS_Host_Model extends Observable implements BS_Model {
     private List<Player> players;
     private boolean isGameOver;
 
+
     private BS_Host_Model() {
 
         //Game data initialization
         setGameOver(false);
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
-        players = new ArrayList<>(); // TODO: 06/05/2023 after all players are added sent the order as indices to the players
-        // TODO: 04/05/2023 add in the view the option to choose the port number
-        //TODO: 05/05/2023 change the singleton of guestModel, board, bag, dictionaryManger
+        players = new ArrayList<>();
+        Player hostPlayer = new Player();
 
         //Communication initialization
         try {
-            gameSocket = new Socket("localhost", 8080);
+            gameSocket = new Socket("localhost", 5555);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,6 +65,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
         currentPlayerIndex = 0;
 
     }
+
+    public static BS_Host_Model getModel() {
+        return HostModelHelper.model_instance;
+    }
+
     public void openSocket(String ip, int port) {
         if (validateIpPort(ip, port)) {
             try {
@@ -76,6 +81,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             throw new RuntimeException("Invalid ip or port");
         }
     }
+
     private boolean validateIpPort(String ip, int port) {
         // Regular expression for IPv4 address
         String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
@@ -87,19 +93,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         }
         // Validate port number
         return Pattern.matches(portRegex, Integer.toString(port));
-    }
-
-    /**
-     * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
-     * If no instance exists, it creates one and then returns it.
-     * <p>
-     */
-    private static class HostModelHelper {
-        public static final BS_Host_Model model_instance = new BS_Host_Model();
-    }
-
-    public static BS_Host_Model getModel() {
-        return HostModelHelper.model_instance;
     }
 
     public List<Player> getPlayers() {
@@ -139,8 +132,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void startNewGame() {
         sortAndSetID();
         //return all the tiles to the bag
-        players.forEach(p -> bag.put(p.getTileLottery()));
+//        players.forEach(p -> bag.put(p.getTileLottery()));
         players.forEach(Player::completeTilesTo7);
+
     }
 
     @Override
@@ -156,18 +150,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
-
-    /**
-     * The tryPlaceWord function is used to try and place a word on the board.
-     * If the word can be placed, it will return true and add the score of that player.
-     * Otherwise, it will return false and not change anything.
-     *
-     * @param Word word Get the word that was placed on the board
-
-     *
-     * @return The score of the word if it was placed successfully
-     *
-     */
     /**
      * The tryPlaceWord function is used to try and place a word on the board.
      * If the word can be placed, it will return true and add the score of that player.
@@ -206,6 +188,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
 
+    /**
+     * The tryPlaceWord function is used to try and place a word on the board.
+     * If the word can be placed, it will return true and add the score of that player.
+     * Otherwise, it will return false and not change anything.
+     *
+     * @param  word Get the word that was placed on the board
+
+     *
+     * @return The score of the word if it was placed successfully
+     *
+     */
+
     public void challengeWord(Word word) {
         // TODO: 06/05/2023 activate the challenge word method in the board
         // need to change challenge in dictionary manager.
@@ -218,21 +212,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * return Void
      */
     public void sortAndSetID() {
-        players.sort((Comparator<? super Player>) player.getTileLottery());
+        players.sort(Comparator.comparing(Player::getTileLottery));
         IntStream.rangeClosed(0, players.size()).forEach(i -> players.set(i, player.set_id(i)));
         hasChanged();
-        notifyObservers("sortAndSetID"+player.get_id());
+        notifyObservers("sortAndSetID" + player.get_id()); // this is host id
         StringBuilder allPlayers = new StringBuilder();
         for (Player p : players) {
             allPlayers.append(p.get_id()).append(",").append(p.get_name()).append(":");
         }
         String allPlayersString = allPlayers.toString();
 
-        BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetID:"+players.size()+":"+allPlayersString);
+        BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetID:" + players.size() + ":" + allPlayersString);
         //sortAndSetID:"+"id,name:id,name
 
     }
-
 
     @Override
     public int getCurrentPlayerScore() {
@@ -285,6 +278,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
     @Override
     public boolean isConnected() {
         return false;
+    }
+
+    /**
+     * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
+     * If no instance exists, it creates one and then returns it.
+     * <p>
+     */
+    private static class HostModelHelper {
+        public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
 
 

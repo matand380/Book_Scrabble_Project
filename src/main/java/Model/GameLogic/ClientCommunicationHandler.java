@@ -12,23 +12,13 @@ public class ClientCommunicationHandler {
     ObjectInputStream in;
 
     Map<String, ObjectFactory> creatorMap = new HashMap<>();
-    Map<String, Runnable> inMessagesMap = new HashMap<>();
-    Map<String, String> outMessagesMap = new HashMap<>();
 
     public ClientCommunicationHandler() {
-
-        // TODO: 04/05/2023 implement client socket connection
-
         creatorMap.put("Board", Board.getBoard());
         creatorMap.put("Bag", Tile.Bag.getBag());
         creatorMap.put("Player", new Player());
         creatorMap.put("Tile", new Tile());
         creatorMap.put("Word", new Word());
-
-        // TODO: 04/05/2023 implement client messages to host - is it only String messages?
-        inMessagesMap.put("try successful", () -> BS_Guest_Model.getModel().notifyObservers("try successful")); //think about this
-
-
     }
 
     public void setCom() {
@@ -72,19 +62,17 @@ public class ClientCommunicationHandler {
                 BS_Guest_Model.getModel().playersScores = new String[size];
                 for (int i = 0; i < size; i++) {
                     String[] player = players[i + 2].split(",");
-                    if(player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())){
+                    if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
                         BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
+                        BS_Guest_Model.getModel().hasChanged();
+                        BS_Guest_Model.getModel().notifyObservers("sortAndSetID:" + BS_Guest_Model.getModel().getPlayer().get_id());
+
                     }
                 }
             case "setNextPlayer":
 
         }
-        // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ","
-        // TODO: 03/05/2023 example: 1,tryPlaceWord, word, x, y, direction
 
-//        if (inMessagesMap.containsKey(key)) {
-//            inMessagesMap.get(key).run();
-//        }
     }
 
     public void outMessages(String key) {

@@ -1,6 +1,7 @@
 package Model.GameData;
 
 import java.io.Serializable;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +12,7 @@ public class Player implements Serializable, ObjectFactory {
     int _score;
     List<Tile> _hand;
     String tileLottery;
+
 
     /**
      * The Player function is a constructor for the Player class.
@@ -25,7 +27,6 @@ public class Player implements Serializable, ObjectFactory {
         this._name = "Default";
         this._score = 0;
         this._hand = new ArrayList<>();
-        this.tileLottery = "";
     }
 
     /**
@@ -144,5 +145,12 @@ public class Player implements Serializable, ObjectFactory {
         }
         return null;
 
+    }
+
+    public void setTileLottery() {
+        Random rand = new Random();
+        int value = rand.nextInt(26)+'A';
+        char c = (char) value;
+        tileLottery = String.valueOf(c);
     }
 }

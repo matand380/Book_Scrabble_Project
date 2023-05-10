@@ -13,28 +13,10 @@ import java.util.regex.Pattern;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
-    Socket socket;
     public String[] playersScores;
+    Socket socket;
     Tile[][] tileBoard;
-
-    private static class BS_Guest_ModelHolder {
-        private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
-    }
-
-    public static BS_Guest_Model getModel() {
-        return BS_Guest_ModelHolder.BSGuestModelInstance;
-    }
-
-    public void setPlayerProperties(String name) {
-        this.player.set_name(name);
-    }
-
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
-
-    public ClientCommunicationHandler getCommunicationHandler() {
-        return communicationHandler;
-    }
-
     ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
     Tile[][] boardTiles = new Tile[15][15]; //should be updated by the host
 
@@ -48,18 +30,34 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         player = new Player();
         playersScores = new String[0];
     }
+
+    public static BS_Guest_Model getModel() {
+        return BS_Guest_ModelHolder.BSGuestModelInstance;
+    }
+
+    public void setPlayerProperties(String name) {
+        this.player.set_name(name);
+    }
+
+    public ClientCommunicationHandler getCommunicationHandler() {
+        return communicationHandler;
+    }
+
     public void openSocket(String ip, int port) { //button start in the view
         if (validateIpPort(ip, port)) {
-            try {
-                socket = new Socket(ip, port);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            communicationHandler.outMessages("addPlayer:" + player.get_name());
+        try {
+            socket = new Socket(ip, port);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        communicationHandler.setCom();
+        communicationHandler.outMessages("addPlayer:" + player.get_name()); // FIXME: 10/05/2023 need to be changed
         } else {
             throw new RuntimeException("Invalid ip or port");
         }
     }
+
     private boolean validateIpPort(String ip, int port) {
         // Regular expression for IPv4 address
         String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
@@ -93,7 +91,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         communicationHandler.outMessages("tryPlaceWord:" + id + ":" + message);
     }
 
-
     public void challengeWord() {
         String id = String.valueOf(player.get_id());
         communicationHandler.outMessages("challengeWord:" + id + "0");
@@ -117,7 +114,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     @Override
     public Board getBoardState() {
-        return board.getBoard();
+        return null;
     }
 
     @Override
@@ -162,5 +159,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         playersScores[Integer.parseInt(id)] += score;
         setChanged();
         notifyObservers("tryPlaceWord:" + id + ":" + score);
+    }
+
+    private static class BS_Guest_ModelHolder {
+        private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
     }
 }

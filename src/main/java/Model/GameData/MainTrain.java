@@ -130,11 +130,12 @@ public class MainTrain {
 		BS_Host_Model host = BS_Host_Model.getModel();
 		BS_Guest_Model client = BS_Guest_Model.getModel();
 		client.setPlayerProperties("matan");
-		client.getCommunicationHandler().setCom();
-		client.tryPlaceWord("HORN",7,5,false);
-		client.getCommunicationHandler().inMessages();
-		client.passTurn(4);
-		client.getCommunicationHandler().inMessages();
+		client.openSocket("localhost", 65533);
+		client.getCommunicationHandler().outMessages("challenge");
+//		client.tryPlaceWord("HORN",7,5,false);
+//		client.getCommunicationHandler().inMessages();
+////		client.passTurn(4);
+//		client.getCommunicationHandler().inMessages();
 
 	}
 

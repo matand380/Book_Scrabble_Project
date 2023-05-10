@@ -1,11 +1,11 @@
 package Model.GameLogic;
 
 
+import Model.BS_Host_Model;
+
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 public class MyServer {
 
@@ -13,6 +13,7 @@ public class MyServer {
     private int port;
     private ClientHandler ch;
     private volatile boolean stop;
+
 
     /**
      * The MyServer function is a constructor for the MyServer class.
@@ -46,19 +47,18 @@ public class MyServer {
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
+                String clientID = UUID.randomUUID().toString();
                 clients.add(aClient);
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
                 try {
-                        try {
-                            ch.handleClient(new ObjectInputStream(aClient.getInputStream()), new ObjectOutputStream(aClient.getOutputStream()));
-                            // TODO: 05/05/2023 implement it in thread
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
+                    try {
+                        ch.handleClient((aClient.getInputStream()), (aClient.getOutputStream()));
+                        // TODO: 05/05/2023 implement it in thread
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
 
-//                    ch.handleOut(aClient.getOutputStream());
-//                    ch.handleIn(aClient.getInputStream());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -76,7 +76,6 @@ public class MyServer {
         }
         server.close();
     }
-
 
     /**
      * The start function creates a new thread and runs the runServer function in that thread.

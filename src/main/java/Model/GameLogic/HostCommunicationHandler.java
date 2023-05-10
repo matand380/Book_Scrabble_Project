@@ -4,23 +4,16 @@ import Model.BS_Host_Model;
 import Model.GameData.*;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.*;
 import java.util.function.Function;
 
 
 public class HostCommunicationHandler implements ClientHandler {
 
 
-    Map<String, Runnable> invocationMap = new HashMap<>();
-    Map<String, String> outMessagesMap = new HashMap<>();
-    Map<String, String> inMessagesMap = new HashMap<>();
-
     Map<String, Function<String[], String>> handlers = new HashMap<>();
-
-
 
     ObjectOutputStream out;
     ObjectInputStream in;
@@ -31,8 +24,8 @@ public class HostCommunicationHandler implements ClientHandler {
         handlers.put("addPlayer", (message) -> {
             Player p = new Player();
             p.set_name(message[1]);
+            p.setTileLottery();
             BS_Host_Model.getModel().addPlayer(p);
-            // TODO: 06/05/2023 un finished method
             return "";
         });
 
@@ -59,16 +52,7 @@ public class HostCommunicationHandler implements ClientHandler {
         });
 
 
-        //host messages to guest
-        outMessagesMap.put("isFound", "challengeFailed");
-        outMessagesMap.put("isNotFound", "challengeSucceeded");
-        outMessagesMap.put("isGameOver", "gameOver");
-
-        // TODO: 04/05/2023 the host needs to send the board, bag, and player to the guest
-
-
         //guest messages to host
-
 
     }
 
@@ -85,7 +69,6 @@ public class HostCommunicationHandler implements ClientHandler {
 //                Player p = new Player();
 //                p.set_name(message[1]);
 //                BS_Host_Model.getModel().addPlayer(p);
-//                // TODO: 06/05/2023 un finished method
 //            case "tryPlaceWord":
 //                String id = message[1];
 //                String word = message[2];
@@ -119,12 +102,6 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
 
-    private void inMessages(String key) {
-        // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ":"
-        // TODO: 03/05/2023 example: 1:tryPlaceWord:word:row:col:direction
-
-    }
-
 
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
@@ -141,6 +118,8 @@ public class HostCommunicationHandler implements ClientHandler {
             throw new RuntimeException(e);
         }
         String key = handleRequests(s);
+        if (key.equals(""))
+            return;
         try {
             out.writeObject(key);
         } catch (IOException e) {
@@ -165,6 +144,7 @@ public class HostCommunicationHandler implements ClientHandler {
         if (key != null) {
             if (key instanceof String) {
                 String message = (String) key;
+
             }
         }
 
