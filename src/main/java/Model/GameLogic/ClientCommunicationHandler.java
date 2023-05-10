@@ -66,6 +66,15 @@ public class ClientCommunicationHandler {
             case "passTurn":
                 BS_Guest_Model.getModel().hasChanged();
                 BS_Guest_Model.getModel().notifyObservers("passTurn:" + id);
+            case "sortAndSetID":
+                String[] players = key.split(":");
+                int size = Integer.parseInt(players[1]);
+                for (int i = 0; i < size; i++) {
+                    String[] player = players[i + 2].split(",");
+                    if(player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())){
+                        BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
+                    }
+                }
 
 
         }
@@ -121,6 +130,5 @@ public class ClientCommunicationHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
