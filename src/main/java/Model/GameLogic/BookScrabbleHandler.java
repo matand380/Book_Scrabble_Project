@@ -2,6 +2,8 @@ package Model.GameLogic;
 
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class BookScrabbleHandler implements ClientHandler {
@@ -36,8 +38,10 @@ public class BookScrabbleHandler implements ClientHandler {
         //Creating a File object for directory
         File directoryPath = new File("src/main/resources/books");
         //List of all files and directories
-        String[] books=directoryPath.list();  ;
-        books[books.length-1]=word;
+        List<String> booksList = Arrays.asList(directoryPath.list());
+        booksList.add(word);
+        String[] books = (String[]) booksList.toArray();
+
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.get().query(books)) {
                 out.println("true\n");
