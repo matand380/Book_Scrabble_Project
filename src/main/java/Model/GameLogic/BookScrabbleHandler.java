@@ -32,7 +32,7 @@ public class BookScrabbleHandler implements ClientHandler {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
         String line = in.nextLine();
-        String word = line.substring(1).split(":")[1];
+        String word = line.split(":")[line.split(":").length - 1];
         System.out.println(word);
         //Creating a File object for directory
         File directoryPath = new File("src/main/resources/books");
