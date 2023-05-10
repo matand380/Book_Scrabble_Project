@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
@@ -46,13 +47,31 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         System.out.println("Please enter the port of the server");
         int port = scanner.nextInt();
         scanner.close();
-        try {
-            socket = new Socket(ip, port);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         player = new Player();
         playersScores = new String[0];
+    }
+    public void openSocket(String ip, int port) {
+        if (validateIpPort(ip, port)) {
+            try {
+                socket = new Socket(ip, port);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("Invalid ip or port");
+        }
+    }
+    private boolean validateIpPort(String ip, int port) {
+        // Regular expression for IPv4 address
+        String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
+        // Regular expression for port number (1-65535)
+        String portRegex = "^([1-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$";
+        // Validate IP address
+        if (!Pattern.matches(ipv4Regex, ip)) {
+            return false;
+        }
+        // Validate port number
+        return Pattern.matches(portRegex, Integer.toString(port));
     }
 
     public Socket getSocket() {
