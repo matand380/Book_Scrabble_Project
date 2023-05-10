@@ -20,12 +20,13 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     private static class BS_Guest_ModelHolder {
         private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
     }
+
     public static BS_Guest_Model getModel() {
         return BS_Guest_ModelHolder.BSGuestModelInstance;
     }
 
     public void setPlayerProperties(String name) {
-       this.player.set_name(name);
+        this.player.set_name(name);
     }
 
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
@@ -36,7 +37,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
     Tile[][] boardTiles = new Tile[15][15]; //should be updated by the host
-    private BS_Guest_Model()  {
+
+    private BS_Guest_Model() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the ip address of the server");
         String ip = scanner.nextLine();
@@ -44,7 +46,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         int port = scanner.nextInt();
         scanner.close();
         try {
-            socket = new Socket(ip , port);
+            socket = new Socket(ip, port);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,20 +59,20 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public Player getPlayer() {
-        communicationHandler.outMessages("addPlayer:"+player.get_name());
+        communicationHandler.outMessages("addPlayer:" + player.get_name());
         return player;
     }
 
     @Override
     public String passTurn(int id) {
-        communicationHandler.outMessages("passTurn:"+id);
+        communicationHandler.outMessages("passTurn:" + id);
         return null;
     }
 
-    public void tryPlaceWord(String word, int x, int y, boolean isVertical){
+    public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
         String message = word + ":" + x + ":" + y + ":" + isVertical;
         String id = String.valueOf(player.get_id());
-        communicationHandler.outMessages("tryPlaceWord:"+id+":"+message);
+        communicationHandler.outMessages("tryPlaceWord:" + id + ":" + message);
     }
 
 
@@ -124,7 +126,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     @Override
     public void setGameOver(boolean isGameOver) {
-        communicationHandler.outMessages("setGameOver:"+isGameOver);
+        communicationHandler.outMessages("setGameOver:" + isGameOver);
     }
 
     @Override

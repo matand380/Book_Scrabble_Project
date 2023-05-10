@@ -21,11 +21,10 @@ public class BookScrabbleHandler implements ClientHandler {
      * If the first character of this line is 'C', then we call challenge on our DictionaryManager object with these books as parameters.
      * If it returns true, we print &quot;true&quot; to our output stream; otherwise we print &quot;false&quot;.
      *
-     *<p>
+     * <p>
      *
      * @param inFromclient inFromclient Read the input from the client
-     * @param outToClient outToClient Send the response to the client
-
+     * @param outToClient  outToClient Send the response to the client
      */
 
     @Override
@@ -60,7 +59,7 @@ public class BookScrabbleHandler implements ClientHandler {
     }
 
 
-@Override
+    @Override
     public void close() {
         in.close();
         out.close();

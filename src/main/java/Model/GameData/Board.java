@@ -6,7 +6,7 @@ import Model.BS_Host_Model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board implements Serializable, ObjectFactory{
+public class Board implements Serializable, ObjectFactory {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
@@ -96,7 +96,6 @@ public class Board implements Serializable, ObjectFactory{
     }
 
 
-
     private static class BoardHolder {
         private static final Board boardInstance = new Board();
     }
@@ -111,6 +110,7 @@ public class Board implements Serializable, ObjectFactory{
     public static Board getBoard() {
         return BoardHolder.boardInstance;
     }
+
     /**
      * The getTiles function returns a copy of the mainBoard array.
      * It is used to get the current state of the board.
@@ -406,11 +406,10 @@ public class Board implements Serializable, ObjectFactory{
      * For each tile, it checks if there is a multiplier on that space on the board (double or triple letter).
      * If so, it multiplies by 2 or 3 respectively and adds to total score.
      * It also checks for double/triple word multipliers.
-     *<p>
-     * @param  w Get the tiles, row and column of the word
+     * <p>
      *
+     * @param w Get the tiles, row and column of the word
      * @return The score of the word multiplied by the doubleWordMultiplier and tripleWordMultiplier
-     *
      */
     private int wordScore(Word w) {
         int score = 0;
@@ -511,7 +510,7 @@ public class Board implements Serializable, ObjectFactory{
     }
 
     @Override
-    public  Board create() {
+    public Board create() {
         return getBoard();
     }
 }

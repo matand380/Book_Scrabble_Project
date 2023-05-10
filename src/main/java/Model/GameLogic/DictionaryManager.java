@@ -15,7 +15,6 @@ public class DictionaryManager {
      * The getDictionaryManager function returns the singleton instance of the DictionaryManager class.
      *
      * @return A singleton
-     *
      */
     public static DictionaryManager getDictionaryManager() {
         return DictionaryManagerHolder.dictionaryManagerInstance;
@@ -26,8 +25,7 @@ public class DictionaryManager {
      * It has a private constructor, and only one instance of it can be created at any time.
      * The DictionaryManager function also contains methods to add words to the dictionary,
      * remove words from the dictionary, and check if a word exists in the dictionary.
-     *<p>
-     *
+     * <p>
      */
     private DictionaryManager() {
         dictionaryMap = new HashMap<>();
@@ -36,12 +34,10 @@ public class DictionaryManager {
     /**
      * The query function takes in a variable number of String arguments,
      * and returns true if the last argument is contained within any of the previous arguments.
-     *<p>
+     * <p>
      *
      * @param books Pass in an array of strings
-     *
      * @return True, if the word is found in any of the books, otherwise it returns false
-     *
      */
     public boolean query(String... books) { //String word
         //upload the books to the dictionary
@@ -65,12 +61,9 @@ public class DictionaryManager {
      * is a word that can be formed by concatenating words from any combination
      * of the other books.
      * If so, it returns true; otherwise it returns false.
-
      *
      * @param books Pass in an array of strings
-     *
      * @return True if the word is in any of the books
-     *
      */
     public boolean challenge(String... books) {
         String word = books[books.length - 1];
@@ -87,10 +80,9 @@ public class DictionaryManager {
 
     /**
      * The getSize function returns the size of the dictionaryMap.
-     *<p>
+     * <p>
      *
      * @return The number of items in the dictionary
-     *
      */
     public int getSize() {
         return dictionaryMap.size();

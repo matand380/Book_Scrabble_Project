@@ -19,7 +19,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Board board;
     Tile.Bag bag;
     Player player;
-    private  List<Player> players;
+    private List<Player> players;
     private boolean isGameOver;
 
     private BS_Host_Model() {
@@ -34,13 +34,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
         //Communication initialization
         try {
-            gameSocket = new Socket("localhost" , 8080);
+            gameSocket = new Socket("localhost", 8080);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         System.out.println("Enter port number for communication server: ");
-         Scanner scanner = new Scanner(System.in);
-         int port = scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);
         System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
         communicationServer.start();
@@ -70,23 +70,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
     /**
      * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
      * If no instance exists, it creates one and then returns it.
-     *<p>
-     *
-     *
+     * <p>
      */
-    private static class HostModelHelper{
+    private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
+
     public static BS_Host_Model getModel() {
         return HostModelHelper.model_instance;
     }
-
-
-    //    public static BS_Host_Model getModel() {
-    //        if (model_instance == null)
-    //            return model_instance = new BS_Host_Model();
-    //        return model_instance;
-    //    }
 
     public List<Player> getPlayers() {
         return players;
@@ -134,7 +126,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         setNextPlayerIndex(currentPlayerIndex);
         board.passCounter++;
         hasChanged();
-        notifyObservers("passTurn:"+getCurrentPlayerIndex());// notify host viewModel about current player
+        notifyObservers("passTurn:" + getCurrentPlayerIndex());// notify host viewModel about current player
         // TODO: 06/05/2023 send to all clients "passTurn:"+getCurrentPlayerIndex());
 //        server.updateAll(String.valueOf(getCurrentPlayerIndex()));
         return String.valueOf(getCurrentPlayerIndex());
@@ -147,7 +139,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * The tryPlaceWord function is used to try and place a word on the board.
      * If the word can be placed, it will return true and add the score of that player.
      * Otherwise, it will return false and not change anything.
-
      *
      * @param Word word Get the word that was placed on the board
 
@@ -159,12 +150,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * The tryPlaceWord function is used to try and place a word on the board.
      * If the word can be placed, it will return true and add the score of that player.
      * Otherwise, it will return false and not change anything.
-
      *
-     * @param  word Pass the word that is being placed on the board
-     *
+     * @param word Pass the word that is being placed on the board
      * @return The score of the word (if it is valid)
-     *
      */
     public void tryPlaceWord(Word word) {
         int score = Board.getBoard().tryPlaceWord(word);
@@ -181,17 +169,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
 
             hasChanged();
-            System.out.println("tryPlaceWord:"+currentPlayerIndex+":"+score);
-            notifyObservers("tryPlaceWord:"+currentPlayerIndex+":"+score);
+            System.out.println("tryPlaceWord:" + currentPlayerIndex + ":" + score);
+            notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + score);
             // TODO: 06/05/2023 send this message to all clients
             //update viewModel with new score and the currentPlayerWords
             //to be able to update the viewModel we send the name of the method that was called
 
 
-
         } else {
             hasChanged();
-            notifyObservers("tryPlaceWord:"+currentPlayerIndex+":"+"0");
+            notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + "0");
             // TODO: 06/05/2023 send this message to all clients
         }
     }
@@ -246,10 +233,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public boolean isGameOver() {
-        if(board.passCounter==getPlayers().size()) //all the players pass turns
-            isGameOver=true;
-        if(Tile.Bag.getBag().size()==0)
-            for(Player p:players)
+        if (board.passCounter == getPlayers().size()) //all the players pass turns
+            isGameOver = true;
+        if (Tile.Bag.getBag().size() == 0)
+            for (Player p : players)
                 if (p.get_hand().size() == 0) {
                     isGameOver = true;
                     break;
@@ -259,14 +246,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     @Override
     public void setGameOver(boolean isGameOver) {
-        this.isGameOver=isGameOver;
+        this.isGameOver = isGameOver;
     }
 
     @Override
     public boolean isConnected() {
         return false;
     }
-
 
 
 }
