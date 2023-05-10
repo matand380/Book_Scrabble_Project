@@ -3,13 +3,14 @@ package Model.GameData;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Player implements Serializable, ObjectFactory {
     public int _id;
     String _name;
     int _score;
     List<Tile> _hand;
-    Tile tileLottery;
+    String tileLottery;
 
     /**
      * The Player function is a constructor for the Player class.
@@ -24,7 +25,7 @@ public class Player implements Serializable, ObjectFactory {
         this._name = "Default";
         this._score = 0;
         this._hand = new ArrayList<>();
-        this.tileLottery = Tile.Bag.getBag().getRand();;
+        this.tileLottery = "";
     }
 
     /**
@@ -109,7 +110,7 @@ public class Player implements Serializable, ObjectFactory {
      *
      * @return A tile from the bag
      */
-    public Tile getTileLottery() {
+    public String getTileLottery() {
 
         return tileLottery;
     }

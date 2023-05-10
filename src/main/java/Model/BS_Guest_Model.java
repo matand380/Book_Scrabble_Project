@@ -14,10 +14,8 @@ import java.util.regex.Pattern;
 public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
     Socket socket;
-    String[] playersScores;
+    public String[] playersScores;
     Tile[][] tileBoard;
-    Board board; //rethink if we need this
-    Tile.Bag bag;//rethink if we need this
 
     private static class BS_Guest_ModelHolder {
         private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
@@ -50,13 +48,14 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         player = new Player();
         playersScores = new String[0];
     }
-    public void openSocket(String ip, int port) {
+    public void openSocket(String ip, int port) { //button start in the view
         if (validateIpPort(ip, port)) {
             try {
                 socket = new Socket(ip, port);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            communicationHandler.outMessages("addPlayer:" + player.get_name());
         } else {
             throw new RuntimeException("Invalid ip or port");
         }
@@ -79,7 +78,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public Player getPlayer() {
-        communicationHandler.outMessages("addPlayer:" + player.get_name());
         return player;
     }
 

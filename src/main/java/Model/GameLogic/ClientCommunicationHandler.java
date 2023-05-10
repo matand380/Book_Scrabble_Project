@@ -69,13 +69,14 @@ public class ClientCommunicationHandler {
             case "sortAndSetID":
                 String[] players = key.split(":");
                 int size = Integer.parseInt(players[1]);
+                BS_Guest_Model.getModel().playersScores = new String[size];
                 for (int i = 0; i < size; i++) {
                     String[] player = players[i + 2].split(",");
                     if(player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())){
                         BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
                     }
                 }
-
+            case "setNextPlayer":
 
         }
         // TODO: 03/05/2023 read the key. convention is player id, method name, parameters(if any). delimiter is ","
