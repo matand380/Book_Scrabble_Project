@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 public class BS_Host_Model extends Observable implements BS_Model {
-    private static BS_Host_Model model_instance = null;
     public ArrayList<Word> currentPlayerWords;
     public int currentPlayerIndex = 0;
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
@@ -221,6 +220,17 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void sortAndSetID() {
         players.sort((Comparator<? super Player>) player.getTileLottery());
         IntStream.rangeClosed(0, players.size()).forEach(i -> players.set(i, player.set_id(i)));
+        hasChanged();
+        notifyObservers("sortAndSetID"+player.get_id());
+        StringBuilder allPlayers = new StringBuilder();
+        for (Player p : players) {
+            allPlayers.append(p.get_id()).append(",").append(p.get_name()).append(":");
+        }
+        String allPlayersString = allPlayers.toString();
+
+        BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetID:"+players.size()+":"+allPlayersString);
+        //sortAndSetID:"+"id,name:id,name
+
     }
 
 

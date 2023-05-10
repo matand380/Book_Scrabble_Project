@@ -145,7 +145,7 @@ public class MyServer {
 
     public void updateAll(String s) {
         for (Socket client : clients) {
-            ObjectOutputStream out = null;
+            ObjectOutputStream out;
             try {
                 out = new ObjectOutputStream(client.getOutputStream());
             } catch (IOException e) {
