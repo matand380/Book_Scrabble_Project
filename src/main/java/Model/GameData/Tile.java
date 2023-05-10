@@ -205,6 +205,10 @@ public class Tile implements Serializable, ObjectFactory{
             return this._quantitiesCounter.clone();
         }
 
+
+        private static class BagHolder{
+            private static final Bag bagInstance = new Bag();
+        }
         /**
          * The getBag function is a static function that returns the singleton instance of the Bag class.
          * <p>
@@ -213,9 +217,7 @@ public class Tile implements Serializable, ObjectFactory{
          *
          */
         public static Bag getBag() {
-            if (bagInstance == null)
-                return bagInstance = new Bag();
-            return bagInstance;
+            return BagHolder.bagInstance;
         }
 
         public void remove() {

@@ -98,7 +98,7 @@ public class Board implements Serializable, ObjectFactory{
 
 
     private static class BoardHolder {
-        private static final Board board = new Board();
+        private static final Board boardInstance = new Board();
     }
 
     /**
@@ -109,7 +109,7 @@ public class Board implements Serializable, ObjectFactory{
      * @return The single instance of the board class
      */
     public static Board getBoard() {
-        return BoardHolder.board;
+        return BoardHolder.boardInstance;
     }
     /**
      * The getTiles function returns a copy of the mainBoard array.

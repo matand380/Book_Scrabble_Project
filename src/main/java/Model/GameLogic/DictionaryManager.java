@@ -8,7 +8,7 @@ public class DictionaryManager {
     Map<String, Dictionary> dictionaryMap;
 
     private static class DictionaryManagerHolder {
-        private static final DictionaryManager dictionaryManager = new DictionaryManager();
+        private static final DictionaryManager dictionaryManagerInstance = new DictionaryManager();
     }
 
     /**
@@ -18,7 +18,7 @@ public class DictionaryManager {
      *
      */
     public static DictionaryManager getDictionaryManager() {
-        return DictionaryManagerHolder.dictionaryManager;
+        return DictionaryManagerHolder.dictionaryManagerInstance;
     }
 
     /**
