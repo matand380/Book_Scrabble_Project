@@ -17,6 +17,13 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Board board; //rethink if we need this
     Tile.Bag bag;//rethink if we need this
 
+    private static class BS_Guest_ModelHolder {
+        private static final BS_Guest_Model BSGuestModel = new BS_Guest_Model();
+    }
+    public static BS_Guest_Model getModel() {
+        return BS_Guest_ModelHolder.BSGuestModel;
+    }
+
     public void setPlayerProperties(String name) {
        this.player.set_name(name);
     }
@@ -43,12 +50,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         }
         player = new Player();
         playersScores = new String[0];
-    }
-
-    public static BS_Guest_Model getModel() {
-        if (model_instance == null)
-            return model_instance = new BS_Guest_Model();
-        return model_instance;
     }
 
     public Socket getSocket() {

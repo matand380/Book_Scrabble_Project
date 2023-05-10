@@ -7,6 +7,20 @@ public class DictionaryManager {
     private static DictionaryManager dictionaryManager = null;
     Map<String, Dictionary> dictionaryMap;
 
+    private static class DictionaryManagerHolder {
+        private static final DictionaryManager dictionaryManager = new DictionaryManager();
+    }
+
+    /**
+     * The getDictionaryManager function returns the singleton instance of the DictionaryManager class.
+     *
+     * @return A singleton
+     *
+     */
+    public static DictionaryManager getDictionaryManager() {
+        return DictionaryManagerHolder.dictionaryManager;
+    }
+
     /**
      * The DictionaryManager function is a singleton class that manages the dictionary.
      * It has a private constructor, and only one instance of it can be created at any time.
@@ -18,23 +32,6 @@ public class DictionaryManager {
     private DictionaryManager() {
         dictionaryMap = new HashMap<>();
     }
-
-    /**
-     * The get function is a static function that returns the singleton instance of
-     * DictionaryManager.
-     * If no instance exists, it creates one and then returns it.
-     *<p>
-     *
-     * @return A singleton object of the dictionary-manager class
-     *
-     */
-    public static DictionaryManager get() {
-        if (dictionaryManager == null) {
-            dictionaryManager = new DictionaryManager();
-        }
-        return dictionaryManager;
-    }
-
 
     /**
      * The query function takes in a variable number of String arguments,

@@ -43,13 +43,13 @@ public class BookScrabbleHandler implements ClientHandler {
         String[] books = (String[]) booksList.toArray();
 
         if (line.charAt(0) == 'Q') {
-            if (DictionaryManager.get().query(books)) {
+            if (DictionaryManager.getDictionaryManager().query(books)) {
                 out.println("true\n");
             } else {
                 out.println("false\n");
             }
         } else if (line.charAt(0) == 'C') {
-            if (DictionaryManager.get().challenge(books)) {
+            if (DictionaryManager.getDictionaryManager().challenge(books)) {
                 out.println("true\n");
             } else {
                 out.println("false\n");
