@@ -27,6 +27,7 @@ public class HostCommunicationHandler implements ClientHandler {
             Player p = new Player();
             p.set_name(message[1]);
             p.setTileLottery();
+            p.set_socketID(BS_Host_Model.getModel().getPlayerToSocketID().get(message[1]));
             BS_Host_Model.getModel().addPlayer(p);
             return "";
         });
@@ -72,38 +73,37 @@ public class HostCommunicationHandler implements ClientHandler {
 
 
     public String handleRequests(String key) {
-//        String[] message = key.split(":");
-//        String methodName = message[0];
-//
-//        switch (methodName) {
-//            case "passTurn":
-//                int player_index = Integer.parseInt(message[1]);
-//                return BS_Host_Model.getModel().passTurn(player_index);
-//            case "addPlayer":
-//                Player p = new Player();
-//                p.set_name(message[1]);
-//                BS_Host_Model.getModel().addPlayer(p);
-//            case "tryPlaceWord":
-//                String playerIndex = message[1];
-//                String word = message[2];
-//                int row = Integer.parseInt(message[3]);
-//                int col = Integer.parseInt(message[4]);
-//                boolean direction = message[5].equals("isVertical");
-//                char[] buildWord = word.toCharArray();
-//                Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_index() == Integer.parseInt(playerIndex)).findFirst().get();
-//                Tile[] tiles = new Tile[word.length()];
-//                for (int i = 0; i < word.length(); i++) {
-//                    tiles[i] = current.charToTile(buildWord[i]);
-//                }
-//                Word w = new Word(tiles, row, col, direction);
-//                BS_Host_Model.getModel().tryPlaceWord(w);
-//            case "challengeWord":
-//                //get from guest challengeWord:playerIndex:word (word is the word that the player wants to challenge)
-//
-//
-//        }
-//        return methodName;
+       /* String[] message = key.split(":");
+        String methodName = message[0];
 
+        switch (methodName) {
+            case "passTurn":
+                int player_index = Integer.parseInt(message[1]);
+                return BS_Host_Model.getModel().passTurn(player_index);
+            case "addPlayer":
+                Player p = new Player();
+                p.set_name(message[1]);
+                BS_Host_Model.getModel().addPlayer(p);
+            case "tryPlaceWord":
+                String playerIndex = message[1];
+                String word = message[2];
+                int row = Integer.parseInt(message[3]);
+                int col = Integer.parseInt(message[4]);
+                boolean direction = message[5].equals("isVertical");
+                char[] buildWord = word.toCharArray();
+                Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_index() == Integer.parseInt(playerIndex)).findFirst().get();
+                Tile[] tiles = new Tile[word.length()];
+                for (int i = 0; i < word.length(); i++) {
+                    tiles[i] = current.charToTile(buildWord[i]);
+                }
+                Word w = new Word(tiles, row, col, direction);
+                BS_Host_Model.getModel().tryPlaceWord(w);
+            case "challengeWord":
+                //get from guest challengeWord:playerIndex:word (word is the word that the player wants to challenge)
+
+
+        }
+        return methodName;*/
         String[] message = key.split(":");
         String methodName = message[0];
         Function<String[], String> handler = handlers.get(methodName);

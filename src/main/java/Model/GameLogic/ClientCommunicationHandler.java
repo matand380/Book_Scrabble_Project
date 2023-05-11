@@ -112,9 +112,8 @@ public class ClientCommunicationHandler {
         }
         String[] message = key.split(":");
         String methodName = message[0];
-        Function<String[], String> handler = handlers.get(methodName);
-        if (handler != null) {
-            handler.apply(message);
+        if (handlers.get(methodName) != null) {
+            handlers.get(methodName).apply(message);
         } else {
             System.out.println("No handler for method " + methodName);
         }
