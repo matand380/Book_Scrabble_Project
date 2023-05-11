@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Player implements Serializable, ObjectFactory {
     public int _index;
-    public String _id; //socket id
+    public String _socketID; //socketID of the player
     String _name;
     int _score;
     List<Tile> _hand;
@@ -25,6 +25,7 @@ public class Player implements Serializable, ObjectFactory {
     public Player() {
         this._name = "Default";
         this._score = 0;
+        this._socketID = "";
         this._hand = new ArrayList<>();
     }
 
@@ -113,22 +114,22 @@ public class Player implements Serializable, ObjectFactory {
     }
 
     /**
-     * The get_id function returns the id of the user.
+     * The get_socketID function returns the _socketID of the user.
      *
      * @return The id of the student
      */
-    public String get_id() {
-        return _id;
+    public String get_socketID() {
+        return this._socketID;
     }
 
     /**
-     * The set_id function sets the value of the _id variable.
+     * The set_socketID function sets the value of the _socketID variable.
      *
-     * @param _id Set the id of a particular row in the database
+     *  Set the _socketID of a particular row in the database
      * @return A void, which means that it does not return anything
      */
-    public Player set_id(String _id) {
-        this._id = _id;
+    public Player set_socketID(String socketID) {
+        this._socketID = socketID;
         return null;
     }
 
