@@ -7,18 +7,51 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ClientCommunicationHandler {
     ObjectOutputStream out;
     ObjectInputStream in;
     Map<String, ObjectFactory> creatorMap = new HashMap<>();
+    Map<String, Function<String[], String>> actions = new HashMap<>();
+
     public ClientCommunicationHandler() {
         creatorMap.put("Board", Board.getBoard());
         creatorMap.put("Bag", Tile.Bag.getBag());
         creatorMap.put("Player", new Player());
         creatorMap.put("Tile", new Tile());
         creatorMap.put("Word", new Word());
+
+        //put all the methods in the map for being able to invoke them in handleRequests
+//        actions.put("tryPlaceWord", (message) -> {
+//            String id = message[1];
+//            String score = message[2];
+//            if (score.equals("0")) {
+//                if (Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id) {
+//                    BS_Guest_Model.getModel().hasChanged();
+//                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + id + ":" + "0");
+//                }
+//            } else {
+//                BS_Guest_Model.getModel().setPlayersScores(id, score);
+//            }
+//            return "";
+//        });
+//        actions.put("sortAndSetID", (message) -> {
+//            String id = message[1];
+//            int sizeSort = Integer.parseInt(message[2]);
+//            BS_Guest_Model.getModel().playersScores = new String[sizeSort];
+//            for (int i = 0; i < sizeSort; i++) {
+//                String[] player = message[i + 2].split(",");
+//                if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
+//                    BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
+//                    BS_Guest_Model.getModel().hasChanged();
+//                    BS_Guest_Model.getModel().notifyObservers("sortAndSetID:" + BS_Guest_Model.getModel().getPlayer().get_id());
+//                }
+//            }
+//            return "";
+//        });
     }
+
     public void setCom() {
         try {
             out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
@@ -28,15 +61,16 @@ public class ClientCommunicationHandler {
             throw new RuntimeException(e);
         }
     }
+
     public void inMessages() {
         String key = null;
         try {
-            Object o = in.readObject();
-            if (o instanceof String) {
-                key = (String) o;
+            Object inObject = in.readObject();
+            if (inObject instanceof String) {
+                key = (String) inObject;
             }
-            if (o instanceof Tile[][]) {
-                BS_Guest_Model.getModel().setBoard((Tile[][]) o);
+            if (inObject instanceof Tile[][]) {
+                BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
                 return;
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -74,7 +108,10 @@ public class ClientCommunicationHandler {
                 }
                 BS_Guest_Model.getModel().hasChanged();
                 BS_Guest_Model.getModel().notifyObservers("challengeWord:" + id + ":" + keyArray[2]);
-
+            case "gameOver":
+                String winnerName = keyArray[2];
+                BS_Guest_Model.getModel().hasChanged();
+                BS_Guest_Model.getModel().notifyObservers("gameOver:"+ BS_Guest_Model.getModel().playersScores[Integer.parseInt(id)] + winnerName);
             case "wordsForChallenge":
                 BS_Guest_Model.getModel().hasChanged();
                 BS_Guest_Model.getModel().notifyObservers(key);

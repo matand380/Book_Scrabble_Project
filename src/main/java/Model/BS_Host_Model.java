@@ -116,15 +116,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
-    public int getMaxScore() {
-        int max = 0;
-        for (Player p : players) {
-            if (p.get_score() > max)
-                max = p.get_score();
-        }
-        return max;
-    }
-
     /**
      * The startNewGame function is used to reset the game.
      * It returns all the tiles from each player's tileLottery back into the bag,
@@ -143,6 +134,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void passTurn(int id) {
         setNextPlayerIndex(currentPlayerIndex);
         board.passCounter++;
+        isGameOver();
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
         hasChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());// notify host viewModel if im the next player
@@ -171,7 +163,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
             notifyObservers("wordsForChallenge:" + words);
             currentPlayerWords.clear();
             // TODO: 11/05/2023 wait for challenge response
-
+            // TODO: 11/05/2023 if challenge didnt happen place the word
+            // TODO: 11/05/2023 check isGameOver
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
             BS_Host_Model.getModel().communicationServer.updateAll("tryPlaceWord:" + currentPlayerIndex + ":" + score);
             hasChanged();
@@ -204,6 +197,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (splitResponse[1].equals("true")) {
                 players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() - 10);
                 Board.getBoard().placeWord(currentPlayerWords.get(0));
+                isGameOver();
                 communicationServer.updateAll(Board.getBoard().getTiles());
                 hasChanged();
                 notifyObservers("board:");
@@ -281,7 +275,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     isGameOver = true;
                     break;
                 }
+        if (isGameOver) {
+            communicationServer.updateAll("gameOver:" + getMaxScore());
+        }
         return isGameOver;
+    }
+
+    public String getMaxScore() {
+        Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
+        return winner.get_id() + ":" + winner.get_name();
     }
 
     @Override
