@@ -90,9 +90,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         communicationHandler.outMessages("tryPlaceWord:" + id + ":" + message);
     }
 
-    public void challengeWord() {
+    public void challengeWord(String word) {
         String id = String.valueOf(player.get_id());
-        communicationHandler.outMessages("challengeWord:" + id + "0");
+        communicationHandler.outMessages("challengeWord:" + id + ":" + word);
         //send challengeWord:id:word (word is the word that the player wants to challenge)
     }
 
@@ -112,7 +112,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public Board getBoardState() {
+    public Tile[][] getBoardState() {
         return null;
     }
 

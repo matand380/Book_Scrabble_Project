@@ -4,6 +4,7 @@ import Model.BS_Guest_Model;
 import Model.GameData.*;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,27 +52,34 @@ public class ClientCommunicationHandler {
                 } else {
                     BS_Guest_Model.getModel().setPlayersScores(id, score);
                 }
-            case "challenge":
-
-            case "passTurn":
-                if(Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id) {
-                    BS_Guest_Model.getModel().hasChanged();
-                    BS_Guest_Model.getModel().notifyObservers("passTurn:" + id);
-                }else
-                    break;
             case "sortAndSetID":
                 String[] players = key.split(":");
-                int size = Integer.parseInt(players[1]);
-                BS_Guest_Model.getModel().playersScores = new String[size];
-                for (int i = 0; i < size; i++) {
+                int sizeSort = Integer.parseInt(players[1]);
+                BS_Guest_Model.getModel().playersScores = new String[sizeSort];
+                for (int i = 0; i < sizeSort; i++) {
                     String[] player = players[i + 2].split(",");
                     if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
                         BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
                         BS_Guest_Model.getModel().hasChanged();
                         BS_Guest_Model.getModel().notifyObservers("sortAndSetID:" + BS_Guest_Model.getModel().getPlayer().get_id());
-
                     }
                 }
+            case "challengeWord":
+                BS_Guest_Model.getModel().playersScores[Integer.parseInt(id)] = keyArray[2];
+                if(Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer().get_id()){
+                    BS_Guest_Model.getModel().getPlayer().set_score(Integer.parseInt(keyArray[2]));
+                }
+                BS_Guest_Model.getModel().hasChanged();
+                BS_Guest_Model.getModel().notifyObservers("challengeWord:" + id + ":" + keyArray[2]);
+
+            case "wordsForChallenge":
+                BS_Guest_Model.getModel().hasChanged();
+                BS_Guest_Model.getModel().notifyObservers(key);
+                break;
+            case "passTurn":
+                    BS_Guest_Model.getModel().hasChanged();
+                    BS_Guest_Model.getModel().notifyObservers(key);
+                    break;
         }
     }
 
