@@ -23,33 +23,43 @@ public class ClientCommunicationHandler {
         creatorMap.put("Word", new Word());
 
         //put all the methods in the map for being able to invoke them in handleRequests
-//        actions.put("tryPlaceWord", (message) -> {
-//            String id = message[1];
-//            String score = message[2];
-//            if (score.equals("0")) {
-//                if (Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id) {
-//                    BS_Guest_Model.getModel().hasChanged();
-//                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + id + ":" + "0");
-//                }
-//            } else {
-//                BS_Guest_Model.getModel().setPlayersScores(id, score);
-//            }
-//            return "";
-//        });
-//        actions.put("sortAndSetID", (message) -> {
-//            String id = message[1];
-//            int sizeSort = Integer.parseInt(message[2]);
-//            BS_Guest_Model.getModel().playersScores = new String[sizeSort];
-//            for (int i = 0; i < sizeSort; i++) {
-//                String[] player = message[i + 2].split(",");
-//                if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
-//                    BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
-//                    BS_Guest_Model.getModel().hasChanged();
-//                    BS_Guest_Model.getModel().notifyObservers("sortAndSetID:" + BS_Guest_Model.getModel().getPlayer().get_id());
-//                }
-//            }
-//            return "";
-//        });
+        actions.put("tryPlaceWord", (message) -> {
+            int index = Integer.parseInt(message[1]);
+            String score = message[2];
+            if (score.equals("0")) {
+                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
+                    BS_Guest_Model.getModel().hasChanged();
+                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0");
+                }
+            } else {
+                BS_Guest_Model.getModel().setPlayersScores(index, score);
+            }
+            return "";
+        });
+        actions.put("sortAndSetIndex", (message) -> {
+            int index = Integer.parseInt(message[1]);
+            int sizeSort = Integer.parseInt(message[2]);
+            BS_Guest_Model.getModel().playersScores = new String[sizeSort];
+            for (int i = 0; i < sizeSort; i++) {
+                String[] player = message[i + 2].split(",");
+                if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
+                    BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
+                    BS_Guest_Model.getModel().hasChanged();
+                    BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
+                }
+            }
+            return "";
+        });
+        actions.put("challengeWord", (message) -> {
+            int index = Integer.parseInt(message[1]);
+            BS_Guest_Model.getModel().playersScores[index] = message[2];
+            if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
+                BS_Guest_Model.getModel().getPlayer().set_score(Integer.parseInt(message[2]));
+            }
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]);
+            return "";
+        });
     }
 
     public void setCom() {
@@ -77,41 +87,41 @@ public class ClientCommunicationHandler {
             return;
         }
         String[] keyArray = key.split(":");
-        String id = keyArray[1];
+        int index = Integer.parseInt(keyArray[1]);
         switch (keyArray[0]) {
             case "tryPlaceWord":
                 String score = keyArray[2];
                 if (score.equals("0")) {
-                    if (Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id) {
+                    if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
                         BS_Guest_Model.getModel().hasChanged();
-                        BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + id + ":" + "0");
+                        BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0");
                     }
                 } else {
-                    BS_Guest_Model.getModel().setPlayersScores(id, score);
+                    BS_Guest_Model.getModel().setPlayersScores(index, score);
                 }
-            case "sortAndSetID":
+            case "sortAndSetIndex":
                 String[] players = key.split(":");
                 int sizeSort = Integer.parseInt(players[1]);
                 BS_Guest_Model.getModel().playersScores = new String[sizeSort];
                 for (int i = 0; i < sizeSort; i++) {
                     String[] player = players[i + 2].split(",");
                     if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
-                        BS_Guest_Model.getModel().getPlayer().set_id(Integer.parseInt(player[0]));
+                        BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
                         BS_Guest_Model.getModel().hasChanged();
-                        BS_Guest_Model.getModel().notifyObservers("sortAndSetID:" + BS_Guest_Model.getModel().getPlayer().get_id());
+                        BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
                     }
                 }
             case "challengeWord":
-                BS_Guest_Model.getModel().playersScores[Integer.parseInt(id)] = keyArray[2];
-                if (Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer().get_id()) {
+                BS_Guest_Model.getModel().playersScores[index] = keyArray[2];
+                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
                     BS_Guest_Model.getModel().getPlayer().set_score(Integer.parseInt(keyArray[2]));
                 }
                 BS_Guest_Model.getModel().hasChanged();
-                BS_Guest_Model.getModel().notifyObservers("challengeWord:" + id + ":" + keyArray[2]);
+                BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + keyArray[2]);
             case "gameOver":
                 String winnerName = keyArray[2];
                 BS_Guest_Model.getModel().hasChanged();
-                BS_Guest_Model.getModel().notifyObservers("gameOver:"+ BS_Guest_Model.getModel().playersScores[Integer.parseInt(id)] + winnerName);
+                BS_Guest_Model.getModel().notifyObservers("gameOver:"+ BS_Guest_Model.getModel().playersScores[index] + winnerName);
             case "wordsForChallenge":
                 BS_Guest_Model.getModel().hasChanged();
                 BS_Guest_Model.getModel().notifyObservers(key);
@@ -121,7 +131,7 @@ public class ClientCommunicationHandler {
                 BS_Guest_Model.getModel().notifyObservers(key);
                 break;
             case "ping":
-                outMessages("ping:"+id+":"+BS_Guest_Model.getModel().getPlayer().get_name());
+                outMessages("ping:"+index+":"+BS_Guest_Model.getModel().getPlayer().get_name());
         }
     }
 

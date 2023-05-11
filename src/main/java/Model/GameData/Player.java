@@ -1,18 +1,17 @@
 package Model.GameData;
 
 import java.io.Serializable;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Player implements Serializable, ObjectFactory {
-    public int _id;
+    public int _index;
+    public String _id; //socket id
     String _name;
     int _score;
     List<Tile> _hand;
     String tileLottery;
-
 
     /**
      * The Player function is a constructor for the Player class.
@@ -30,56 +29,6 @@ public class Player implements Serializable, ObjectFactory {
     }
 
     /**
-     * The get_name function returns the name of the person.
-     * <p>
-     *
-     * @return The name of the player
-     */
-    public String get_name() {
-        return _name;
-    }
-
-    /**
-     * The set_name function sets the name of the person.
-     *
-     * @param name Set the name of the contact
-     * @return Nothing
-     */
-    public void set_name(String name) {
-        this._name = name;
-    }
-
-    /**
-     * The get_score function returns the score of the player.
-     * <p>
-     *
-     * @return The score of the player
-     */
-    public int get_score() {
-        return _score;
-    }
-
-    /**
-     * The set_score function sets the score of a player.
-     * <p>
-     *
-     * @param _score Set the score of the player
-     */
-    public void set_score(int _score) {
-        this._score = _score;
-    }
-
-    /**
-     * The get_hand function returns the hand of a player.
-     * <p>
-     *
-     * @return The list of tiles in the hand
-     */
-    public List<Tile> get_hand() {
-        return _hand;
-    }
-
-    /**
      * The addTilesTo7 function adds tiles to the hand until it has 7 tiles.
      */
     public void completeTilesTo7() {
@@ -88,32 +37,6 @@ public class Player implements Serializable, ObjectFactory {
                 break;
             _hand.add(Tile.Bag.getBag().getRand());
         }
-    }
-
-    public int get_id() {
-        return _id;
-    }
-
-    /**
-     * The set_id function sets the value of the _id variable.
-     *
-     * @param _id Set the id of a particular row in the database
-     * @return A void, which means that it does not return anything
-     */
-    public Player set_id(int _id) {
-        this._id = _id;
-        return null;
-    }
-
-
-    /**
-     * The getTileLottery function is used to get a random tile from the bag.
-     *
-     * @return A tile from the bag
-     */
-    public String getTileLottery() {
-
-        return tileLottery;
     }
 
     /**
@@ -137,6 +60,12 @@ public class Player implements Serializable, ObjectFactory {
 
     }
 
+    /**
+     * The charToTile function takes in a character and returns the tile with that letter from the hand of the player.
+     *
+     * @param c Find the tile with the corresponding letter
+     * @return The tile with the given letter
+     */
     public Tile charToTile(char c) {
         for (Tile t : _hand) {
             if (t.letter == c) {
@@ -144,13 +73,112 @@ public class Player implements Serializable, ObjectFactory {
             }
         }
         return null;
+    }
 
+    /**
+     * The getTileLottery function is used to get a random tile from the bag.
+     *
+     * @return A tile from the bag
+     */
+    public String getTileLottery() {
+
+        return tileLottery;
     }
 
     public void setTileLottery() {
         Random rand = new Random();
-        int value = rand.nextInt(26)+'A';
+        int value = rand.nextInt(26) + 'A';
         char c = (char) value;
         tileLottery = String.valueOf(c);
+    }
+
+    /**
+     * The get_index function returns the index of the current node.
+     *
+     * @return The _index variable
+     */
+    public int get_index() {
+        return _index;
+    }
+
+    /**
+     * The set_index function sets the index of a player.
+     *
+     * @param _index Set the index of the player
+     * @return Null
+     */
+    public Player set_index(int _index) {
+        this._index = _index;
+        return null;
+    }
+
+    /**
+     * The get_id function returns the id of the user.
+     *
+     * @return The id of the student
+     */
+    public String get_id() {
+        return _id;
+    }
+
+    /**
+     * The set_id function sets the value of the _id variable.
+     *
+     * @param _id Set the id of a particular row in the database
+     * @return A void, which means that it does not return anything
+     */
+    public Player set_id(String _id) {
+        this._id = _id;
+        return null;
+    }
+
+    /**
+     * The get_hand function returns the hand of a player.
+     * <p>
+     *
+     * @return The list of tiles in the hand
+     */
+    public List<Tile> get_hand() {
+        return _hand;
+    }
+
+    /**
+     * The set_score function sets the score of a player.
+     * <p>
+     *
+     * @param _score Set the score of the player
+     */
+    public void set_score(int _score) {
+        this._score = _score;
+    }
+
+    /**
+     * The get_score function returns the score of the player.
+     * <p>
+     *
+     * @return The score of the player
+     */
+    public int get_score() {
+        return _score;
+    }
+
+    /**
+     * The set_name function sets the name of the person.
+     *
+     * @param name Set the name of the contact
+     *  Nothing
+     */
+    public void set_name(String name) {
+        this._name = name;
+    }
+
+    /**
+     * The get_name function returns the name of the person.
+     * <p>
+     *
+     * @return The name of the player
+     */
+    public String get_name() {
+        return _name;
     }
 }

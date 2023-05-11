@@ -11,14 +11,9 @@ import java.util.function.Function;
 
 
 public class HostCommunicationHandler implements ClientHandler {
-
-
     Map<String, Function<String[], String>> handlers = new HashMap<>();
-
-
     ObjectOutputStream out;
     ObjectInputStream in;
-
     PrintWriter toGameServer;
     Scanner fromGameServer;
 
@@ -37,13 +32,13 @@ public class HostCommunicationHandler implements ClientHandler {
         });
 
         handlers.put("tryPlaceWord", (message) -> {
-            String id = message[1];
+            String PlayerIndex = message[1];
             String word = message[2];
             int row = Integer.parseInt(message[3]);
             int col = Integer.parseInt(message[4]);
             boolean direction = message[5].equals("isVertical");
             char[] buildWord = word.toCharArray();
-            Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_id() == Integer.parseInt(id)).findFirst().get();
+            Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_index() == Integer.parseInt(PlayerIndex)).findFirst().get();
             Tile[] tiles = new Tile[word.length()];
             for (int i = 0; i < word.length(); i++) {
                 tiles[i] = current.charToTile(buildWord[i]);
@@ -54,12 +49,12 @@ public class HostCommunicationHandler implements ClientHandler {
         });
 
         handlers.put("challengeWord", (message) -> {
-            String id = message[1];
+            String PlayerIndex = message[1];
             String word = message[2];
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch((w1) -> w1.toString().equals(word));
             if (exist) {
-                String response =  (String) BS_Host_Model.getModel().challengeWord(word, id);
-                return "challengeWord:" + id + ":" + response;
+                String response =  (String) BS_Host_Model.getModel().challengeWord(word, PlayerIndex);
+                return "challengeWord:" + PlayerIndex + ":" + response;
             }
             // TODO: 06/05/2023 handle challengeWord case
             return "";
@@ -82,20 +77,20 @@ public class HostCommunicationHandler implements ClientHandler {
 //
 //        switch (methodName) {
 //            case "passTurn":
-//                int player_id = Integer.parseInt(message[1]);
-//                return BS_Host_Model.getModel().passTurn(player_id);
+//                int player_index = Integer.parseInt(message[1]);
+//                return BS_Host_Model.getModel().passTurn(player_index);
 //            case "addPlayer":
 //                Player p = new Player();
 //                p.set_name(message[1]);
 //                BS_Host_Model.getModel().addPlayer(p);
 //            case "tryPlaceWord":
-//                String id = message[1];
+//                String playerIndex = message[1];
 //                String word = message[2];
 //                int row = Integer.parseInt(message[3]);
 //                int col = Integer.parseInt(message[4]);
 //                boolean direction = message[5].equals("isVertical");
 //                char[] buildWord = word.toCharArray();
-//                Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_id() == Integer.parseInt(id)).findFirst().get();
+//                Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_index() == Integer.parseInt(playerIndex)).findFirst().get();
 //                Tile[] tiles = new Tile[word.length()];
 //                for (int i = 0; i < word.length(); i++) {
 //                    tiles[i] = current.charToTile(buildWord[i]);
@@ -103,7 +98,7 @@ public class HostCommunicationHandler implements ClientHandler {
 //                Word w = new Word(tiles, row, col, direction);
 //                BS_Host_Model.getModel().tryPlaceWord(w);
 //            case "challengeWord":
-//                //get from guest challengeWord:id:word (word is the word that the player wants to challenge)
+//                //get from guest challengeWord:playerIndex:word (word is the word that the player wants to challenge)
 //
 //
 //        }

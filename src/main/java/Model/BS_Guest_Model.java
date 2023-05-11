@@ -30,16 +30,12 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         playersScores = new String[0];
     }
 
+    private static class BS_Guest_ModelHolder {
+        private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
+    }
+
     public static BS_Guest_Model getModel() {
         return BS_Guest_ModelHolder.BSGuestModelInstance;
-    }
-
-    public void setPlayerProperties(String name) {
-        this.player.set_name(name);
-    }
-
-    public ClientCommunicationHandler getCommunicationHandler() {
-        return communicationHandler;
     }
 
     public void openSocket(String ip, int port) { //button start in the view
@@ -70,6 +66,57 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return Pattern.matches(portRegex, Integer.toString(port));
     }
 
+    @Override
+    public void passTurn(int playerIndex) {
+        communicationHandler.outMessages("passTurn:" + playerIndex);
+    }
+
+    public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
+        String message = word + ":" + x + ":" + y + ":" + isVertical;
+        String playerIndex = String.valueOf(player.get_index());
+        communicationHandler.outMessages("tryPlaceWord:" + playerIndex + ":" + message);
+    }
+
+    public void challengeWord(String word) {
+        String playerIndex = String.valueOf(player.get_index());
+        communicationHandler.outMessages("challengeWord:" + playerIndex + ":" + word);
+        //send challengeWord:playerIndex:word (word is the word that the player wants to challenge)
+    }
+
+    @Override
+    public boolean isHost() {
+        return false;
+    }
+
+    @Override
+    public boolean isGameOver() {
+        communicationHandler.outMessages("isGameOver:");
+        // TODO get the answer from the server and return it
+        return false;
+    }
+
+    @Override
+    public void setGameOver(boolean isGameOver) {
+        communicationHandler.outMessages("setGameOver:" + isGameOver);
+    }
+
+    @Override
+    public boolean isConnected() {
+        return false;
+    }
+
+    public void setBoard(Tile[][] boardTiles) {
+        this.tileBoard = boardTiles;
+        setChanged();
+        notifyObservers("board:");
+    }
+
+    public void setPlayersScores(int index, String score) {
+        playersScores[index] += score;
+        setChanged();
+        notifyObservers("tryPlaceWord:" + index + ":" + score);
+    }
+
     public Socket getSocket() {
         return socket;
     }
@@ -78,21 +125,12 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return player;
     }
 
-    @Override
-    public void passTurn(int id) {
-        communicationHandler.outMessages("passTurn:" + id);
+    public void setPlayerProperties(String name) {
+        this.player.set_name(name);
     }
 
-    public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
-        String message = word + ":" + x + ":" + y + ":" + isVertical;
-        String id = String.valueOf(player.get_id());
-        communicationHandler.outMessages("tryPlaceWord:" + id + ":" + message);
-    }
-
-    public void challengeWord(String word) {
-        String id = String.valueOf(player.get_id());
-        communicationHandler.outMessages("challengeWord:" + id + ":" + word);
-        //send challengeWord:id:word (word is the word that the player wants to challenge)
+    public ClientCommunicationHandler getCommunicationHandler() {
+        return communicationHandler;
     }
 
     @Override
@@ -125,41 +163,5 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return null;
     }
 
-    @Override
-    public boolean isHost() {
-        return false;
-    }
 
-    @Override
-    public boolean isGameOver() {
-        communicationHandler.outMessages("isGameOver:");
-        // TODO get the answer from the server and return it
-        return false;
-    }
-
-    @Override
-    public void setGameOver(boolean isGameOver) {
-        communicationHandler.outMessages("setGameOver:" + isGameOver);
-    }
-
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
-
-    public void setBoard(Tile[][] boardTiles) {
-        this.tileBoard = boardTiles;
-        setChanged();
-        notifyObservers("board:");
-    }
-
-    public void setPlayersScores(String id, String score) {
-        playersScores[Integer.parseInt(id)] += score;
-        setChanged();
-        notifyObservers("tryPlaceWord:" + id + ":" + score);
-    }
-
-    private static class BS_Guest_ModelHolder {
-        private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
-    }
 }
