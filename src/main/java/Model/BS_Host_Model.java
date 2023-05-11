@@ -160,8 +160,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
             // TODO: 06/05/2023 challenge pop up if someone press challenge activate challengeWord method
-            // TODO: 06/05/2023 if challenge is true fine the challenger, if false give challenger bonus;
-            // TODO: 07/05/2023 "challengeWord:"+id+":"+score(after fine or bonus)
             StringBuilder sb = new StringBuilder();
             for (Word w : currentPlayerWords) {
                 sb.append(w.toString());
@@ -172,21 +170,19 @@ public class BS_Host_Model extends Observable implements BS_Model {
             hasChanged();
             notifyObservers("wordsForChallenge:" + words);
             currentPlayerWords.clear();
+            // TODO: 11/05/2023 wait for challenge response
 
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-
+            BS_Host_Model.getModel().communicationServer.updateAll("tryPlaceWord:" + currentPlayerIndex + ":" + score);
             hasChanged();
-            System.out.println("tryPlaceWord:" + currentPlayerIndex + ":" + score);
             notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + score);
-            // TODO: 06/05/2023 send this message to all clients
-            //update viewModel with new score and the currentPlayerWords
-            //to be able to update the viewModel we send the name of the method that was called
-
+            //only for testing
+            System.out.println("tryPlaceWord:" + currentPlayerIndex + ":" + score);
 
         } else {
+            BS_Host_Model.getModel().communicationServer.updateAll("tryPlaceWord:" + currentPlayerIndex + ":" + "0");
             hasChanged();
             notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + "0");
-            // TODO: 06/05/2023 send this message to all clients
         }
     }
 
@@ -207,7 +203,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
         if (splitResponse[0].equals("C")) {
             if (splitResponse[1].equals("true")) {
                 players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() - 10);
-                Board.getBoard().placeWord(currentPlayerWords.stream().filter(w -> w.toString().equals(word)).findFirst().get());
+                Board.getBoard().placeWord(currentPlayerWords.get(0));
+                communicationServer.updateAll(Board.getBoard().getTiles());
                 hasChanged();
                 notifyObservers("board:");
             } else if (splitResponse[1].equals("false")) {
@@ -215,12 +212,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
             }
             hasChanged();
             notifyObservers("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
-            return "challengeWord:" + id + players.get(Integer.parseInt(id)).get_score();
+            communicationServer.updateAll("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
+            return "";
         } else {
             System.out.println("Error: dictionaryLegal");
             return "";
-            // TODO: 06/05/2023 activate the challenge word method in the board
-            // need to change challenge in dictionary manager.
         }
 
     }

@@ -57,7 +57,7 @@ public class HostCommunicationHandler implements ClientHandler {
             String word = message[2];
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch((w1) -> w1.toString().equals(word));
             if (exist) {
-                String response =  BS_Host_Model.getModel().challengeWord(word, id);
+                String response =  (String) BS_Host_Model.getModel().challengeWord(word, id);
                 return "challengeWord:" + id + ":" + response;
             }
             // TODO: 06/05/2023 handle challengeWord case

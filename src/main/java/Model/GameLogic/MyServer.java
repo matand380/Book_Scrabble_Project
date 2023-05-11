@@ -143,7 +143,7 @@ public class MyServer {
         return ip;
     }
 
-    public void updateAll(String s) {
+    public void updateAll(Object s) {
         for (Socket client : clients) {
             ObjectOutputStream out;
             try {
