@@ -491,7 +491,6 @@ public class Board implements Serializable, ObjectFactory {
             } else return 0;
         }
         wordCounter += newWord.size();
-        setPassCounter(0);
         BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;
     }
@@ -505,6 +504,7 @@ public class Board implements Serializable, ObjectFactory {
      */
 
     public void placeWord(Word w) {
+        setPassCounter(0);
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;
