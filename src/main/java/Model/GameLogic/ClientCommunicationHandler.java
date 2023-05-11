@@ -11,9 +11,7 @@ import java.util.Map;
 public class ClientCommunicationHandler {
     ObjectOutputStream out;
     ObjectInputStream in;
-
     Map<String, ObjectFactory> creatorMap = new HashMap<>();
-
     public ClientCommunicationHandler() {
         creatorMap.put("Board", Board.getBoard());
         creatorMap.put("Bag", Tile.Bag.getBag());
@@ -21,23 +19,28 @@ public class ClientCommunicationHandler {
         creatorMap.put("Tile", new Tile());
         creatorMap.put("Word", new Word());
     }
-
     public void setCom() {
         try {
             out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
             in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
+            inMessages();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-
     public void inMessages() {
-        String key;
+        String key = null;
         try {
-            key = (String) in.readObject();
+            Object o = in.readObject();
+            if (o instanceof String) {
+                key = (String) o;
+            }
+            if (o instanceof Tile[][]) {
+                BS_Guest_Model.getModel().setBoard((Tile[][]) o);
+                return;
+            }
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            return;
         }
         String[] keyArray = key.split(":");
         String id = keyArray[1];
@@ -66,7 +69,7 @@ public class ClientCommunicationHandler {
                 }
             case "challengeWord":
                 BS_Guest_Model.getModel().playersScores[Integer.parseInt(id)] = keyArray[2];
-                if(Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer().get_id()){
+                if (Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer().get_id()) {
                     BS_Guest_Model.getModel().getPlayer().set_score(Integer.parseInt(keyArray[2]));
                 }
                 BS_Guest_Model.getModel().hasChanged();
@@ -77,9 +80,9 @@ public class ClientCommunicationHandler {
                 BS_Guest_Model.getModel().notifyObservers(key);
                 break;
             case "passTurn":
-                    BS_Guest_Model.getModel().hasChanged();
-                    BS_Guest_Model.getModel().notifyObservers(key);
-                    break;
+                BS_Guest_Model.getModel().hasChanged();
+                BS_Guest_Model.getModel().notifyObservers(key);
+                break;
         }
     }
 

@@ -18,7 +18,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Tile[][] tileBoard;
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
     ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
-    Tile[][] boardTiles = new Tile[15][15]; //should be updated by the host
 
     private BS_Guest_Model() {
         Scanner scanner = new Scanner(System.in);
@@ -113,7 +112,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     @Override
     public Tile[][] getBoardState() {
-        return null;
+        return tileBoard;
     }
 
     @Override
@@ -149,9 +148,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public void setBoard(Tile[][] boardTiles) {
-        this.boardTiles = boardTiles;
+        this.tileBoard = boardTiles;
         setChanged();
-        notifyObservers();
+        notifyObservers("board:");
     }
 
     public void setPlayersScores(String id, String score) {
