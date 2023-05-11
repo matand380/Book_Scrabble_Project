@@ -80,9 +80,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public String passTurn(int id) {
+    public void passTurn(int id) {
         communicationHandler.outMessages("passTurn:" + id);
-        return null;
     }
 
     public void tryPlaceWord(String word, int x, int y, boolean isVertical) {

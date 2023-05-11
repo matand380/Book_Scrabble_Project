@@ -44,15 +44,15 @@ public class BookScrabbleHandler implements ClientHandler {
 
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.getDictionaryManager().query(books)) {
-                out.println("true\n");
+                out.println("Q:true\n");
             } else {
-                out.println("false\n");
+                out.println("Q:false\n");
             }
         } else if (line.charAt(0) == 'C') {
             if (DictionaryManager.getDictionaryManager().challenge(books)) {
-                out.println("true\n");
+                out.println("C:true\n");
             } else {
-                out.println("false\n");
+                out.println("C:false\n");
             }
         }
 

@@ -18,9 +18,15 @@ public class HostCommunicationHandler implements ClientHandler {
     ObjectOutputStream out;
     ObjectInputStream in;
 
+    PrintWriter toGameServer;
+    Scanner fromGameServer;
+
     public HostCommunicationHandler() {
         //put all the methods in the map for being able to invoke them in handleRequests
-        handlers.put("passTurn", (message) -> BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
+        handlers.put("passTurn", (message) -> {
+            BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1]));
+            return "";
+        });
         handlers.put("addPlayer", (message) -> {
             Player p = new Player();
             p.set_name(message[1]);
@@ -140,16 +146,34 @@ public class HostCommunicationHandler implements ClientHandler {
 
     }
 
-    public void outMessages(Object key) {
+    public void messagesToGameServer(String key) {
         if (key != null) {
-            if (key instanceof String) {
-                String message = (String) key;
-
+            try{
+                toGameServer = new PrintWriter(BS_Host_Model.getModel().getGameSocket().getOutputStream());
+                toGameServer.println(key);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         }
-
-
     }
-}
+
+    public String messagesFromGameServer() {
+            try{
+                fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
+                String key = null;
+                while (fromGameServer.hasNextLine()) {
+                     key = fromGameServer.nextLine();
+                }
+                return key;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        return null;
+    }}
+
+
+
 
 

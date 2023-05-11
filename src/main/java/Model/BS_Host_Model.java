@@ -21,8 +21,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Player player;
     private List<Player> players;
     private boolean isGameOver;
-
-
     private BS_Host_Model() {
 
         //Game data initialization
@@ -70,6 +68,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return HostModelHelper.model_instance;
     }
 
+    public Socket getGameSocket() {
+        return gameSocket;
+    }
+
     public void openSocket(String ip, int port) {
         if (validateIpPort(ip, port)) {
             try {
@@ -110,7 +112,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
     @Override
     public void setNextPlayerIndex(int index) {
         currentPlayerIndex = (index + 1) % players.size();
-        // TODO: 06/05/2023 send to all clients "nextPlayerIndex:"+getCurrentPlayerIndex());
 
     }
 
@@ -138,14 +139,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public String passTurn(int id) {
+    public void passTurn(int id) {
         setNextPlayerIndex(currentPlayerIndex);
         board.passCounter++;
+        if (getCurrentPlayerIndex() == player.get_id())
+        {
         hasChanged();
-        notifyObservers("passTurn:" + getCurrentPlayerIndex());// notify host viewModel about current player
-        // TODO: 06/05/2023 send to all clients "passTurn:"+getCurrentPlayerIndex());
-//        server.updateAll(String.valueOf(getCurrentPlayerIndex()));
-        return String.valueOf(getCurrentPlayerIndex());
+        notifyObservers("passTurn:" + getCurrentPlayerIndex());// notify host viewModel if im the next player
+        }
+        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
 
 
     }
@@ -164,11 +166,17 @@ public class BS_Host_Model extends Observable implements BS_Model {
             // TODO: 06/05/2023 challenge pop up if someone press challenge activate challengeWord method
             // TODO: 06/05/2023 if challenge is true fine the challenger, if false give challenger bonus;
             // TODO: 07/05/2023 "challengeWord:"+id+":"+score(after fine or bonus)
-            //hasChanged();
-            //notifyObservers("challengeWord:"+id+":"+score);
-            //after challenge is done pass turn anyway
-            //hasChanged();
-            //notifyObservers("passTurn:"+getCurrentPlayerIndex());// notify host viewModel about current player
+            StringBuilder sb = new StringBuilder();
+            for (Word w : currentPlayerWords){
+                sb.append(w.toMessage());
+                sb.append(":");
+            }
+            String words = sb.toString();
+            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" +words);
+            hasChanged();
+            notifyObservers("wordsForChallenge:" +words);
+            currentPlayerWords.clear();
+
 
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
 
@@ -193,11 +201,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * If the word can be placed, it will return true and add the score of that player.
      * Otherwise, it will return false and not change anything.
      *
-     * @param  word Get the word that was placed on the board
-
-     *
+     * @param word Get the word that was placed on the board
      * @return The score of the word if it was placed successfully
-     *
      */
 
     public void challengeWord(Word word) {
@@ -287,6 +292,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
+    }
+    public HostCommunicationHandler getCommunicationHandler() {
+        return communicationHandler;
     }
 
 

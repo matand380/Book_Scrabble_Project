@@ -13,6 +13,7 @@ public class MyServer {
     private int port;
     private ClientHandler ch;
     private volatile boolean stop;
+    System.Logger logger;
 
 
     /**
@@ -42,7 +43,7 @@ public class MyServer {
     private void runServer() throws Exception {
         ServerSocket server = new ServerSocket(port);
         server.setSoTimeout(1000);
-        System.Logger logger = System.getLogger("MyServer");
+        logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
         while (!stop) {
             try {
@@ -148,11 +149,13 @@ public class MyServer {
             try {
                 out = new ObjectOutputStream(client.getOutputStream());
             } catch (IOException e) {
+                logger.log(System.Logger.Level.ERROR, "Error in update all: getting output stream");
                 throw new RuntimeException(e);
             }
             try {
                 out.writeObject(s);
             } catch (IOException e) {
+                logger.log(System.Logger.Level.ERROR, "Error in update all: writing to output stream");
                 throw new RuntimeException(e);
             }
 

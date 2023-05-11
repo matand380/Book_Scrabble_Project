@@ -245,9 +245,17 @@ public class Board implements Serializable, ObjectFactory {
 
     private boolean dictionaryLegal(Word w) {
         String stringWord = w.toMessage();
-        //BS_Host_Model.getModel().outMessages("Q:stringWord");
+        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
+        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        String[] splitResponse = response.split(":");
+        if (splitResponse[0].equals("Q")) {
+            return splitResponse[1].equals("true");
+        }
+        else {
+            System.out.println("Error: dictionaryLegal");
+            return false;
+        }
 
-        return true;
     }
 
     /**
