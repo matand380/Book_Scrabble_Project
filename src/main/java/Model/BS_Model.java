@@ -19,7 +19,7 @@ public interface BS_Model {
     // Methods for getting data from the model
     int getCurrentPlayerScore();
     List<Tile> getCurrentPlayerHand();
-    Board getBoardState();
+    Tile[][] getBoardState();
     int[] getBagState();
     String getWinner();
     boolean isHost();

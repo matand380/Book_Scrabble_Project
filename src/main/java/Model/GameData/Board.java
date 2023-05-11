@@ -244,7 +244,7 @@ public class Board implements Serializable, ObjectFactory {
     }
 
     private boolean dictionaryLegal(Word w) {
-        String stringWord = w.toMessage();
+        String stringWord = w.toString();
         BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
         String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
         String[] splitResponse = response.split(":");
@@ -491,7 +491,6 @@ public class Board implements Serializable, ObjectFactory {
             } else return 0;
         }
         wordCounter += newWord.size();
-        placeWord(w); // FIXME: 07/05/2023 put in independent method in board, should be activate after no one challenged
         setPassCounter(0);
         BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;
@@ -505,7 +504,7 @@ public class Board implements Serializable, ObjectFactory {
      * @param w the Word object representing the word to be placed on the board
      */
 
-    private void placeWord(Word w) {
+    public void placeWord(Word w) {
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;

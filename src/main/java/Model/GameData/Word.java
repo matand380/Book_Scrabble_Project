@@ -132,9 +132,22 @@ public class Word implements Serializable, ObjectFactory {
                 sb.append("_");
                 continue;
             }
-            sb.append(tile.toString());
+            sb.append(tile.letter);
         }
         sb.append(":").append(this.row).append(":").append(this.col).append(":").append(this.vertical);
+        return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Tile tile : this.tiles) {
+            if (tile == null) {
+                sb.append("_");
+                continue;
+            }
+            sb.append(tile.letter);
+        }
         return sb.toString();
     }
 }

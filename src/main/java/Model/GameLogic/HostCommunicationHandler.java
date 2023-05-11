@@ -53,6 +53,13 @@ public class HostCommunicationHandler implements ClientHandler {
         });
 
         handlers.put("challengeWord", (message) -> {
+            String id = message[1];
+            String word = message[2];
+            boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch((w1) -> w1.toString().equals(word));
+            if (exist) {
+                String response =  BS_Host_Model.getModel().challengeWord(word, id);
+                return "challengeWord:" + id + ":" + response;
+            }
             // TODO: 06/05/2023 handle challengeWord case
             return "";
         });
@@ -126,10 +133,12 @@ public class HostCommunicationHandler implements ClientHandler {
         String key = handleRequests(s);
         if (key.equals(""))
             return;
-        try {
-            out.writeObject(key);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (key.startsWith("challengeWord")) {
+            try {
+                out.writeObject(key);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
 

@@ -21,6 +21,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Player player;
     private List<Player> players;
     private boolean isGameOver;
+
     private BS_Host_Model() {
 
         //Game data initialization
@@ -142,14 +143,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void passTurn(int id) {
         setNextPlayerIndex(currentPlayerIndex);
         board.passCounter++;
-        if (getCurrentPlayerIndex() == player.get_id())
-        {
+        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
         hasChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());// notify host viewModel if im the next player
-        }
-        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
-
-
     }
 
     /**
@@ -167,16 +163,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
             // TODO: 06/05/2023 if challenge is true fine the challenger, if false give challenger bonus;
             // TODO: 07/05/2023 "challengeWord:"+id+":"+score(after fine or bonus)
             StringBuilder sb = new StringBuilder();
-            for (Word w : currentPlayerWords){
-                sb.append(w.toMessage());
+            for (Word w : currentPlayerWords) {
+                sb.append(w.toString());
                 sb.append(":");
             }
             String words = sb.toString();
-            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" +words);
+            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
             hasChanged();
-            notifyObservers("wordsForChallenge:" +words);
+            notifyObservers("wordsForChallenge:" + words);
             currentPlayerWords.clear();
-
 
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
 
@@ -205,9 +200,28 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @return The score of the word if it was placed successfully
      */
 
-    public void challengeWord(Word word) {
-        // TODO: 06/05/2023 activate the challenge word method in the board
-        // need to change challenge in dictionary manager.
+    public String challengeWord(String word, String id) {
+        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
+        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        String[] splitResponse = response.split(":");
+        if (splitResponse[0].equals("C")) {
+            if (splitResponse[1].equals("true")) {
+                players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() - 10);
+                Board.getBoard().placeWord(currentPlayerWords.stream().filter(w -> w.toString().equals(word)).findFirst().get());
+                hasChanged();
+                notifyObservers("board:");
+            } else if (splitResponse[1].equals("false")) {
+                players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() + 10);
+            }
+            hasChanged();
+            notifyObservers("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
+            return "challengeWord:" + id + players.get(Integer.parseInt(id)).get_score();
+        } else {
+            System.out.println("Error: dictionaryLegal");
+            return "";
+            // TODO: 06/05/2023 activate the challenge word method in the board
+            // need to change challenge in dictionary manager.
+        }
 
     }
 
@@ -228,7 +242,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         String allPlayersString = allPlayers.toString();
 
         BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetID:" + players.size() + ":" + allPlayersString);
-        //sortAndSetID:"+"id,name:id,name
 
     }
 
@@ -243,8 +256,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     @Override
-    public Board getBoardState() {
-        return Board.getBoard();
+    public Tile[][] getBoardState() {
+        return Board.getBoard().getTiles();
     }
 
     @Override
@@ -285,6 +298,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return false;
     }
 
+    public HostCommunicationHandler getCommunicationHandler() {
+        return communicationHandler;
+    }
+
     /**
      * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
      * If no instance exists, it creates one and then returns it.
@@ -292,9 +309,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
-    }
-    public HostCommunicationHandler getCommunicationHandler() {
-        return communicationHandler;
     }
 
 
