@@ -15,6 +15,7 @@ public class HostCommunicationHandler implements ClientHandler {
 
     Map<String, Function<String[], String>> handlers = new HashMap<>();
 
+
     ObjectOutputStream out;
     ObjectInputStream in;
 
@@ -64,8 +65,13 @@ public class HostCommunicationHandler implements ClientHandler {
             return "";
         });
 
+        handlers.put("ping", (message) -> {
+            BS_Host_Model.getModel().getPlayerToSocketID().put(message[2],message[1]);
+            // TODO: 11/05/2023 think about what to do with identical names
+            System.out.println(message[1]+","+message[2]);
+            return "";
+        });
 
-        //guest messages to host
 
     }
 

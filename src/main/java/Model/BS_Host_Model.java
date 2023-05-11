@@ -19,6 +19,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Board board;
     Tile.Bag bag;
     Player player;
+    Map<String, String> playerToSocketID = new HashMap<>();
     private List<Player> players;
     private boolean isGameOver;
 
@@ -67,6 +68,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public static BS_Host_Model getModel() {
         return HostModelHelper.model_instance;
+    }
+
+    public Map<String, String> getPlayerToSocketID() {
+        return playerToSocketID;
     }
 
     public Socket getGameSocket() {
@@ -197,119 +202,131 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (splitResponse[1].equals("true")) {
                 players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() - 10);
                 Board.getBoard().placeWord(currentPlayerWords.get(0));
-                isGameOver();
-                communicationServer.updateAll(Board.getBoard().getTiles());
-                hasChanged();
-                notifyObservers("board:");
-            } else if (splitResponse[1].equals("false")) {
-                players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() + 10);
-            }
-            hasChanged();
-            notifyObservers("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
-            communicationServer.updateAll("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
-            return "";
-        } else {
-            System.out.println("Error: dictionaryLegal");
-            return "";
-        }
+                char[] wordChars = word.toCharArray();
+                players.get(currentPlayerIndex).get_hand().removeIf(tile -> {
+                    for (char c : wordChars) {
+                        if (tile.letter == c) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+                players.get(currentPlayerIndex).completeTilesTo7();
+                // TODO: 11/05/2023 send hand to the player; 
+                    isGameOver();
 
-    }
-
-    /**
-     * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
-     * and then sets each player's ID to be equal to their index in the list.
-     * return Void
-     */
-    public void sortAndSetID() {
-        players.sort(Comparator.comparing(Player::getTileLottery));
-        IntStream.rangeClosed(0, players.size()).forEach(i -> players.set(i, player.set_id(i)));
-        hasChanged();
-        notifyObservers("sortAndSetID" + player.get_id()); // this is host id
-        StringBuilder allPlayers = new StringBuilder();
-        for (Player p : players) {
-            allPlayers.append(p.get_id()).append(",").append(p.get_name()).append(":");
-        }
-        String allPlayersString = allPlayers.toString();
-
-        BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetID:" + players.size() + ":" + allPlayersString);
-
-    }
-
-    @Override
-    public int getCurrentPlayerScore() {
-        return 0;
-    }
-
-    @Override
-    public List<Tile> getCurrentPlayerHand() {
-        return null;
-    }
-
-    @Override
-    public Tile[][] getBoardState() {
-        return Board.getBoard().getTiles();
-    }
-
-    @Override
-    public int[] getBagState() {
-        return Tile.Bag.getBag()._quantitiesCounter;
-    }
-
-    @Override
-    public String getWinner() {
-        return null;
-    }
-
-    @Override
-    public boolean isHost() {
-        return true;
-    }
-
-    @Override
-    public boolean isGameOver() {
-        if (board.passCounter == getPlayers().size()) //all the players pass turns
-            isGameOver = true;
-        if (Tile.Bag.getBag().size() == 0)
-            for (Player p : players)
-                if (p.get_hand().size() == 0) {
-                    isGameOver = true;
-                    break;
+                    communicationServer.updateAll(Board.getBoard().getTiles());
+                    hasChanged();
+                    notifyObservers("board:");
+                } else if (splitResponse[1].equals("false")) {
+                    players.get(Integer.parseInt(id)).set_score(players.get(Integer.parseInt(id)).get_score() + 10);
                 }
-        if (isGameOver) {
-            communicationServer.updateAll("gameOver:" + getMaxScore());
+                hasChanged();
+                notifyObservers("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
+                communicationServer.updateAll("challengeWord:" + id + players.get(Integer.parseInt(id)).get_score());
+                return "";
+            } else {
+                System.out.println("Error: dictionaryLegal");
+                return "";
+            }
+
         }
-        return isGameOver;
+
+        /**
+         * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
+         * and then sets each player's ID to be equal to their index in the list.
+         * return Void
+         */
+        public void sortAndSetID () {
+            players.sort(Comparator.comparing(Player::getTileLottery));
+            IntStream.rangeClosed(0, players.size()).forEach(i -> players.set(i, player.set_id(i)));
+            hasChanged();
+            notifyObservers("sortAndSetID" + player.get_id()); // this is host id
+            StringBuilder allPlayers = new StringBuilder();
+            for (Player p : players) {
+                allPlayers.append(p.get_id()).append(",").append(p.get_name()).append(":");
+            }
+            String allPlayersString = allPlayers.toString();
+
+            BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetID:" + players.size() + ":" + allPlayersString);
+
+        }
+
+        @Override
+        public int getCurrentPlayerScore () {
+            return 0;
+        }
+
+        @Override
+        public List<Tile> getCurrentPlayerHand () {
+            return null;
+        }
+
+        @Override
+        public Tile[][] getBoardState () {
+            return Board.getBoard().getTiles();
+        }
+
+        @Override
+        public int[] getBagState () {
+            return Tile.Bag.getBag()._quantitiesCounter;
+        }
+
+        @Override
+        public String getWinner () {
+            return null;
+        }
+
+        @Override
+        public boolean isHost () {
+            return true;
+        }
+
+        @Override
+        public boolean isGameOver () {
+            if (board.passCounter == getPlayers().size()) //all the players pass turns
+                isGameOver = true;
+            if (Tile.Bag.getBag().size() == 0)
+                for (Player p : players)
+                    if (p.get_hand().size() == 0) {
+                        isGameOver = true;
+                        break;
+                    }
+            if (isGameOver) {
+                communicationServer.updateAll("gameOver:" + getMaxScore());
+            }
+            return isGameOver;
+        }
+
+        @Override
+        public void setGameOver ( boolean isGameOver){
+            this.isGameOver = isGameOver;
+        }
+
+        public String getMaxScore () {
+            Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
+            return winner.get_id() + ":" + winner.get_name();
+        }
+
+        @Override
+        public boolean isConnected () {
+            return false;
+        }
+
+        public HostCommunicationHandler getCommunicationHandler () {
+            return communicationHandler;
+        }
+
+        /**
+         * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
+         * If no instance exists, it creates one and then returns it.
+         * <p>
+         */
+        private static class HostModelHelper {
+            public static final BS_Host_Model model_instance = new BS_Host_Model();
+        }
+
+
     }
-
-    public String getMaxScore() {
-        Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
-        return winner.get_id() + ":" + winner.get_name();
-    }
-
-    @Override
-    public void setGameOver(boolean isGameOver) {
-        this.isGameOver = isGameOver;
-    }
-
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
-
-    public HostCommunicationHandler getCommunicationHandler() {
-        return communicationHandler;
-    }
-
-    /**
-     * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
-     * If no instance exists, it creates one and then returns it.
-     * <p>
-     */
-    private static class HostModelHelper {
-        public static final BS_Host_Model model_instance = new BS_Host_Model();
-    }
-
-
-}
 
 

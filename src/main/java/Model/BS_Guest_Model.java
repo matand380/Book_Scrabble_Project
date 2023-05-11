@@ -43,7 +43,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public void openSocket(String ip, int port) { //button start in the view
-        if (validateIpPort(ip, port)) {
+        //if (validateIpPort(ip, port)) {
         try {
             socket = new Socket(ip, port);
 
@@ -51,10 +51,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
             throw new RuntimeException(e);
         }
         communicationHandler.setCom();
-        communicationHandler.outMessages("addPlayer:" + player.get_name()); // FIXME: 10/05/2023 need to be changed
-        } else {
-            throw new RuntimeException("Invalid ip or port");
-        }
+        //communicationHandler.outMessages("addPlayer:" + player.get_name()); // FIXME: 10/05/2023 need to be changed
+//        } else {
+//            throw new RuntimeException("Invalid ip or port");
+//        }
     }
 
     private boolean validateIpPort(String ip, int port) {

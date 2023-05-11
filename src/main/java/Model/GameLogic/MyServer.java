@@ -15,6 +15,8 @@ public class MyServer {
     private volatile boolean stop;
     System.Logger logger;
 
+    Map<String,Socket> clientsMap = new HashMap<>();
+
 
     /**
      * The MyServer function is a constructor for the MyServer class.
@@ -49,7 +51,9 @@ public class MyServer {
             try {
                 Socket aClient = server.accept(); // blocking call
                 String clientID = UUID.randomUUID().toString();
-                clients.add(aClient);
+                clientsMap.put(clientID,aClient);
+                ping(clientID);
+
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
                 try {
@@ -76,6 +80,18 @@ public class MyServer {
             }
         }
         server.close();
+    }
+
+    private void ping(String clientID) {
+        Socket s = clientsMap.get(clientID);
+        ObjectOutputStream out;
+        try {
+            out = new ObjectOutputStream(s.getOutputStream());
+            out.writeObject("ping:" + clientID);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
@@ -144,6 +160,7 @@ public class MyServer {
     }
 
     public void updateAll(Object s) {
+
         for (Socket client : clients) {
             ObjectOutputStream out;
             try {

@@ -120,6 +120,8 @@ public class ClientCommunicationHandler {
                 BS_Guest_Model.getModel().hasChanged();
                 BS_Guest_Model.getModel().notifyObservers(key);
                 break;
+            case "ping":
+                outMessages("ping:"+id+":"+BS_Guest_Model.getModel().getPlayer().get_name());
         }
     }
 
