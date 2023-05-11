@@ -54,8 +54,11 @@ public class ClientCommunicationHandler {
             case "challenge":
 
             case "passTurn":
-                BS_Guest_Model.getModel().hasChanged();
-                BS_Guest_Model.getModel().notifyObservers("passTurn:" + id);
+                if(Integer.parseInt(id) == BS_Guest_Model.getModel().getPlayer()._id) {
+                    BS_Guest_Model.getModel().hasChanged();
+                    BS_Guest_Model.getModel().notifyObservers("passTurn:" + id);
+                }else
+                    break;
             case "sortAndSetID":
                 String[] players = key.split(":");
                 int size = Integer.parseInt(players[1]);
@@ -69,10 +72,7 @@ public class ClientCommunicationHandler {
 
                     }
                 }
-            case "setNextPlayer":
-
         }
-
     }
 
     public void outMessages(String key) {
