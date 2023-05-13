@@ -2,6 +2,7 @@ package Model.GameData;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -32,12 +33,13 @@ public class Player implements Serializable, ObjectFactory {
     /**
      * The addTilesTo7 function adds tiles to the hand until it has 7 tiles.
      */
-    public void completeTilesTo7() {
+    public String completeTilesTo7() {
         while (_hand.size() < 7) {
             if (Tile.Bag.getBag().size() == 0)
                 break;
             _hand.add(Tile.Bag.getBag().getRand());
         }
+        return this._socketID;
     }
 
     /**
@@ -124,8 +126,9 @@ public class Player implements Serializable, ObjectFactory {
 
     /**
      * The set_socketID function sets the value of the _socketID variable.
+     * <p>
+     * Set the _socketID of a particular row in the database
      *
-     *  Set the _socketID of a particular row in the database
      * @return A void, which means that it does not return anything
      */
     public Player set_socketID(String socketID) {
@@ -144,16 +147,6 @@ public class Player implements Serializable, ObjectFactory {
     }
 
     /**
-     * The set_score function sets the score of a player.
-     * <p>
-     *
-     * @param _score Set the score of the player
-     */
-    public void set_score(int _score) {
-        this._score = _score;
-    }
-
-    /**
      * The get_score function returns the score of the player.
      * <p>
      *
@@ -164,13 +157,13 @@ public class Player implements Serializable, ObjectFactory {
     }
 
     /**
-     * The set_name function sets the name of the person.
+     * The set_score function sets the score of a player.
+     * <p>
      *
-     * @param name Set the name of the contact
-     *  Nothing
+     * @param _score Set the score of the player
      */
-    public void set_name(String name) {
-        this._name = name;
+    public void set_score(int _score) {
+        this._score = _score;
     }
 
     /**
@@ -181,5 +174,26 @@ public class Player implements Serializable, ObjectFactory {
      */
     public String get_name() {
         return _name;
+    }
+
+    /**
+     * The set_name function sets the name of the person.
+     *
+     * @param name Set the name of the contact
+     *             Nothing
+     */
+    public void set_name(String name) {
+        this._name = name;
+    }
+
+    /**
+     * The updateHand function is used to update the hand of a player
+     * when receiving a new hand from the server.
+     * <p>
+     *
+     * @param inObject Update the hand of a player
+     */
+    public void updateHand(List<Tile> inObject) {
+        this._hand = inObject; // TODO: 13/05/2023 check if this works
     }
 }

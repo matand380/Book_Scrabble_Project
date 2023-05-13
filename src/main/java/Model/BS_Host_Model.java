@@ -127,7 +127,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
         sortAndSetIndex();
         //return all the tiles to the bag
 //        players.forEach(p -> bag.put(p.getTileLottery()));
-        players.forEach(Player::completeTilesTo7);
+        players.forEach(p-> {
+           String id = p.completeTilesTo7();
+           communicationServer.updateSpecificPlayer(id, p.get_hand());
+
+        });
+        // TODO: 11/05/2023 send to all clients their hand
 
     }
 
@@ -279,6 +284,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 }
         if (isGameOver) {
             communicationServer.updateAll("gameOver:" + getMaxScore());
+            // TODO: 11/05/2023 hasChanged() + notifyObservers()
         }
         return isGameOver;
     }

@@ -6,6 +6,7 @@ import Model.GameData.*;
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -105,7 +106,12 @@ public class ClientCommunicationHandler {
             }
             if (inObject instanceof Tile[][]) {
                 BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
+                // TODO: 13/05/2023 hasChanged() and notifyObservers()
                 return;
+            }
+            if (inObject instanceof List<?> && ((List<?>) inObject).get(0) instanceof Tile) {
+                BS_Guest_Model.getModel().getPlayer().updateHand((List<Tile>) inObject);
+                // TODO: 13/05/2023 hasChanged() and notifyObservers()
             }
         } catch (IOException | ClassNotFoundException e) {
             return;

@@ -39,7 +39,7 @@ public class BookScrabbleHandler implements ClientHandler {
         //List of all files and directories
         List<String> booksList = Arrays.asList(directoryPath.list());
         booksList.add(word);
-        String[] books = (String[]) booksList.toArray();
+        String[] books = (String[]) booksList.toArray(); // FIXME: 13/05/2023 it is not going to work
 
 
         if (line.charAt(0) == 'Q') {
