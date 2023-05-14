@@ -25,10 +25,12 @@ public class HostCommunicationHandler implements ClientHandler {
         });
         handlers.put("addPlayer", (message) -> {
             Player p = new Player();
-            p.set_name(message[1]);
-            p.setTileLottery();
             p.set_socketID(BS_Host_Model.getModel().getPlayerToSocketID().get(message[1]));
+            p.set_name(message[2]);
+            p.setTileLottery();
             BS_Host_Model.getModel().addPlayer(p);
+            BS_Host_Model.getModel().hasChanged();
+            BS_Host_Model.getModel().notifyObservers("playersListSize:" + BS_Host_Model.getModel().getPlayers().size());
             return "";
         });
 
@@ -58,13 +60,6 @@ public class HostCommunicationHandler implements ClientHandler {
                 return "challengeWord:" + PlayerIndex + ":" + response;
             }
             // TODO: 06/05/2023 handle challengeWord case
-            return "";
-        });
-
-        handlers.put("ping", (message) -> {
-            BS_Host_Model.getModel().getPlayerToSocketID().put(message[2],message[1]);
-            // TODO: 11/05/2023 think about what to do with identical names
-            System.out.println(message[1]+","+message[2]);
             return "";
         });
 
