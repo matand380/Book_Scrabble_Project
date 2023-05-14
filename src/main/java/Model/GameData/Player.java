@@ -128,12 +128,10 @@ public class Player implements Serializable, ObjectFactory {
      * The set_socketID function sets the value of the _socketID variable.
      * <p>
      * Set the _socketID of a particular row in the database
-     *
-     * @return A void, which means that it does not return anything
      */
-    public Player set_socketID(String socketID) {
+    public void set_socketID(String socketID) {
         this._socketID = socketID;
-        return null;
+
     }
 
     /**

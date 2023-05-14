@@ -13,16 +13,9 @@ import java.util.function.Function;
 public class ClientCommunicationHandler {
     ObjectOutputStream out;
     ObjectInputStream in;
-    Map<String, ObjectFactory> creatorMap = new HashMap<>();
     Map<String, Function<String[], String>> handlers = new HashMap<>();
 
     public ClientCommunicationHandler() {
-        //put all the classes in the map for being able to create them in handleRequests
-        creatorMap.put("Board", Board.getBoard());
-        creatorMap.put("Bag", Tile.Bag.getBag());
-        creatorMap.put("Player", new Player());
-        creatorMap.put("Tile", new Tile());
-        creatorMap.put("Word", new Word());
 
         //put all the methods in the map for being able to invoke them in handleRequests
         handlers.put("tryPlaceWord", (message) -> {
@@ -106,7 +99,6 @@ public class ClientCommunicationHandler {
             }
             if (inObject instanceof Tile[][]) {
                 BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
-                // TODO: 13/05/2023 hasChanged() and notifyObservers()
                 return;
             }
             if (inObject instanceof List<?> && ((List<?>) inObject).get(0) instanceof Tile) {
@@ -201,14 +193,6 @@ public class ClientCommunicationHandler {
             }
         }
     }
-
-    public Object getInstance(String key) {
-        if (creatorMap.containsKey(key)) {
-            return creatorMap.get(key).create();
-        }
-        return null;
-    }
-
 
     public void close() {
         try {
