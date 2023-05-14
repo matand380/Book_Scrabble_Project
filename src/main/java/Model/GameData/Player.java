@@ -163,7 +163,11 @@ public class Player implements Serializable, ObjectFactory {
      * @param _score Set the score of the player
      */
     public void set_score(int _score) {
-        this._score = _score;
+        if (_score >= 0)
+            this._score = _score;
+        else {
+            this._score = 0;
+        }
     }
 
     /**

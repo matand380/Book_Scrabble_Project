@@ -15,6 +15,9 @@ public class ClientCommunicationHandler {
     ObjectInputStream in;
     Map<String, Function<String[], String>> handlers = new HashMap<>();
 
+    boolean stop = false;
+
+
     public ClientCommunicationHandler() {
 
         //put all the methods in the map for being able to invoke them in handleRequests
@@ -85,19 +88,22 @@ public class ClientCommunicationHandler {
     }
 
     public void setCom() {
-        try {
-            out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
-            in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
-            inMessages();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        while (!stop) {
+            try {
+                out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
+                in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            inMessages(in);
         }
+
     }
 
-    public void inMessages() {
+    public void inMessages(ObjectInputStream inputStream) {
         String key = null;
         try {
-            Object inObject = in.readObject();
+            Object inObject = inputStream.readObject();
             if (inObject instanceof String) {
                 key = (String) inObject;
             }
@@ -105,8 +111,9 @@ public class ClientCommunicationHandler {
                 BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
                 return;
             }
-            if (inObject instanceof List<?> && ((List<?>) inObject).get(0) instanceof Tile) {
-                BS_Guest_Model.getModel().getPlayer().updateHand((List<Tile>) inObject);
+            if (inObject instanceof Tile[]) {
+                List<Tile> newHand = Arrays.asList((Tile[]) inObject);
+                BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
                 // FIXME: 14/05/2023 need to check again casting to List<Tile> and its communication flow
                 return;
                 // TODO: 13/05/2023 hasChanged() and notifyObservers()

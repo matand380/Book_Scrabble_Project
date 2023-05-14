@@ -5,10 +5,11 @@ import Model.GameLogic.*;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
+
+
+
 
 public class BS_Host_Model extends Observable implements BS_Model {
     public ArrayList<Word> currentPlayerWords;
@@ -118,8 +119,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
         sortAndSetIndex();
         players.forEach(p -> {
             String id = p.completeTilesTo7();
+            Tile[] tiles = p.get_hand().toArray(new Tile[p.get_hand().size()]);
             if (id != null)
-                communicationServer.updateSpecificPlayer(id, p.get_hand());
+                communicationServer.updateSpecificPlayer(id, tiles);
         });
 
     }
@@ -190,11 +192,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
         int PlayerIndex = Integer.parseInt(index);
         BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
         String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        System.out.println(response); // TODO: 14/05/2023 remove this line, only for testing
         String[] splitResponse = response.split(":");
         if (splitResponse[0].equals("C")) {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
-                placeAndComplete7(word);
+                placeAndComplete7(word); // FIXME: 14/05/2023 it raises an NullPointerException if currentPlayerWords is empty
                 // TODO: 11/05/2023 send hand to the player;
                 isGameOver();
                 communicationServer.updateAll(Board.getBoard().getTiles());
@@ -206,11 +209,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
             hasChanged();
             notifyObservers("challengeWord:" + PlayerIndex + players.get(PlayerIndex).get_score());
             communicationServer.updateAll("challengeWord:" + PlayerIndex + players.get(PlayerIndex).get_score());
-            return "";
         } else {
             System.out.println("Error: dictionaryLegal");
-            return "";
         }
+        return "";
 
     }
 

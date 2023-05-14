@@ -112,7 +112,6 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
 
-
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
         try {
@@ -154,9 +153,10 @@ public class HostCommunicationHandler implements ClientHandler {
 
     public void messagesToGameServer(String key) {
         if (key != null) {
-            try{
+            try {
                 toGameServer = new PrintWriter(BS_Host_Model.getModel().getGameSocket().getOutputStream());
                 toGameServer.println(key);
+                toGameServer.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -165,16 +165,15 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
     public String messagesFromGameServer() {
-            try{
-                fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
-                String key = null;
-                while (fromGameServer.hasNextLine()) {
-                     key = fromGameServer.nextLine();
-                }
-                return key;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
+            String key = null;
+            StringBuilder sb = new StringBuilder();
+            key = fromGameServer.next();
+            return key;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }

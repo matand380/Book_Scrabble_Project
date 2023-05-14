@@ -129,16 +129,18 @@ public class MainTrain {
 //		System.out.println("Game Data done");
 		BS_Host_Model host = BS_Host_Model.getModel();
 		host.setPlayerProperties("Eviatar");
+		Tile[] tiles = new Tile[4];
+		tiles[0] = new Tile('H', 4);
+		tiles[1] = new Tile('O', 1);
+		tiles[2] = new Tile('R', 1);
+		tiles[3] = new Tile('N', 1);
+		Word word = new Word(tiles, 7, 5, false);
+			host.tryPlaceWord(word);
 		BS_Guest_Model client = BS_Guest_Model.getModel();
 		client.setPlayerProperties("matan");
 		client.openSocket("localhost", 65533);
 		host.startNewGame();
 
-//		client.getCommunicationHandler().outMessages("challenge");
-//		client.tryPlaceWord("HORN",7,5,false);
-//		client.getCommunicationHandler().inMessages();
-////		client.passTurn(4);
-//		client.getCommunicationHandler().inMessages();
 
 	}
 
