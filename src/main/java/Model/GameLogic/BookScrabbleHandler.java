@@ -2,9 +2,8 @@ package Model.GameLogic;
 
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.nio.file.*;
+import java.util.*;
 
 public class BookScrabbleHandler implements ClientHandler {
 
@@ -35,13 +34,20 @@ public class BookScrabbleHandler implements ClientHandler {
         String word = line.split(":")[line.split(":").length - 1];
         System.out.println(word);
         //Creating a File object for directory
-        File directoryPath = new File("src/main/resources/books");
-        //List of all files and directories
-        List<String> booksList = Arrays.asList(directoryPath.list());
+        String directoryPath = "src/main/resources/books";
+        List<String> booksList = new ArrayList<>();
+        Path pathBooks = Paths.get(directoryPath);
+        try {
+            Files.walk(pathBooks).forEach(filePath -> {
+                if (Files.isRegularFile(filePath)) {
+                    booksList.add(filePath.getFileName().toString());
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         booksList.add(word);
-        String[] books = (String[]) booksList.toArray(new String[0]); // FIXME: 13/05/2023 it is not going to work
-
-
+        String[] books = booksList.toArray(new String[0]);
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.getDictionaryManager().query(books)) {
                 out.println("Q:true\n");
@@ -55,8 +61,6 @@ public class BookScrabbleHandler implements ClientHandler {
                 out.println("C:false\n");
             }
         }
-
-
     }
 
 
