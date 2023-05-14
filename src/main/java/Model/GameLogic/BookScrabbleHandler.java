@@ -34,7 +34,7 @@ public class BookScrabbleHandler implements ClientHandler {
         String word = line.split(":")[line.split(":").length - 1];
         System.out.println(word);
         //Creating a File object for directory
-        String directoryPath = "src/main/resources/books";
+        String directoryPath = getClass().getClassLoader().getResource("books").getPath();
         List<String> booksList = new ArrayList<>();
         Path pathBooks = Paths.get(directoryPath);
         try {

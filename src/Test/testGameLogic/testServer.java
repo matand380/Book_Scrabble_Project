@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class testServer {
     public static void main(String[] args) {
-        if (testServer()) {
+       if (testServer()) {
             testDM();
             testBookScrabbleHandler();
             System.out.println("testServer-done");
@@ -41,7 +41,7 @@ public class testServer {
         boolean ok = true;
         Random r = new Random();
         int port = 6000 + r.nextInt(1000);
-        MyServer s = new MyServer(port, new testServer.ClientHandler1());
+        MyServer s = new MyServer(port, new ClientHandler1());
         int c = Thread.activeCount();
         s.start(); // runs in the background
         try {
@@ -89,7 +89,7 @@ public class testServer {
         String[] t2 = writeFile("t2.txt");
         String[] t3 = writeFile("t3.txt");
 
-        DictionaryManager dm = DictionaryManager.get();
+        DictionaryManager dm = DictionaryManager.getDictionaryManager();
 
         if (!dm.query("t1.txt", "t2.txt", t2[4])) System.out.println("1 problem for Dictionary Manager query ");
         if (!dm.query("t1.txt", "t2.txt", t1[9])) System.out.println("2 problem for Dictionary Manager query");
