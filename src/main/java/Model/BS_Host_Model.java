@@ -228,7 +228,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         notifyObservers("sortAndSetIndex" + player.get_index()); // this is host index
         StringBuilder allPlayers = new StringBuilder();
         for (Player p : players) {
-            allPlayers.append(p.get_index()).append(",").append(p.get_name()).append(":");
+            allPlayers.append(p.get_index()).append(",").append(p.get_socketID()).append(":");
         }
         String allPlayersString = allPlayers.toString();
 

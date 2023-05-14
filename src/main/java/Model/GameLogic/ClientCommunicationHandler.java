@@ -51,7 +51,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().playersScores = new String[sizeSort];
             for (int i = 0; i < sizeSort; i++) {
                 String[] player = message[i + 2].split(",");
-                if (player[i].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
+                if (player[i].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
                     BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
                     BS_Guest_Model.getModel().hasChanged();
                     BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
