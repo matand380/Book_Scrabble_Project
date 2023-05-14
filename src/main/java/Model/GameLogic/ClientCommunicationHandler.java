@@ -27,15 +27,19 @@ public class ClientCommunicationHandler {
                     BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0");
                 }
             } else {
+                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
+                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
+                }
                 BS_Guest_Model.getModel().setPlayersScores(index, score);
             }
             return "";
         });
         handlers.put("challengeWord", (message) -> {
             int index = Integer.parseInt(message[1]);
-            BS_Guest_Model.getModel().playersScores[index] = message[2];
+            String score = message[2];
+            BS_Guest_Model.getModel().playersScores[index] += score;
             if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                BS_Guest_Model.getModel().getPlayer().set_score(Integer.parseInt(message[2]));
+                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
             }
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]);
@@ -47,7 +51,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().playersScores = new String[sizeSort];
             for (int i = 0; i < sizeSort; i++) {
                 String[] player = message[i + 2].split(",");
-                if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
+                if (player[i].equals(BS_Guest_Model.getModel().getPlayer().get_name())) {
                     BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
                     BS_Guest_Model.getModel().hasChanged();
                     BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());

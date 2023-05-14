@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Player implements Serializable, ObjectFactory {
-    public int _index;
-    public String _socketID; //socketID of the player
-    String _name;
-    int _score;
-    List<Tile> _hand;
-    String tileLottery;
+    private int _index;
+    private String _socketID; //socketID of the player
+    private String _name;
+    private int _score;
+    private List<Tile> _hand;
+    private String tileLottery;
 
     /**
      * The Player function is a constructor for the Player class.
@@ -34,10 +34,10 @@ public class Player implements Serializable, ObjectFactory {
      * The addTilesTo7 function adds tiles to the hand until it has 7 tiles.
      */
     public String completeTilesTo7() {
-        while (_hand.size() < 7) {
+        while (this.get_hand().size() < 7) {
             if (Tile.Bag.getBag().size() == 0)
                 break;
-            _hand.add(Tile.Bag.getBag().getRand());
+            this.get_hand().add(Tile.Bag.getBag().getRand());
         }
         return this._socketID;
     }
@@ -59,7 +59,7 @@ public class Player implements Serializable, ObjectFactory {
      * @return True if the player's rack is empty, false otherwise
      */
     public boolean isRackEmpty() {
-        return Tile.Bag.getBag().size() == 0 && _hand.isEmpty();
+        return Tile.Bag.getBag().size() == 0 && this.get_hand().isEmpty();
 
     }
 
@@ -70,7 +70,7 @@ public class Player implements Serializable, ObjectFactory {
      * @return The tile with the given letter
      */
     public Tile charToTile(char c) {
-        for (Tile t : _hand) {
+        for (Tile t : this.get_hand()) {
             if (t.letter == c) {
                 return t;
             }
@@ -109,9 +109,8 @@ public class Player implements Serializable, ObjectFactory {
      * @param _index Set the index of the player
      * @return Null
      */
-    public Player set_index(int _index) {
+    public void set_index(int _index) {
         this._index = _index;
-        return null;
     }
 
     /**
@@ -141,6 +140,10 @@ public class Player implements Serializable, ObjectFactory {
      */
     public List<Tile> get_hand() {
         return _hand;
+    }
+
+    public void set_hand(List<Tile> _hand) {
+        this._hand = _hand;
     }
 
     /**
@@ -191,7 +194,7 @@ public class Player implements Serializable, ObjectFactory {
      * @param inObject Update the hand of a player
      */
     public void updateHand(List<Tile> inObject) {
-        this._hand.clear();
-        this._hand.addAll(inObject);
+        this.get_hand().clear();
+        this.get_hand().addAll(inObject);
     }
 }
