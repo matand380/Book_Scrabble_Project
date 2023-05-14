@@ -7,6 +7,8 @@ import java.util.Observer;
 
 public class BS_ViewModel extends Observable implements Observer {
 
+    String winner;
+
     @Override
     public void update(Observable o, Object arg) {
         if (o == BS_Host_Model.getModel())

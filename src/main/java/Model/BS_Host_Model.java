@@ -66,6 +66,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
+    /**
+     * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
+     * If no instance exists, it creates one and then returns it.
+     * <p>
+     */
+    public static BS_Host_Model getModel() {
+        return HostModelHelper.model_instance;
+    }
+
     public Map<String, String> getPlayerToSocketID() {
         return playerToSocketID;
     }
@@ -111,7 +120,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return currentPlayerIndex;
     }
 
-    @Override
     public void setNextPlayerIndex(int index) {
         currentPlayerIndex = (index + 1) % players.size();
 
@@ -125,9 +133,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public void startNewGame() {
         sortAndSetIndex();
-        players.forEach(p-> {
-           String id = p.completeTilesTo7();
-           communicationServer.updateSpecificPlayer(id, p.get_hand());
+        players.forEach(p -> {
+            String id = p.completeTilesTo7();
+            communicationServer.updateSpecificPlayer(id, p.get_hand());
         });
 
     }
@@ -185,7 +193,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         }
     }
 
-
     /**
      * The tryPlaceWord function is used to try and place a word on the board.
      * If the word can be placed, it will return true and add the score of that player.
@@ -204,7 +211,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
                 placeAndComplete7(word);
-                // TODO: 11/05/2023 send hand to the player; 
+                // TODO: 11/05/2023 send hand to the player;
                 isGameOver();
                 communicationServer.updateAll(Board.getBoard().getTiles());
                 hasChanged();
@@ -268,7 +275,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return true;
     }
 
-    @Override
     public boolean isGameOver() {
         if (board.passCounter == getPlayers().size()) //all the players pass turns
             isGameOver = true;
@@ -295,37 +301,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return winner.get_index() + ":" + winner.get_name();
     }
 
-    @Override
-    public boolean isConnected() {
-        return false;
-    }
-
     public HostCommunicationHandler getCommunicationHandler() {
         return communicationHandler;
     }
 
-    private static class HostModelHelper {
-        public static final BS_Host_Model model_instance = new BS_Host_Model();
-    }
-
-    /**
-     * The getModel function is a static function that returns the singleton instance of the BS_Host_Model class.
-     * If no instance exists, it creates one and then returns it.
-     * <p>
-     */
-    public static BS_Host_Model getModel() {
-        return HostModelHelper.model_instance;
-    }
-
-
     @Override
     public int getCurrentPlayerScore() {
-        return 0;
+        return player.get_score();
     }
 
     @Override
     public List<Tile> getCurrentPlayerHand() {
-        return null;
+        return player.get_hand();
     }
 
     @Override
@@ -333,15 +320,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return Board.getBoard().getTiles();
     }
 
-    @Override
-    public int[] getBagState() {
-        return Tile.Bag.getBag()._quantitiesCounter;
+    private static class HostModelHelper {
+        public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
 
-    @Override
-    public String getWinner() {
-        return null;
-    }
 
 }
 
