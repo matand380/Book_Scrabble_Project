@@ -30,7 +30,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
-        Player hostPlayer = new Player();
+        player = new Player();
 
         //Communication initialization
         try {
@@ -46,23 +46,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         communicationServer.start();
 
         //only for testing
-        Player player1 = new Player();
-        player1.set_name("player1");
-        List<Tile> hand = new ArrayList<>();
-        Tile h = bag.getTile('H');
-        Tile o = bag.getTile('O');
-        Tile r = bag.getTile('R');
-        Tile n = bag.getTile('N');
-        hand.add(h);
-        hand.add(o);
-        hand.add(r);
-        hand.add(n);
-        player1.get_hand().addAll(hand);
-        Player player2 = new Player();
-        player2.set_name("player2");
-        players.add(player1);
-        players.add(player2);
-        currentPlayerIndex = 0;
 
     }
 
@@ -135,7 +118,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
         sortAndSetIndex();
         players.forEach(p -> {
             String id = p.completeTilesTo7();
-            communicationServer.updateSpecificPlayer(id, p.get_hand());
+            if (id != null)
+                communicationServer.updateSpecificPlayer(id, p.get_hand());
         });
 
     }
@@ -237,7 +221,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
     public void sortAndSetIndex() {
         players.sort(Comparator.comparing(Player::getTileLottery));
-        IntStream.rangeClosed(0, players.size()).forEach(i -> players.set(i, player.set_index(i)));
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).set_index(i);
+        }
         hasChanged();
         notifyObservers("sortAndSetIndex" + player.get_index()); // this is host index
         StringBuilder allPlayers = new StringBuilder();
@@ -318,6 +304,14 @@ public class BS_Host_Model extends Observable implements BS_Model {
     @Override
     public Tile[][] getBoardState() {
         return Board.getBoard().getTiles();
+    }
+
+    @Override
+    public void setPlayerProperties(String name) {
+        player.set_name(name);
+        player.set_socketID(null);
+        player.setTileLottery();
+        players.add(player);
     }
 
     private static class HostModelHelper {

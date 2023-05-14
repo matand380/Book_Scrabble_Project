@@ -75,7 +75,7 @@ public class ClientCommunicationHandler {
         handlers.put("ping", (message) -> {
             String socketID = message[1];
             BS_Guest_Model.getModel().getPlayer().set_socketID(socketID);
-            outMessages("addPLayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
+            outMessages("addPlayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
             return "";
         });
     }
@@ -103,6 +103,8 @@ public class ClientCommunicationHandler {
             }
             if (inObject instanceof List<?> && ((List<?>) inObject).get(0) instanceof Tile) {
                 BS_Guest_Model.getModel().getPlayer().updateHand((List<Tile>) inObject);
+                // FIXME: 14/05/2023 need to check again casting to List<Tile> and its communication flow
+                return;
                 // TODO: 13/05/2023 hasChanged() and notifyObservers()
             }
         } catch (IOException | ClassNotFoundException e) {

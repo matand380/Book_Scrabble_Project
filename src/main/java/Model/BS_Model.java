@@ -10,6 +10,7 @@ import java.util.List;
 public interface BS_Model {
 
     // Methods for setting data in the model
+    public void setPlayerProperties(String name);
     void passTurn(int id);
 
     void setGameOver(boolean isGameOver);

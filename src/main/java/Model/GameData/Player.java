@@ -191,6 +191,7 @@ public class Player implements Serializable, ObjectFactory {
      * @param inObject Update the hand of a player
      */
     public void updateHand(List<Tile> inObject) {
-        this._hand = inObject; // TODO: 13/05/2023 check if this works
+        this._hand.clear();
+        this._hand.addAll(inObject);
     }
 }

@@ -106,6 +106,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return player;
     }
 
+    @Override
     public void setPlayerProperties(String name) {
         this.player.set_name(name);
     }

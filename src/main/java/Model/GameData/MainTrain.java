@@ -128,9 +128,12 @@ public class MainTrain {
 //		testBoard(); // 70 points
 //		System.out.println("Game Data done");
 		BS_Host_Model host = BS_Host_Model.getModel();
+		host.setPlayerProperties("Eviatar");
 		BS_Guest_Model client = BS_Guest_Model.getModel();
 		client.setPlayerProperties("matan");
 		client.openSocket("localhost", 65533);
+		host.startNewGame();
+
 //		client.getCommunicationHandler().outMessages("challenge");
 //		client.tryPlaceWord("HORN",7,5,false);
 //		client.getCommunicationHandler().inMessages();
