@@ -50,7 +50,7 @@ public class MyServer {
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
-                String clientID = UUID.randomUUID().toString();
+                String clientID = UUID.randomUUID().toString().substring(0,6);
                 clientsMap.put(clientID,aClient);
                 ping(clientID);
 
