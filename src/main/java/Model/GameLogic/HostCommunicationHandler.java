@@ -27,6 +27,7 @@ public class HostCommunicationHandler implements ClientHandler {
             Player p = new Player();
             p.set_socketID(BS_Host_Model.getModel().getPlayerToSocketID().get(message[1]));
             p.set_name(message[2]);
+            BS_Host_Model.getModel().getPlayerToSocketID().put(message[2], p.get_socketID());
             p.setTileLottery();
             BS_Host_Model.getModel().addPlayer(p);
             BS_Host_Model.getModel().hasChanged();
