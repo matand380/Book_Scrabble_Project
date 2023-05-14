@@ -75,7 +75,7 @@ public class ClientCommunicationHandler {
         handlers.put("ping", (message) -> {
             String socketID = message[1];
             BS_Guest_Model.getModel().getPlayer().set_socketID(socketID);
-            outMessages("ping:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
+            outMessages("addPLayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
             return "";
         });
     }

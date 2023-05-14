@@ -84,7 +84,6 @@ public class Player implements Serializable, ObjectFactory {
      * @return A tile from the bag
      */
     public String getTileLottery() {
-
         return tileLottery;
     }
 
