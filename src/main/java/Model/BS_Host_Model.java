@@ -33,17 +33,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
         players = new ArrayList<>();
         player = new Player();
 
-        //Communication initialization
-        try {
-            gameSocket = new Socket("localhost", 5555);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        openSocket("127.0.0.1", 5555);
         System.out.println("Enter port number for communication server: ");
         Scanner scanner = new Scanner(System.in);
         int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);
-        System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
+    //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
         communicationServer.start();
 
         //only for testing
@@ -120,8 +116,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
         players.forEach(p -> {
             String id = p.completeTilesTo7();
             Tile[] tiles = p.get_hand().toArray(new Tile[p.get_hand().size()]);
+            StringBuilder sb = new StringBuilder();
+            for (Tile t : tiles) {
+                sb.append(t.letter+","+t.getScore()+":");
+            }
+            String tilesString = sb.toString();
             if (id != null)
-                communicationServer.updateSpecificPlayer(id, tiles);
+                communicationServer.updateSpecificPlayer(id, tilesString);
         });
 
     }
@@ -219,7 +220,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     /**
      * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
      * and then sets each player's ID to be equal to their index in the list.
-     * return Void
+     * Return Void
      */
     public void sortAndSetIndex() {
         players.sort(Comparator.comparing(Player::getTileLottery));
@@ -240,8 +241,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The placeAndComplete7 function is used to place a word on the board and then complete the player's hand
-     * to 7 tiles. It does this by removing all of the letters in that word from their hand, and then completing
-     * their hand with new tiles from the bag. This function is called when a player has placed all of their tiles
+     * to 7 tiles.
+     * It does this by removing all the letters in that word from their hand, and then completing
+     * their hand with new tiles from the bag.
+     * This function is called when a player has placed all of their tiles
      * on one turn, so they do not need to draw any more tiles after placing them.
      */
     private void placeAndComplete7(String word) {

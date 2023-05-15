@@ -181,21 +181,22 @@ public class MyServer {
 
     public void updateSpecificPlayer(String id, Object obj)
     {
-        Socket s = clientsMap.get(id);
-        ObjectOutputStream out;
-        try {
-            out = new ObjectOutputStream(s.getOutputStream());
-        } catch (IOException e) {
-            logger.log(System.Logger.Level.ERROR, "Error in update specific player: getting output stream");
-            throw new RuntimeException(e);
-        }
-        try {
-            out.writeObject(obj);
-        } catch (IOException e) {
-            logger.log(System.Logger.Level.ERROR, "Error in update specific player: writing to output stream");
-            throw new RuntimeException(e);
-        }
-
+        new Thread(() -> {
+            Socket s = clientsMap.get(id);
+            ObjectOutputStream out;
+            try {
+                out = new ObjectOutputStream(s.getOutputStream());
+            } catch (IOException e) {
+                logger.log(System.Logger.Level.ERROR, "Error in update specific player: getting output stream");
+                throw new RuntimeException(e);
+            }
+            try {
+                out.writeObject(obj);
+            } catch (IOException e) {
+                logger.log(System.Logger.Level.ERROR, "Error in update specific player: writing to output stream");
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 }
 

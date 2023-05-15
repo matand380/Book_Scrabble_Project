@@ -17,15 +17,15 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Socket socket;
     Tile[][] tileBoard;
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
-    ClientCommunicationHandler communicationHandler = new ClientCommunicationHandler();
+    ClientCommunicationHandler communicationHandler;
 
     private BS_Guest_Model() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter the ip address of the server");
-        String ip = scanner.nextLine();
-        System.out.println("Please enter the port of the server");
-        int port = scanner.nextInt();
-        scanner.close();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please enter the ip address of the server");
+//        String ip = scanner.nextLine();
+//        System.out.println("Please enter the port of the server");
+//        int port = scanner.nextInt();
+//        scanner.close();
         player = new Player();
         playersScores = new String[0];
     }
@@ -35,14 +35,15 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public void openSocket(String ip, int port) { //button start in the view
-        //if (validateIpPort(ip, port)) {
-        try {
-            socket = new Socket(ip, port);
+        if (validateIpPort(ip, port)) {
+            try {
+                socket = new Socket(ip, port);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            communicationHandler = new ClientCommunicationHandler();
         }
-        communicationHandler.setCom();
     }
 
     private boolean validateIpPort(String ip, int port) {
