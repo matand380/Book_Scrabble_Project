@@ -35,7 +35,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
 
-        openSocket("17.235.253.109", 1234); //copy local server ip + server port
+        openSocket("17.235.253.109", 65533); //copy local server ip + server port
         System.out.println("Enter server port number : ");
         Scanner scanner = new Scanner(System.in);
         int port = scanner.nextInt();
