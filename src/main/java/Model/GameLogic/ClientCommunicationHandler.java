@@ -116,6 +116,7 @@ public class ClientCommunicationHandler {
             String[] newScores = gson.fromJson(scores, String[].class);
             BS_Guest_Model.getModel().setPlayersScores(newScores);
             return "";
+            // FIXME: 15/05/2023 need to implement this on host side
         });
 
 

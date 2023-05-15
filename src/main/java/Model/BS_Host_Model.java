@@ -8,11 +8,8 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+
 import com.google.gson.Gson;
-
-
-
-
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -43,7 +40,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         Scanner scanner = new Scanner(System.in);
         int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);
-    //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
+        //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
         communicationServer.start();
 
         //only for testing
@@ -167,6 +164,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
             // TODO: 11/05/2023 if challenge didnt happen place the word
             //if(!isChallenge) {// implement isChallenge
             placeAndComplete7(word.toString());
+            // TODO: 15/05/2023 add Gson of the Tile[][] to the updateAll
+            ////////////////////////////////////////////
+            Gson gson = new Gson();
+            String json = gson.toJson(Board.getBoard().getTiles());
+            communicationServer.updateAll("tileBoard:" + json);
+            ////////////////////////////////////////////
+
             // }
             // TODO: 11/05/2023 check isGameOver
             isGameOver();
