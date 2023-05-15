@@ -31,7 +31,7 @@ public class BookScrabbleHandler implements ClientHandler {
         in = new Scanner(inFromclient);
         out = new PrintWriter(outToClient);
         String line = in.nextLine();
-        String word = line.split(":")[line.split(":").length - 1];
+        String word = line.split(":")[line.split(":").length - 1]; //word from client
         System.out.println(word);
         //Creating a File object for directory
         String directoryPath = getClass().getClassLoader().getResource("books").getPath();
@@ -47,7 +47,7 @@ public class BookScrabbleHandler implements ClientHandler {
             e.printStackTrace();
         }
         booksList.add(word);
-        String[] books = booksList.toArray(new String[0]);
+        String[] books = booksList.toArray(new String[0]); // book1:word
         if (line.charAt(0) == 'Q') {
             if (DictionaryManager.getDictionaryManager().query(books)) {
                 out.println("Q:true\n");

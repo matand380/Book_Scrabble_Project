@@ -18,7 +18,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Tile[][] tileBoard;
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
     ClientCommunicationHandler communicationHandler;
-
     private BS_Guest_Model() {
 //        Scanner scanner = new Scanner(System.in);
 //        System.out.println("Please enter the ip address of the server");
@@ -32,6 +31,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     public static BS_Guest_Model getModel() {
         return BS_Guest_ModelHolder.BSGuestModelInstance;
+    }
+
+    public void setPlayersScores(String[] playersScores) {
+        this.playersScores = playersScores;
     }
 
     public void openSocket(String ip, int port) { //button start in the view
@@ -93,7 +96,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         notifyObservers("board:");
     }
 
-    public void setPlayersScores(int index, String score) {
+    public void setPlayerScore(int index, String score) {
         playersScores[index] += score;
         setChanged();
         notifyObservers("tryPlaceWord:" + index + ":" + score);

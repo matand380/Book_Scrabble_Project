@@ -6,7 +6,11 @@ import Model.GameLogic.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+import com.google.gson.Gson;
+
+
 
 
 
@@ -112,17 +116,17 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
 
     public void startNewGame() {
+        Gson gson = new Gson();
         sortAndSetIndex();
         players.forEach(p -> {
             String id = p.completeTilesTo7();
             Tile[] tiles = p.get_hand().toArray(new Tile[p.get_hand().size()]);
-            StringBuilder sb = new StringBuilder();
-            for (Tile t : tiles) {
-                sb.append(t.letter+","+t.getScore()+":");
+
+            if (id != null) {
+                String json = gson.toJson(tiles);
+                communicationServer.updateSpecificPlayer(id, "hand:" + json);
             }
-            String tilesString = sb.toString();
-            if (id != null)
-                communicationServer.updateSpecificPlayer(id, tilesString);
+
         });
 
     }

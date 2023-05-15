@@ -8,7 +8,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
+
 
 public class ClientCommunicationHandler {
     ObjectOutputStream out;
@@ -33,7 +39,7 @@ public class ClientCommunicationHandler {
                 if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
                     BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
                 }
-                BS_Guest_Model.getModel().setPlayersScores(index, score);
+                BS_Guest_Model.getModel().setPlayerScore(index, score);
             }
             return "";
         });
@@ -86,6 +92,34 @@ public class ClientCommunicationHandler {
             return "";
         });
 
+        handlers.put("hand", (message) -> {
+            String hand = message[1];
+            Gson gson = new Gson();
+            Tile[] newTiles = gson.fromJson(hand, Tile[].class);
+            List<Tile> newHand = Arrays.asList(newTiles);
+            BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
+            return "";
+        });
+
+        handlers.put("tileBoard", (message) -> {
+            String tiles = message[1];
+            Gson gson = new Gson();
+            Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
+            BS_Guest_Model.getModel().setBoard(newTiles);
+            // FIXME: 15/05/2023 need to implement this on host side
+            return "";
+        });
+
+        handlers.put("playersScores", (message) -> {
+            String scores = message[1];
+            Gson gson = new Gson();
+            String[] newScores = gson.fromJson(scores, String[].class);
+            BS_Guest_Model.getModel().setPlayersScores(newScores);
+            return "";
+        });
+
+
+
         try {
             out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
             in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
@@ -106,14 +140,19 @@ public class ClientCommunicationHandler {
 //                inMessages(in);
 //            }
 //    }).start();
-        Thread inMessageThread = new Thread(this::inMessages);
-        inMessageThread.start();
-
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            while (!stop) {
+                inMessages();
+            }
+            // FIXME: 15/05/2023 check this again
+        });
 
     }
 
 
     public void inMessages() {
+
         String key = null;
         try {
             Object inObject = in.readObject();
@@ -124,13 +163,7 @@ public class ClientCommunicationHandler {
                 BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
 
             }
-            if (inObject instanceof Tile[]) {
-                List<Tile> newHand = Arrays.asList((Tile[]) inObject);
-                BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
-                // FIXME: 14/05/2023 need to check again casting to List<Tile> and its communication flow
 
-                // TODO: 13/05/2023 hasChanged() and notifyObservers()
-            }
         } catch (IOException | ClassNotFoundException e) {
 
         }
@@ -143,7 +176,6 @@ public class ClientCommunicationHandler {
         } else {
             System.out.println("No handler for method " + methodName);
         }
-
 
     }
 
