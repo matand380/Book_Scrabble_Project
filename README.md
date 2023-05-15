@@ -1,13 +1,13 @@
 <div align="center">
- <img src="src/main/resources/images/Logo.JPG" alt="Scrabble Logo" width="100" height="100">
-
+  <img src="src/main/resources/images/Logo.JPG" alt="Scrabble Logo" width="100" height="100">
 </div>
 
-<h1 align="center">Scrabble Game</h1>
+<h1 align="center" style="color: #FFA500; font-family: 'Arial Black', sans-serif;">Scrabble Game</h1>
 
-<p align="center">Welcome to the <strong>Scrabble Game</strong>! Challenge your friends in this digital version of the classic board game. Test your word-building skills, strategic thinking, and aim for the highest score!</p>
+<p align="center" style="font-size: 18px;">Welcome to the <strong>Scrabble Game</strong>! Challenge your friends in this digital version of the classic board game. Test your word-building skills, strategic thinking, and aim for the highest score!</p>
 
 ---
+
 
 ## Features
 
