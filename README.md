@@ -2,12 +2,11 @@
  <img src="src/main/resources/images/Logo.JPG" alt="Scrabble Logo" width="100" height="100">
 </div>
 
-# Scrabble Game
+<h1 align="center">Scrabble Game</h1>
 
-Welcome to the **Scrabble Game**! Challenge your friends in this digital version of the classic board game. Test your word-building skills, strategic thinking, and aim for the highest score!
+<p align="center">Welcome to the <strong>Scrabble Game</strong>! Challenge your friends in this digital version of the classic board game. Test your word-building skills, strategic thinking, and aim for the highest score!</p>
 
-* This software development project planning document outlines the plan for the Book Scrabble project, which is the final project of the Advanced Software Development course.
-* The purpose of this document is to provide a clear guide for the project team and lecturers on how the project will be executed and the expected outcomes.
+---
 
 ## Features
 
@@ -64,6 +63,8 @@ The following mitigation strategies will be implemented:
   * Continuous testing and debugging to address technical difficulties.
   * Open communication and collaboration to prevent and resolve team conflicts.
 
+[Back to Top](#scrabble-game)
+
 ## Gantt
  
 <img width="1209" alt="צילום מסך 2023-04-09 ב-23 27 49" src="https://user-images.githubusercontent.com/73496652/230795013-478c38ad-7f3a-4a9f-a9c1-1b6f1614f604.png">
@@ -71,7 +72,10 @@ The following mitigation strategies will be implemented:
 ## Teams and work division 
 ## <img width="1181" alt="Book Scrabble Project" src="https://github.com/matand380/Book_Scrabble_Project/assets/73496652/11591d3a-af3a-4918-be06-7bd709181704">
 
+[Back to Top](#scrabble-game)
+
 <div align="center">
   <img src=src/main/resources/images/Logo.JPG alt="Scrabble Logo" width="100" height="100">
 </div>
+
 
