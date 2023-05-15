@@ -1,5 +1,6 @@
 <div align="center">
  <img src="src/main/resources/images/Logo.JPG" alt="Scrabble Logo" width="100" height="100">
+
 </div>
 
 <h1 align="center">Scrabble Game</h1>
@@ -23,7 +24,7 @@
 * [Matan Drabkin](https://github.com/matand380)
 * [Tal Avraham](https://github.com/Tavraham)
 
-## How to Play
+## How to Play ? 
 
 1. Launch the game and select the desired game mode (multiplayer).
 2. Follow the on-screen instructions to set up the game parameters (number of players, difficulty level, etc.).
@@ -33,6 +34,8 @@
 6. Pass the device or wait for the computer AI to take its turn.
 7. Continue playing until all players have used all their tiles or no more valid moves are possible.
 8. The player with the highest score at the end of the game wins.
+
+ <img src="src/main/resources/images/d04bd8bd-1354-4c3c-b3fd-ac57c6fdc61c_f1600x768.jpeg" alt="Scrabble Logo" width="400" height="100">
 
 ## Video links
  * Demo video - will be added
