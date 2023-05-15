@@ -127,10 +127,13 @@ public class MainTrain {
 //		testBag(); // 30 points
 //		testBoard(); // 70 points
 //		System.out.println("Game Data done");
-		BS_Host_Model host = BS_Host_Model.getModel();
+		//TODO : move to host test
+		BS_Host_Model host = BS_Host_Model.getModel(); // change port
 		host.setPlayerProperties("Eviatar");
 		Tile[] tiles = new Tile[4];
+
 		//try place word
+		//TODO : move to func in test file
 		tiles[0] = new Tile('W', 4);
 		tiles[1] = new Tile('V', 1);
 		tiles[2] = new Tile('I', 1);
@@ -138,10 +141,13 @@ public class MainTrain {
 		Word word = new Word(tiles, 7, 5, false);
 			host.tryPlaceWord(word);
 		host.challengeWord("WVIT", "0");
-		BS_Guest_Model client = BS_Guest_Model.getModel();
-		client.setPlayerProperties("matan");
-		client.openSocket("127.0.0.1", 65533);
-		client.getCommunicationHandler().setCom();
+
+		//TODO : move to guest test
+		////////// guest test
+//		BS_Guest_Model client = BS_Guest_Model.getModel();
+//		client.setPlayerProperties("matan");
+//		client.openSocket("127.0.0.1", 65533);  //copy local server ip + server port
+//		client.getCommunicationHandler().setCom();
 
 		host.startNewGame();
 
