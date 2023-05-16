@@ -30,7 +30,7 @@ public class testBag {
         for (int k = 0; k < 9; k++) {
             int[] qs = b.getQuantities();
             Tile t = b.getRand();
-            int i = t.letter - 'A';
+            int i = t.getLetter() - 'A';
             int[] qs1 = b.getQuantities();
             if (qs1[i] != qs[i] - 1) System.out.println("problem with getRand");
 

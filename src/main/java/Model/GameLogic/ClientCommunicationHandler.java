@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 
@@ -96,13 +97,17 @@ public class ClientCommunicationHandler {
             return "";
         });
 
+    }
 
-        try {
-            out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
-            in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void handleInput(String key) {
+        String[] message = key.split(":");
+        String methodName = message[0];
+        if (handlers.get(methodName) != null) {
+            handlers.get(methodName).apply(message);
+        } else {
+            System.out.println("No handler for method " + methodName);
         }
+
     }
 
     public void setCom() {
@@ -113,38 +118,24 @@ public class ClientCommunicationHandler {
             throw new RuntimeException(e);
         }
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            while (!stop) {
-                inMessages();
-            }
-            // FIXME: 15/05/2023 check this again
-        });
+        // FIXME: 15/05/2023 check this again
+        executor.submit(this::inMessages);
+
 
     }
 
-
     public void inMessages() {
 
-        String key = null;
-        try {
-            key = (String) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Received message: " + key); // FIXME: 16/05/2023 for debugging
-        if (key == null) {
-            System.out.println("Server disconnected");
-            return;
-        }
-        String[] message = key.split(":");
-        String methodName = message[0];
-        if (handlers.get(methodName) != null) {
-            handlers.get(methodName).apply(message);
-        } else {
-            System.out.println("No handler for method " + methodName);
-        }
-
+            String key = null;
+            try {
+                key = (String) in.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (key == null) {
+                return;
+            }
+            handleInput(key);
     }
 
     public void outMessages(String key) {
