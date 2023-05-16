@@ -72,14 +72,15 @@ public class MyServer {
             }
 
         }
-        for (Socket client : clients) {
-            try {
-                client.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (clientsMap.isEmpty()) {
+            //close all threads
+            ch.close();
+            server.close();
         }
-        server.close();
+        else {
+            //force close all threads
+            logger.log(System.Logger.Level.INFO, "Server is shutting down");
+        }
     }
 
     private void ping(String clientID) {

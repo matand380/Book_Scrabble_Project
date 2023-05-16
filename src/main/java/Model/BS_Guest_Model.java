@@ -16,6 +16,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public String[] playersScores;
     Socket socket;
     Tile[][] tileBoard;
+    Tile[][] tempBoard;
     Player player; // TODO: 04/05/2023 implement player class and send it to the host
     ClientCommunicationHandler communicationHandler;
     private BS_Guest_Model() {
@@ -86,11 +87,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return false;
     }
 
-    @Override
-    public void setGameOver(boolean isGameOver) {
-        // TODO: 14/05/2023 close all resources in orderly manner
-//        communicationHandler.outMessages("setGameOver:" + isGameOver);
-    }
+
 
     public void setBoard(Tile[][] boardTiles) {
         this.tileBoard = boardTiles;
@@ -134,6 +131,17 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     private static class BS_Guest_ModelHolder {
         private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
+    }
+
+    public void endGame() {
+        communicationHandler.outMessages("endGame:"+player.get_socketID());
+        communicationHandler.close();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

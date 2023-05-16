@@ -27,33 +27,6 @@ public class ClientCommunicationHandler {
     public ClientCommunicationHandler() {
 
         //put all the methods in the map for being able to invoke them in handleRequests
-//        handlers.put("tryPlaceWord", (message) -> {
-//            int index = Integer.parseInt(message[1]);
-//            String score = message[2];
-//            if (score.equals("0")) {
-//                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-//                    BS_Guest_Model.getModel().hasChanged();
-//                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0"); // FIXME: 16/05/2023 move to playerScore
-//                }
-//            } else {
-//                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-//                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));// FIXME: 16/05/2023 move to playerScore
-//                }
-//                BS_Guest_Model.getModel().setPlayerScore(index, score); //FIXME: 16/05/2023 move to playerScore
-//            }
-//            return "";
-//        });
-//        handlers.put("challengeWord", (message) -> {
-//            int index = Integer.parseInt(message[1]);
-//            String score = message[2];
-//            BS_Guest_Model.getModel().playersScores[index] += score; //FIXME: 16/05/2023 move to playerScore
-//            if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-//                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score)); //FIXME: 16/05/2023 move to playerScore
-//            }
-//            BS_Guest_Model.getModel().hasChanged();
-//            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]); //FIXME: 16/05/2023 move to playerScore
-//            return "";
-//        });
         handlers.put("sortAndSetIndex", (message) -> {
             int index = Integer.parseInt(message[1]);
             int sizeSort = Integer.parseInt(message[2]);
@@ -78,11 +51,11 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers(message);
             return "";
         });
-        handlers.put("gameOver", (message) -> {
+        handlers.put("winner", (message) -> {
             int index = Integer.parseInt(message[1]);
             String winnerName = message[2];
             BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("gameOver:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
+            BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
             return "";
         });
         handlers.put("ping", (message) -> {
@@ -125,6 +98,7 @@ public class ClientCommunicationHandler {
 
 
 
+
         try {
             out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
             in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
@@ -134,17 +108,12 @@ public class ClientCommunicationHandler {
     }
 
     public void setCom() {
-//        new Thread(() -> {
-//            try {
-//                out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
-//                in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            while (!stop) {
-//                inMessages(in);
-//            }
-//    }).start();
+        try {
+            out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
+            in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
             while (!stop) {

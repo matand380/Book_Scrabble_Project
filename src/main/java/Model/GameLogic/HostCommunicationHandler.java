@@ -27,7 +27,7 @@ public class HostCommunicationHandler implements ClientHandler {
             Player p = new Player();
             p.set_socketID(message[1]);
             p.set_name(message[2]);
-            BS_Host_Model.getModel().getPlayerToSocketID().put(message[2], p.get_socketID());
+            BS_Host_Model.getModel().getPlayerToSocketID().put(p.get_name(), p.get_socketID());
             p.setTileLottery();
             BS_Host_Model.getModel().addPlayer(p);
             BS_Host_Model.getModel().hasChanged();
@@ -60,6 +60,16 @@ public class HostCommunicationHandler implements ClientHandler {
                 BS_Host_Model.getModel().challengeWord(word, PlayerIndex);
             }
             // TODO: 06/05/2023 handle challengeWord case
+            return "";
+        });
+
+        handlers.put("endGame", (message) -> {
+            String id = message[1];
+            try {
+                BS_Host_Model.getModel().getCommunicationServer().clientsMap.get(id).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return "";
         });
 
@@ -114,6 +124,8 @@ public class HostCommunicationHandler implements ClientHandler {
         try {
             in.close();
             out.close();
+            toGameServer.close();
+            fromGameServer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 public class BS_Host_Model extends Observable implements BS_Model {
     public ArrayList<Word> currentPlayerWords;
     public int currentPlayerIndex = 0;
+    public boolean gameIsOver = false;
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
     MyServer communicationServer;
     Socket gameSocket;
@@ -29,19 +30,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
     System.Logger hostLogger = System.getLogger("HostLogger");
     ExecutorService executor = Executors.newSingleThreadExecutor();
     private List<Player> players;
-    private boolean isGameOver;
-
 
     private BS_Host_Model() {
 
         //Game data initialization
-        setGameOver(false);
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
         player = new Player();
 
-
+        //for testing
         openSocket("17.235.253.109", 65533); //copy local server ip + server port
         System.out.println("Enter server port number : ");
         Scanner scanner = new Scanner(System.in);
@@ -49,8 +47,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         communicationServer = new MyServer(port, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
         communicationServer.start();
-
-        //only for testing
 
     }
 
@@ -61,6 +57,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
     public static BS_Host_Model getModel() {
         return HostModelHelper.model_instance;
+    }
+
+    public MyServer getCommunicationServer() {
+        return communicationServer;
     }
 
     public Map<String, String> getPlayerToSocketID() {
@@ -129,8 +129,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (id != null) {
                 String json = gson.toJson(tiles);
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
-            }else
-            {
+            } else {
                 hasChanged();
                 notifyObservers("hand updated");
             }
@@ -143,7 +142,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     @Override
     public void passTurn(int playerIndex) {
         setNextPlayerIndex(currentPlayerIndex);
-        board.passCounter++;
+        board.setPassCounter(board.getPassCounter() + 1);
         isGameOver();
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
         hasChanged();
@@ -160,9 +159,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void tryPlaceWord(Word word) {
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
-            // TODO: 06/05/2023 challenge pop up if someone press challenge activate challengeWord method
 
-            //build the string of words for a challenge, send it to all clients and notify host viewModel
+            // * build the string of words for a challenge, send it to all clients and notify host viewModel
             StringBuilder sb = new StringBuilder();
             for (Word w : currentPlayerWords) {
                 sb.append(w.toString());
@@ -172,19 +170,22 @@ public class BS_Host_Model extends Observable implements BS_Model {
             BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
             hasChanged();
             notifyObservers("wordsForChallenge:" + words);
-            currentPlayerWords.clear();
 
-            // *get an indication from a client if he pressed a challenge or not
+            currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
 
+            /////////////////////////////
+            // TODO: 16/05/2023 get an indication from a client if he pressed a challenge or not
             // !there is only one client that can press a challenge.
             // !we handle the first client that pressed challenge
             // !and notify the rest that their request for a challenge is invalid
+            /////////////////////////////
+
 
             //execute challengeWord method
             boolean result = false;
             try {
                 Future<Boolean> f = executor.submit(() -> challengeWord(word.toString(), String.valueOf(currentPlayerIndex)));
-                result = f.get();
+                result = f.get(); // blocking call
             } catch (ExecutionException | InterruptedException e) {
                 hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
             }
@@ -192,11 +193,17 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (result) {
                 placeAndComplete7(word.toString());
                 updateBoard();
-                isGameOver();
                 if (isGameOver()) {
+                    gameIsOver = true;
+                    communicationServer.updateAll("endGame");
+                    hasChanged();
+                    notifyObservers("endGame");
                     return;
                 }
-
+            } else {
+                String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+                communicationServer.updateSpecificPlayer("challengeSuccess", id);
+                passTurn(currentPlayerIndex);
             }
 
             /*
@@ -220,34 +227,19 @@ public class BS_Host_Model extends Observable implements BS_Model {
             *
              */
 
-            // TODO: 11/05/2023 if challenge didnt happen place the word
-            //if(!isChallenge) {// implement isChallenge
-
-            // after challenge or if no challenge happened, update the board and complete the hand
+            //if no challenge happened, update the board and complete the hand
             placeAndComplete7(word.toString());
-
-            ////////////////////////////////////////////
-            Gson gson = new Gson();
-            String json = gson.toJson(Board.getBoard().getTiles());
-            communicationServer.updateAll("tileBoard:" + json);
-            hasChanged();
-            notifyObservers("tileBoard updated");
-            ////////////////////////////////////////////
-
-            // }
-            // TODO: 11/05/2023 check isGameOver
-
-            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-            BS_Host_Model.getModel().communicationServer.updateAll("tryPlaceWord:" + currentPlayerIndex + ":" + score);
-            hasChanged();
-            notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + score);
-            //only for testing
-            System.out.println("tryPlaceWord:" + currentPlayerIndex + ":" + score);
-
-        } else {
-            BS_Host_Model.getModel().communicationServer.updateAll("tryPlaceWord:" + currentPlayerIndex + ":" + "0");
-            hasChanged();
-            notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + "0");
+            updateBoard();
+            updateScores();
+            if (isGameOver()) {
+                gameIsOver = true;
+                communicationServer.updateAll("endGame");
+                hasChanged();
+                notifyObservers("endGame");
+                return;
+            }
+            passTurn(currentPlayerIndex);
+            board.setPassCounter(0);
         }
     }
 
@@ -260,6 +252,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     private void endGame() {
+        getCommunicationServer().close();
+        // TODO: 16/05/2023 server will be notified about the winner;
+        // TODO: 16/05/2023 its close button will be disabled while clientsMap is not empty
+        // TODO: 16/05/2023 when clientsMap will be empty the button will be enabled
+        // TODO: 16/05/2023 press the button will execute the endGame method
+
         // TODO: 16/05/2023 this method will be activated after pressing the end game button
         // TODO: 16/05/2023 wait that all clients closed their game
         // TODO: 16/05/2023 the HOST end game button will be activated after all clients pressed exit in their game
@@ -282,34 +280,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
         BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
         String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
 
-        System.out.println(response); // TODO: 14/05/2023 remove this line, only for testing
-
-        // *handle the response
+        // handle the response
         String[] splitResponse = response.split(":");
         if (splitResponse[0].equals("C")) {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
-
-                // * send updated score to all players
                 updateScores();
                 return true;
-
-                //isGameOver(); moved to tryPlaceWord
-
-
             } else {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() + 10);
-
-
-                //update all players with the new score including host viewModel
-                communicationServer.updateAll("challengeWord:" + PlayerIndex + players.get(PlayerIndex).get_score());
-                hasChanged();
-                notifyObservers("challengeWord:" + PlayerIndex + players.get(PlayerIndex).get_score());
-
+                updateScores();
                 return false;
-
             }
-
         } else {
             hostLogger.log(System.Logger.Level.ERROR, "GameServer response in challengeWord is not valid");
             return false;
@@ -386,7 +368,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     public boolean isGameOver() {
-        if (board.passCounter == getPlayers().size()) //all the players pass turns
+        boolean isGameOver = false;
+        if (board.getPassCounter() == getPlayers().size()) //all the players pass turns
             isGameOver = true;
         if (Tile.Bag.getBag().size() == 0)
             for (Player p : players)
@@ -395,17 +378,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     break;
                 }
         if (isGameOver) {
-            communicationServer.updateAll("gameOver:" + getMaxScore());
+            communicationServer.updateAll("winner:" + getMaxScore());
             hasChanged();
-            notifyObservers("gameOver:" + getMaxScore());
+            notifyObservers("winner:" + getMaxScore());
         }
         return isGameOver;
     }
 
-    @Override
-    public void setGameOver(boolean isGameOver) {
-        this.isGameOver = isGameOver;
-    }
 
     public String getMaxScore() {
         Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();

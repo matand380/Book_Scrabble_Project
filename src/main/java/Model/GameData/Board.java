@@ -10,7 +10,7 @@ public class Board implements Serializable, ObjectFactory {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
-    public int passCounter = 0;
+    private int passCounter = 0;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
@@ -504,7 +504,6 @@ public class Board implements Serializable, ObjectFactory {
      */
 
     public void placeWord(Word w) {
-        setPassCounter(0);
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;
