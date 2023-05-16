@@ -253,6 +253,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         notifyObservers("tileBoard updated");
     }
 
+    public boolean isFull() {
+        return players.size() == 4;
+    }
+
     private void endGame() {
         executor.shutdown();
         getCommunicationServer().close();
