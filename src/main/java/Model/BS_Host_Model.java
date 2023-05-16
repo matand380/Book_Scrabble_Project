@@ -146,7 +146,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         isGameOver();
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
         hasChanged();
-        notifyObservers("passTurn:" + getCurrentPlayerIndex());// notify host viewModel if im the next player
+        notifyObservers("passTurn:" + getCurrentPlayerIndex());
     }
 
     /**
@@ -160,7 +160,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
 
-            // * build the string of words for a challenge, send it to all clients and notify host viewModel
+            // build the string of words for a challenge, send it to all clients and notify host viewModel
             StringBuilder sb = new StringBuilder();
             for (Word w : currentPlayerWords) {
                 sb.append(w.toString());
@@ -253,15 +253,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     private void endGame() {
         getCommunicationServer().close();
-        // TODO: 16/05/2023 server will be notified about the winner;
-        // TODO: 16/05/2023 its close button will be disabled while clientsMap is not empty
-        // TODO: 16/05/2023 when clientsMap will be empty the button will be enabled
-        // TODO: 16/05/2023 press the button will execute the endGame method
+        // 16/05/2023 server will be notified about the winner;
+        // 16/05/2023 its close button will be disabled while clientsMap is not empty
+       //16/05/2023 when clientsMap will be empty the button will be enabled
+       // 16/05/2023 press the button will execute the endGame method
 
-        // TODO: 16/05/2023 this method will be activated after pressing the end game button
-        // TODO: 16/05/2023 wait that all clients closed their game
-        // TODO: 16/05/2023 the HOST end game button will be activated after all clients pressed exit in their game
-        // TODO: 16/05/2023 need to close the game and all resources
+       // 16/05/2023 this method will be activated after pressing the end game button
+        // 16/05/2023 wait that all clients closed their game
+        // 16/05/2023 the HOST end game button will be activated after all clients pressed exit in their game
+        // 16/05/2023 need to close the game and all resources
     }
 
     /**

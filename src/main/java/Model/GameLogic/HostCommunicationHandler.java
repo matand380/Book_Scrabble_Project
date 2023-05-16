@@ -120,7 +120,7 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
     @Override
-    public void close() { // FIXME: 09/05/2023 closes the wrong streams
+    public void close() {
         try {
             in.close();
             out.close();

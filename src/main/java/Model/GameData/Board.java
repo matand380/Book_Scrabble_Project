@@ -327,9 +327,9 @@ public class Board implements Serializable, ObjectFactory {
      * The checkHorizontalWord function checks the horizontal word that is formed by a tile placed on the board.
      * <p>
      *
-     * @param row  row Determine the row that the tile is being placed in
-     * @param col  col Determine the column of the tile that is being placed
-     * @param tile tile Add the tile to the word
+     * @param row  row Determines the row that the tile is being placed in
+     * @param col  col Determines the column of the tile that is being placed
+     * @param tile tile Adds the tile to the word
      * @return A word object
      */
     private Word checkHorizontalWord(int row, int col, Tile tile) {
@@ -399,7 +399,7 @@ public class Board implements Serializable, ObjectFactory {
      * <p>
      *
      * @param w w Pass the word that is being scored
-     * @return The score of the all the words that are formed by placing the tiles from this word on the board
+     * @return The score of all the words that are formed by placing the tiles from this word on the board
      */
     int getScore(Word w) {
         int score = 0;

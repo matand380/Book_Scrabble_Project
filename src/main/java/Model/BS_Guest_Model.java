@@ -17,7 +17,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Socket socket;
     Tile[][] tileBoard;
     Tile[][] tempBoard;
-    Player player; // TODO: 04/05/2023 implement player class and send it to the host
+    Player player;
     ClientCommunicationHandler communicationHandler;
     private BS_Guest_Model() {
 //        Scanner scanner = new Scanner(System.in);
@@ -79,7 +79,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public void challengeWord(String word) {
         String playerIndex = String.valueOf(player.get_index());
         communicationHandler.outMessages("challengeWord:" + playerIndex + ":" + word);
-        //send challengeWord:playerIndex:word (word is the word that the player wants to challenge)
     }
 
     @Override

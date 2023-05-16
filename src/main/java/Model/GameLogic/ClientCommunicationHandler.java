@@ -26,7 +26,7 @@ public class ClientCommunicationHandler {
 
     public ClientCommunicationHandler() {
 
-        //put all the methods in the map for being able to invoke them in handleRequests
+        //put all the methods in the map for being able to invoke them
         handlers.put("sortAndSetIndex", (message) -> {
             int index = Integer.parseInt(message[1]);
             int sizeSort = Integer.parseInt(message[2]);
@@ -97,8 +97,6 @@ public class ClientCommunicationHandler {
         });
 
 
-
-
         try {
             out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
             in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
@@ -129,20 +127,16 @@ public class ClientCommunicationHandler {
 
         String key = null;
         try {
-            Object inObject = in.readObject();
-            if (inObject instanceof String) {
-                key = (String) inObject;
-            }
-            if (inObject instanceof Tile[][]) {
-                BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
-
-            }
-
+            key = (String) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
-
+            e.printStackTrace();
         }
 
-        System.out.println("Received message: " + key);
+        System.out.println("Received message: " + key); // FIXME: 16/05/2023 for debugging
+        if (key == null) {
+            System.out.println("Server disconnected");
+            return;
+        }
         String[] message = key.split(":");
         String methodName = message[0];
         if (handlers.get(methodName) != null) {
@@ -156,31 +150,13 @@ public class ClientCommunicationHandler {
     public void outMessages(String key) {
         if (key != null) {
             try {
-                out.writeObject(key); // implement client validation tests
+                out.writeObject(key);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void outObjects(Object key) {
-        if (key != null) {
-            try {
-                if (key instanceof Tile[][]) {
-                    Tile[][] tiles = (Tile[][]) key;
-                    out.writeObject(tiles); // implement client validation tests
-                } else if (key instanceof Player) {
-                    Player player = (Player) key;
-                    out.writeObject(player); // implement client validation tests
-                } else if (key instanceof Word) {
-                    Word word = (Word) key;
-                    out.writeObject(word); // implement client validation tests
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     public void close() {
         try {
