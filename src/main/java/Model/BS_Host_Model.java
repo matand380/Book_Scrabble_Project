@@ -169,12 +169,29 @@ public class BS_Host_Model extends Observable implements BS_Model {
             notifyObservers("wordsForChallenge:" + words);
             currentPlayerWords.clear();
 
+            // *get an indication from a client if he pressed a challenge or not
+
+            // !there is only one client that can press a challenge.
+            // !we handle the first client that pressed challenge
+            // !and notify the rest that their request for a challenge is invalid
+
             //execute challengeWord method
+            boolean result = false;
             try {
                 Future<Boolean> f = executor.submit(() -> challengeWord(word.toString(), String.valueOf(currentPlayerIndex)));
-                boolean result = f.get();
+                result = f.get();
             } catch (ExecutionException | InterruptedException e) {
                 hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
+            }
+
+            if (result) {
+                placeAndComplete7(word.toString());
+                updateBoard();
+                isGameOver();
+                if (isGameOver()) {
+                    return;
+                }
+
             }
 
             /*
@@ -214,7 +231,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             // }
             // TODO: 11/05/2023 check isGameOver
-            isGameOver();
+
             players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
             BS_Host_Model.getModel().communicationServer.updateAll("tryPlaceWord:" + currentPlayerIndex + ":" + score);
             hasChanged();
@@ -227,6 +244,21 @@ public class BS_Host_Model extends Observable implements BS_Model {
             hasChanged();
             notifyObservers("tryPlaceWord:" + currentPlayerIndex + ":" + "0");
         }
+    }
+
+    private void updateBoard() {
+        Gson gson = new Gson();
+        String json = gson.toJson(Board.getBoard().getTiles());
+        communicationServer.updateAll("tileBoard:" + json);
+        hasChanged();
+        notifyObservers("tileBoard updated");
+    }
+
+    private void endGame() {
+        // TODO: 16/05/2023 this method will be activated after pressing the end game button
+        // TODO: 16/05/2023 wait that all clients closed their game
+        // TODO: 16/05/2023 the HOST end game button will be activated after all clients pressed exit in their game
+        // TODO: 16/05/2023 need to close the game and all resources
     }
 
     /**
@@ -287,126 +319,128 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             }
 
-
+        } else {
+            hostLogger.log(System.Logger.Level.ERROR, "GameServer response in challengeWord is not valid");
+            return false;
         }
-        return false;
     }
 
-        /**
-         * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
-         * and then sets each player's ID to be equal to their index in the list.
-         * Return Void
-         */
-        public void sortAndSetIndex () {
-            players.sort(Comparator.comparing(Player::getTileLottery));
-            for (int i = 0; i < players.size(); i++) {
-                players.get(i).set_index(i);
-            }
-            hasChanged();
-            notifyObservers("sortAndSetIndex" + player.get_index()); // this is host index
-            StringBuilder allPlayers = new StringBuilder();
-            for (Player p : players) {
-                allPlayers.append(p.get_index()).append(",").append(p.get_socketID()).append(":");
-            }
-            String allPlayersString = allPlayers.toString();
-
-            BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetIndex:" + players.size() + ":" + allPlayersString);
-
+    /**
+     * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
+     * and then sets each player's ID to be equal to their index in the list.
+     * Return Void
+     */
+    public void sortAndSetIndex() {
+        players.sort(Comparator.comparing(Player::getTileLottery));
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).set_index(i);
         }
+        hasChanged();
+        notifyObservers("sortAndSetIndex" + player.get_index()); // this is host index
+        StringBuilder allPlayers = new StringBuilder();
+        for (Player p : players) {
+            allPlayers.append(p.get_index()).append(",").append(p.get_socketID()).append(":");
+        }
+        String allPlayersString = allPlayers.toString();
 
-        /**
-         * The placeAndComplete7 function is used to place a word on the board and then complete the player's hand
-         * to 7 tiles.
-         * It does this by removing all the letters in that word from their hand, and then completing
-         * their hand with new tiles from the bag.
-         * This function is called when a player has placed all of their tiles
-         * on one turn, so they do not need to draw any more tiles after placing them.
-         */
-        private void placeAndComplete7 (String word){
-            Board.getBoard().placeWord(currentPlayerWords.get(0));
-            char[] wordChars = word.toCharArray();
-            players.get(currentPlayerIndex).get_hand().removeIf(tile -> {
-                for (char c : wordChars) {
-                    if (tile.letter == c) {
-                        return true;
-                    }
+        BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetIndex:" + players.size() + ":" + allPlayersString);
+
+    }
+
+    /**
+     * The placeAndComplete7 function is used to place a word on the board and then complete the player's hand
+     * to 7 tiles.
+     * It does this by removing all the letters in that word from their hand, and then completing
+     * their hand with new tiles from the bag.
+     * This function is called when a player has placed all of their tiles
+     * on one turn, so they do not need to draw any more tiles after placing them.
+     */
+    private void placeAndComplete7(String word) {
+        Board.getBoard().placeWord(currentPlayerWords.get(0));
+        char[] wordChars = word.toCharArray();
+        players.get(currentPlayerIndex).get_hand().removeIf(tile -> {
+            for (char c : wordChars) {
+                if (tile.letter == c) {
+                    return true;
                 }
-                return false;
-            });
-            players.get(currentPlayerIndex).completeTilesTo7();
-            String id = players.get(currentPlayerIndex).get_socketID();
-            Gson gson = new Gson();
-            String json = gson.toJson(players.get(currentPlayerIndex).get_hand());
-            communicationServer.updateSpecificPlayer(id, "hand:" + json);
-            if (currentPlayerIndex == BS_Host_Model.getModel().player.get_index()) {
-                hasChanged();
-                notifyObservers("hand:" + json);
             }
+            return false;
+        });
+        players.get(currentPlayerIndex).completeTilesTo7();
+        String id = players.get(currentPlayerIndex).get_socketID();
+        Gson gson = new Gson();
+        String json = gson.toJson(players.get(currentPlayerIndex).get_hand());
+        communicationServer.updateSpecificPlayer(id, "hand:" + json);
+        if (currentPlayerIndex == BS_Host_Model.getModel().player.get_index()) {
+            hasChanged();
+            notifyObservers("hand:" + json);
         }
-
-        @Override
-        public boolean isHost () {
-            return true;
-        }
-
-        public boolean isGameOver () {
-            if (board.passCounter == getPlayers().size()) //all the players pass turns
-                isGameOver = true;
-            if (Tile.Bag.getBag().size() == 0)
-                for (Player p : players)
-                    if (p.get_hand().size() == 0) {
-                        isGameOver = true;
-                        break;
-                    }
-            if (isGameOver) {
-                communicationServer.updateAll("gameOver:" + getMaxScore());
-                // TODO: 11/05/2023 hasChanged() + notifyObservers()
-            }
-            return isGameOver;
-        }
-
-        @Override
-        public void setGameOver ( boolean isGameOver){
-            this.isGameOver = isGameOver;
-        }
-
-        public String getMaxScore () {
-            Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
-            return winner.get_index() + ":" + winner.get_name();
-        }
-
-        public HostCommunicationHandler getCommunicationHandler () {
-            return communicationHandler;
-        }
-
-        @Override
-        public int getCurrentPlayerScore () {
-            return player.get_score();
-        }
-
-        @Override
-        public List<Tile> getCurrentPlayerHand () {
-            return player.get_hand();
-        }
-
-        @Override
-        public Tile[][] getBoardState () {
-            return Board.getBoard().getTiles();
-        }
-
-        @Override
-        public void setPlayerProperties (String name){
-            player.set_name(name);
-            player.set_socketID(null);
-            player.setTileLottery();
-            players.add(player);
-        }
-
-        private static class HostModelHelper {
-            public static final BS_Host_Model model_instance = new BS_Host_Model();
-        }
-
-
     }
+
+    @Override
+    public boolean isHost() {
+        return true;
+    }
+
+    public boolean isGameOver() {
+        if (board.passCounter == getPlayers().size()) //all the players pass turns
+            isGameOver = true;
+        if (Tile.Bag.getBag().size() == 0)
+            for (Player p : players)
+                if (p.get_hand().size() == 0) {
+                    isGameOver = true;
+                    break;
+                }
+        if (isGameOver) {
+            communicationServer.updateAll("gameOver:" + getMaxScore());
+            hasChanged();
+            notifyObservers("gameOver:" + getMaxScore());
+        }
+        return isGameOver;
+    }
+
+    @Override
+    public void setGameOver(boolean isGameOver) {
+        this.isGameOver = isGameOver;
+    }
+
+    public String getMaxScore() {
+        Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
+        return winner.get_index() + ":" + winner.get_name();
+    }
+
+    public HostCommunicationHandler getCommunicationHandler() {
+        return communicationHandler;
+    }
+
+    @Override
+    public int getCurrentPlayerScore() {
+        return player.get_score();
+    }
+
+    @Override
+    public List<Tile> getCurrentPlayerHand() {
+        return player.get_hand();
+    }
+
+    @Override
+    public Tile[][] getBoardState() {
+        return Board.getBoard().getTiles();
+    }
+
+    @Override
+    public void setPlayerProperties(String name) {
+        player.set_name(name);
+        player.set_socketID(null);
+        player.setTileLottery();
+        players.add(player);
+    }
+
+    private static class HostModelHelper {
+        public static final BS_Host_Model model_instance = new BS_Host_Model();
+    }
+
+
+}
 
 
