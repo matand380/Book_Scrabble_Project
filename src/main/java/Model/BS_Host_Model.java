@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -40,7 +41,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
         //for testing
-        openSocket("17.235.253.109", 65533); //copy local server ip + server port
+        openSocket("127.0.0.1", 5555); //copy local server ip + server port
         System.out.println("Enter server port number : ");
         Scanner scanner = new Scanner(System.in);
         int port = scanner.nextInt();
@@ -121,6 +122,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public void startNewGame() {
         Gson gson = new Gson();
+
         sortAndSetIndex();
         players.forEach(p -> {
             String id = p.completeTilesTo7();
@@ -252,7 +254,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     private void endGame() {
+        executor.shutdown();
         getCommunicationServer().close();
+        notifyAll(); // notify the main that the game is over
         // 16/05/2023 server will be notified about the winner;
         // 16/05/2023 its close button will be disabled while clientsMap is not empty
        //16/05/2023 when clientsMap will be empty the button will be enabled
@@ -345,7 +349,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         char[] wordChars = word.toCharArray();
         players.get(currentPlayerIndex).get_hand().removeIf(tile -> {
             for (char c : wordChars) {
-                if (tile.letter == c) {
+                if (tile.getLetter() == c) {
                     return true;
                 }
             }

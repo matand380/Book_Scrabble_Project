@@ -7,9 +7,16 @@ import java.util.Random;
 import java.util.Set;
 
 public class Tile implements Serializable, ObjectFactory {
-    public
-    final char letter;
-    final int _score;
+    public char getLetter() {
+        return letter;
+    }
+
+    public int get_score() {
+        return _score;
+    }
+
+     final char letter;
+     final int _score;
 
 
     public Tile() {

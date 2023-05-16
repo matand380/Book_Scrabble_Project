@@ -6,8 +6,10 @@ import Model.BS_Model;
 import  Model.GameData.Tile.Bag;
 import javafx.scene.transform.MatrixType;
 
+import java.security.Key;
 import java.text.Format;
 
+import static java.lang.Thread.onSpinWait;
 import static java.lang.Thread.sleep;
 
 public class MainTrain {
@@ -130,24 +132,23 @@ public class MainTrain {
 		//TODO : move to host test
 		BS_Host_Model host = BS_Host_Model.getModel(); // change port
 		host.setPlayerProperties("Eviatar");
-		Tile[] tiles = new Tile[4];
+//		Tile[] tiles = new Tile[4];
 
-		//try place word
 		//TODO : move to func in test file
-		tiles[0] = new Tile('W', 4);
-		tiles[1] = new Tile('V', 1);
-		tiles[2] = new Tile('I', 1);
-		tiles[3] = new Tile('T', 1);
-		Word word = new Word(tiles, 7, 5, false);
-			host.tryPlaceWord(word);
-		host.challengeWord("WVIT", "0");
 
 		//TODO : move to guest test
 		////////// guest test
-//		BS_Guest_Model client = BS_Guest_Model.getModel();
-//		client.setPlayerProperties("matan");
-//		client.openSocket("127.0.0.1", 65533);  //copy local server ip + server port
-//		client.getCommunicationHandler().setCom();
+
+		BS_Guest_Model client = BS_Guest_Model.getModel();
+		client.setPlayerProperties("matan");
+		client.openSocket("127.0.0.1", 65533);  //copy local server ip + server port
+		client.getCommunicationHandler().setCom();
+
+//		tiles[0] = new Tile('W', 4);
+//		tiles[1] = new Tile('V', 1);
+//		tiles[2] = new Tile('I', 1);
+//		tiles[3] = new Tile('T', 1);
+//		Word word = new Word(tiles, 7, 5, false);
 
 		host.startNewGame();
 
