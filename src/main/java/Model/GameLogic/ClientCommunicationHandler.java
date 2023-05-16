@@ -27,33 +27,33 @@ public class ClientCommunicationHandler {
     public ClientCommunicationHandler() {
 
         //put all the methods in the map for being able to invoke them in handleRequests
-        handlers.put("tryPlaceWord", (message) -> {
-            int index = Integer.parseInt(message[1]);
-            String score = message[2];
-            if (score.equals("0")) {
-                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                    BS_Guest_Model.getModel().hasChanged();
-                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0"); // FIXME: 16/05/2023 move to playerScore
-                }
-            } else {
-                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));// FIXME: 16/05/2023 move to playerScore
-                }
-                BS_Guest_Model.getModel().setPlayerScore(index, score); //FIXME: 16/05/2023 move to playerScore
-            }
-            return "";
-        });
-        handlers.put("challengeWord", (message) -> {
-            int index = Integer.parseInt(message[1]);
-            String score = message[2];
-            BS_Guest_Model.getModel().playersScores[index] += score; //FIXME: 16/05/2023 move to playerScore
-            if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score)); //FIXME: 16/05/2023 move to playerScore
-            }
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]); //FIXME: 16/05/2023 move to playerScore
-            return "";
-        });
+//        handlers.put("tryPlaceWord", (message) -> {
+//            int index = Integer.parseInt(message[1]);
+//            String score = message[2];
+//            if (score.equals("0")) {
+//                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
+//                    BS_Guest_Model.getModel().hasChanged();
+//                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0"); // FIXME: 16/05/2023 move to playerScore
+//                }
+//            } else {
+//                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
+//                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));// FIXME: 16/05/2023 move to playerScore
+//                }
+//                BS_Guest_Model.getModel().setPlayerScore(index, score); //FIXME: 16/05/2023 move to playerScore
+//            }
+//            return "";
+//        });
+//        handlers.put("challengeWord", (message) -> {
+//            int index = Integer.parseInt(message[1]);
+//            String score = message[2];
+//            BS_Guest_Model.getModel().playersScores[index] += score; //FIXME: 16/05/2023 move to playerScore
+//            if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
+//                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score)); //FIXME: 16/05/2023 move to playerScore
+//            }
+//            BS_Guest_Model.getModel().hasChanged();
+//            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]); //FIXME: 16/05/2023 move to playerScore
+//            return "";
+//        });
         handlers.put("sortAndSetIndex", (message) -> {
             int index = Integer.parseInt(message[1]);
             int sizeSort = Integer.parseInt(message[2]);
@@ -98,8 +98,9 @@ public class ClientCommunicationHandler {
             Tile[] newTiles = gson.fromJson(hand, Tile[].class);
             List<Tile> newHand = Arrays.asList(newTiles);
             BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("hand updated");
             return "";
-            // TODO: 16/05/2023 hasChanged() and notifyObservers() in what convention?
         });
 
         handlers.put("tileBoard", (message) -> {
@@ -109,8 +110,6 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().setBoard(newTiles);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
-            // TODO: 16/05/2023 hasChanged() and notifyObservers() in what convention?
-            // FIXME: 15/05/2023 need to implement this on host side
             return "";
         });
 
@@ -122,8 +121,6 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("playersScores updated");
             return "";
-            // TODO: 16/05/2023 hasChanged() and notifyObservers() in what convention?
-            // FIXME: 15/05/2023 need to implement this on host side
         });
 
 

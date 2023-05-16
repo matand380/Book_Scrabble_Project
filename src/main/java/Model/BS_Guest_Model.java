@@ -35,7 +35,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     public void setPlayersScores(String[] playersScores) {
         this.playersScores = playersScores;
+        getPlayer().set_score(Integer.parseInt(playersScores[getPlayer().get_index()]));
     }
+
 
     public void openSocket(String ip, int port) { //button start in the view
         if (validateIpPort(ip, port)) {
@@ -96,11 +98,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         notifyObservers("board:");
     }
 
-    public void setPlayerScore(int index, String score) {
-        playersScores[index] += score;
-        setChanged();
-        notifyObservers("tryPlaceWord:" + index + ":" + score);
-    }
+
 
     public Socket getSocket() {
         return socket;

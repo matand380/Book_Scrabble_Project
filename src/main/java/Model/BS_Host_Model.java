@@ -129,7 +129,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (id != null) {
                 String json = gson.toJson(tiles);
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
+            }else
+            {
+                hasChanged();
+                notifyObservers("hand updated");
             }
+
 
         });
 
@@ -285,22 +290,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
 
-                Gson gson = new Gson();
-
-                // *update specific player (the challenger) with the new score
-                //? check if it is necessary
-                String challengerScore = gson.toJson(players.get(PlayerIndex).get_score());
-                communicationServer.updateSpecificPlayer(players.get(PlayerIndex).get_socketID(), "playerScore:" + challengerScore);
-
-                // *create Gson with String[] of all scores
-                String[] scores = new String[players.size()];
-                for (int i = 0; i < players.size(); i++) {
-                    scores[i] = String.valueOf(players.get(i).get_score());
-                }
-                String playersScores = gson.toJson(scores);
-                communicationServer.updateAll("playersScores:" + playersScores);
-                hasChanged();
-                notifyObservers("playersScores updated");
+                // * send updated score to all players
+                updateScores();
                 return true;
 
                 //isGameOver(); moved to tryPlaceWord
@@ -323,6 +314,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
             hostLogger.log(System.Logger.Level.ERROR, "GameServer response in challengeWord is not valid");
             return false;
         }
+    }
+
+    private void updateScores() {
+        String[] scores = new String[players.size()];
+        for (int i = 0; i < players.size(); i++) {
+            scores[i] = String.valueOf(players.get(i).get_score());
+        }
+        Gson gson = new Gson();
+        String playersScores = gson.toJson(scores);
+        communicationServer.updateAll("playersScores:" + playersScores);
+        hasChanged();
+        notifyObservers("playersScores updated");
     }
 
     /**
