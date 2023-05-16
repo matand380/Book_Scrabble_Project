@@ -1,5 +1,7 @@
-import testGameLogic.*;
-import testGameData.*;
+package testGameLogic;
+
+import testGameData.testBag;
+import testGameData.testBoard;
 
 public class testsBackEnd {
     /**

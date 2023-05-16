@@ -1,15 +1,17 @@
 package Model;
 
-import Model.GameData.*;
-import Model.GameLogic.*;
+import Model.GameData.Board;
+import Model.GameData.Player;
+import Model.GameData.Tile;
+import Model.GameData.Word;
+import Model.GameLogic.HostCommunicationHandler;
+import Model.GameLogic.MyServer;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
-
-import com.google.gson.Gson;
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -22,10 +24,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Tile.Bag bag;
     Player player;
     Map<String, String> playerToSocketID = new HashMap<>();
-    private List<Player> players;
+    private final List<Player> players;
     private boolean isGameOver;
 
-    private BS_Host_Model() {
+    public BS_Host_Model() {
 
         //Game data initialization
         setGameOver(false);
@@ -34,11 +36,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
         players = new ArrayList<>();
         player = new Player();
 
-
-        openSocket("17.235.253.109", 65533); //copy local server ip + server port
-        System.out.println("Enter server port number : ");
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter local/remote server ip: ");
+        String ip = scanner.nextLine();
+        System.out.println("Enter local/remote server port: ");
         int port = scanner.nextInt();
+
+        openSocket(ip, port); //copy local server ip + server port
+        // System.out.println("Enter server port number : ");
+        //    Scanner scanner = new Scanner(System.in);
+        //  int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
         communicationServer.start();
@@ -55,6 +62,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public static BS_Host_Model getModel() {
         return HostModelHelper.model_instance;
     }
+    public int getBagSize() {return bag.size();}
 
     public Map<String, String> getPlayerToSocketID() {
         return playerToSocketID;
@@ -277,12 +285,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public boolean isGameOver() {
         if (board.passCounter == getPlayers().size()) //all the players pass turns
             isGameOver = true;
-        if (Tile.Bag.getBag().size() == 0)
-            for (Player p : players)
-                if (p.get_hand().size() == 0) {
-                    isGameOver = true;
-                    break;
-                }
+        if (Tile.Bag.getBag().size() == 0) for (Player p : players)
+            if (p.get_hand().size() == 0) {
+                isGameOver = true;
+                break;
+            }
         if (isGameOver) {
             communicationServer.updateAll("gameOver:" + getMaxScore());
             // TODO: 11/05/2023 hasChanged() + notifyObservers()

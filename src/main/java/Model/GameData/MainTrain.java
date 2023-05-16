@@ -1,19 +1,9 @@
 package Model.GameData;
 
-import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
-import Model.BS_Model;
-import  Model.GameData.Tile.Bag;
-import javafx.scene.transform.MatrixType;
-
-import java.text.Format;
-
-import static java.lang.Thread.sleep;
+import Model.GameData.Tile.Bag;
 
 public class MainTrain {
-
-
-
 	public static void testBag() {
 		Bag b=Tile.Bag.getBag();
 		Bag b1=Tile.Bag.getBag();
@@ -46,8 +36,6 @@ public class MainTrain {
 			System.out.println("your getTile is wrong (-2)");
 
 	}
-
-
 	public static Tile[] get(String s) {
 		Tile[] ts=new Tile[s.length()];
 		int i=0;
@@ -57,7 +45,6 @@ public class MainTrain {
 		}
 		return ts;
 	}
-
 	public static void testBoard() {
 		Board b = Board.getBoard();
 		if(b!=Board.getBoard())
@@ -78,47 +65,47 @@ public class MainTrain {
 		Word w6=new Word(ts,7,0,false);
 
 		if(!b.boardLegal(w5) || !b.boardLegal(w6))
-			System.out.println("your boardLegal function is wrong (-10)");
+			System.out.println("your boardLegal function is wrong ");
 
 		for(Tile t : ts)
 			bag.put(t);
 
 		Word horn=new Word(get("HORN"), 7, 5, false);
 		if(b.tryPlaceWord(horn)!=14)
-			System.out.println("problem in placeWord for 1st word (-10)");
+			System.out.println("problem in placeWord for 1st word");
 		System.out.println(formatTiles(b.getTiles()));
 
 
 		Word farm=new Word(get("FA_M"), 5, 7, true);
 		if(b.tryPlaceWord(farm)!=9)
-			System.out.println("problem in placeWord for 2ed word (-10)");
+			System.out.println("problem in placeWord for 2ed word");
 		System.out.println(formatTiles(b.getTiles()));
 
 		Word paste=new Word(get("PASTE"), 9, 5, false);
 		if(b.tryPlaceWord(paste)!=25)
-			System.out.println("problem in placeWord for 3ed word (-10)");
+			System.out.println("problem in placeWord for 3ed word");
 		System.out.println(formatTiles(b.getTiles()));
 
 		Word mob=new Word(get("_OB"), 8, 7, false);
 		int mobpoint = b.tryPlaceWord(mob);
 		if(mobpoint!=18)
-			System.out.println("mob point sould be 18");
+			System.out.println("mob point should be 18");
 		System.out.println(formatTiles(b.getTiles()));
 
 		Word bit=new Word(get("BIT"), 10, 4, false);
 		int bitpoint = b.tryPlaceWord(bit);
 		if(bitpoint!=22)
-			System.out.println("bitpoint should be 22 (-15)");
+			System.out.println("bitpoint should be 22");
 		System.out.println(formatTiles(b.getTiles()));
 
 		Word bit2=new Word(get("S_TA"), 9, 4, true);
 		if(b.tryPlaceWord(bit2)!=28)
-			System.out.println("SBTA should be 28 (-15)");
+			System.out.println("SBTA should be 28");
 		System.out.println(formatTiles(b.getTiles()));
 
 		Word bit3=new Word(get("A_ONE"), 11, 3, false);
 		if(b.tryPlaceWord(bit3)!=26)
-			System.out.println("ATONE should be 26 (-15)");
+			System.out.println("ATONE should be 26");
 		System.out.println(formatTiles(b.getTiles()));
 
 	}
@@ -129,18 +116,19 @@ public class MainTrain {
 //		System.out.println("Game Data done");
 		//TODO : move to host test
 		BS_Host_Model host = BS_Host_Model.getModel(); // change port
-		host.setPlayerProperties("Eviatar");
-		Tile[] tiles = new Tile[4];
+
+//		host.setPlayerProperties("Eviatar");
+		//TODO : move to func in test file
 
 		//try place word
-		//TODO : move to func in test file
-		tiles[0] = new Tile('W', 4);
-		tiles[1] = new Tile('V', 1);
-		tiles[2] = new Tile('I', 1);
-		tiles[3] = new Tile('T', 1);
-		Word word = new Word(tiles, 7, 5, false);
-			host.tryPlaceWord(word);
-		host.challengeWord("WVIT", "0");
+//		Tile[] tiles = new Tile[4];
+//		tiles[0] = new Tile('W', 4);
+//		tiles[1] = new Tile('V', 1);
+//		tiles[2] = new Tile('I', 1);
+//		tiles[3] = new Tile('T', 1);
+//		Word word = new Word(tiles, 7, 5, false);
+//		host.tryPlaceWord(word);
+//		host.challengeWord("WVIT", "0");
 
 		//TODO : move to guest test
 		////////// guest test
@@ -150,7 +138,6 @@ public class MainTrain {
 //		client.getCommunicationHandler().setCom();
 
 		host.startNewGame();
-
 
 	}
 
