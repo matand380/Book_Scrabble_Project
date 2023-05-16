@@ -33,25 +33,25 @@ public class ClientCommunicationHandler {
             if (score.equals("0")) {
                 if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
                     BS_Guest_Model.getModel().hasChanged();
-                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0");
+                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0"); // FIXME: 16/05/2023 move to playerScore
                 }
             } else {
                 if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
+                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));// FIXME: 16/05/2023 move to playerScore
                 }
-                BS_Guest_Model.getModel().setPlayerScore(index, score);
+                BS_Guest_Model.getModel().setPlayerScore(index, score); //FIXME: 16/05/2023 move to playerScore
             }
             return "";
         });
         handlers.put("challengeWord", (message) -> {
             int index = Integer.parseInt(message[1]);
             String score = message[2];
-            BS_Guest_Model.getModel().playersScores[index] += score;
+            BS_Guest_Model.getModel().playersScores[index] += score; //FIXME: 16/05/2023 move to playerScore
             if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
+                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score)); //FIXME: 16/05/2023 move to playerScore
             }
             BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]);
+            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]); //FIXME: 16/05/2023 move to playerScore
             return "";
         });
         handlers.put("sortAndSetIndex", (message) -> {
@@ -99,6 +99,7 @@ public class ClientCommunicationHandler {
             List<Tile> newHand = Arrays.asList(newTiles);
             BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
             return "";
+            // TODO: 16/05/2023 hasChanged() and notifyObservers() in what convention?
         });
 
         handlers.put("tileBoard", (message) -> {
@@ -106,6 +107,9 @@ public class ClientCommunicationHandler {
             Gson gson = new Gson();
             Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
             BS_Guest_Model.getModel().setBoard(newTiles);
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
+            // TODO: 16/05/2023 hasChanged() and notifyObservers() in what convention?
             // FIXME: 15/05/2023 need to implement this on host side
             return "";
         });
@@ -115,7 +119,10 @@ public class ClientCommunicationHandler {
             Gson gson = new Gson();
             String[] newScores = gson.fromJson(scores, String[].class);
             BS_Guest_Model.getModel().setPlayersScores(newScores);
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("playersScores updated");
             return "";
+            // TODO: 16/05/2023 hasChanged() and notifyObservers() in what convention?
             // FIXME: 15/05/2023 need to implement this on host side
         });
 
