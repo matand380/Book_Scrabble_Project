@@ -10,7 +10,7 @@ public class Board implements Serializable, ObjectFactory {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
-    public int passCounter = 0;
+    private int passCounter = 0;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
@@ -327,9 +327,9 @@ public class Board implements Serializable, ObjectFactory {
      * The checkHorizontalWord function checks the horizontal word that is formed by a tile placed on the board.
      * <p>
      *
-     * @param row  row Determine the row that the tile is being placed in
-     * @param col  col Determine the column of the tile that is being placed
-     * @param tile tile Add the tile to the word
+     * @param row  row Determines the row that the tile is being placed in
+     * @param col  col Determines the column of the tile that is being placed
+     * @param tile tile Adds the tile to the word
      * @return A word object
      */
     private Word checkHorizontalWord(int row, int col, Tile tile) {
@@ -399,7 +399,7 @@ public class Board implements Serializable, ObjectFactory {
      * <p>
      *
      * @param w w Pass the word that is being scored
-     * @return The score of the all the words that are formed by placing the tiles from this word on the board
+     * @return The score of all the words that are formed by placing the tiles from this word on the board
      */
     int getScore(Word w) {
         int score = 0;
@@ -504,7 +504,6 @@ public class Board implements Serializable, ObjectFactory {
      */
 
     public void placeWord(Word w) {
-        setPassCounter(0);
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;

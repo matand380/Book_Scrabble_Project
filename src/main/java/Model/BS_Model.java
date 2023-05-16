@@ -13,8 +13,6 @@ public interface BS_Model {
     public void setPlayerProperties(String name);
     void passTurn(int id);
 
-    void setGameOver(boolean isGameOver);
-
 
     // Methods for getting data from the model
     int getCurrentPlayerScore();

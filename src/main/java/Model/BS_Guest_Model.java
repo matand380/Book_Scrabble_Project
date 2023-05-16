@@ -16,7 +16,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public String[] playersScores;
     Socket socket;
     Tile[][] tileBoard;
-    Player player; // TODO: 04/05/2023 implement player class and send it to the host
+    Tile[][] tempBoard;
+    Player player;
     ClientCommunicationHandler communicationHandler;
     private BS_Guest_Model() {
 
@@ -43,7 +44,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     public void setPlayersScores(String[] playersScores) {
         this.playersScores = playersScores;
+        getPlayer().set_score(Integer.parseInt(playersScores[getPlayer().get_index()]));
     }
+
 
     public void openSocket(String ip, int port) { //button start in the view
         if (validateIpPort(ip, port)) {
@@ -84,7 +87,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public void challengeWord(String word) {
         String playerIndex = String.valueOf(player.get_index());
         communicationHandler.outMessages("challengeWord:" + playerIndex + ":" + word);
-        //send challengeWord:playerIndex:word (word is the word that the player wants to challenge)
     }
 
     @Override
@@ -92,11 +94,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return false;
     }
 
-    @Override
-    public void setGameOver(boolean isGameOver) {
-        // TODO: 14/05/2023 close all resources in orderly manner
-//        communicationHandler.outMessages("setGameOver:" + isGameOver);
-    }
+
 
     public void setBoard(Tile[][] boardTiles) {
         this.tileBoard = boardTiles;
@@ -104,11 +102,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         notifyObservers("board:");
     }
 
-    public void setPlayerScore(int index, String score) {
-        playersScores[index] += score;
-        setChanged();
-        notifyObservers("tryPlaceWord:" + index + ":" + score);
-    }
+
 
     public Socket getSocket() {
         return socket;
@@ -144,6 +138,17 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     private static class BS_Guest_ModelHolder {
         private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
+    }
+
+    public void endGame() {
+        communicationHandler.outMessages("endGame:"+player.get_socketID());
+        communicationHandler.close();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

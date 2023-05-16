@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 
@@ -26,34 +27,7 @@ public class ClientCommunicationHandler {
 
     public ClientCommunicationHandler() {
 
-        //put all the methods in the map for being able to invoke them in handleRequests
-        handlers.put("tryPlaceWord", (message) -> {
-            int index = Integer.parseInt(message[1]);
-            String score = message[2];
-            if (score.equals("0")) {
-                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                    BS_Guest_Model.getModel().hasChanged();
-                    BS_Guest_Model.getModel().notifyObservers("tryPlaceWord:" + index + ":" + "0");
-                }
-            } else {
-                if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                    BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
-                }
-                BS_Guest_Model.getModel().setPlayerScore(index, score);
-            }
-            return "";
-        });
-        handlers.put("challengeWord", (message) -> {
-            int index = Integer.parseInt(message[1]);
-            String score = message[2];
-            BS_Guest_Model.getModel().playersScores[index] += score;
-            if (index == BS_Guest_Model.getModel().getPlayer().get_index()) {
-                BS_Guest_Model.getModel().getPlayer().set_score(BS_Guest_Model.getModel().getPlayer().get_score() + Integer.parseInt(score));
-            }
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("challengeWord:" + index + ":" + message[2]);
-            return "";
-        });
+        //put all the methods in the map for being able to invoke them
         handlers.put("sortAndSetIndex", (message) -> {
             int index = Integer.parseInt(message[1]);
             int sizeSort = Integer.parseInt(message[2]);
@@ -78,11 +52,11 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers(message);
             return "";
         });
-        handlers.put("gameOver", (message) -> {
+        handlers.put("winner", (message) -> {
             int index = Integer.parseInt(message[1]);
             String winnerName = message[2];
             BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("gameOver:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
+            BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
             return "";
         });
         handlers.put("ping", (message) -> {
@@ -98,6 +72,8 @@ public class ClientCommunicationHandler {
             Tile[] newTiles = gson.fromJson(hand, Tile[].class);
             List<Tile> newHand = Arrays.asList(newTiles);
             BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("hand updated");
             return "";
         });
 
@@ -106,7 +82,8 @@ public class ClientCommunicationHandler {
             Gson gson = new Gson();
             Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
             BS_Guest_Model.getModel().setBoard(newTiles);
-            // FIXME: 15/05/2023 need to implement this on host side
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
             return "";
         });
 
@@ -115,61 +92,14 @@ public class ClientCommunicationHandler {
             Gson gson = new Gson();
             String[] newScores = gson.fromJson(scores, String[].class);
             BS_Guest_Model.getModel().setPlayersScores(newScores);
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers("playersScores updated");
             return "";
-            // FIXME: 15/05/2023 need to implement this on host side
-        });
-
-
-
-        try {
-            out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
-            in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setCom() {
-//        new Thread(() -> {
-//            try {
-//                out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
-//                in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            while (!stop) {
-//                inMessages(in);
-//            }
-//    }).start();
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            while (!stop) {
-                inMessages();
-            }
-            // FIXME: 15/05/2023 check this again
         });
 
     }
 
-
-    public void inMessages() {
-
-        String key = null;
-        try {
-            Object inObject = in.readObject();
-            if (inObject instanceof String) {
-                key = (String) inObject;
-            }
-            if (inObject instanceof Tile[][]) {
-                BS_Guest_Model.getModel().setBoard((Tile[][]) inObject);
-
-            }
-
-        } catch (IOException | ClassNotFoundException e) {
-
-        }
-
-        System.out.println("Received message: " + key);
+    public void handleInput(String key) {
         String[] message = key.split(":");
         String methodName = message[0];
         if (handlers.get(methodName) != null) {
@@ -180,34 +110,44 @@ public class ClientCommunicationHandler {
 
     }
 
+    public void setCom() {
+        try {
+            out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
+            in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        // FIXME: 15/05/2023 check this again
+        executor.submit(this::inMessages);
+
+
+    }
+
+    public void inMessages() {
+
+            String key = null;
+            try {
+                key = (String) in.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            if (key == null) {
+                return;
+            }
+            handleInput(key);
+    }
+
     public void outMessages(String key) {
         if (key != null) {
             try {
-                out.writeObject(key); // implement client validation tests
+                out.writeObject(key);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void outObjects(Object key) {
-        if (key != null) {
-            try {
-                if (key instanceof Tile[][]) {
-                    Tile[][] tiles = (Tile[][]) key;
-                    out.writeObject(tiles); // implement client validation tests
-                } else if (key instanceof Player) {
-                    Player player = (Player) key;
-                    out.writeObject(player); // implement client validation tests
-                } else if (key instanceof Word) {
-                    Word word = (Word) key;
-                    out.writeObject(word); // implement client validation tests
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     public void close() {
         try {
