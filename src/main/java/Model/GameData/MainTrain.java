@@ -125,33 +125,33 @@ public class MainTrain {
 
 	}
 
-	public static void main(String[] args) {
 //		testBag(); // 30 points
 //		testBoard(); // 70 points
 //		System.out.println("Game Data done");
 		//TODO : move to host test
-		BS_Host_Model host = BS_Host_Model.getModel(); // change port
+	public static void main(String[] args) {
+
+		BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a port for the Host Server
+		host.openSocket("127.0.0.1", 5555); //assign ip and port of the Game Server
 		host.setPlayerProperties("Eviatar");
-//		Tile[] tiles = new Tile[4];
 
-		//TODO : move to func in test file
+		Thread t = new Thread(()-> BS_Host_Model.getModel().getCommunicationServer().start());
+		t.start();
 
-		//TODO : move to guest test
-		////////// guest test
+		try {
+			Thread.sleep(1000); //wait for server to start
+		} catch (InterruptedException e) {
+			System.out.println("sleep failed");
+		}
 
 		BS_Guest_Model client = BS_Guest_Model.getModel();
 		client.setPlayerProperties("matan");
-		client.openSocket("127.0.0.1", 65533);  //copy local server ip + server port
+		//choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;
+		client.openSocket("127.0.0.1", 65533);
 		client.getCommunicationHandler().setCom();
 
-//		tiles[0] = new Tile('W', 4);
-//		tiles[1] = new Tile('V', 1);
-//		tiles[2] = new Tile('I', 1);
-//		tiles[3] = new Tile('T', 1);
-//		Word word = new Word(tiles, 7, 5, false);
-
+		//test start from here
 		host.startNewGame();
-
 
 	}
 

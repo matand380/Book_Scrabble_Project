@@ -125,7 +125,6 @@ public class ClientCommunicationHandler {
     }
 
     public void inMessages() {
-
             String key = null;
             try {
                 key = (String) in.readObject();
@@ -136,6 +135,7 @@ public class ClientCommunicationHandler {
                 return;
             }
             handleInput(key);
+
     }
 
     public void outMessages(String key) {
@@ -146,7 +146,7 @@ public class ClientCommunicationHandler {
                 throw new RuntimeException(e);
             }
         }
-    }
+        }
 
 
     public void close() {

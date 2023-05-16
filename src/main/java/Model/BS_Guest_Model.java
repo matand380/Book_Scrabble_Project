@@ -20,16 +20,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     Player player;
     ClientCommunicationHandler communicationHandler;
     private BS_Guest_Model() {
-
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please enter the ip address of the server");
-//        String ip = scanner.nextLine();
-//        System.out.println("Please enter the port of the server");
-//        int port = scanner.nextInt();
-//        scanner.close();
-
-
-
         player = new Player();
         playersScores = new String[0];
     }

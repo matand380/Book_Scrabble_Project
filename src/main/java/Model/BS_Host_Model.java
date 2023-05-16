@@ -41,13 +41,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
         //for testing
-        openSocket("172.20.10.4", 12345); //copy local server ip + server port
         System.out.println("Pick host port number : ");
-        Scanner scanner = new Scanner(System.in);
-        int port = scanner.nextInt();
+         Scanner scanner = new Scanner(System.in);
+         int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
-        communicationServer.start();
 
     }
 
@@ -263,10 +261,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         notifyAll(); // notify the main that the game is over
         // 16/05/2023 server will be notified about the winner;
         // 16/05/2023 its close button will be disabled while clientsMap is not empty
-       //16/05/2023 when clientsMap will be empty the button will be enabled
-       // 16/05/2023 press the button will execute the endGame method
+        //16/05/2023 when clientsMap will be empty the button will be enabled
+        // 16/05/2023 press the button will execute the endGame method
 
-       // 16/05/2023 this method will be activated after pressing the end game button
+        // 16/05/2023 this method will be activated after pressing the end game button
         // 16/05/2023 wait that all clients closed their game
         // 16/05/2023 the HOST end game button will be activated after all clients pressed exit in their game
         // 16/05/2023 need to close the game and all resources
