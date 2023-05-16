@@ -41,8 +41,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
         //for testing
-        openSocket("127.0.0.1", 5555); //copy local server ip + server port
-        System.out.println("Enter server port number : ");
+        openSocket("172.20.10.4", 12345); //copy local server ip + server port
+        System.out.println("Pick host port number : ");
         Scanner scanner = new Scanner(System.in);
         int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);

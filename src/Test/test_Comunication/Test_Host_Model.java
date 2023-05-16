@@ -16,14 +16,15 @@ public class Test_Host_Model {
         //set name from user
         System.out.println("Enter your name: ");
         Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
+        String name = scanner.next();
         host.setPlayerProperties(name);
 
         BS_Guest_Model client1 = BS_Guest_Model.getModel();
         System.out.println("Please enter the ip address of the host");
         scanner = new Scanner(System.in);
-        System.out.println("Please enter the port of the host");
         String ip = scanner.nextLine();
+
+        System.out.println("Please enter the port of the host");
         int port = scanner.nextInt();
         scanner.close();
         client1.openSocket(ip, port);
