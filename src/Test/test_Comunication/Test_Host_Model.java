@@ -1,23 +1,48 @@
 package test_Comunication;
 
+import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
 import Model.GameData.Tile;
 import Model.GameData.Word;
 
 import java.util.Scanner;
 
+
 public class Test_Host_Model {
     public static void main(String[] args) {
 
-        BS_Host_Model host = new BS_Host_Model();
+        BS_Host_Model host = BS_Host_Model.getModel();
+
         //set name from user
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter your name: ");
+        Scanner scanner = new Scanner(System.in);
         String name = scanner.nextLine();
         host.setPlayerProperties(name);
 
-        int bagSize=host.getBagSize();
+        BS_Guest_Model client1 = BS_Guest_Model.getModel();
+        System.out.println("Please enter the ip address of the host");
+        scanner = new Scanner(System.in);
+        System.out.println("Please enter the port of the host");
+        String ip = scanner.nextLine();
+        int port = scanner.nextInt();
+        scanner.close();
+        client1.openSocket(ip, port);
 
+
+        //connect player to the host
+
+
+        //check if the Host model can guest more players
+
+        if(host.isFull())
+            System.out.println("players list is full");
+        else
+            System.out.println("Number of players: "+host.getPlayers().size());
+
+
+
+
+        int bagSize=Tile.Bag.getBag().size();
         Tile[] tiles = new Tile[4];
         tiles[0] = new Tile('W', 4);
         tiles[1] = new Tile('V', 1);
@@ -27,11 +52,11 @@ public class Test_Host_Model {
         host.tryPlaceWord(word);
         host.challengeWord("WVIT", "0");
 
-        if(bagSize!=host.getBagSize())
+        if(bagSize!=Tile.Bag.getBag().size())
             System.out.println("problem with the bag size after trying " +
                     "to place and challenge eligible word");
 
-        //try to see if now what we try to check for WVIT the process going to c
+
 
 
 
