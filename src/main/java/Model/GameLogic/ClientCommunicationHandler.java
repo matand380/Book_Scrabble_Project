@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class ClientCommunicationHandler {
     PrintWriter out;
     Scanner in;
-    Map<String, Function<String[], String>> handlers = new HashMap<>();
+    Map<String, Function<String, String>> handlers = new HashMap<>();
     BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
 
     volatile boolean stop = false;
@@ -25,10 +25,11 @@ public class ClientCommunicationHandler {
 
         //put all the methods in the map for being able to invoke them
         handlers.put("sortAndSetIndex", (message) -> {
-            int size = Integer.parseInt(message[1]);
+            String[] key = message.split(":");
+            int size = Integer.parseInt(key[1]);
             BS_Guest_Model.getModel().playersScores = new String[size];
             for (int i = 0; i < size; i++) {
-                String[] player = message[i + 2].split(",");
+                String[] player = key[i + 2].split(",");
                 if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
                     BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
                     BS_Guest_Model.getModel().hasChanged();
@@ -48,21 +49,23 @@ public class ClientCommunicationHandler {
             return "";
         });
         handlers.put("winner", (message) -> {
-            int index = Integer.parseInt(message[1]);
-            String winnerName = message[2];
+            String[] key = message.split(":");
+            int index = Integer.parseInt(key[1]);
+            String winnerName = key[2];
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
             return "";
         });
         handlers.put("ping", (message) -> {
-            String socketID = message[1];
+            String[] key = message.split(":");
+            String socketID = key[1];
             BS_Guest_Model.getModel().getPlayer().set_socketID(socketID);
             outMessages("addPlayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
             return "";
         });
 
         handlers.put("hand", (message) -> {
-            String hand = message[1];
+            String hand = message.substring(5);
             Gson gson = new Gson();
             Tile[] newTiles = gson.fromJson(hand, Tile[].class);
             List<Tile> newHand = Arrays.asList(newTiles);
@@ -73,7 +76,7 @@ public class ClientCommunicationHandler {
         });
 
         handlers.put("tileBoard", (message) -> {
-            String tiles = message[1];
+            String tiles = message.substring(10);
             Gson gson = new Gson();
             Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
             BS_Guest_Model.getModel().setBoard(newTiles);
@@ -83,7 +86,7 @@ public class ClientCommunicationHandler {
         });
 
         handlers.put("playersScores", (message) -> {
-            String scores = message[1];
+            String scores = message.substring(14);
             Gson gson = new Gson();
             String[] newScores = gson.fromJson(scores, String[].class);
             BS_Guest_Model.getModel().setPlayersScores(newScores);
@@ -102,7 +105,7 @@ public class ClientCommunicationHandler {
                 String[] message = key.split(":");
                 String methodName = message[0];
                 if (handlers.get(methodName) != null) {
-                    handlers.get(methodName).apply(message);
+                    handlers.get(methodName).apply(key);
                 } else {
                     System.out.println("No handler for method " + methodName);
                 }
@@ -130,20 +133,20 @@ public class ClientCommunicationHandler {
     }
 
     public void inMessages() {
-            String key = null;
-            try {
-                while (!stop) {
-                    if (in.hasNext()) {
-                        key = in.next();
-                    }
-                    if (key!=null)// Read an object from the server
-                    {
-                    inputQueue.put(key); // Put the received object in the queue
-                    }
+        String key = null;
+        try {
+            while (!stop) {
+                if (in.hasNext()) {
+                    key = in.next();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                if (key != null)// Read an object from the server
+                {
+                    inputQueue.put(key); // Put the received object in the queue
+                }
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 //        String key = null;
 //            try {
@@ -163,7 +166,7 @@ public class ClientCommunicationHandler {
             out.println(key);
             out.flush();
         }
-        }
+    }
 
 
     public void close() {
