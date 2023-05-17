@@ -101,7 +101,7 @@ public class ClientCommunicationHandler {
         while (!stop) {
 
             try {
-                String key = inputQueue.take();
+                String key = inputQueue.take(); //blocking call
                 String[] message = key.split(":");
                 String methodName = message[0];
                 if (handlers.get(methodName) != null) {
