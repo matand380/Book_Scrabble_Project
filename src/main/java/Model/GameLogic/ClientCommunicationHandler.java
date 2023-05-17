@@ -9,14 +9,18 @@ import java.util.*;
 import com.google.gson.Gson;
 
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 
 public class ClientCommunicationHandler {
     PrintWriter out;
     Scanner in;
-    Map<String, Function<String, String>> handlers = new HashMap<>();
+    Map<String, Function<String, String>> handlers1 = new HashMap<>();
+    Map<String, Consumer<String>> handlers = new HashMap<>();
     BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    ExecutorService executor = Executors.newFixedThreadPool(2);
+
 
     volatile boolean stop = false;
 
@@ -36,17 +40,17 @@ public class ClientCommunicationHandler {
                     BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
                 }
             }
-            return "";
+
         });
         handlers.put("wordsForChallenge", (message) -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
-            return "";
+
         });
         handlers.put("passTurn", (message) -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
-            return "";
+
         });
         handlers.put("winner", (message) -> {
             String[] key = message.split(":");
@@ -54,14 +58,14 @@ public class ClientCommunicationHandler {
             String winnerName = key[2];
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
-            return "";
+
         });
         handlers.put("ping", (message) -> {
             String[] key = message.split(":");
             String socketID = key[1];
             BS_Guest_Model.getModel().getPlayer().set_socketID(socketID);
             outMessages("addPlayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
-            return "";
+
         });
 
         handlers.put("hand", (message) -> {
@@ -72,7 +76,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("hand updated");
-            return "";
+
         });
 
         handlers.put("tileBoard", (message) -> {
@@ -82,7 +86,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().setBoard(newTiles);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
-            return "";
+
         });
 
         handlers.put("playersScores", (message) -> {
@@ -92,7 +96,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().setPlayersScores(newScores);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("playersScores updated");
-            return "";
+
         });
 
     }
@@ -105,7 +109,7 @@ public class ClientCommunicationHandler {
                 String[] message = key.split(":");
                 String methodName = message[0];
                 if (handlers.get(methodName) != null) {
-                    handlers.get(methodName).apply(key);
+                    handlers.get(methodName).accept(key);
                 } else {
                     System.out.println("No handler for method " + methodName);
                 }
@@ -124,7 +128,6 @@ public class ClientCommunicationHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ExecutorService executor = Executors.newFixedThreadPool(2);
         // FIXME: 15/05/2023 check this again
         executor.submit(this::inMessages);
         executor.submit(this::handleInput);
@@ -170,6 +173,8 @@ public class ClientCommunicationHandler {
 
 
     public void close() {
+        stop = true;
+        executor.shutdown();
         in.close();
         out.close();
     }

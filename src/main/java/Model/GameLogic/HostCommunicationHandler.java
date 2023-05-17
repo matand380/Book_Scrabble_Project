@@ -5,21 +5,28 @@ import Model.GameData.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 
-public class HostCommunicationHandler implements ClientHandler  {
-    Map<String, Function<String[], String>> handlers = new HashMap<>();
+public class HostCommunicationHandler implements ClientHandler {
+    Map<String, Consumer<String[]>> handlers = new HashMap<>();
     PrintWriter out;
     Scanner in;
     PrintWriter toGameServer;
     Scanner fromGameServer;
+    BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+
 
     public HostCommunicationHandler() {
         //put all the methods in the map for being able to invoke them in handleRequests
         handlers.put("passTurn", (message) -> {
             BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1]));
-            return "";
         });
         handlers.put("addPlayer", (message) -> {
             Player p = new Player();
@@ -30,7 +37,6 @@ public class HostCommunicationHandler implements ClientHandler  {
             BS_Host_Model.getModel().addPlayer(p);
             BS_Host_Model.getModel().hasChanged();
             BS_Host_Model.getModel().notifyObservers("playersListSize:" + BS_Host_Model.getModel().getPlayers().size());
-            return "";
         });
 
         handlers.put("tryPlaceWord", (message) -> {
@@ -47,7 +53,6 @@ public class HostCommunicationHandler implements ClientHandler  {
             }
             Word w = new Word(tiles, row, col, direction);
             BS_Host_Model.getModel().tryPlaceWord(w);
-            return "";
         });
 
         handlers.put("challengeWord", (message) -> {
@@ -58,7 +63,6 @@ public class HostCommunicationHandler implements ClientHandler  {
                 BS_Host_Model.getModel().challengeWord(word, PlayerIndex);
             }
             // TODO: 06/05/2023 handle challengeWord case
-            return "";
         });
 
         handlers.put("endGame", (message) -> {
@@ -68,37 +72,45 @@ public class HostCommunicationHandler implements ClientHandler  {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "";
         });
 
-
+        executor.submit(this::handleRequests);
     }
 
 
-    public String handleRequests(String key) {
-
-        String[] message = key.split(":");
-        String methodName = message[0];
-        Function<String[], String> handler = handlers.get(methodName);
-        if (handler != null) {
-            return handler.apply(message);
-        } else {
-            // handle when unknown method is called
-            return "";
+    public void handleRequests() {
+        try {
+            String key = inputQueue.take(); //blocking call
+            String[] message = key.split(":");
+            String methodName = message[0];
+            if (handlers.get(methodName) != null) {
+                handlers.get(methodName).accept(message);
+            } else {
+                System.out.println("No handler for method " + methodName);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
     }
-
-
 
 
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
         in = new Scanner(inputStream);
         out = new PrintWriter(outputStream);
-        String s = null;
-        s =  in.next();
-        String key = handleRequests(s);
-
+        String key = null;
+        try {
+            if (in.hasNext()) {
+                key = in.next();
+            }
+            if (key != null)// Read an object from the server
+            {
+                inputQueue.put(key); // Put the received object in the queue
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -136,7 +148,6 @@ public class HostCommunicationHandler implements ClientHandler  {
 
         return null;
     }
-
 
 
 }
