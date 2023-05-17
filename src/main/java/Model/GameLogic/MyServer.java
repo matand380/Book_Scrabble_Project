@@ -6,16 +6,18 @@ import Model.BS_Host_Model;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MyServer {
 
     public List<Socket> clients;
+    System.Logger logger;
+    ExecutorService executorService;
+    Map<String, Socket> clientsMap = new HashMap<>();
     private int port;
     private ClientHandler ch;
     private volatile boolean stop;
-    System.Logger logger;
-
-    Map<String,Socket> clientsMap = new HashMap<>();
 
 
     /**
@@ -31,6 +33,7 @@ public class MyServer {
         this.ch = ch;
         this.stop = false;
         this.clients = new ArrayList<>();
+        executorService = Executors.newFixedThreadPool(3);
     }
 
     /**
@@ -50,8 +53,8 @@ public class MyServer {
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
-                String clientID = UUID.randomUUID().toString().substring(0,6);
-                clientsMap.put(clientID,aClient);
+                String clientID = UUID.randomUUID().toString().substring(0, 6);
+                clientsMap.put(clientID, aClient);
                 ping(clientID);
 
                 logger.log(System.Logger.Level.INFO, "New client connected");
@@ -76,23 +79,14 @@ public class MyServer {
             //close all threads
             ch.close();
             server.close();
-        }
-        else {
+        } else {
             //force close all threads
             logger.log(System.Logger.Level.INFO, "Server is shutting down");
         }
     }
 
     private void ping(String clientID) {
-        Socket s = clientsMap.get(clientID);
-        ObjectOutputStream out;
-        try {
-            out = new ObjectOutputStream(s.getOutputStream());
-            out.writeObject("ping:" + clientID);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        updateSpecificPlayer(clientID, "ping:" + clientID);
     }
 
     /**
@@ -161,43 +155,33 @@ public class MyServer {
     }
 
     public void updateAll(Object s) {
-
-        for (Socket client : clients) {
-            ObjectOutputStream out;
+        //foreach socket in map send s
+        clientsMap.forEach((id, socket) -> {
+            PrintWriter out;
             try {
-                out = new ObjectOutputStream(client.getOutputStream());
+                out = new PrintWriter(socket.getOutputStream());
             } catch (IOException e) {
                 logger.log(System.Logger.Level.ERROR, "Error in update all: getting output stream");
                 throw new RuntimeException(e);
             }
-            try {
-                out.writeObject(s);
-            } catch (IOException e) {
-                logger.log(System.Logger.Level.ERROR, "Error in update all: writing to output stream");
-                throw new RuntimeException(e);
-            }
-
-        }
+            out.println(s);
+            out.flush();
+        });
     }
 
-    public void updateSpecificPlayer(String id, Object obj)
-    {
-        new Thread(() -> {
-            Socket s = clientsMap.get(id);
-            ObjectOutputStream out;
-            try {
-                out = new ObjectOutputStream(s.getOutputStream());
-            } catch (IOException e) {
-                logger.log(System.Logger.Level.ERROR, "Error in update specific player: getting output stream");
-                throw new RuntimeException(e);
-            }
-            try {
-                out.writeObject(obj);
-            } catch (IOException e) {
-                logger.log(System.Logger.Level.ERROR, "Error in update specific player: writing to output stream");
-                throw new RuntimeException(e);
-            }
-        }).start();
+    public void updateSpecificPlayer(String id, Object obj) {
+
+        Socket s = clientsMap.get(id);
+        PrintWriter out;
+        try {
+            out = new PrintWriter(s.getOutputStream());
+        } catch (IOException e) {
+            logger.log(System.Logger.Level.ERROR, "Error in update specific player: getting output stream");
+            throw new RuntimeException(e);
+        }
+        out.println(obj);
+        out.flush();
+
     }
 }
 

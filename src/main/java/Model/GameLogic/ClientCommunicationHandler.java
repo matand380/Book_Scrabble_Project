@@ -4,23 +4,19 @@ import Model.BS_Guest_Model;
 import Model.GameData.*;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.gson.Gson;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.function.Function;
 
 
 public class ClientCommunicationHandler {
-    ObjectOutputStream out;
-    ObjectInputStream in;
+    PrintWriter out;
+    Scanner in;
     Map<String, Function<String[], String>> handlers = new HashMap<>();
+    BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
 
     volatile boolean stop = false;
 
@@ -99,27 +95,37 @@ public class ClientCommunicationHandler {
 
     }
 
-    public void handleInput(String key) {
-        String[] message = key.split(":");
-        String methodName = message[0];
-        if (handlers.get(methodName) != null) {
-            handlers.get(methodName).apply(message);
-        } else {
-            System.out.println("No handler for method " + methodName);
+    public void handleInput() {
+        while (!stop) {
+
+            try {
+                String key = inputQueue.take();
+                String[] message = key.split(":");
+                String methodName = message[0];
+                if (handlers.get(methodName) != null) {
+                    handlers.get(methodName).apply(message);
+                } else {
+                    System.out.println("No handler for method " + methodName);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
 
     }
 
     public void setCom() {
         try {
-            out = new ObjectOutputStream(BS_Guest_Model.getModel().getSocket().getOutputStream());
-            in = new ObjectInputStream(BS_Guest_Model.getModel().getSocket().getInputStream());
+            out = new PrintWriter(BS_Guest_Model.getModel().getSocket().getOutputStream());
+            in = new Scanner(BS_Guest_Model.getModel().getSocket().getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newFixedThreadPool(2);
         // FIXME: 15/05/2023 check this again
         executor.submit(this::inMessages);
+        executor.submit(this::handleInput);
 
 
     }
@@ -127,34 +133,41 @@ public class ClientCommunicationHandler {
     public void inMessages() {
             String key = null;
             try {
-                key = (String) in.readObject();
-            } catch (IOException | ClassNotFoundException e) {
+                while (!stop) {
+                    key = in.next();
+
+                    if (key!=null)// Read an object from the server
+                    {
+                    inputQueue.put(key); // Put the received object in the queue
+                    }
+                }
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (key == null) {
-                return;
-            }
-            handleInput(key);
 
+//        String key = null;
+//            try {
+//                key = (String) in.readObject();
+//            } catch (IOException | ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            if (key == null) {
+//                return;
+//            }
+//            handleInput(key);
+//        }
     }
 
     public void outMessages(String key) {
         if (key != null) {
-            try {
-                out.writeObject(key);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            out.println(key);
+            out.flush();
         }
         }
 
 
     public void close() {
-        try {
-            in.close();
-            out.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        in.close();
+        out.close();
     }
 }

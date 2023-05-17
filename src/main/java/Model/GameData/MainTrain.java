@@ -132,24 +132,30 @@ public class MainTrain {
 	public static void main(String[] args) {
 
 		BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a port for the Host Server
-		host.openSocket("127.0.0.1", 5555); //assign ip and port of the Game Server
+		host.openSocket("127.0.0.1", 65535); //assign ip and port of the Game Server
 		host.setPlayerProperties("Eviatar");
 
 		Thread t = new Thread(()-> BS_Host_Model.getModel().getCommunicationServer().start());
 		t.start();
 
 		try {
-			Thread.sleep(1000); //wait for server to start
+			Thread.sleep(2000); //wait for server to start
 		} catch (InterruptedException e) {
 			System.out.println("sleep failed");
 		}
 
-		BS_Guest_Model client = BS_Guest_Model.getModel();
-		client.setPlayerProperties("matan");
-		//choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;
-		client.openSocket("127.0.0.1", 65533);
-		client.getCommunicationHandler().setCom();
+			BS_Guest_Model client = BS_Guest_Model.getModel();
+			client.setPlayerProperties("matan");
+			//choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;
+			client.openSocket("127.0.0.1", 65533);
+			client.getCommunicationHandler().setCom();
 
+
+		try {
+			Thread.sleep(2000); //wait for server to start
+		} catch (InterruptedException e) {
+			System.out.println("sleep failed");
+		}
 		//test start from here
 		host.startNewGame();
 

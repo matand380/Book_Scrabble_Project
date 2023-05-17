@@ -4,16 +4,14 @@ import Model.BS_Host_Model;
 import Model.GameData.*;
 
 import java.io.*;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.*;
 import java.util.function.Function;
 
 
-public class HostCommunicationHandler implements ClientHandler {
+public class HostCommunicationHandler implements ClientHandler  {
     Map<String, Function<String[], String>> handlers = new HashMap<>();
-    ObjectOutputStream out;
-    ObjectInputStream in;
+    PrintWriter out;
+    Scanner in;
     PrintWriter toGameServer;
     Scanner fromGameServer;
 
@@ -91,44 +89,25 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
 
+
+
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
-        try {
-            in = new ObjectInputStream(inputStream);
-            out = new ObjectOutputStream(outputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        in = new Scanner(inputStream);
+        out = new PrintWriter(outputStream);
         String s = null;
-        try {
-            s = (String) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        s =  in.next();
         String key = handleRequests(s);
-        if (key.equals(""))
-            return;
-        if (key.startsWith("challengeWord")) {
-            try {
-                out.writeObject(key);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
 
     }
 
     @Override
     public void close() {
-        try {
-            in.close();
-            out.close();
-            toGameServer.close();
-            fromGameServer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        in.close();
+        out.close();
+        toGameServer.close();
+        fromGameServer.close();
 
     }
 
@@ -149,7 +128,6 @@ public class HostCommunicationHandler implements ClientHandler {
         try {
             fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
             String key = null;
-            StringBuilder sb = new StringBuilder();
             key = fromGameServer.next();
             return key;
         } catch (IOException e) {
@@ -158,6 +136,8 @@ public class HostCommunicationHandler implements ClientHandler {
 
         return null;
     }
+
+
 
 }
 
