@@ -151,17 +151,6 @@ public class ClientCommunicationHandler {
             e.printStackTrace();
         }
 
-//        String key = null;
-//            try {
-//                key = (String) in.readObject();
-//            } catch (IOException | ClassNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//            if (key == null) {
-//                return;
-//            }
-//            handleInput(key);
-//        }
     }
 
     public void outMessages(String key) {

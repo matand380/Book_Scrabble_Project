@@ -159,6 +159,7 @@ public class MainTrain {
 		//test start from here
 		host.startNewGame();
 
+
 	}
 
 	public static String formatTiles(Tile[][] tiles) {
