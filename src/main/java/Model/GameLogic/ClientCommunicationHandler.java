@@ -25,12 +25,11 @@ public class ClientCommunicationHandler {
 
         //put all the methods in the map for being able to invoke them
         handlers.put("sortAndSetIndex", (message) -> {
-            int index = Integer.parseInt(message[1]);
-            int sizeSort = Integer.parseInt(message[2]);
-            BS_Guest_Model.getModel().playersScores = new String[sizeSort];
-            for (int i = 0; i < sizeSort; i++) {
+            int size = Integer.parseInt(message[1]);
+            BS_Guest_Model.getModel().playersScores = new String[size];
+            for (int i = 0; i < size; i++) {
                 String[] player = message[i + 2].split(",");
-                if (player[i].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
+                if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
                     BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
                     BS_Guest_Model.getModel().hasChanged();
                     BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
@@ -134,8 +133,9 @@ public class ClientCommunicationHandler {
             String key = null;
             try {
                 while (!stop) {
-                    key = in.next();
-
+                    if (in.hasNext()) {
+                        key = in.next();
+                    }
                     if (key!=null)// Read an object from the server
                     {
                     inputQueue.put(key); // Put the received object in the queue
