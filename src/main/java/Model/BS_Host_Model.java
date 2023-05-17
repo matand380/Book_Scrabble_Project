@@ -10,7 +10,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
@@ -18,6 +20,7 @@ import com.google.gson.GsonBuilder;
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
+    private final AtomicBoolean challengeActivated = new AtomicBoolean(false);
     public ArrayList<Word> currentPlayerWords;
     public int currentPlayerIndex = 0;
     public boolean gameIsOver = false;
@@ -32,6 +35,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     ExecutorService executor = Executors.newSingleThreadExecutor();
     private List<Player> players;
 
+
     private BS_Host_Model() {
 
         //Game data initialization
@@ -42,8 +46,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
         //for testing
         System.out.println("Pick host port number : ");
-         Scanner scanner = new Scanner(System.in);
-         int port = scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        int port = scanner.nextInt();
         communicationServer = new MyServer(port, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
 
@@ -171,8 +175,47 @@ public class BS_Host_Model extends Observable implements BS_Model {
             hasChanged();
             notifyObservers("wordsForChallenge:" + words);
 
-            currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
+            LockSupport.parkNanos(10000000000L);
+            if (challengeActivated.get()) {
+                //execute challengeWord method
+                boolean result = false;
+//                try {
+                    String forChallenge = currentPlayerWords.get(0).toString(); // TODO: 17/05/2023 need to be fixed
+                    // TODO: 17/05/2023  it can be any word from the list, we need to take the one the we received from the client
+                   result = challengeWord(forChallenge, String.valueOf(currentPlayerIndex));
+//                }
+//                catch (ExecutionException | InterruptedException e) {
+//                    hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
+//                }
 
+                if (result) {
+                    placeAndComplete7(word.toString());
+                    updateBoard();
+
+                    if (isGameOver()) {
+                        gameIsOver = true;
+                        communicationServer.updateAll("endGame");
+                        hasChanged();
+                        notifyObservers("endGame");
+                        return;
+                    }
+                } else {
+                    String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+                    if (id != null)
+                        communicationServer.updateSpecificPlayer("challengeSuccess", id);
+                    else {
+                        hasChanged();
+                        notifyObservers("challengeSuccess");
+                    }
+                    passTurn(currentPlayerIndex);
+                    // TODO: 17/05/2023 if challenge success the player can try another word it is not passed turn
+                }
+
+                challengeActivated.set(false);
+                LockSupport.unpark(Thread.currentThread());
+                currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
+                return;
+            }
             /////////////////////////////
             // TODO: 16/05/2023 get an indication from a client if he pressed a challenge or not
             // !there is only one client that can press a challenge.
@@ -181,30 +224,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             /////////////////////////////
 
 
-            //execute challengeWord method
-            boolean result = false;
-            try {
-                Future<Boolean> f = executor.submit(() -> challengeWord(word.toString(), String.valueOf(currentPlayerIndex)));
-                result = f.get(); // blocking call
-            } catch (ExecutionException | InterruptedException e) {
-                hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
-            }
 
-            if (result) {
-                placeAndComplete7(word.toString());
-                updateBoard();
-                if (isGameOver()) {
-                    gameIsOver = true;
-                    communicationServer.updateAll("endGame");
-                    hasChanged();
-                    notifyObservers("endGame");
-                    return;
-                }
-            } else {
-                String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
-                communicationServer.updateSpecificPlayer("challengeSuccess", id);
-                passTurn(currentPlayerIndex);
-            }
 
             /*
             * if tryPlaceWord returns score > 0, then we send a list of words to all clients
@@ -229,6 +249,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             //if no challenge happened, update the board and complete the hand
             placeAndComplete7(word.toString());
+            players.get(currentPlayerIndex).set_score(score);
             updateBoard();
             updateScores();
             if (isGameOver()) {
@@ -240,6 +261,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
             }
             passTurn(currentPlayerIndex);
             board.setPassCounter(0);
+            currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
+
         }
     }
 
@@ -283,8 +306,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
         //send a challenge to the GameServer and get a response
         int PlayerIndex = Integer.parseInt(index);
-        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
-        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        Future<String> f = BS_Host_Model.getModel().executor.submit(() -> {
+            BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
+            return BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        });
+        String response = null;
+        try {
+            response = f.get(); // blocking call
+        } catch (InterruptedException | ExecutionException e) {
+            hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
+        }
+//        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
+//        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
 
         // handle the response
         String[] splitResponse = response.split(":");
@@ -424,11 +457,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
         players.add(player);
     }
 
+    public void requestChallengeActivation() {
+        // Set the challengeRequested flag to indicate a challenge is requested
+        challengeActivated.set(true);
+
+    }
+
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
-
-
 }
+
 
 

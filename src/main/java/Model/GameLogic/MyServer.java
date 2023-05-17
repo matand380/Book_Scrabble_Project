@@ -174,14 +174,21 @@ public class MyServer {
         Socket s = clientsMap.get(id);
         PrintWriter out;
         try {
-            out = new PrintWriter(s.getOutputStream());
+            if (s != null) {
+                out = new PrintWriter(s.getOutputStream());
+                out.println(obj);
+                out.flush();
+            }
         } catch (IOException e) {
             logger.log(System.Logger.Level.ERROR, "Error in update specific player: getting output stream");
             throw new RuntimeException(e);
         }
-        out.println(obj);
-        out.flush();
 
+
+    }
+
+    public boolean isRunning() {
+        return !stop;
     }
 }
 

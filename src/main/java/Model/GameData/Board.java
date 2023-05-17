@@ -5,17 +5,18 @@ import Model.BS_Host_Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.Future;
 
 public class Board implements Serializable, ObjectFactory {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
-    private int passCounter = 0;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
     boolean wScount = false;
     ArrayList<Word> wordOnBoard = new ArrayList<>();
+    private int passCounter = 0;
 
     /**
      * The Board function creates a new board object.
@@ -93,11 +94,6 @@ public class Board implements Serializable, ObjectFactory {
         scoreBoard[14][7] = 'r';//pale blue triple word score
         scoreBoard[14][14] = 'r';//pale blue triple word score
 
-    }
-
-
-    private static class BoardHolder {
-        private static final Board boardInstance = new Board();
     }
 
     /**
@@ -245,13 +241,22 @@ public class Board implements Serializable, ObjectFactory {
 
     private boolean dictionaryLegal(Word w) {
         String stringWord = w.toString();
-        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
-        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        Future<String> res = BS_Host_Model.getModel().getCommunicationHandler().executor.submit(() -> {
+            BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
+            return BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        });
+
+        String response = null;
+        try {
+            response = res.get();
+        } catch (Exception e) {
+            System.out.println("Error: dictionaryLegal");
+        }
+//        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
         String[] splitResponse = response.split(":");
         if (splitResponse[0].equals("Q")) {
             return splitResponse[1].equals("true");
-        }
-        else {
+        } else {
             System.out.println("Error: dictionaryLegal");
             return false;
         }
@@ -321,7 +326,6 @@ public class Board implements Serializable, ObjectFactory {
         for (int j = 0; j < temp.size(); j++) tiles[j] = temp.get(j);
         return new Word(tiles, rowBegin, col, true);
     }
-
 
     /**
      * The checkHorizontalWord function checks the horizontal word that is formed by a tile placed on the board.
@@ -407,7 +411,6 @@ public class Board implements Serializable, ObjectFactory {
         return score;
     }
 
-
     /**
      * The wordScore function takes in a Word object and returns the score of that word.
      * The function first initializes the score to 0, then iterates through each tile in the word.
@@ -458,7 +461,6 @@ public class Board implements Serializable, ObjectFactory {
         return score;
     }
 
-
     public int getPassCounter() {
         return passCounter;
     }
@@ -485,11 +487,11 @@ public class Board implements Serializable, ObjectFactory {
         if (!dictionaryLegal(w)) return 0;
         if (!boardLegal(w)) return 0;
         ArrayList<Word> newWord = getWords(w);
-        for (Word word : newWord) {
-            if (dictionaryLegal(word)) {
-                sum += getScore(word);
-            } else return 0;
-        }
+            for (Word word : newWord) {
+                if (dictionaryLegal(word)) {
+                    sum += getScore(word);
+                } else return 0;
+            }
         wordCounter += newWord.size();
         BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;
@@ -518,6 +520,10 @@ public class Board implements Serializable, ObjectFactory {
     @Override
     public Board create() {
         return getBoard();
+    }
+
+    private static class BoardHolder {
+        private static final Board boardInstance = new Board();
     }
 }
 

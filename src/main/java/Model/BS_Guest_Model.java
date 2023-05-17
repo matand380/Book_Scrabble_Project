@@ -15,8 +15,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     private static BS_Guest_Model model_instance = null;
     public String[] playersScores;
     Socket socket;
-    Tile[][] tileBoard;
-    Tile[][] tempBoard;
+    Tile[][] tileBoard = new Tile[15][15];
+    Tile[][] tempBoard = new Tile[15][15];
     Player player;
     ClientCommunicationHandler communicationHandler;
     private BS_Guest_Model() {

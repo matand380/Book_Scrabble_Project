@@ -20,7 +20,7 @@ public class HostCommunicationHandler implements ClientHandler {
     PrintWriter toGameServer;
     Scanner fromGameServer;
     BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
-    ExecutorService executor = Executors.newSingleThreadExecutor();
+    public ExecutorService executor = Executors.newFixedThreadPool(3);
 
 
     public HostCommunicationHandler() {
@@ -75,23 +75,25 @@ public class HostCommunicationHandler implements ClientHandler {
         });
 
         executor.submit(this::handleRequests);
+        executor.submit(this::messagesFromGameServer);
     }
 
 
     public void handleRequests() {
-        try {
-            String key = inputQueue.take(); //blocking call
-            String[] message = key.split(":");
-            String methodName = message[0];
-            if (handlers.get(methodName) != null) {
-                handlers.get(methodName).accept(message);
-            } else {
-                System.out.println("No handler for method " + methodName);
+        while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
+            try {
+                String key = inputQueue.take(); //blocking call
+                String[] message = key.split(":");
+                String methodName = message[0];
+                if (handlers.get(methodName) != null) {
+                    handlers.get(methodName).accept(message);
+                } else {
+                    System.out.println("No handler for method " + methodName);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-
     }
 
 

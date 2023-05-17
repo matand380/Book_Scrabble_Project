@@ -158,6 +158,9 @@ public class MainTrain {
 		}
 		//test start from here
 		host.startNewGame();
+		Word w = new Word(get("HORN"), 7, 5, false);
+//		host.requestChallengeActivation(); //if you want to check the challenge method - uncomment this line
+		host.tryPlaceWord(w);
 
 
 	}
