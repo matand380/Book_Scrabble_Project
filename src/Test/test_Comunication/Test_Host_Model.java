@@ -2,6 +2,7 @@ package test_Comunication;
 
 import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
+import Model.GameData.Player;
 import Model.GameData.Tile;
 import Model.GameData.Word;
 import java.util.Scanner;
@@ -17,6 +18,8 @@ public class Test_Host_Model {
 
         //test start from here
         host.startNewGame();
+        if(!test_StartGame_State())
+            System.out.println("test_StartGame_State failed");
 
 
         Word w1 = new Word(get("HORN"), 7, 5, false);
@@ -28,8 +31,7 @@ public class Test_Host_Model {
         Word w2 = new Word(get("BORN"), 7, 5, false);
         host.tryPlaceWord(w2);
         System.out.println(formatTiles(host.getBoardState()));
-        //check scores sayed the same
-        //check pass turn
+        //
 
 
         //old test dan and tal
@@ -125,6 +127,27 @@ public class Test_Host_Model {
         }
         return client;
     }
+
+    public static boolean test_StartGame_State()
+    {
+        //check if all the players got tiles
+        for(Player p: BS_Host_Model.getModel().getPlayers()) {
+            if(p.get_hand().size()!=7)
+                return false;}
+        //number of tile in bag after that loop
+        //check passCounter
+//check word counter after adding a word
+
+        //the board is empty
+        //th bag had the right amount of tiles after the players got tiles
+        //the players got a tile and the play order is right(sortAntSetIndex)
+
+        return true;
+
+
+    }
+        //after type pass passCounter is 1
+        //after all the plaers type pass game is over
 
     public static Tile[] get(String s) {
         Tile[] ts=new Tile[s.length()];
