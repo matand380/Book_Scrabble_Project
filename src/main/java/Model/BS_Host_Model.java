@@ -489,11 +489,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void requestChallengeActivation(String challengeInfo) {
         // Set the challengeInfo challengerIndex:word
         this.setChallengeInfo(challengeInfo);
+        String challengerIndex = this.getChallengeInfo().split(":")[0];
+        String forChallenge = this.challengeInfo.split(":")[1];
         // Set the challengeRequested flag to indicate a challenge is requested
         // TODO: 18/05/2023 if(challengeActivated.get()) send message back to client that challenge is already activated
-        challengeActivated.set(true);
-
-
+        if (challengeActivated.get()) {
+            if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
+                communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+            } else {
+                hasChanged();
+                notifyObservers("challengeAlreadyActivated");
+            }
+        } else {
+            challengeActivated.set(true);
+        }
     }
 
     private static class HostModelHelper {
