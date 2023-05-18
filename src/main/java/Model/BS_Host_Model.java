@@ -436,8 +436,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
             communicationServer.updateAll("winner:" + getMaxScore());
             hasChanged();
             notifyObservers("winner:" + getMaxScore());
-            //todo: change the variable "gameIsOver" to true(Matan or eviatar approve next line)
-            //gameIsOver = true;
         }
         return isGameOver;
     }
