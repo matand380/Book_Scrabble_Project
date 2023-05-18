@@ -160,6 +160,7 @@ public class MainTrain {
 		host.startNewGame();
 		Word w = new Word(get("HORN"), 7, 5, false);
 //		host.requestChallengeActivation(); //if you want to check the challenge method - uncomment this line
+		client.challengeWord("HORN");
 		host.requestChallengeActivation(host.getPlayer().get_index()+":"+"HORN");
 		host.tryPlaceWord(w);
 //		Word w2 = new Word(get("F_RM"), 5, 7, true);

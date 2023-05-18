@@ -189,8 +189,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
             BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
             hasChanged();
             notifyObservers("wordsForChallenge:" + words);
+            //if the current player is the host, then the host's viewModel wan't display the challenge words
 
-            LockSupport.parkNanos(10000000000L);
+            LockSupport.parkNanos(10000000000L); //park for 10 seconds
             if (challengeActivated.get()) {
                 //execute challengeWord method
                 boolean result = false;
@@ -205,7 +206,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
                 if (result) {
                     placeAndComplete7(word.toString());
+                    players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
                     updateBoard();
+                    updateScores();
 
                     if (isGameOver()) {
                         gameIsOver = true;
@@ -217,18 +220,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 } else {
                     String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
                     if (id != null)
-                        communicationServer.updateSpecificPlayer("challengeSuccess", id);
+                        communicationServer.updateSpecificPlayer(id, "challengeSuccess");
                         // TODO: 18/05/2023 the current player need to handle this message
                     else {
                         hasChanged();
                         notifyObservers("challengeSuccess");
                     }
                     passTurn(currentPlayerIndex);
-                    // TODO: 17/05/2023 if challenge success the player can try another word it is not passed turn
+                    // TODO: 17/05/2023 in tests check the counter of passTurn
                 }
 
                 challengeActivated.set(false);
-                currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
+                currentPlayerWords.clear();
                 return;
             }
             /////////////////////////////
@@ -264,7 +267,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             //if no challenge happened, update the board and complete the hand
             placeAndComplete7(word.toString());
-            players.get(currentPlayerIndex).set_score(score);
+            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
             updateBoard();
             updateScores();
             if (isGameOver()) {
@@ -278,6 +281,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
             board.setPassCounter(0);
             currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
 
+        }
+        // score == 0 means that the word cannot be placed on the board
+        else {
+            String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+            if (id != null)
+                communicationServer.updateSpecificPlayer(id, "invalidWord");
+            else {
+                hasChanged();
+                notifyObservers("invalidWord");
+            }
         }
     }
 
@@ -477,6 +490,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         // Set the challengeInfo challengerIndex:word
         this.setChallengeInfo(challengeInfo);
         // Set the challengeRequested flag to indicate a challenge is requested
+        // TODO: 18/05/2023 if(challengeActivated.get()) send message back to client that challenge is already activated
         challengeActivated.set(true);
 
 

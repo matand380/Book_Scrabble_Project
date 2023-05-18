@@ -243,26 +243,27 @@ public class Board implements Serializable, ObjectFactory {
     }
 
     private boolean dictionaryLegal(Word w) {
-        StringBuilder sb = new StringBuilder();
-        if (w.isVertical()) {
-            //get the index of the _ in the word
-            for (int i = 0; i < w.getTiles().length; i++) {
-                if (w.getTiles()[i] == null) {
-                    sb.append(Board.getBoard().mainBoard[w.getRow()][w.getCol() + i].letter);
-                } else
-                    sb.append(w.getTiles()[i].getLetter());
-            }
-        } else {
-            //get the index of the _ in the word
-            for (int i = 0; i < w.getTiles().length; i++) {
-                if (w.getTiles()[i] == null) {
-                    sb.append(Board.getBoard().mainBoard[w.getRow() + i][w.getCol()].letter);
-                } else
-                    sb.append(w.getTiles()[i].getLetter());
-            }
-        }
-        String stringWord = sb.toString();
-//        String stringWord = w.toString();
+//        StringBuilder sb = new StringBuilder();
+//        if (w.isVertical()) {
+//            //get the index of the _ in the word
+//            for (int i = 0; i < w.getTiles().length; i++) {
+//                if (w.getTiles()[i] == null) {
+//                    sb.append(Board.getBoard().mainBoard[w.getRow()][w.getCol() + i].letter);
+//                } else
+//                    sb.append(w.getTiles()[i].getLetter());
+//            }
+//        } else {
+//            //get the index of the _ in the word
+//            for (int i = 0; i < w.getTiles().length; i++) {
+//                if (w.getTiles()[i] == null) {
+//                    sb.append(Board.getBoard().mainBoard[w.getRow() + i][w.getCol()].letter);
+//                } else
+//                    sb.append(w.getTiles()[i].getLetter());
+//            }
+//        }
+        Word forQuery = checkWordNull(w);
+        String stringWord = forQuery.toString();
+
         Future<String> res = BS_Host_Model.getModel().getCommunicationHandler().executor.submit(() -> {
             BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
             return BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
