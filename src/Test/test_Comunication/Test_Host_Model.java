@@ -29,16 +29,16 @@ static BS_Guest_Model clientB;
 
 
 
-        Word w1 = new Word(get("HORN"), 7, 5, false);
-		host.requestChallengeActivation(); //if you want to check the challenge method - uncomment this line
-        host.tryPlaceWord(w1);
-        System.out.println(formatTiles(host.getBoardState()));
-
-
-        host.passTurn(host.currentPlayerIndex);
-        Word w2 = new Word(get("BORN"), 7, 5, false);
-        host.tryPlaceWord(w2);
-        System.out.println(formatTiles(host.getBoardState()));
+//        Word w1 = new Word(get("HORN"), 7, 5, false);
+//		host.requestChallengeActivation(); //if you want to check the challenge method - uncomment this line
+//        host.tryPlaceWord(w1);
+//        System.out.println(formatTiles(host.getBoardState()));
+//
+//
+//        host.passTurn(host.currentPlayerIndex);
+//        Word w2 = new Word(get("BORN"), 7, 5, false);
+//        host.tryPlaceWord(w2);
+//        System.out.println(formatTiles(host.getBoardState()));
         //
 
         //old test dan and tal
@@ -95,7 +95,7 @@ static BS_Guest_Model clientB;
         //still need to check way the score osnt updated after the play
         //part of guest model test if we will separate them
         Word w1 = new Word(get("HORN"), 7, 5, false);
-        host.requestChallengeActivation();
+        host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex())+"HORN");
         host.tryPlaceWord(w1);
         System.out.println(formatTiles(host.getBoardState()));
         System.out.println("player A score: "+clientA.playersScores[host.getCurrentPlayerIndex()]);
