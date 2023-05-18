@@ -17,7 +17,6 @@ public class Board implements Serializable, ObjectFactory {
     boolean wScount = false;
     ArrayList<Word> wordOnBoard = new ArrayList<>();
     private int passCounter = 0;
-
     /**
      * The Board function creates a new board object.
      * It initializes the mainBoard and scoreBoard arrays to null and 0 respectively.
@@ -105,6 +104,10 @@ public class Board implements Serializable, ObjectFactory {
      */
     public static Board getBoard() {
         return BoardHolder.boardInstance;
+    }
+
+    public int getWordCounter() {
+        return wordCounter;
     }
 
     /**
@@ -240,7 +243,26 @@ public class Board implements Serializable, ObjectFactory {
     }
 
     private boolean dictionaryLegal(Word w) {
-        String stringWord = w.toString();
+        StringBuilder sb = new StringBuilder();
+        if (w.isVertical()) {
+            //get the index of the _ in the word
+            for (int i = 0; i < w.getTiles().length; i++) {
+                if (w.getTiles()[i] == null) {
+                    sb.append(Board.getBoard().mainBoard[w.getRow()][w.getCol() + i].letter);
+                } else
+                    sb.append(w.getTiles()[i].getLetter());
+            }
+        } else {
+            //get the index of the _ in the word
+            for (int i = 0; i < w.getTiles().length; i++) {
+                if (w.getTiles()[i] == null) {
+                    sb.append(Board.getBoard().mainBoard[w.getRow() + i][w.getCol()].letter);
+                } else
+                    sb.append(w.getTiles()[i].getLetter());
+            }
+        }
+        String stringWord = sb.toString();
+//        String stringWord = w.toString();
         Future<String> res = BS_Host_Model.getModel().getCommunicationHandler().executor.submit(() -> {
             BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
             return BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
@@ -487,11 +509,11 @@ public class Board implements Serializable, ObjectFactory {
         if (!dictionaryLegal(w)) return 0;
         if (!boardLegal(w)) return 0;
         ArrayList<Word> newWord = getWords(w);
-            for (Word word : newWord) {
-                if (dictionaryLegal(word)) {
-                    sum += getScore(word);
-                } else return 0;
-            }
+        for (Word word : newWord) {
+            if (dictionaryLegal(word)) {
+                sum += getScore(word);
+            } else return 0;
+        }
         wordCounter += newWord.size();
         BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;
