@@ -128,13 +128,18 @@ public class Test_Host_Model {
         return client;
     }
 
-    public static boolean test_StartGame_State()
-    {
+    public static boolean test_StartGame_State() {
         //check if all the players got tiles
-        for(Player p: BS_Host_Model.getModel().getPlayers()) {
-            if(p.get_hand().size()!=7)
-                return false;}
+        for (Player p : BS_Host_Model.getModel().getPlayers()) {
+            if (p.get_hand().size() != 7) {
+                System.out.println("problem in -check if all the players got tiles");
+                return false;
+            }
+        }
+
+
         //number of tile in bag after that loop
+
         //check passCounter
 //check word counter after adding a word
 
