@@ -23,9 +23,9 @@ static BS_Guest_Model clientB;
         //test start from here
         host.startNewGame();
         test_StartGame_State();
-        test_PassTurns();
-        //test_WordCounter();
+        test_WordCounter();
         test_ScoreUpdates();
+        test_PassTurns();
 
 
 
@@ -107,21 +107,21 @@ static BS_Guest_Model clientB;
 
     }
 
-//    private static void test_WordCounter() {
-//        Word w1 = new Word(get("BORN"), 7, 5, false);
-//        Word w2 = new Word(get("BORN"), 2, 2, false);
-//        Word w3 = new Word(get("BORN"), 3, 3, false);
-//        host.tryPlaceWord(w1);
-//        System.out.println(formatTiles(host.getBoardState()));
-//        host.tryPlaceWord(w2);
-//        System.out.println(formatTiles(host.getBoardState()));
-//        host.tryPlaceWord(w3);
-//        System.out.println(formatTiles(host.getBoardState()));
-//        //todo:need getter to "wordCounter" from the board
-//        if(Board.getBoard().getwordCouner!=3)
-//            System.out.println("problem with the word counter");
-//
-//    }
+    private static void test_WordCounter() { //need to rewrite
+        Word w1 = new Word(get("BORN"), 7, 5, false);
+        Word w2 = new Word(get("BORN"), 2, 2, false);
+        Word w3 = new Word(get("BORN"), 3, 3, false);
+        host.tryPlaceWord(w1);
+        System.out.println(formatTiles(host.getBoardState()));
+        host.tryPlaceWord(w2);
+        System.out.println(formatTiles(host.getBoardState()));
+        host.tryPlaceWord(w3);
+        System.out.println(formatTiles(host.getBoardState()));
+
+        if(Board.getBoard().getWordCounter()!=3)
+            System.out.println("problem with the word counter");
+
+    }
 
     //local methods for testing
     public static BS_Host_Model startCommunication_CreatHost() {
