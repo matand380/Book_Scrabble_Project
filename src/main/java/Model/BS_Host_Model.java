@@ -146,7 +146,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void passTurn(int playerIndex) {
         setNextPlayerIndex(currentPlayerIndex);
         board.setPassCounter(board.getPassCounter() + 1);
-        isGameOver();
+        if (isGameOver()) {
+            gameIsOver = true;
+            communicationServer.updateAll("endGame");
+            hasChanged();
+            notifyObservers("endGame");
+            return;
+        }
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
         hasChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());

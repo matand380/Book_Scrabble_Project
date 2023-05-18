@@ -161,6 +161,9 @@ public class MainTrain {
 		Word w = new Word(get("HORN"), 7, 5, false);
 //		host.requestChallengeActivation(); //if you want to check the challenge method - uncomment this line
 		host.tryPlaceWord(w);
+		Word w2 = new Word(get("F_RM"), 5, 7, true);
+		host.tryPlaceWord(w2);
+
 
 
 	}
