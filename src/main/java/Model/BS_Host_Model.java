@@ -228,7 +228,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 }
 
                 challengeActivated.set(false);
-                LockSupport.unpark(Thread.currentThread());
                 currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
                 return;
             }
@@ -340,6 +339,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         if (splitResponse[0].equals("C")) {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
+                // FIXME: 18/05/2023 wrong update of scores
                 updateScores();
                 return true;
             } else {
