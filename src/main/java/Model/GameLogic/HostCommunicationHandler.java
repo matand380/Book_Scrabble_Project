@@ -60,7 +60,12 @@ public class HostCommunicationHandler implements ClientHandler {
             String word = message[2];
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch((w1) -> w1.toString().equals(word));
             if (exist) {
-                BS_Host_Model.getModel().challengeWord(word, PlayerIndex);
+                BS_Host_Model.getModel().requestChallengeActivation();
+//                BS_Host_Model.getModel().challengeWord(word, PlayerIndex);
+            }
+            else
+            {
+                BS_Host_Model.getModel().hostLogger.log(System.Logger.Level.ERROR,"Player " + PlayerIndex + " tried to challenge a word that doesn't exist");
             }
             // TODO: 06/05/2023 handle challengeWord case
         });

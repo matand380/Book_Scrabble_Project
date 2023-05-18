@@ -31,7 +31,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Tile.Bag bag;
     Player player;
     Map<String, String> playerToSocketID = new HashMap<>();
-    System.Logger hostLogger = System.getLogger("HostLogger");
+    public System.Logger hostLogger = System.getLogger("HostLogger");
     ExecutorService executor = Executors.newSingleThreadExecutor();
     private List<Player> players;
 
