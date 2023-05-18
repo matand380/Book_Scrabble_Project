@@ -40,32 +40,31 @@ public class ClientCommunicationHandler {
                     BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
                 }
             }
-
         });
+
         handlers.put("wordsForChallenge", (message) -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
-
         });
+
         handlers.put("passTurn", (message) -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
-
         });
+
         handlers.put("winner", (message) -> {
             String[] key = message.split(":");
             int index = Integer.parseInt(key[1]);
             String winnerName = key[2];
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
-
         });
+
         handlers.put("ping", (message) -> {
             String[] key = message.split(":");
             String socketID = key[1];
             BS_Guest_Model.getModel().getPlayer().set_socketID(socketID);
             outMessages("addPlayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
-
         });
 
         handlers.put("hand", (message) -> {
@@ -76,7 +75,6 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("hand updated");
-
         });
 
         handlers.put("tileBoard", (message) -> {
@@ -86,7 +84,6 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().setBoard(newTiles);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
-
         });
 
         handlers.put("playersScores", (message) -> {
@@ -96,9 +93,17 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().setPlayersScores(newScores);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("playersScores updated");
-
         });
 
+        handlers.put("challengeSuccess", (message) -> {
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers(message);
+        });
+
+        handlers.put("invalidWord", (message) -> {
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers(message);
+        });
     }
 
     public void handleInput() {
