@@ -11,12 +11,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -34,6 +32,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public System.Logger hostLogger = System.getLogger("HostLogger");
     ExecutorService executor = Executors.newSingleThreadExecutor();
     private List<Player> players;
+
+    private String getChallengeInfo() {
+        return challengeInfo;
+    }
+
+    private void setChallengeInfo(String challengeInfo) {
+        this.challengeInfo = challengeInfo;
+    }
+
+    String challengeInfo;
 
 
     private BS_Host_Model() {
@@ -185,9 +193,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 //execute challengeWord method
                 boolean result = false;
 //                try {
-                    String forChallenge = currentPlayerWords.get(0).toString(); // TODO: 17/05/2023 need to be fixed
-                    // TODO: 17/05/2023  it can be any word from the list, we need to take the one the we received from the client
-                   result = challengeWord(forChallenge, String.valueOf(currentPlayerIndex));
+                String challengerIndex = this.getChallengeInfo().split(":")[0];
+                    String forChallenge = this.challengeInfo.split(":")[1];
+                   result = challengeWord(forChallenge, challengerIndex);
 //                }
 //                catch (ExecutionException | InterruptedException e) {
 //                    hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
@@ -208,6 +216,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
                     if (id != null)
                         communicationServer.updateSpecificPlayer("challengeSuccess", id);
+                        // TODO: 18/05/2023 the current player need to handle this message
                     else {
                         hasChanged();
                         notifyObservers("challengeSuccess");
@@ -464,9 +473,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
         players.add(player);
     }
 
-    public void requestChallengeActivation() {
+    public void requestChallengeActivation(String challengeInfo) {
+        // Set the challengeInfo to the challengeInfo string
+        this.setChallengeInfo(challengeInfo);
         // Set the challengeRequested flag to indicate a challenge is requested
         challengeActivated.set(true);
+
 
     }
 
