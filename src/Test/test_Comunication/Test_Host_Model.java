@@ -24,10 +24,13 @@ public class Test_Host_Model {
         host.tryPlaceWord(w1);
         System.out.println(formatTiles(host.getBoardState()));
 
-//
-//        Word w2 = new Word(get("BORN"), 7, 5, false);
-//        host.tryPlaceWord(w2);
-//        System.out.println(formatTiles(host.getBoardState()));
+
+        Word w2 = new Word(get("BORN"), 7, 5, false);
+        host.tryPlaceWord(w2);
+        System.out.println(formatTiles(host.getBoardState()));
+        //check scores sayed the same
+        //check pass turn
+
 
         //old test dan and tal
 //        BS_Host_Model host = BS_Host_Model.getModel();
@@ -85,7 +88,7 @@ public class Test_Host_Model {
         host.openSocket("127.0.0.1", 65535); //assign ip and port of the Game Server
         //TODO: get the name from the user instead of hard coding it as we did here
 
-        System.out.println("Enter your name: ");
+        System.out.println("Enter the Host name: ");
         Scanner scanner = new Scanner(System.in);
         String name = scanner.next();
         host.setPlayerProperties(name);
@@ -106,8 +109,12 @@ public class Test_Host_Model {
         BS_Guest_Model client = BS_Guest_Model.getModel();
         //TODO: get the name from the user instead of hard coding it
         client.setPlayerProperties("Tal");
-        //choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;
-        client.openSocket("127.0.0.1", 65534);
+        //choose the same port as you chose for the host the ip should be 127.0.0.1 - don't change it;
+        //todo:ask the user to put the host port to connect ,we might need a list of ports (games) to his choice
+        System.out.println("Enter the HostPort to connect: ");
+        Scanner scanner = new Scanner(System.in);
+        int port = scanner.nextInt();
+        client.openSocket("127.0.0.1", port);
         client.getCommunicationHandler().setCom();
 
 
