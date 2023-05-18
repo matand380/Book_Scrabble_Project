@@ -138,7 +138,7 @@ public class Test_Host_Model {
         }
 
         //number of tile in bag after that loop
-        if(BS_Host_Model.getModel().Tile.Bag.getBag().size() != 86)
+        if(Tile.Bag.getBag().size() != 86)
         {
             System.out.println("problem in -number of tile in bag after that loop");
             return false;
