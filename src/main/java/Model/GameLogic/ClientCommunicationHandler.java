@@ -104,6 +104,10 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
+        handlers.put("challengeAlreadyActivated", (message) -> {
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers(message);
+        });
     }
 
     public void handleInput() {
