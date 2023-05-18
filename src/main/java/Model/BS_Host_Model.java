@@ -22,6 +22,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public ArrayList<Word> currentPlayerWords;
     public int currentPlayerIndex = 0;
     public boolean gameIsOver = false;
+    public System.Logger hostLogger = System.getLogger("HostLogger");
     HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
     MyServer communicationServer;
     Socket gameSocket;
@@ -29,20 +30,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Tile.Bag bag;
     Player player;
     Map<String, String> playerToSocketID = new HashMap<>();
-    public System.Logger hostLogger = System.getLogger("HostLogger");
     ExecutorService executor = Executors.newSingleThreadExecutor();
-    private List<Player> players;
-
-    private String getChallengeInfo() {
-        return challengeInfo;
-    }
-
-    private void setChallengeInfo(String challengeInfo) {
-        this.challengeInfo = challengeInfo;
-    }
-
     String challengeInfo;
-
+    private List<Player> players;
 
     private BS_Host_Model() {
 
@@ -68,6 +58,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
     public static BS_Host_Model getModel() {
         return HostModelHelper.model_instance;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    private String getChallengeInfo() {
+        return challengeInfo;
+    }
+
+    private void setChallengeInfo(String challengeInfo) {
+        this.challengeInfo = challengeInfo;
     }
 
     public MyServer getCommunicationServer() {
@@ -194,8 +196,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 boolean result = false;
 //                try {
                 String challengerIndex = this.getChallengeInfo().split(":")[0];
-                    String forChallenge = this.challengeInfo.split(":")[1];
-                   result = challengeWord(forChallenge, challengerIndex);
+                String forChallenge = this.challengeInfo.split(":")[1];
+                result = challengeWord(forChallenge, challengerIndex);
 //                }
 //                catch (ExecutionException | InterruptedException e) {
 //                    hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
@@ -474,7 +476,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     public void requestChallengeActivation(String challengeInfo) {
-        // Set the challengeInfo to the challengeInfo string
+        // Set the challengeInfo challengerIndex:word
         this.setChallengeInfo(challengeInfo);
         // Set the challengeRequested flag to indicate a challenge is requested
         challengeActivated.set(true);
