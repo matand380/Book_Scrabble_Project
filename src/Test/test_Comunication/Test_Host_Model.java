@@ -20,9 +20,9 @@ static BS_Guest_Model clientD;
         host=startCommunication_CreatHost();
         //todo:if address is already in use give the option to change the port
         clientA=startCommunication_CreatGuest();
-        clientB=startCommunication_CreatGuest();
-        clientC=startCommunication_CreatGuest();
-        clientD=startCommunication_CreatGuest();
+       // clientB=startCommunication_CreatGuest();
+       // clientC=startCommunication_CreatGuest();
+       // clientD=startCommunication_CreatGuest();
 
         //test start from here
 
@@ -105,7 +105,7 @@ static BS_Guest_Model clientD;
         //still need to check way the score osnt updated after the play
         //part of guest model test if we will separate them
         Word w1 = new Word(get("HORN"), 7, 5, false);
-        host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex())+"HORN");
+        //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex())+"HORN");
         host.tryPlaceWord(w1);
         System.out.println(formatTiles(host.getBoardState()));
         System.out.println("player A score: "+clientA.playersScores[host.getCurrentPlayerIndex()]);
@@ -213,7 +213,7 @@ static BS_Guest_Model clientD;
         //check word counter after adding a word
         //check passCounter
         //after type pass passCounter is 1
-        //after all the plaers type pass game is over
+        //after all the players type pass game is over
 
     public static Tile[] get(String s) {
         Tile[] ts=new Tile[s.length()];
