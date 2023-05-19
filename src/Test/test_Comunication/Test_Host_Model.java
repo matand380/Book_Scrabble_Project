@@ -14,18 +14,28 @@ public class Test_Host_Model {
 static BS_Host_Model host;
 static BS_Guest_Model clientA;
 static BS_Guest_Model clientB;
+static BS_Guest_Model clientC;
+static BS_Guest_Model clientD;
     public static void main(String[] args) {
         host=startCommunication_CreatHost();
         //todo:if address is already in use give the option to change the port
         clientA=startCommunication_CreatGuest();
         clientB=startCommunication_CreatGuest();
+        clientC=startCommunication_CreatGuest();
+        clientD=startCommunication_CreatGuest();
 
         //test start from here
+
         host.startNewGame();
-        test_StartGame_State();
-        test_WordCounter();
         test_ScoreUpdates();
-        test_PassTurns();
+
+        //TODO: update score after place word
+        //TODO: limit the number of clients
+
+        //test_StartGame_State();
+        //test_WordCounter();
+        //test_PassTurns();
+
 
 
 
@@ -126,7 +136,7 @@ static BS_Guest_Model clientB;
     //local methods for testing
     public static BS_Host_Model startCommunication_CreatHost() {
         BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a random port for the Host Server
-        host.openSocket("127.0.0.1", 65535); //assign ip and port of the Game Server
+        host.openSocket("127.0.0.1", 22334); //assign ip and port of the Game Server
         //TODO: get the name from the user instead of hard coding it as we did here
 
 //        System.out.println("Enter the Host name: ");
@@ -155,7 +165,7 @@ static BS_Guest_Model clientB;
 //        System.out.println("Enter the HostPort to connect: ");
 //        Scanner scanner = new Scanner(System.in);
 //        int port = scanner.nextInt();
-        client.openSocket("127.0.0.1", 65534);
+        client.openSocket("127.0.0.1", 23455);
         client.getCommunicationHandler().setCom();
 
 
