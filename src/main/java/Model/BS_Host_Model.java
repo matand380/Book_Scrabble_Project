@@ -234,6 +234,33 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 currentPlayerWords.clear();
                 return;
             }
+            //if no challenge happened, update the board and complete the hand
+            placeAndComplete7(word.toString());
+            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+            updateBoard();
+            updateScores();
+            if (isGameOver()) {
+                gameIsOver = true;
+                communicationServer.updateAll("endGame");
+                hasChanged();
+                notifyObservers("endGame");
+                return;
+            }
+            passTurn(currentPlayerIndex);
+            board.setPassCounter(0);
+            currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
+
+        }
+        // score == 0 means that the word cannot be placed on the board
+        else {
+            String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+            if (id != null)
+                communicationServer.updateSpecificPlayer(id, "invalidWord");
+            else {
+                hasChanged();
+                notifyObservers("invalidWord");
+            }
+        }
             /////////////////////////////
             // TODO: 16/05/2023 get an indication from a client if he pressed a challenge or not
             // !there is only one client that can press a challenge.
@@ -265,33 +292,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             *
              */
 
-            //if no challenge happened, update the board and complete the hand
-            placeAndComplete7(word.toString());
-            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-            updateBoard();
-            updateScores();
-            if (isGameOver()) {
-                gameIsOver = true;
-                communicationServer.updateAll("endGame");
-                hasChanged();
-                notifyObservers("endGame");
-                return;
-            }
-            passTurn(currentPlayerIndex);
-            board.setPassCounter(0);
-            currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
 
-        }
-        // score == 0 means that the word cannot be placed on the board
-        else {
-            String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
-            if (id != null)
-                communicationServer.updateSpecificPlayer(id, "invalidWord");
-            else {
-                hasChanged();
-                notifyObservers("invalidWord");
-            }
-        }
     }
 
     private void updateBoard() {
@@ -300,6 +301,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
         communicationServer.updateAll("tileBoard:" + json);
         hasChanged();
         notifyObservers("tileBoard updated");
+        //for testing
+        System.out.println("host tileBoard");
+        System.out.println(MainTrain.formatTiles(BS_Host_Model.getModel().getBoardState()));
     }
 
     public boolean isFull() {
