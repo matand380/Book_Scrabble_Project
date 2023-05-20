@@ -248,9 +248,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         board.setPassCounter(board.getPassCounter() + 1);
         if (isGameOver()) {
             gameIsOver = true;
-            communicationServer.updateAll("endGame");
-            hasChanged();
-            notifyObservers("endGame");
             return;
         }
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
@@ -332,9 +329,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
             updateScores();
             if (isGameOver()) {
                 gameIsOver = true;
-                communicationServer.updateAll("endGame");
-                hasChanged();
-                notifyObservers("endGame");
                 return;
             }
             passTurn(currentPlayerIndex);
