@@ -14,10 +14,14 @@ import java.util.Scanner;
 //TODO: update score after place word
 //TODO: limit the number of clients
 //todo: no handler for try place word at ClientCommunicationHandler
+//todo: host.tryPlaceWord(w1); not comparing between the hand and the rack
+//todo: words arnt at the correct position when placing a word
 
 
 public class testCommunication_Guest_Host_Model {
 
+    static BS_Host_Model host;
+    static BS_Guest_Model clientA;
 
     static int localPortForClientToConnect = 23455;
     static int ServerPortToConnect = 65535;
@@ -26,21 +30,19 @@ public class testCommunication_Guest_Host_Model {
     public static void main(String[] args) {
         System.out.println("Enter the local port:" + localPortForClientToConnect);
         //create host and guest
-        BS_Host_Model host = startCommunication_CreatHost();
+        host = BS_Host_Model.getModel();
+        startCommunication_CreatHost();
+
+        clientA = BS_Guest_Model.getModel();
+        startCommunication_CreatGuest();
+
         host.startNewGame();
-
-        BS_Guest_Model clientA = startCommunication_CreatGuest();
-
-        //test start from here
-
         //Word w=new Word(get("HORN"), 7, 5, false);
-        System.out.println("choose a word to place");
-        Scanner scanner = new Scanner(System.in);
-        String word = scanner.nextLine();
+
 
 //        clientA.tryPlaceWord(word.toUpperCase(), 7, 5, false);
 
-        test_ScoreUpdates(word.toUpperCase());
+        test_ScoreUpdates();
 //        test_ScoreUpdates(new Word(get("HORN"), 7, 5, false));
 //
 //        test_ScoreUpdates(new Word(get("_OUSE"), 7, 5, true));
@@ -57,16 +59,21 @@ public class testCommunication_Guest_Host_Model {
 
     }
 
-    private static void test_ScoreUpdates(String w) {
+    private static void test_ScoreUpdates() {
         //BSP-77
         //still need to check way the score isn't updated after the play
         //part of guest model test if we will separate them
 
-        BS_Host_Model host = BS_Host_Model.getModel();
-        BS_Guest_Model clientA = BS_Guest_Model.getModel();
-
         int score = host.getPlayers().get(host.getCurrentPlayerIndex()).get_score();
         int currantTurn = host.getCurrentPlayerIndex();
+
+        System.out.println("choose a word to place");
+        System.out.println("the current player name is: " + host.getPlayers().get(host.getCurrentPlayerIndex()).get_name());
+        for (Tile t : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
+            System.out.print( t.getLetter() + ",");
+        System.out.println("\n");
+        Scanner scanner = new Scanner(System.in);
+        String w = scanner.nextLine();
 
         if (host.getPlayers().get(host.getCurrentPlayerIndex()).get_index() == host.getPlayer().get_index()) {
             //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
@@ -89,7 +96,7 @@ public class testCommunication_Guest_Host_Model {
     }
 
     //local methods for testing
-    public static BS_Host_Model startCommunication_CreatHost() {
+    public static void startCommunication_CreatHost() {
         BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a random port for the Host Server
         host.openSocket("127.0.0.1", ServerPortToConnect); //assign ip and port of the Game Server
         //TODO: get the name from the user instead of hard coding it as we did here
@@ -107,10 +114,9 @@ public class testCommunication_Guest_Host_Model {
         } catch (InterruptedException e) {
             System.out.println("sleep failed");
         }
-        return host;
     }
 
-    public static BS_Guest_Model startCommunication_CreatGuest() {
+    public static void startCommunication_CreatGuest() {
 
         BS_Guest_Model client = BS_Guest_Model.getModel();
         //TODO: get the name from the user instead of hard coding it
@@ -123,13 +129,11 @@ public class testCommunication_Guest_Host_Model {
         client.openSocket("127.0.0.1", localPortForClientToConnect);
         client.getCommunicationHandler().setCom();
 
-
         try {
             Thread.sleep(2000); //wait for server to start
         } catch (InterruptedException e) {
             System.out.println("sleep failed");
         }
-        return client;
     }
 
     public static void test_StartGame_State() {
