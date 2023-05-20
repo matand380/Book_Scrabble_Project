@@ -30,87 +30,21 @@ public class testCommunication_Guest_Host_Model {
         System.out.println("Enter the local port:" + localPortForClientToConnect);
         //create host and guest
         BS_Host_Model host = BS_Host_Model.getModel();
-
-
-        //////////// startCommunication_CreatHost()////////
-        host.openSocket("127.0.0.1", ServerPortToConnect);
-        host.setPlayerProperties("Host");
-        Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
-        t.start();
-        try {
-            Thread.sleep(2000); //wait for server to start
-        } catch (InterruptedException e) {
-            System.out.println("sleep failed");
-        }
-        //////////// startCommunication_CreatHost()////////
+        startCommunication_CreatHost();
 
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
-        /////////////startCommunication_CreatGuest();/////////////
-        clientA.setPlayerProperties("Client");
-        clientA.openSocket("127.0.0.1", localPortForClientToConnect);
-        clientA.getCommunicationHandler().setCom();
-
-        try {
-            Thread.sleep(2000); //wait for server to start
-        } catch (InterruptedException e) {
-            System.out.println("sleep failed");
-        }
-        /////////////startCommunication_CreatGuest();/////////////
+        startCommunication_CreatGuest();
 
         host.startNewGame();
         //Word w=new Word(get("HORN"), 7, 5, false);
 
 
-//        clientA.tryPlaceWord(word.toUpperCase(), 7, 5, false);
-// to debug the client
-        if(host.getPlayers().get(host.getCurrentPlayerIndex()).get_socketID()==null) {
-            host.setNextPlayerIndex(host.currentPlayerIndex);
-        }
-        System.out.println("the current player name is: " + host.getPlayers().get(host.getCurrentPlayerIndex()).get_name());
-        for (Tile tile : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
-            System.out.print( tile.getLetter() + ",");
-        System.out.println("\n");
-        System.out.println("choose a word to place");
-        Scanner scanner = new Scanner(System.in);
-        String w = scanner.nextLine();
-        System.out.println("choose a row :");
-        int row = scanner.nextInt();
-        System.out.println("choose a col :");
-        int col = scanner.nextInt();
-        System.out.println("choose true for vertical or false for horizontal :");
-        boolean vertical = scanner.nextBoolean();
-        clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
-
-//        test_ScoreUpdates();
-//        test_ScoreUpdates();
-//        test_ScoreUpdates();
-//        test_ScoreUpdates(new Word(get("HORN"), 7, 5, false));
-//
-//        test_ScoreUpdates(new Word(get("_OUSE"), 7, 5, true));
-        //or this:
-        //test_ScoreUpdates(new Word(get("HOUSE"), 7, 5, true));
-
-//        test_ScoreUpdates(new Word(get("_OCK"), 7, 7, true));
-
-//        test_StartGame_State();
-//
-//        test_WordCounter();
-//        test_PassTurns();
-        System.out.println("Done");
-
-    }
-
-//    private static void test_ScoreUpdates() {
-//        //BSP-77
-//        //still need to check way the score isn't updated after the play
-//        //part of guest model test if we will separate them
-//
-//        int score = host.getPlayers().get(host.getCurrentPlayerIndex()).get_score();
-//        int currantTurn = host.getCurrentPlayerIndex();
-//
+//        if(host.getPlayers().get(host.getCurrentPlayerIndex()).get_socketID()==null) {
+//            host.setNextPlayerIndex(host.currentPlayerIndex);
+//        }
 //        System.out.println("the current player name is: " + host.getPlayers().get(host.getCurrentPlayerIndex()).get_name());
-//        for (Tile t : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
-//            System.out.print( t.getLetter() + " ");
+//        for (Tile tile : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
+//            System.out.print( tile.getLetter() + ",");
 //        System.out.println("\n");
 //        System.out.println("choose a word to place");
 //        Scanner scanner = new Scanner(System.in);
@@ -121,63 +55,97 @@ public class testCommunication_Guest_Host_Model {
 //        int col = scanner.nextInt();
 //        System.out.println("choose true for vertical or false for horizontal :");
 //        boolean vertical = scanner.nextBoolean();
+//        clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
+
+        test_ScoreUpdates();
+        test_ScoreUpdates();
+        test_ScoreUpdates();
+        test_ScoreUpdates();
+        test_ScoreUpdates();
+
+//        test_StartGame_State();
 //
-//        if (host.getPlayers().get(host.getCurrentPlayerIndex()).get_index() == host.getPlayer().get_index()) {
-//            //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
-//            host.tryPlaceWord(new Word(get(w), row, col, vertical));
-//            if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
-//                System.out.println("problem with the score update for the host turn");
-//        } else {
-//            clientA.tryPlaceWord(w, row, col, vertical);
-//            if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
-//                System.out.println("problem with the score update for the client turn");
-//        }
-//
-//        System.out.println("host score: " + host.getPlayer().get_score());
-//        System.out.println("clientA score: " + clientA.getPlayer().get_score());
-//
-//        //passTurn test
-//        if (currantTurn == host.getCurrentPlayerIndex())
-//            System.out.println("problem with the turn update after the play");
-//
-//    }
+//        test_WordCounter();
+//        test_PassTurns();
+        System.out.println("Done");
+
+    }
+
+    private static void test_ScoreUpdates() {
+        BS_Host_Model host = BS_Host_Model.getModel();
+        BS_Guest_Model clientA = BS_Guest_Model.getModel();
+
+        int score = host.getPlayers().get(host.getCurrentPlayerIndex()).get_score();
+        int currantTurn = host.getCurrentPlayerIndex();
+
+        System.out.println("the current player name is: " + host.getPlayers().get(host.getCurrentPlayerIndex()).get_name());
+        for (Tile t : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
+            System.out.print( t.getLetter() + " ");
+        System.out.println("\n");
+        System.out.println("choose a word to place");
+        Scanner scanner = new Scanner(System.in);
+        String w = scanner.nextLine();
+        if(w.equals("pass"))
+            host.passTurn(host.currentPlayerIndex);
+        else {
+        System.out.println("choose a row :");
+        int row = scanner.nextInt();
+        System.out.println("choose a col :");
+        int col = scanner.nextInt();
+        System.out.println("choose true for vertical or false for horizontal :");
+        boolean vertical = scanner.nextBoolean();
+
+        if (host.getPlayers().get(host.getCurrentPlayerIndex()).get_index() == host.getPlayer().get_index()) {
+            //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
+            host.tryPlaceWord(new Word(get(w.toUpperCase()), row, col, vertical));
+            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
+                System.out.println("problem with the score update for the host turn");
+        } else
+        {
+            clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
+
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+            if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
+                System.out.println("problem with the score update for the client turn");
+        }
+        System.out.println("host score: " + host.getPlayer().get_score());
+        System.out.println("clientA score: " + clientA.getPlayer().get_score());
+
+        //passTurn test
+        if (currantTurn == host.getCurrentPlayerIndex())
+            System.out.println("problem with the turn update after the play");}
+
+    }
 
     //local methods for testing
-    public void startCommunication_CreatHost() {
+    public static void startCommunication_CreatHost() {
         BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a random port for the Host Server
-        host.openSocket("127.0.0.1", ServerPortToConnect); //assign ip and port of the Game Server
-        //TODO: get the name from the user instead of hard coding it as we did here
-
-//        System.out.println("Enter the Host name: ");
-//        Scanner scanner = new Scanner(System.in);
-//        String name = scanner.next();
+        host.openSocket("127.0.0.1", ServerPortToConnect);
         host.setPlayerProperties("Host");
-
         Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
         t.start();
-
         try {
             Thread.sleep(2000); //wait for server to start
         } catch (InterruptedException e) {
             System.out.println("sleep failed");
-        }
-    }
+        }}
 
-    public void startCommunication_CreatGuest() {
+    public static void startCommunication_CreatGuest() {
 
-        BS_Guest_Model client = BS_Guest_Model.getModel();
-        //TODO: get the name from the user instead of hard coding it
-        client.setPlayerProperties("Client");
-        //choose the same port as you chose for the host the ip should be 127.0.0.1 - don't change it;
-        //todo:ask the user to put the host port to connect ,we might need a list of ports (games) to his choice
-//        System.out.println("Enter the HostPort to connect: ");
-//        Scanner scanner = new Scanner(System.in);
-//        int port = scanner.nextInt();
-        client.openSocket("127.0.0.1", localPortForClientToConnect);
-        client.getCommunicationHandler().setCom();
-
-//        Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
-//        t.start();
+        BS_Guest_Model clientA = BS_Guest_Model.getModel();
+        clientA.setPlayerProperties("Client");
+        clientA.openSocket("127.0.0.1", localPortForClientToConnect);
+        clientA.getCommunicationHandler().setCom();
 
         try {
             Thread.sleep(2000); //wait for server to start
