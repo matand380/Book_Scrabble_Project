@@ -23,7 +23,6 @@ public class ClientCommunicationHandler {
     /**
      * The ClientCommunicationHandler constructor that initializes the handlers map.
      * The handlers map contains all the methods that are used to handle messages from the host.
-     * return A runnable
      */
     public ClientCommunicationHandler() {
 
@@ -119,7 +118,6 @@ public class ClientCommunicationHandler {
      * that first element as a key to find which handler should be used.
      * If no such handler exists, then nothing happens.
      * Otherwise, if there is a valid method name in message[0], then we call that method with message as its argument.
-     * return Void
      */
     public void handleInput() {
         while (!stop) {
@@ -146,7 +144,6 @@ public class ClientCommunicationHandler {
      * The function also creates a Scanner object called in, which is used to receive messages from the host.
      * The function also creates a thread that runs the inMessages function, which is responsible for constantly checking for new messages from the host.
      * The function also creates a thread that runs the handleInput function, which is responsible for taking input from the inputQueue and passing it to the appropriate handler.
-     * return Void
      */
     public void setCom() {
         try {
@@ -163,7 +160,6 @@ public class ClientCommunicationHandler {
     /**
      * The inMessages function is a thread that runs in the background and constantly checks for new messages from the host.
      * If there are any, it puts them into an inputQueue to be processed by another function.
-     * return Void
      */
     public void inMessages() {
         String key = null;
@@ -185,7 +181,6 @@ public class ClientCommunicationHandler {
     /**
      * The outMessages function is used to send a message out the hostCommunicationHandler from the client.
      * It does this by taking a string as an argument and sending it to the host.
-     * return Void
      */
     public void outMessages(String key) {
         if (key != null) {
@@ -199,7 +194,6 @@ public class ClientCommunicationHandler {
      * The close function closes the connection to the server.
      * It stops all threads and shuts down the executor.
      * It also closes the input and output streams.
-     * return Void
      */
     public void close() {
         stop = true;

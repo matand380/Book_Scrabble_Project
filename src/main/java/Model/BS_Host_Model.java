@@ -34,6 +34,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     String challengeInfo;
     private List<Player> players;
 
+    /**
+     * The BS_Host_Model function is a singleton class that creates the host model for the game.
+     */
     private BS_Host_Model() {
 
         //Game data initialization
@@ -60,30 +63,74 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return HostModelHelper.model_instance;
     }
 
+    /**
+     * The getPlayer function returns the player object.
+     * <p>
+     *
+     * @return The player object
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * The getChallengeInfo function returns the challengeInfo variable.
+     * <p>
+     *
+     * @return A string containing the challenge info
+     * @see BS_Host_Model#setChallengeInfo(String)
+     */
     private String getChallengeInfo() {
         return challengeInfo;
     }
 
+    /**
+     * The setChallengeInfo function sets the challengeInfo variable to a new value.
+     * <p>
+     *
+     * @param challengeInfo Set the challengeinfo variable
+     */
     private void setChallengeInfo(String challengeInfo) {
         this.challengeInfo = challengeInfo;
     }
 
+    /**
+     * The getCommunicationServer function returns the communicationServer object.
+     * <p>
+     *
+     * @return The communicationserver object
+     */
     public MyServer getCommunicationServer() {
         return communicationServer;
     }
 
+    /**
+     * The getPlayerToSocketID function returns a map of player names to socket IDs.
+     * <p>
+     *
+     * @return A map of the player names to their socket ids
+     */
     public Map<String, String> getPlayerToSocketID() {
         return playerToSocketID;
     }
 
+    /**
+     * The getGameSocket function returns the gameSocket variable.
+     * <p>
+     *
+     * @return The gamesocket variable
+     */
     public Socket getGameSocket() {
         return gameSocket;
     }
 
+    /**
+     * The openSocket function opens a socket connection to the server.
+     * <p>
+     *
+     * @param ip   Set the ip address of the server
+     * @param port Specify the port number of the server
+     */
     public void openSocket(String ip, int port) {
         if (validateIpPort(ip, port)) {
             try {
@@ -96,6 +143,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
         }
     }
 
+    /**
+     * The validateIpPort function takes in a String ip and an int port.
+     * It returns true if the ip is a valid IPv4 address and the port is within range (0-65535).
+     * Otherwise, it returns false.
+     * <p>
+     *
+     * @param ip   Store the ip address of the server
+     * @param port Validate the port number
+     * @return A boolean
+     */
     private boolean validateIpPort(String ip, int port) {
         // Regular expression for IPv4 address
         String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
@@ -109,18 +166,43 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return Pattern.matches(portRegex, Integer.toString(port));
     }
 
+    /**
+     * The getPlayers function returns a list of players.
+     * <p>
+     *
+     * @return A list of players
+     */
     public List<Player> getPlayers() {
         return players;
     }
+
+    /**
+     * The addPlayer function adds a player to the game.
+     * <p>
+     *
+     * @param p Add a player to the players arraylist
+     */
 
     public void addPlayer(Player p) {
         this.players.add(p);
     }
 
+    /**
+     * The getCurrentPlayerIndex function returns the index of the current player.
+     * <p>
+     *
+     * @return The current player index
+     */
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
     }
 
+    /**
+     * The setNextPlayerIndex function sets the currentPlayerIndex to the next player in line.
+     * <p>
+     *
+     * @param index Determine which player is the current player
+     */
     public void setNextPlayerIndex(int index) {
         currentPlayerIndex = (index + 1) % players.size();
     }
@@ -152,6 +234,14 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
+    /**
+     * The passTurn function is called when a player passes their turn.
+     * It increments the pass counter, and if it reaches 2, then the game ends.
+     * If not, it sets the next player as currentPlayerIndex and updates all clients with this information.
+     * <p>
+     *
+     * @param playerIndex Determine which player is passing their turn
+     */
     @Override
     public void passTurn(int playerIndex) {
         setNextPlayerIndex(currentPlayerIndex);
@@ -169,11 +259,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     /**
-     * The tryPlaceWord function is used to try and place a word on the board.
-     * If the word can be placed, it will return true and add the score of that player.
-     * Otherwise, it will return false and not change anything.
+     * The tryPlaceWord function is used to check if a word can be placed on the board.
+     * If it can, then the function returns true and updates the score of the player who played that word.
+     * Otherwise, it returns false and does not update any scores or change anything else in game state.
+     * <p>
      *
-     * @param word Pass the word that is being placed on the board
+     * @param word Get the word that the player is trying to place
      */
     public void tryPlaceWord(Word word) {
         int score = Board.getBoard().tryPlaceWord(word);
@@ -261,12 +352,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 notifyObservers("invalidWord");
             }
         }
-            /////////////////////////////
-            // TODO: 16/05/2023 get an indication from a client if he pressed a challenge or not
-            // !there is only one client that can press a challenge.
-            // !we handle the first client that pressed challenge
-            // !and notify the rest that their request for a challenge is invalid
-            /////////////////////////////
+        /////////////////////////////
+        // TODO: 16/05/2023 get an indication from a client if he pressed a challenge or not
+        // !there is only one client that can press a challenge.
+        // !we handle the first client that pressed challenge
+        // !and notify the rest that their request for a challenge is invalid
+        /////////////////////////////
 
 
 
@@ -295,6 +386,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
+    /**
+     * The updateBoard function is called when the board has changed.
+     * It converts the tiles on the board to a JSON string and sends it to all clients.
+     * <p>
+     */
     private void updateBoard() {
         Gson gson = new Gson();
         String json = gson.toJson(Board.getBoard().getTiles());
@@ -306,10 +402,21 @@ public class BS_Host_Model extends Observable implements BS_Model {
         System.out.println(MainTrain.formatTiles(BS_Host_Model.getModel().getBoardState()));
     }
 
+    /**
+     * The isFull function checks to see if the game is full.
+     * <p>
+     *
+     * @return True if the players array has 4 objects in it
+     */
     public boolean isFull() {
         return players.size() == 4;
     }
 
+    /**
+     * The endGame function is called when the game has ended.
+     * It shuts down the executor, closes the communication server, and notifies all clients that they can exit their games.
+     * <p>
+     */
     private void endGame() {
         executor.shutdown();
         getCommunicationServer().close();
@@ -370,6 +477,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
         }
     }
 
+    /**
+     * The updateScores function is used to update the scores of all players in the game.
+     * It takes no parameters and returns nothing.
+     * <p>
+     */
     private void updateScores() {
         String[] scores = new String[players.size()];
         for (int i = 0; i < players.size(); i++) {
@@ -434,11 +546,24 @@ public class BS_Host_Model extends Observable implements BS_Model {
         }
     }
 
+    /**
+     * The isHost function returns true if the current player is a host.
+     * <p>
+     *
+     * @return A boolean value
+     */
     @Override
     public boolean isHost() {
         return true;
     }
 
+    /**
+     * The isGameOver function checks if the game is over.
+     * The game is over when all players pass their turns or there are no more tiles in the bag and one of the players has no tiles left.
+     * <p>
+     *
+     * @return True when the game is over
+     */
     public boolean isGameOver() {
         boolean isGameOver = false;
         if (board.getPassCounter() == getPlayers().size()) //all the players pass turns
@@ -458,30 +583,66 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
 
+    /**
+     * The getMaxScore function returns the player with the highest score.
+     * <p>
+     *
+     * @return A string that contains the index of the player with the highest score and their name
+     */
+
     public String getMaxScore() {
         Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
         return winner.get_index() + ":" + winner.get_name();
     }
 
+    /**
+     * The getCommunicationHandler function returns the communicationHandler object.
+     * <p>
+     *
+     * @return The communication handler object
+     */
     public HostCommunicationHandler getCommunicationHandler() {
         return communicationHandler;
     }
 
+    /**
+     * The getCurrentPlayerScore function returns the current player's score.
+     *<p>
+     * @return The score of the current player
+     */
     @Override
     public int getCurrentPlayerScore() {
         return player.get_score();
     }
 
+    /**
+     * The getCurrentPlayerHand function returns the current player's hand.
+     * <p>
+     *
+     * @return The current player's hand
+     */
     @Override
     public List<Tile> getCurrentPlayerHand() {
         return player.get_hand();
     }
 
+    /**
+     * The getBoardState function returns the current state of the board.
+     * <p>
+     *
+     * @return The board state
+     */
     @Override
     public Tile[][] getBoardState() {
         return Board.getBoard().getTiles();
     }
 
+    /**
+     * The setPlayerProperties function sets the player's name, socketID, and tileLottery.
+     * <p>
+     *
+     * @param name Set the name of the player
+     */
     @Override
     public void setPlayerProperties(String name) {
         player.set_name(name);
@@ -490,6 +651,15 @@ public class BS_Host_Model extends Observable implements BS_Model {
         players.add(player);
     }
 
+    /**
+     * The requestChallengeActivation function is called when a player requests to activate a challenge.
+     * The function sets the challengeInfo variable to the challengerIndex:word that was sent from the client,
+     * and then checks if there is already an active challenge. If there isn't, it sets the flag for an active
+     * challenge to true. If there is already an active challenge, it sends back a message saying so and does nothing else.
+     * <p>
+     *
+     * @param challengeInfo Set the challengeinfo variable
+     */
     public void requestChallengeActivation(String challengeInfo) {
         // Set the challengeInfo challengerIndex:word
         this.setChallengeInfo(challengeInfo);
