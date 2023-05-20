@@ -25,7 +25,6 @@ public class ClientCommunicationHandler {
      * The handlers map contains all the methods that are used to handle messages from the host.
      */
     public ClientCommunicationHandler() {
-
         //put all the methods in the map for being able to invoke them
         handlers.put("sortAndSetIndex", (message) -> {
             String[] key = message.split(":");
@@ -106,6 +105,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
+
         handlers.put("challengeAlreadyActivated", (message) -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
@@ -121,6 +121,7 @@ public class ClientCommunicationHandler {
      */
     public void handleInput() {
         while (!stop) {
+
             try {
                 String key = inputQueue.take(); //blocking call
                 String[] message = key.split(":");
@@ -128,7 +129,7 @@ public class ClientCommunicationHandler {
                 if (handlers.get(methodName) != null) {
                     handlers.get(methodName).accept(key);
                 } else {
-                    System.out.println("No handler for method " + methodName);
+                    System.out.println("No handler for method(Client) :" + methodName);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

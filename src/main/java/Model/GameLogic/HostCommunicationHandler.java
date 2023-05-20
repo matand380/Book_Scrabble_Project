@@ -112,7 +112,7 @@ public class HostCommunicationHandler implements ClientHandler {
                 if (handlers.get(methodName) != null) {
                     handlers.get(methodName).accept(message);
                 } else {
-                    System.out.println("No handler for method " + methodName);
+                    System.out.println("No handler for method(Host) : " + methodName);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
