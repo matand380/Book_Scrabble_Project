@@ -36,26 +36,6 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatGuest();
 
         host.startNewGame();
-        //Word w=new Word(get("HORN"), 7, 5, false);
-
-
-//        if(host.getPlayers().get(host.getCurrentPlayerIndex()).get_socketID()==null) {
-//            host.setNextPlayerIndex(host.currentPlayerIndex);
-//        }
-//        System.out.println("the current player name is: " + host.getPlayers().get(host.getCurrentPlayerIndex()).get_name());
-//        for (Tile tile : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
-//            System.out.print( tile.getLetter() + ",");
-//        System.out.println("\n");
-//        System.out.println("choose a word to place");
-//        Scanner scanner = new Scanner(System.in);
-//        String w = scanner.nextLine();
-//        System.out.println("choose a row :");
-//        int row = scanner.nextInt();
-//        System.out.println("choose a col :");
-//        int col = scanner.nextInt();
-//        System.out.println("choose true for vertical or false for horizontal :");
-//        boolean vertical = scanner.nextBoolean();
-//        clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
 
         test_ScoreUpdates();
         test_ScoreUpdates();
@@ -64,11 +44,9 @@ public class testCommunication_Guest_Host_Model {
         test_ScoreUpdates();
 
 //        test_StartGame_State();
-//
 //        test_WordCounter();
 //        test_PassTurns();
         System.out.println("Done");
-
     }
 
     private static void test_ScoreUpdates() {
@@ -80,50 +58,54 @@ public class testCommunication_Guest_Host_Model {
 
         System.out.println("the current player name is: " + host.getPlayers().get(host.getCurrentPlayerIndex()).get_name());
         for (Tile t : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
-            System.out.print( t.getLetter() + " ");
+            System.out.print(t.getLetter() + " ");
         System.out.println("\n");
         System.out.println("choose a word to place");
         Scanner scanner = new Scanner(System.in);
         String w = scanner.nextLine();
-        if(w.equals("pass"))
+        if (w.equals("pass"))
             host.passTurn(host.currentPlayerIndex);
         else {
-        System.out.println("choose a row :");
-        int row = scanner.nextInt();
-        System.out.println("choose a col :");
-        int col = scanner.nextInt();
-        System.out.println("choose true for vertical or false for horizontal :");
-        boolean vertical = scanner.nextBoolean();
+            System.out.println("choose a row :");
+            int row = scanner.nextInt();
+            System.out.println("choose a col :");
+            int col = scanner.nextInt();
+            System.out.println("choose true for vertical or false for horizontal :");
+            boolean vertical = scanner.nextBoolean();
 
-        if (host.getPlayers().get(host.getCurrentPlayerIndex()).get_index() == host.getPlayer().get_index()) {
-            //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
-            host.tryPlaceWord(new Word(get(w.toUpperCase()), row, col, vertical));
-            try {
-                Thread.sleep(15000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            if (host.getPlayers().get(host.getCurrentPlayerIndex()).get_index() == host.getPlayer().get_index()) {
+                //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
+                host.tryPlaceWord(new Word(get(w.toUpperCase()), row, col, vertical));
+                try {
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
+                    System.out.println("problem with the score update for the host turn");
+            } else {
+                clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
+
+                try {
+                    Thread.sleep(15000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
+                    System.out.println("problem with the score update for the client turn");
             }
-            if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
-                System.out.println("problem with the score update for the host turn");
-        } else
-        {
-            clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
+            System.out.println("host score: " + host.getPlayer().get_score());
+            System.out.println("clientA score: " + clientA.getPlayer().get_score());
 
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            //passTurn test
+            if (currantTurn == host.getCurrentPlayerIndex())
+                System.out.println("problem with the turn update after the play");
         }
 
-            if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
-                System.out.println("problem with the score update for the client turn");
+        if (host.gameIsOver) {
+            System.out.println("*************\ngame is over\n*************\n");
         }
-        System.out.println("host score: " + host.getPlayer().get_score());
-        System.out.println("clientA score: " + clientA.getPlayer().get_score());
-
-        //passTurn test
-        if (currantTurn == host.getCurrentPlayerIndex())
-            System.out.println("problem with the turn update after the play");}
 
     }
 
@@ -138,7 +120,8 @@ public class testCommunication_Guest_Host_Model {
             Thread.sleep(2000); //wait for server to start
         } catch (InterruptedException e) {
             System.out.println("sleep failed");
-        }}
+        }
+    }
 
     public static void startCommunication_CreatGuest() {
 
