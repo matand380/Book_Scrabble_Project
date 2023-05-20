@@ -44,7 +44,7 @@ public class HostCommunicationHandler implements ClientHandler {
             String word = message[2];
             int row = Integer.parseInt(message[3]);
             int col = Integer.parseInt(message[4]);
-            boolean direction = message[5].equals("isVertical");
+            boolean direction = message[5].equals("true");
             char[] buildWord = word.toCharArray();
             Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_index() == Integer.parseInt(PlayerIndex)).findFirst().get();
             Tile[] tiles = new Tile[word.length()];
