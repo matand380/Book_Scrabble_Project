@@ -87,6 +87,7 @@ public class HostCommunicationHandler implements ClientHandler {
 
     public void handleRequests() {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
+
             try {
                 String key = inputQueue.take(); //blocking call
                 String[] message = key.split(":");
@@ -105,21 +106,22 @@ public class HostCommunicationHandler implements ClientHandler {
 
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
-        in = new Scanner(inputStream);
-        out = new PrintWriter(outputStream);
-        String key = null;
-        try {
-            if (in.hasNext()) {
-                key = in.next();
+        while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
+            in = new Scanner(inputStream);
+            out = new PrintWriter(outputStream);
+            String key = null;
+            try {
+                if (in.hasNext()) {
+                    key = in.next();
+                }
+                if (key != null)// Read an object from the server
+                {
+                    inputQueue.put(key); // Put the received object in the queue
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            if (key != null)// Read an object from the server
-            {
-                inputQueue.put(key); // Put the received object in the queue
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
-
     }
 
     @Override
