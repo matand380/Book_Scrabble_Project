@@ -242,25 +242,17 @@ public class Board implements Serializable, ObjectFactory {
         return true;
     }
 
+    /**
+     * The dictionaryLegal function checks if a word is legal in the dictionary which is stored in the game server.
+     *<p>
+     *
+     * @param  w Check if the word is legal
+     *
+     * @return True if the word is in the dictionary,
+     *
+     */
     private boolean dictionaryLegal(Word w) {
-//        StringBuilder sb = new StringBuilder();
-//        if (w.isVertical()) {
-//            //get the index of the _ in the word
-//            for (int i = 0; i < w.getTiles().length; i++) {
-//                if (w.getTiles()[i] == null) {
-//                    sb.append(Board.getBoard().mainBoard[w.getRow()][w.getCol() + i].letter);
-//                } else
-//                    sb.append(w.getTiles()[i].getLetter());
-//            }
-//        } else {
-//            //get the index of the _ in the word
-//            for (int i = 0; i < w.getTiles().length; i++) {
-//                if (w.getTiles()[i] == null) {
-//                    sb.append(Board.getBoard().mainBoard[w.getRow() + i][w.getCol()].letter);
-//                } else
-//                    sb.append(w.getTiles()[i].getLetter());
-//            }
-//        }
+
         Word forQuery = checkWordNull(w);
         String stringWord = forQuery.toString();
 

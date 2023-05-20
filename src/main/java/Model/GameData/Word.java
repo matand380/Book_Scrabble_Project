@@ -125,6 +125,15 @@ public class Word implements Serializable, ObjectFactory {
         return new Word(new Tile[0], 0, 0, false);
     }
 
+    /**
+     * The toMessage function takes the tiles in a move and converts them into a string.
+     * The string is formatted as follows:
+     * 		The letters of each tile are concatenated together, with an underscore (_) representing null tiles.
+     * 		The row, column, and vertical boolean are appended to the end of this string separated by colons (:).
+     * <p>
+     * @return A string
+     *
+     */
     public String toMessage(){
         StringBuilder sb = new StringBuilder();
         for(Tile tile : this.tiles){
@@ -138,6 +147,13 @@ public class Word implements Serializable, ObjectFactory {
         return sb.toString();
     }
 
+    /**
+     * The toString function returns a string representation of the Word object.
+     *
+     * <p>
+     * @return The letters of the tiles in the rack
+     *
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

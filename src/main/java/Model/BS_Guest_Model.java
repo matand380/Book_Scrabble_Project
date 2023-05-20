@@ -22,7 +22,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The BS_Guest_Model function is a constructor that initializes the player and playersScores variables.
-     * //@return A new BS_Guest_Model object
      */
     private BS_Guest_Model() {
         player = new Player();
@@ -32,7 +31,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     /**
      * The getModel function is a static function that returns the singleton instance of the BS_Guest_Model class.
      * This allows for only one instance of this model to be created, and it can be accessed from anywhere in the program.
-     * //@return The singleton instance of the bs_guest_model class
+     * @return The singleton instance of the bs_guest_model class
      */
     public static BS_Guest_Model getModel() {
         return BS_Guest_ModelHolder.BSGuestModelInstance;
@@ -40,8 +39,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The setPlayersScores function is used to set the scores of all players in the game.
-     * //@param String[] playersScores Set the playersScores array
-     * //@return Void
+     * @param playersScores Set the playersScores array
      */
     public void setPlayersScores(String[] playersScores) {
         this.playersScores = playersScores;
@@ -50,9 +48,8 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The openSocket function is used to open a socket connection with the host.
-     * //@param String ip Set the ip address of the host
-     * //@param int port Connect to the host on this port
-     * //@return A socket
+     * @param  ip Set the ip address of the host
+     * @param  port Connect to the host on this port
      */
     public void openSocket(String ip, int port) { //button start in the view
         if (validateIpPort(ip, port)) {
@@ -70,9 +67,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      * The validateIpPort function takes in a String ip and an int port.
      * It returns true if the ip is a valid IPv4 address and the port is within range (0-65535).
      * Otherwise, it returns false.
-     * //@param String ip Validate the ip address
-     * //@param int port Validate the port number
-     * //@return False if the ip or port is invalid, otherwise it returns true
+     * @param  ip Validate the ip address
+     * @param  port Validate the port number
+     * @return False if the ip or port is invalid, otherwise it returns true
      */
     private boolean validateIpPort(String ip, int port) {
         // Regular expression for IPv4 address
@@ -90,8 +87,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     /**
      * The passTurn function is used to send a message to the host that the player has no more moves to make and wants to move his turn to the next player.
      * pass the turn from one player to another.
-     * //@param int playerIndex Tell the server which player is passing their turn
-     * //@return Void
+     * @param  playerIndex Tell the server which player is passing their turn
      */
     @Override
     public void passTurn(int playerIndex) {
@@ -100,11 +96,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The tryPlaceWord function is used to send a message to the host that the player has want to placed a word on the board.
-     * //@param String word Pass the word that is being placed on the board.
-     * //@param int x Determine the x coordinate of the word.
-     * //@param int y Determine the y-coordinate of the word.
-     * //@param boolean isVertical Determine whether the word is placed vertically or horizontally.
-     * //@return A boolean
+     * @param  word Pass the word that is being placed on the board.
+     * @param  x Determine the x coordinate of the word.
+     * @param  y Determine the y-coordinate of the word.
+     * @param  isVertical Determine whether the word is placed vertically or horizontally.
      */
     public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
         String message = word + ":" + x + ":" + y + ":" + isVertical;
@@ -115,8 +110,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     /**
      * The challengeWord function is used to challenge a word that has been played by another player.
      * The function takes in the word that is being challenged as a parameter and sends it to the host.
-     * //@param String word Send the word to be challenged
-     * //@return A boolean value if the challenge was successful or not
+     * @param  word Send the word to be challenged
      */
     public void challengeWord(String word) {
         String playerIndex = String.valueOf(player.get_index());
@@ -135,8 +129,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The setBoard function is used to set (update) the board of the game.
-     * //@param Tile[][] boardTiles Set the tileBoard variable
-     * //@return Void
+     * @param boardTiles Set the tileBoard variable
      */
     public void setBoard(Tile[][] boardTiles) {
         this.tileBoard = boardTiles;
@@ -146,7 +139,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The getSocket function returns the socket that is used to connect to the server.
-     * //@return The socket
+     * @return The socket
      */
     public Socket getSocket() {
         return socket;
@@ -154,7 +147,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The getPlayer function returns the player object.
-     * //@return A player object
+     * @return A player object
      */
     public Player getPlayer() {
         return player;
@@ -162,8 +155,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The setPlayerProperties function sets the player's name to the given string.
-     * //@param String name Set the name of the player
-     * //@return Void
+     * @param  name Set the name of the player
      */
     @Override
     public void setPlayerProperties(String name) {
@@ -172,7 +164,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The getCommunicationHandler function returns the communicationHandler object.
-     * //@return A clientCommunicationHandler object
+     * @return A clientCommunicationHandler object
      */
     public ClientCommunicationHandler getCommunicationHandler() {
         return communicationHandler;
@@ -180,7 +172,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The getCurrentPlayerScore function returns the current player's score.
-     * //@return The score of the current player
+     * @return The score of the current player
      */
     @Override
     public int getCurrentPlayerScore() {
@@ -189,7 +181,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The getCurrentPlayerHand function returns the current player's hand List of Tile.
-     * //@return The current player's hand
+     * @return The current player's hand
      */
     @Override
     public List<Tile> getCurrentPlayerHand() {
@@ -198,7 +190,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The getBoardState function returns the current state of the board.
-     * //@return A 2d array of tile objects
+     * @return A 2d array of tile objects
      */
     @Override
     public Tile[][] getBoardState() {
@@ -212,7 +204,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     /**
      * The endGame function is called when the game ends.
      * It sends a message to the host that it has ended, and then closes all connections with the host.
-     * //@return void
      */
     public void endGame() {
         communicationHandler.outMessages("endGame:" + player.get_socketID());
