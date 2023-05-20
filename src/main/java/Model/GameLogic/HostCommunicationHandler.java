@@ -23,6 +23,13 @@ public class HostCommunicationHandler implements ClientHandler {
     public ExecutorService executor = Executors.newFixedThreadPool(3);
 
 
+    /**
+     * The HostCommunicationHandler function is responsible for handling all the requests from the clients.
+     * It uses a map of functions to invoke them when needed.
+     *<p>
+     *
+     *
+     */
     public HostCommunicationHandler() {
         //put all the methods in the map for being able to invoke them in handleRequests
         handlers.put("passTurn", (message) -> {
@@ -85,6 +92,16 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
 
+    /**
+     * The handleRequests function is the main function of the RequestHandler class.
+     * It takes in a request from the inputQueue, and then uses that request to call
+     * one of its handlers. The handler will then process that request and send it back to
+     * whoever requested it. This function runs as long as there are requests in the queue,
+     * or until communicationServer stops running (which happens when all threads have been closed).
+        *<p>
+     *
+     *
+     */
     public void handleRequests() {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
 
@@ -104,6 +121,19 @@ public class HostCommunicationHandler implements ClientHandler {
     }
 
 
+    /**
+     * The handleClient function is the function that handles all of the communication between
+     * the client and server. It takes in an input stream and output stream, which are used to
+     * communicate with each other. The handleClient function will continuously run while it is
+     * connected to a client, as long as there are no errors or exceptions thrown. The handleClient
+     * function will take in a key from the inputStream (which comes from the client), put it into
+     * an ArrayBlockingQueue called &quot;inputQueue&quot;, then wait for another key to be sent by repeating this process.
+     *
+     * @param  inputStream Read data from the client
+     * @param  outputStream Write to the client
+     *
+     *
+     */
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
@@ -124,6 +154,11 @@ public class HostCommunicationHandler implements ClientHandler {
         }
     }
 
+    /**
+     * The close function closes the connection to the server.
+     *<p>
+     *
+     */
     @Override
     public void close() {
         in.close();
@@ -133,6 +168,14 @@ public class HostCommunicationHandler implements ClientHandler {
 
     }
 
+    /**
+     * The messagesToGameServer function is used to send messages from the client to the game server.
+     *<p>
+     *
+     * @param key Send a message to the game server
+     *
+     *
+     */
     public void messagesToGameServer(String key) {
         if (key != null) {
             try {
@@ -146,6 +189,14 @@ public class HostCommunicationHandler implements ClientHandler {
         }
     }
 
+    /**
+     * The messagesFromGameServer function is used to receive messages from the game server.
+     *<p>
+     *
+     *
+     * @return A string containing the message from the game server
+     *
+     */
     public String messagesFromGameServer() {
         try {
             fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
