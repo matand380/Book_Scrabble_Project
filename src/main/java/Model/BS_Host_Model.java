@@ -254,6 +254,23 @@ public class BS_Host_Model extends Observable implements BS_Model {
         hasChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());
     }
+    /**
+     * The passTurnTryPlace function is called when a player passes their turn.
+     * It sets the next player index to be the current player index, and then checks if the game is over.
+     * If it isn't, it updates all clients with a passTurn message containing the currentPlayerIndex.
+     * @param playerIndex Determine which player is passing the turn
+     */
+    public void passTurnTryPlace(int playerIndex) {
+        setNextPlayerIndex(currentPlayerIndex);
+        BS_Host_Model.getModel().board.setPassCounter(0);
+        if (isGameOver()) {
+            gameIsOver = true;
+            return;
+        }
+        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
+        hasChanged();
+        notifyObservers("passTurn:" + getCurrentPlayerIndex());
+    }
 
     /**
      * The tryPlaceWord function is used to check if a word can be placed on the board.
@@ -331,8 +348,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 gameIsOver = true;
                 return;
             }
-            passTurn(currentPlayerIndex);
-            board.setPassCounter(0);
+            passTurnTryPlace(currentPlayerIndex);
             currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
 
         }
