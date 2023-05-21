@@ -2,18 +2,13 @@ package Model.GameData;
 
 import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
-import Model.BS_Model;
 import Model.GameData.Tile.Bag;
-import javafx.scene.transform.MatrixType;
 
-import java.security.Key;
-import java.text.Format;
 import java.util.Scanner;
 
-import static java.lang.Thread.onSpinWait;
 import static java.lang.Thread.sleep;
 
-public class MainTrain {
+public class matanTests {
 
 
     public static void testBag() {
