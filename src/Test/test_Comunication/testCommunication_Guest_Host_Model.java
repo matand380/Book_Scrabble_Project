@@ -19,10 +19,6 @@ import java.util.Scanner;
 
 
 public class testCommunication_Guest_Host_Model {
-
-//    static BS_Host_Model host;
-//    static BS_Guest_Model clientA;
-
     static int localPortForClientToConnect = 23455;
     static int ServerPortToConnect = 65535;
 
@@ -33,20 +29,74 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatHost();
 
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
-        startCommunication_CreatGuest();
+        startCommunication_CreatGuest("clientA");
 
         host.startNewGame();
+        emptyTestChallengeWord();
 
         test_ScoreUpdates();
         test_ScoreUpdates();
         test_ScoreUpdates();
         test_ScoreUpdates();
         test_ScoreUpdates();
+        test_ScoreUpdates();
+        test_ScoreUpdates();
+        test_ScoreUpdates();
 
-//        test_StartGame_State();
-//        test_WordCounter();
-//        test_PassTurns();
+        test_ScoreUpdates();
+
+        test_StartGame_State();
+        test_WordCounter();
+        test_PassTurns();
         System.out.println("Done");
+    }
+
+    public static void emptyTestChallengeWord(){
+        BS_Host_Model host = BS_Host_Model.getModel();
+        BS_Guest_Model clientA = BS_Guest_Model.getModel();
+        boolean b=host.challengeWord("BBB","0");
+        if(b)
+            System.out.println("problem with Challenge worked for eligible word");
+
+        b=host.challengeWord("COMMAND","0");
+        if(!b)
+            System.out.println("problem with Challenge worked for non eligible word");
+
+        b=host.challengeWord("","0");
+        if(!b)
+            System.out.println("problem with Challenge worked for empty word");
+
+    }
+
+    private static void testChallengeWord(){
+        BS_Host_Model host = BS_Host_Model.getModel();
+        BS_Guest_Model clientA = BS_Guest_Model.getModel();
+
+
+        System.out.println("enter the parameters of the word that was last placed");
+        Word wordPlaced= getWordFromTheUser();
+
+
+        for (Word w1 : Board.getBoard().getWords(wordPlaced))
+            System.out.println(w1.toString());
+        System.out.println("choose a word to challenge from the board");
+        Word wordToChallenge= getWordFromTheUser();
+        printScores();
+
+        if(host.getPlayers().get(host.getCurrentPlayerIndex()).get_index()==host.getPlayer().get_index())
+            host.challengeWord(wordToChallenge.toString().toUpperCase(), Integer.toString(host.getPlayers().get(host.getCurrentPlayerIndex()).get_index()));
+        else
+            clientA.challengeWord(wordToChallenge.toString().toUpperCase());
+
+        printScores();
+
+
+        //print the word that created after the turn
+        //once matan and eviater will fix the getter for the word on board and the code for the update of the board
+//        for (Word w1 : Board.getBoard().getWords(Board.getBoard().getwordOnBoard[Board.getBoard().getwordOnBoard.length - 1]))
+//            System.out.println(w1.toString());
+
+
     }
 
     private static void test_ScoreUpdates() {
@@ -60,11 +110,16 @@ public class testCommunication_Guest_Host_Model {
         for (Tile t : host.getPlayers().get(host.getCurrentPlayerIndex()).get_hand())
             System.out.print(t.getLetter() + " ");
         System.out.println("\n");
-        System.out.println("choose a word to place");
+
+
+        System.out.println("choose a word to place or type : pass or challenge");
         Scanner scanner = new Scanner(System.in);
         String w = scanner.nextLine();
         if (w.equals("pass"))
             host.passTurn(host.currentPlayerIndex);
+        if (w.equals("challenge"))
+            testChallengeWord();
+
         else {
             System.out.println("choose a row :");
             int row = scanner.nextInt();
@@ -81,8 +136,6 @@ public class testCommunication_Guest_Host_Model {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                if (score != host.getPlayers().get(host.getCurrentPlayerIndex()).get_score())
-                    System.out.println("problem with the score update for the host turn");
             } else {
                 clientA.tryPlaceWord(w.toUpperCase(), row, col, vertical);
 
@@ -98,15 +151,12 @@ public class testCommunication_Guest_Host_Model {
             System.out.println("host score: " + host.getPlayer().get_score());
             System.out.println("clientA score: " + clientA.getPlayer().get_score());
 
-            //passTurn test
-            if (currantTurn == host.getCurrentPlayerIndex())
-                System.out.println("problem with the turn update after the play");
         }
-
+        //print passTurns
+        System.out.println("PassCounter: " + Board.getBoard().getPassCounter());
         if (host.gameIsOver) {
-            System.out.println("*************\ngame is over\n*************\n");
+            System.out.println("*************\ngame is over\n(the boolean gameIsOver is true)\n*************\n");
         }
-
     }
 
     //local methods for testing
@@ -123,10 +173,10 @@ public class testCommunication_Guest_Host_Model {
         }
     }
 
-    public static void startCommunication_CreatGuest() {
+    public static void startCommunication_CreatGuest(String name) {
 
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
-        clientA.setPlayerProperties("Client");
+        clientA.setPlayerProperties(name);
         clientA.openSocket("127.0.0.1", localPortForClientToConnect);
         clientA.getCommunicationHandler().setCom();
 
@@ -174,22 +224,18 @@ public class testCommunication_Guest_Host_Model {
         int i = 0;
         for (char c : s.toCharArray()) {
             ts[i] = Tile.Bag.getBag().getTile(c);
+            //Tile.Bag.getBag()._quantitiesCounter[c-'A']++;
             i++;
         }
         return ts;
     }
 
-    //check word counter after adding a word
-    //check passCounter
-    //after type pass passCounter is 1
-    //after all the players type pass game is over
-
     public static String formatTiles(Tile[][] tiles) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
-                sb.append(tiles[i][j] == null ? "-" : tiles[i][j].getLetter());
-                if (j < tiles[i].length - 1) {
+        for (Tile[] tile : tiles) {
+            for (int j = 0; j < tile.length; j++) {
+                sb.append(tile[j] == null ? "-" : tile[j].getLetter());
+                if (j < tile.length - 1) {
                     sb.append("  ");
                 }
             }
@@ -198,7 +244,7 @@ public class testCommunication_Guest_Host_Model {
         return sb.toString();
     }
 
-    private void test_WordCounter() {//need to rewrite
+    private static void test_WordCounter() {//need to rewrite
         BS_Host_Model host = BS_Host_Model.getModel();
         Word w1 = new Word(get("BORN"), 7, 5, false);
         Word w2 = new Word(get("BORN"), 2, 2, false);
@@ -213,6 +259,27 @@ public class testCommunication_Guest_Host_Model {
         if (Board.getBoard().getWordCounter() != 3)
             System.out.println("problem with the word counter");
 
+    }
+
+    public static Word getWordFromTheUser() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("enter the word :");
+        String w = scanner.next();
+        System.out.println("enter the row :");
+        int row = scanner.nextInt();
+        System.out.println("enter the col :");
+        int col = scanner.nextInt();
+        System.out.println("choose true for vertical or false for horizontal :");
+        boolean vertical = scanner.nextBoolean();
+        return new Word(get(w.toUpperCase()), row, col, vertical);
+    }
+
+    public static void printScores(){
+        System.out.println("--------------------------------------------------");
+        for(Player p: BS_Host_Model.getModel().getPlayers()){
+            System.out.println(p.get_name() + " score: " + p.get_score());
+        }
+        System.out.println("--------------------------------------------------");
     }
 }
 
