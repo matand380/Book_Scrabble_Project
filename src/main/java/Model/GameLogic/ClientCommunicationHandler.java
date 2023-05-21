@@ -81,7 +81,7 @@ public class ClientCommunicationHandler {
             Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
             //for testing
             System.out.println("client tileBoard:\n");
-            System.out.println(MainTrain.formatTiles(newTiles));
+            System.out.println(matanTests.formatTiles(newTiles));
             BS_Guest_Model.getModel().setBoard(newTiles);
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
