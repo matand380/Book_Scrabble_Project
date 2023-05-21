@@ -95,10 +95,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     /**
-     * The tryPlaceWord function is used to send a message to the host that the player has want to placed a word on the board.
+     * The tryPlaceWord function is used to send a message to the host that the player has want to place a word on the board.
      * @param  word Pass the word that is being placed on the board.
-     * @param  x Determine the x coordinate of the word.
-     * @param  y Determine the y-coordinate of the word.
+     * @param  x Determine the row coordinate of the word.
+     * @param  y Determine the coll-coordinate of the word.
      * @param  isVertical Determine whether the word is placed vertically or horizontally.
      */
     public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
@@ -118,7 +118,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     /**
-     * The isHost function returns a boolean value of false because I am the Guest.
+     * The isHost function returns a boolean value of false because this is a guest model.
      *
      * @return False
      */
@@ -203,7 +203,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     /**
      * The endGame function is called when the game ends.
-     * It sends a message to the host that it has ended, and then closes all connections with the host.
+     * It sends a message to the host that it has ended, and then closes all resources and the connection to the host.
      */
     public void endGame() {
         communicationHandler.outMessages("endGame:" + player.get_socketID());

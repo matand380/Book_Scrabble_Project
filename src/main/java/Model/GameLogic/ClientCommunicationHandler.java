@@ -21,8 +21,8 @@ public class ClientCommunicationHandler {
 
 
     /**
-     * The ClientCommunicationHandler constructor that initializes the handlers map.
-     * The handlers map contains all the methods that are used to handle messages from the host.
+     * The ClientCommunicationHandler constructor that initializes the handler map.
+     * The handler map contains all the methods that are used to handle messages from the host.
      */
     public ClientCommunicationHandler() {
         //put all the methods in the map for being able to invoke them
@@ -117,7 +117,7 @@ public class ClientCommunicationHandler {
      * The handleInput function will take a string from the queue, split it into an array of strings based on colons, and then use
      * that first element as a key to find which handler should be used.
      * If no such handler exists, then nothing happens.
-     * Otherwise, if there is a valid method name in message[0], then we call that method with message as its argument.
+     * Otherwise, if there is a valid method name in a message[0], then we call that method with the message as its argument.
      */
     public void handleInput() {
         while (!stop) {

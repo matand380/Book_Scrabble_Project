@@ -93,7 +93,7 @@ public class HostCommunicationHandler implements ClientHandler {
 
 
     /**
-     * The handleRequests function is the main function of the RequestHandler class.
+     * The handleRequests function is the main function of the HostCommunicationHandler class.
      * It takes in a request from the inputQueue, and then uses that request to call
      * one of its handlers. The handler will then process that request and send it back to
      * whoever requested it. This function runs as long as there are requests in the queue,
@@ -122,7 +122,7 @@ public class HostCommunicationHandler implements ClientHandler {
 
 
     /**
-     * The handleClient function is the function that handles all of the communication between
+     * The handleClient function is the function that handles all the communication between
      * the client and server. It takes in an input stream and output stream, which are used to
      * communicate with each other. The handleClient function will continuously run while it is
      * connected to a client, as long as there are no errors or exceptions thrown. The handleClient
