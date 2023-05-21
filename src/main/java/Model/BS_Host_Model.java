@@ -88,7 +88,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * The setChallengeInfo function sets the challengeInfo variable to a new value.
      * <p>
      *
-     * @param challengeInfo Set the challengeinfo variable
+     * @param challengeInfo Set the challenge info variable
      */
     private void setChallengeInfo(String challengeInfo) {
         this.challengeInfo = challengeInfo;
@@ -208,9 +208,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     /**
-     * The startNewGame function is used to reset the game.
-     * It returns all the tiles from each player's tileLottery back into the bag,
-     * and then completes each player's hand to 7 tiles.
+     * The startNewGame function is used to start the game.
+     * It gives each player 7 tiles, sorts the tiles, and sets the player with the smallest tile as the current player.
+     * and then gives each player's hand to 7 tiles.
      */
 
     public void startNewGame() {
@@ -236,7 +236,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The passTurn function is called when a player passes their turn.
-     * It increments the pass counter, and if it reaches 2, then the game ends.
+     * It increments the pass counter, and if it reaches the maximum, then the game ends.
      * If not, it sets the next player as currentPlayerIndex and updates all clients with this information.
      * <p>
      *
@@ -255,7 +255,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         notifyObservers("passTurn:" + getCurrentPlayerIndex());
     }
     /**
-     * The passTurnTryPlace function is called when a player passes their turn.
+     * The passTurnTryPlace function is called after a player tries to place a word on the board.
      * It sets the next player index to be the current player index, and then checks if the game is over.
      * If it isn't, it updates all clients with a passTurn message containing the currentPlayerIndex.
      * @param playerIndex Determine which player is passing the turn
@@ -276,6 +276,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * The tryPlaceWord function is used to check if a word can be placed on the board.
      * If it can, then the function returns true and updates the score of the player who played that word.
      * Otherwise, it returns false and does not update any scores or change anything else in game state.
+     * The function starts the process with the tryPlaceWord function in the Board class.
+     * If a word can be placed, then the function updates all players with a list of words for a challenge.
+     * If a challenge has been activated, then the function checks if the word is in the dictionary.
+     * If it is,
+     * then the function updates the score of the player who played the word and fines the challenger.
+     * If it isn't, then the function updates the score of the challenger.
+     * If a challenge has not been activated,
+     * then the function updates the score of the player
+     * who played the word and sends an updated board to all clients.
+     *
      * <p>
      *
      * @param word Get the word that the player is trying to place
@@ -300,14 +310,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (challengeActivated.get()) {
                 //execute challengeWord method
                 boolean result = false;
-//                try {
                 String challengerIndex = this.getChallengeInfo().split(":")[0];
                 String forChallenge = this.challengeInfo.split(":")[1];
                 result = challengeWord(forChallenge, challengerIndex);
-//                }
-//                catch (ExecutionException | InterruptedException e) {
-//                    hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
-//                }
 
                 if (result) {
                     placeAndComplete7(word.toString());
@@ -326,13 +331,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
                     if (id != null)
                         communicationServer.updateSpecificPlayer(id, "challengeSuccess");
-                        // TODO: 18/05/2023 the current player need to handle this message
                     else {
                         hasChanged();
                         notifyObservers("challengeSuccess");
                     }
                     passTurn(currentPlayerIndex);
-                    // TODO: 17/05/2023 in tests check the counter of passTurn
                 }
 
                 challengeActivated.set(false);
@@ -349,7 +352,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 return;
             }
             passTurnTryPlace(currentPlayerIndex);
-            currentPlayerWords.clear(); // TODO: 16/05/2023 check if this is the right place to clear the list
+            currentPlayerWords.clear();
 
         }
         // score == 0 means that the word cannot be placed on the board
@@ -362,37 +365,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 notifyObservers("invalidWord");
             }
         }
-        /////////////////////////////
-        // TODO: 16/05/2023 get an indication from a client if he pressed a challenge or not
-        // !there is only one client that can press a challenge.
-        // !we handle the first client that pressed challenge
-        // !and notify the rest that their request for a challenge is invalid
-        /////////////////////////////
-
-
-
-
-            /*
-            * if tryPlaceWord returns score > 0, then we send a list of words to all clients
-            *  that will be used for a challenge
-            *
-            * if a client or the host press challenge, then we call [[BS_Host_Model#challengeWord()]] method
-            *
-            * if challengeWord returns true, then we call placeAndComplete7 method,
-            * and we need to update the client that pressed tryPlaceWord that a challenge happened but the challenge returned true
-            *
-            * if challengeWord returns false, then we pass by the placeAndComplete7 method,
-            * and we need to update the client that pressed tryPlaceWord that a challenge happened and the challenge returned false
-            * he will need to remove the word from the board
-            *
-            * if no one pressed a challenge, then we call placeAndComplete7 method
-            * we need a positive indicator that no one pressed a challenge
-
-            ! the tryPlaceWord method needs to wait for the challenge response
-            *
-            *
-             */
-
 
     }
 
@@ -413,7 +385,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     /**
-     * The isFull function checks to see if the game is full.
+     * The isFull function checks to see if the game is full (total of 4 players).
      * <p>
      *
      * @return True if the players array has 4 objects in it
@@ -424,6 +396,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The endGame function is called when the game has ended.
+     * This method is called when the host presses the end game button (which is only enabled after all clients have exited their games).
      * It shuts down the executor, closes the communication server, and notifies all clients that they can exit their games.
      * <p>
      */
@@ -436,21 +409,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
         //16/05/2023 when clientsMap will be empty the button will be enabled
         // 16/05/2023 press the button will execute the endGame method
 
-        // 16/05/2023 this method will be activated after pressing the end game button
-        // 16/05/2023 wait that all clients closed their game
-        // 16/05/2023 the HOST end game button will be activated after all clients pressed exit in their game
-        // 16/05/2023 need to close the game and all resources
     }
 
     /**
-     * The tryPlaceWord function is used to try and place a word on the board.
-     * If the word can be placed, it will return true and add the score of that player.
-     * Otherwise, it will return false and not change anything.
+     * The challengeWord function is called when a player challenges another player's word.
+     * The function sends the challenged word to the GameServer, which checks if it is valid or not.
+     * If it is valid, then the challenger loses 10 points and if invalid, then they gain 10 points.
+     * <p>
      *
-     * @param word Get the word that was placed on the board
-     * @return The score of the word if it was placed successfully
+     * @param  word Send the word to be challenged to the game server
+     * @param  index Identify the player who is challenging
+     *
+     * @return A boolean value
+     *
      */
-
     public boolean challengeWord(String word, String index) {
 
         //send a challenge to the GameServer and get a response
@@ -489,7 +461,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The updateScores function is used to update the scores of all players in the game.
-     * It takes no parameters and returns nothing.
      * <p>
      */
     private void updateScores() {
@@ -506,8 +477,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The sortAndSetID function sorts the players in ascending order by their tileLottery value,
-     * and then sets each player's ID to be equal to their index in the list.
-     * Return Void
+     * and then sets each player's index to be equal to their index in the list.
      */
     public void sortAndSetIndex() {
         players.sort(Comparator.comparing(Player::getTileLottery));
@@ -531,8 +501,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * to 7 tiles.
      * It does this by removing all the letters in that word from their hand, and then completing
      * their hand with new tiles from the bag.
-     * This function is called when a player has placed all of their tiles
-     * on one turn, so they do not need to draw any more tiles after placing them.
+     * This function is called when a player has placed their tiles
      */
     private void placeAndComplete7(String word) {
         Board.getBoard().placeWord(currentPlayerWords.get(0));
@@ -569,7 +538,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The isGameOver function checks if the game is over.
-     * The game is over when all players pass their turns or there are no more tiles in the bag and one of the players has no tiles left.
+     * The game is over when all players pass their turns or there are no more tiles in the bag, and one of the players has no tiles left.
      * <p>
      *
      * @return True when the game is over
@@ -665,7 +634,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * The requestChallengeActivation function is called when a player requests to activate a challenge.
      * The function sets the challengeInfo variable to the challengerIndex:word that was sent from the client,
      * and then checks if there is already an active challenge. If there isn't, it sets the flag for an active
-     * challenge to true. If there is already an active challenge, it sends back a message saying so and does nothing else.
+     * challenge to be true. If there is already an active challenge, it sends back a message saying so and does nothing else.
      * <p>
      *
      * @param challengeInfo Set the challengeinfo variable
