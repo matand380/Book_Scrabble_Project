@@ -153,7 +153,6 @@ public class ClientCommunicationHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        // FIXME: 15/05/2023 check this again
         executor.submit(this::inMessages);
         executor.submit(this::handleInput);
     }
