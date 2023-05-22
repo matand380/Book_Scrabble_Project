@@ -32,7 +32,8 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatGuest("clientA");
 
         host.startNewGame();
-        emptyTestChallengeWord();
+        UniTest_ChallengeWordGuest();
+        UniTest_ChallengeWord();
 
         test_ScoreUpdates();
         test_ScoreUpdates();
@@ -50,8 +51,22 @@ public class testCommunication_Guest_Host_Model {
         test_PassTurns();
         System.out.println("Done");
     }
+    public static void UniTest_ChallengeWordGuest(){
 
-    public static void emptyTestChallengeWord(){
+        BS_Host_Model host = BS_Host_Model.getModel();
+        BS_Guest_Model clientA = BS_Guest_Model.getModel();
+        String word="COMMAND";
+        clientA.challengeWord(word);
+        //get comunication handler massege
+
+        if(BS_Host_Model.getModel().getCommunicationHandler().getInputQueue().contains("challengeWord:COMMAND:0"))
+            System.out.println("test passed");
+        else
+            System.out.println("test failed");
+
+    }
+
+    public static void UniTest_ChallengeWord(){
         BS_Host_Model host = BS_Host_Model.getModel();
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
         boolean b=host.challengeWord("BBB","0");
@@ -65,7 +80,6 @@ public class testCommunication_Guest_Host_Model {
         b=host.challengeWord("","0");
         if(!b)
             System.out.println("problem with Challenge worked for empty word");
-
     }
 
     private static void testChallengeWord(){
@@ -112,13 +126,15 @@ public class testCommunication_Guest_Host_Model {
         System.out.println("\n");
 
 
-        System.out.println("choose a word to place or type : pass or challenge");
+        System.out.println("choose a word to place or type : passTurn or challenge");
         Scanner scanner = new Scanner(System.in);
         String w = scanner.nextLine();
-        if (w.equals("pass"))
-            host.passTurn(host.currentPlayerIndex);
-        if (w.equals("challenge"))
-            testChallengeWord();
+        if (w.equals("passTurn")||w.equals("challenge")) {
+            if (w.equals("challenge"))
+                testChallengeWord();
+            else
+                host.passTurn(host.currentPlayerIndex);
+        }
 
         else {
             System.out.println("choose a row :");
@@ -220,6 +236,7 @@ public class testCommunication_Guest_Host_Model {
     }
 
     public static Tile[] get(String s) {
+        BS_Host_Model host = BS_Host_Model.getModel();
         Tile[] ts = new Tile[s.length()];
         int i = 0;
         for (char c : s.toCharArray()) {
