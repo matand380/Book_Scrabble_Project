@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class testCommunication_Guest_Host_Model {
     static int localPortForClientToConnect = 23455;
-    static int ServerPortToConnect = 65535;
+    static int ServerPortToConnect = 12345;
 
     public static void main(String[] args) {
         System.out.println("Enter the local port:" + localPortForClientToConnect);
@@ -272,6 +272,12 @@ public class testCommunication_Guest_Host_Model {
         System.out.println("choose true for vertical or false for horizontal :");
         boolean vertical = scanner.nextBoolean();
         return new Word(get(w.toUpperCase()), row, col, vertical);
+    }
+
+    public static void getMaxScoreHost(){
+
+        BS_Host_Model host = BS_Host_Model.getModel();
+        host.getMaxScore();
     }
 
     public static void printScores(){
