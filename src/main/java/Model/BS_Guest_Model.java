@@ -12,7 +12,6 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
-    private static BS_Guest_Model model_instance = null;
     public String[] playersScores;
     Socket socket;
     Tile[][] tileBoard = new Tile[15][15];
