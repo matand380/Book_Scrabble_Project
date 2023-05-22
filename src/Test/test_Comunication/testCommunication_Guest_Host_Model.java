@@ -48,6 +48,7 @@ public class testCommunication_Guest_Host_Model {
         test_StartGame_State();
         test_WordCounter();
         test_PassTurns();
+        getMaxScoreHost();
         System.out.println("Done");
     }
 
@@ -277,7 +278,7 @@ public class testCommunication_Guest_Host_Model {
     public static void getMaxScoreHost(){
 
         BS_Host_Model host = BS_Host_Model.getModel();
-        host.getMaxScore();
+        System.out.println(host.getMaxScore());
     }
 
     public static void printScores(){
