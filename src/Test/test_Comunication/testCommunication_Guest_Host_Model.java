@@ -2,15 +2,12 @@ package test_Comunication;
 
 import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
-import Model.BS_Model;
+
 import Model.GameData.Board;
 import Model.GameData.Player;
 import Model.GameData.Tile;
 import Model.GameData.Word;
-import Model.GameLogic.ClientCommunicationHandler;
-import Model.challengeWord_uniTest;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
+
 
 import java.util.Scanner;
 
@@ -37,8 +34,8 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatGuest("clientA");
 
         host.startNewGame();
-
-
+        testGetModel_Host();
+        testGetModel_Guest();
         test_ScoreUpdates();
         test_ScoreUpdates();
         test_ScoreUpdates();
@@ -56,8 +53,19 @@ public class testCommunication_Guest_Host_Model {
         getMaxScoreHost();
         System.out.println("Done");
     }
-//test if 2 different guest models are the same, they should not be because they are singleton
-    public static void testGetModel(){
+
+    private static void testGetModel_Guest() {
+        BS_Guest_Model clientA = BS_Guest_Model.getModel();
+        BS_Guest_Model clientB = BS_Guest_Model.getModel();
+        if (clientA != clientB)
+            System.out.println("testGetModel: problems with singleton");
+    }
+    
+    public static void testGetModel_Host(){
+        BS_Host_Model hostA = BS_Host_Model.getModel();
+        BS_Host_Model hostB = BS_Host_Model.getModel();
+        if(hostA!=hostB)
+            System.out.println("testGetModel: problems with singleton");
 
     }
     private static void testChallengeWord(){
