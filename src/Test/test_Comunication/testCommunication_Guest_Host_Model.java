@@ -2,10 +2,15 @@ package test_Comunication;
 
 import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
+import Model.BS_Model;
 import Model.GameData.Board;
 import Model.GameData.Player;
 import Model.GameData.Tile;
 import Model.GameData.Word;
+import Model.GameLogic.ClientCommunicationHandler;
+import Model.challengeWord_uniTest;
+import org.junit.Assert;
+import org.junit.jupiter.api.Test;
 
 import java.util.Scanner;
 
@@ -19,8 +24,8 @@ import java.util.Scanner;
 
 
 public class testCommunication_Guest_Host_Model {
-    static int localPortForClientToConnect = 23455;
-    static int ServerPortToConnect = 12345;
+    static int localPortForClientToConnect = 23445;
+    static int ServerPortToConnect = 23456;
 
     public static void main(String[] args) {
         System.out.println("Enter the local port:" + localPortForClientToConnect);
@@ -32,7 +37,6 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatGuest("clientA");
 
         host.startNewGame();
-        UniTest_ChallengeWordGuest();
         UniTest_ChallengeWord();
 
         test_ScoreUpdates();
@@ -52,35 +56,46 @@ public class testCommunication_Guest_Host_Model {
         getMaxScoreHost();
         System.out.println("Done");
     }
-    public static void UniTest_ChallengeWordGuest(){
 
-        BS_Host_Model host = BS_Host_Model.getModel();
-        BS_Guest_Model clientA = BS_Guest_Model.getModel();
-        String word="COMMAND";
-        clientA.challengeWord(word);
-        //get comunication handler massege
+    public static void UniTest_ChallengeWord()  {
 
-        if(BS_Host_Model.getModel().getCommunicationHandler().getInputQueue().contains("challengeWord:COMMAND:0"))
-            System.out.println("test passed");
-        else
-            System.out.println("test failed");
+        // Step 1: Set up the test environment
+        BS_Guest_Model Guest_Model = BS_Guest_Model.getModel();
+        challengeWord_uniTest.CommunicationHandlerStub communicationHandler = new challengeWord_uniTest.CommunicationHandlerStub();
 
+        // Step 2: Set up the necessary dependencies
+        String expectedMessage = "challengeWord:0:WORD";
+        communicationHandler.setExpectedMessage(expectedMessage);
+
+        // Step 3: Call the method you want to test
+        Guest_Model.challengeWord("WORD");
+
+        // Step 4: Verify the method was called with the expected string
+        String actualMessage = communicationHandler.getSentMessage();
+        Assert.assertEquals(expectedMessage, actualMessage);
     }
+    private class CommunicationHandlerStub extends ClientCommunicationHandler  {
+        private String expectedMessage;
+        private String sentMessage;
 
-    public static void UniTest_ChallengeWord(){
-        BS_Host_Model host = BS_Host_Model.getModel();
-        BS_Guest_Model clientA = BS_Guest_Model.getModel();
-        boolean b=host.challengeWord("BBB","0");
-        if(b)
-            System.out.println("problem with Challenge worked for eligible word");
+        public CommunicationHandlerStub() {
+            this.expectedMessage = "Message not sent";
+            this.sentMessage = "Message not sent";
+        }
 
-        b=host.challengeWord("COMMAND","0");
-        if(!b)
-            System.out.println("problem with Challenge worked for non eligible word");
+        public void setExpectedMessage(String expectedMessage) {
+            this.expectedMessage = expectedMessage;
+        }
 
-        b=host.challengeWord("","0");
-        if(!b)
-            System.out.println("problem with Challenge worked for empty word");
+        public String getSentMessage() {
+            return sentMessage;
+        }
+
+        @Override
+        public void outMessages(String key){
+            sentMessage=key;
+        }
+
     }
 
     private static void testChallengeWord(){
