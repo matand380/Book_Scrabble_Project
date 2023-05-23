@@ -25,7 +25,7 @@ import java.util.Scanner;
 
 public class testCommunication_Guest_Host_Model {
     static int localPortForClientToConnect = 23445;
-    static int ServerPortToConnect = 23456;
+    static int ServerPortToConnect = 12346;
 
     public static void main(String[] args) {
         System.out.println("Enter the local port:" + localPortForClientToConnect);
@@ -37,7 +37,7 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatGuest("clientA");
 
         host.startNewGame();
-        UniTest_ChallengeWord();
+
 
         test_ScoreUpdates();
         test_ScoreUpdates();
@@ -56,48 +56,10 @@ public class testCommunication_Guest_Host_Model {
         getMaxScoreHost();
         System.out.println("Done");
     }
-
-    public static void UniTest_ChallengeWord()  {
-
-        // Step 1: Set up the test environment
-        BS_Guest_Model Guest_Model = BS_Guest_Model.getModel();
-        challengeWord_uniTest.CommunicationHandlerStub communicationHandler = new challengeWord_uniTest.CommunicationHandlerStub();
-
-        // Step 2: Set up the necessary dependencies
-        String expectedMessage = "challengeWord:0:WORD";
-        communicationHandler.setExpectedMessage(expectedMessage);
-
-        // Step 3: Call the method you want to test
-        Guest_Model.challengeWord("WORD");
-
-        // Step 4: Verify the method was called with the expected string
-        String actualMessage = communicationHandler.getSentMessage();
-        Assert.assertEquals(expectedMessage, actualMessage);
-    }
-    private class CommunicationHandlerStub extends ClientCommunicationHandler  {
-        private String expectedMessage;
-        private String sentMessage;
-
-        public CommunicationHandlerStub() {
-            this.expectedMessage = "Message not sent";
-            this.sentMessage = "Message not sent";
-        }
-
-        public void setExpectedMessage(String expectedMessage) {
-            this.expectedMessage = expectedMessage;
-        }
-
-        public String getSentMessage() {
-            return sentMessage;
-        }
-
-        @Override
-        public void outMessages(String key){
-            sentMessage=key;
-        }
+//test if 2 different guest models are the same, they should not be because they are singleton
+    public static void testGetModel(){
 
     }
-
     private static void testChallengeWord(){
         BS_Host_Model host = BS_Host_Model.getModel();
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
