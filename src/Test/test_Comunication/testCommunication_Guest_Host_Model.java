@@ -21,7 +21,7 @@ import java.util.Scanner;
 
 
 public class testCommunication_Guest_Host_Model {
-    static int localPortForClientToConnect = 23445;
+    static int localPortForClientToConnect = 23446;
     static int ServerPortToConnect = 12346;
 
     public static void main(String[] args) {
@@ -34,61 +34,60 @@ public class testCommunication_Guest_Host_Model {
         startCommunication_CreatGuest("clientA");
 
         host.startNewGame();
-        testGetModel_Host();
-        testGetModel_Guest();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-        test_ScoreUpdates();
-
-        test_ScoreUpdates();
-
+        testGetModelSingleton_Host();
+        testGetModelSingleton_Guest();
         test_StartGame_State();
-        test_WordCounter();
+
+        //test_WordCounter();
         test_PassTurns();
+        while(!BS_Host_Model.getModel().gameIsOver)
+        {test_flow();}
         getMaxScoreHost();
         System.out.println("Done");
     }
+    public void test_connectionProblemsWithPlayers(){    }
+    public void test_connectionProblemsWithHost(){    }
 
-    private static void testGetModel_Guest() {
+
+    public static void testGetModelSingleton_Guest() {
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
         BS_Guest_Model clientB = BS_Guest_Model.getModel();
         if (clientA != clientB)
             System.out.println("testGetModel: problems with singleton");
     }
-    
-    public static void testGetModel_Host(){
+
+    public static void testGetModelSingleton_Host(){
         BS_Host_Model hostA = BS_Host_Model.getModel();
         BS_Host_Model hostB = BS_Host_Model.getModel();
         if(hostA!=hostB)
             System.out.println("testGetModel: problems with singleton");
 
     }
+
     private static void testChallengeWord(){
         BS_Host_Model host = BS_Host_Model.getModel();
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
 
-
         System.out.println("enter the parameters of the word that was last placed");
         Word wordPlaced= getWordFromTheUser();
 
-
+        System.out.println("those are the words on the board");
         for (Word w1 : Board.getBoard().getWords(wordPlaced))
             System.out.println(w1.toString());
         System.out.println("choose a word to challenge from the board");
         Word wordToChallenge= getWordFromTheUser();
-        printScores();
+        int HostScoreBefore=host.getPlayer().get_score();
+        int PlayerBScoreBefore=clientA.getPlayer().get_score();
 
         if(host.getPlayers().get(host.getCurrentPlayerIndex()).get_index()==host.getPlayer().get_index())
             host.challengeWord(wordToChallenge.toString().toUpperCase(), Integer.toString(host.getPlayers().get(host.getCurrentPlayerIndex()).get_index()));
         else
             clientA.challengeWord(wordToChallenge.toString().toUpperCase());
 
-        printScores();
+        int HostScoreAft=host.getPlayer().get_score();
+        int PlayerBScoreAft=clientA.getPlayer().get_score();
+        if(HostScoreBefore==HostScoreAft&&PlayerBScoreBefore==PlayerBScoreAft)
+            System.out.println("challenge function is wrong-scores are even before and after the challenge - (testChallengeWord)");
 
 
         //print the word that created after the turn
@@ -99,7 +98,7 @@ public class testCommunication_Guest_Host_Model {
 
     }
 
-    private static void test_ScoreUpdates() {
+    private static void test_flow() {
         BS_Host_Model host = BS_Host_Model.getModel();
         BS_Guest_Model clientA = BS_Guest_Model.getModel();
 
@@ -212,13 +211,14 @@ public class testCommunication_Guest_Host_Model {
     }
 
     public static void test_PassTurns() {
-        //todo: change the variable "gameIsOver" in isGameOver method to true
         BS_Host_Model host = BS_Host_Model.getModel();
         for (int i = 0; i <= BS_Host_Model.getModel().getPlayers().size() + 1; i++) {
             host.passTurn(host.currentPlayerIndex);
         }
         if (!host.gameIsOver)
             System.out.println("the game should be over now");
+        host.gameIsOver = false;
+        Board.getBoard().setPassCounter(0);
     }
 
     public static Tile[] get(String s) {
