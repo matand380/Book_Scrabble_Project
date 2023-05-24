@@ -128,57 +128,60 @@ public class matanTests {
 
         BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a port for the Host Server
         host.openSocket("127.0.0.1", 65535); //assign ip and port of the Game Server
-        host.setPlayerProperties("Eviatar");
-
-        Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
-        t.start();
-
-        try {
-            Thread.sleep(2000); //wait for server to start
-        } catch (InterruptedException e) {
-            System.out.println("sleep failed");
-        }
-
-        BS_Guest_Model client = BS_Guest_Model.getModel();
-        client.setPlayerProperties("matan");
-        //choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;
-        client.openSocket("127.0.0.1", 65533);
-        client.getCommunicationHandler().setCom();
 
 
-        try {
-            Thread.sleep(2000); //wait for server to start
-        } catch (InterruptedException e) {
-            System.out.println("sleep failed");
-        }
-
-        //test start from here
-        host.startNewGame();
+        System.out.println(host.getMaxScore());
 
 
-        //force the current player to be the client
-        int current = host.getCurrentPlayerIndex();
-        if (host.getPlayers().get(host.currentPlayerIndex).get_socketID() == null)
-            host.setNextPlayerIndex(current);
-
-        //print the hand of the client
-        Tile[] hand = new Tile[7];
-        for (int i = 0; i < 7; i++) {
-            hand[i] = host.getPlayers().get(host.currentPlayerIndex).get_hand().get(i);
-        }
-        for (Tile tile : hand) {
-            System.out.print(tile.letter + " ");
-        }
-        //choose word to place from client's hand
-        //be aware to choose valid word!!!
-        System.out.println("choose word to place");
-        Scanner sc = new Scanner(System.in);
-        String word = sc.nextLine();
-
-        //send request to host
-        client.tryPlaceWord(word.toUpperCase(), 7, 5, false);
-
-        //you can run without debug mode to see the result (only if you have a valid word)
+//        Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
+//        t.start();
+//
+//        try {
+//            Thread.sleep(2000); //wait for server to start
+//        } catch (InterruptedException e) {
+//            System.out.println("sleep failed");
+//        }
+//
+//        BS_Guest_Model client = BS_Guest_Model.getModel();
+//        client.setPlayerProperties("matan");
+//        //choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;
+//        client.openSocket("127.0.0.1", 65533);
+//        client.getCommunicationHandler().setCom();
+//
+//
+//        try {
+//            Thread.sleep(2000); //wait for server to start
+//        } catch (InterruptedException e) {
+//            System.out.println("sleep failed");
+//        }
+//
+//        //test start from here
+//        host.startNewGame();
+//
+//
+//        //force the current player to be the client
+//        int current = host.getCurrentPlayerIndex();
+//        if (host.getPlayers().get(host.currentPlayerIndex).get_socketID() == null)
+//            host.setNextPlayerIndex(current);
+//
+//        //print the hand of the client
+//        Tile[] hand = new Tile[7];
+//        for (int i = 0; i < 7; i++) {
+//            hand[i] = host.getPlayers().get(host.currentPlayerIndex).get_hand().get(i);
+//        }
+//        for (Tile tile : hand) {
+//            System.out.print(tile.letter + " ");
+//        }
+//        //choose word to place from client's hand
+//        //be aware to choose valid word!!!
+//        System.out.println("choose word to place");
+//        Scanner sc = new Scanner(System.in);
+//        String word = sc.nextLine();
+//
+//        //send request to host
+//        client.tryPlaceWord(word.toUpperCase(), 7, 5, false);
+//
+//        //you can run without debug mode to see the result (only if you have a valid word)
 
     }
 

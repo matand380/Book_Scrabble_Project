@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -570,9 +571,34 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
 
     public String getMaxScore() {
-        Player winner = players.stream().max(Comparator.comparing(Player::get_score)).get();
-        return winner.get_index() + ":" + winner.get_name();
+        // TODO: 24/05/2023 need more work
+
+        int maxScore = Collections.max(players.stream().map(Player::get_score).collect(Collectors.toList()));
+
+        Deque<Player> maxScorePlayers = new ArrayDeque<>();
+        for (Player player : players) {
+            if (player.get_score() == maxScore) {
+                maxScorePlayers.add(player);
+            }
+        }
+
+        if (maxScorePlayers.size() == 1) {
+            Player winner = maxScorePlayers.getFirst();
+            return winner.get_index() + ":" + winner.get_name();
+        } else {
+            return getMaxScoreWithTie(maxScorePlayers);
+        }
     }
+
+    private String getMaxScoreWithTie(Deque<Player> maxScorePlayers) {
+
+        if (maxScorePlayers.getFirst() == players.get(currentPlayerIndex))
+            return maxScorePlayers.getLast().get_index() + ":" + maxScorePlayers.getLast().get_name();
+        else
+            return maxScorePlayers.getFirst().get_index() + ":" + maxScorePlayers.getFirst().get_name();
+
+    }
+
 
     /**
      * The getCommunicationHandler function returns the communicationHandler object.
