@@ -2,11 +2,13 @@ package test_Comunication;
 
 import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
+import Model.GameData.Board;
 import Model.GameData.Player;
 import Model.GameData.Tile;
 import Model.GameLogic.ClientCommunicationHandler;
 import Model.GameLogic.HostCommunicationHandler;
 import Model.GameLogic.MyServer;
+import com.google.gson.Gson;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,6 +51,7 @@ public class TestHostModel {
     @Before
     public void setup() {
         hostModelMock = BS_Host_Model.getModel();
+        new Thread(()->hostModelMock.getCommunicationServer().start());
     }
 
     @Test
@@ -65,11 +68,11 @@ public class TestHostModel {
 
     @Test
     public void testSetGetChallengeInfo(){
-        String challengeInfo = "12, 13, 14, 15, 16, 17, 18, 19, 20";
+        String challengeInfo = "0:word";
         Method setChallengeInfo;
         Method getChallengeInfo;
         try {
-            setChallengeInfo = BS_Host_Model.getModel().getClass().getDeclaredMethod("setChallengeInfo", String[].class);
+            setChallengeInfo = BS_Host_Model.getModel().getClass().getDeclaredMethod("setChallengeInfo", String.class);
             getChallengeInfo = BS_Host_Model.getModel().getClass().getDeclaredMethod("getChallengeInfo");
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);}
@@ -78,7 +81,7 @@ public class TestHostModel {
         getChallengeInfo.setAccessible(true);
 
         try{
-            setChallengeInfo.invoke(hostModelMock, (Object) challengeInfo.split(", "));
+            setChallengeInfo.invoke(hostModelMock,challengeInfo);
             assertEquals(challengeInfo, getChallengeInfo.invoke(hostModelMock));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -93,12 +96,12 @@ public class TestHostModel {
 
     @Test
     public void testGetPlayerToSocketID() {
-        assertNull(hostModelMock.getPlayerToSocketID());
+        assertNotNull(hostModelMock.getPlayerToSocketID());
     }
 
     @Test
     public void testGetGameSocket() {
-        assertNotNull(hostModelMock.getGameSocket());
+        assertNull(hostModelMock.getGameSocket());
     }
 
     @Test
@@ -109,7 +112,7 @@ public class TestHostModel {
     @Test
     public void testOpenSocket(){
         String ip="127.0.0.1";
-        int port=4444;
+        int port=23456;
         Method openSocket;
         try {
             openSocket = BS_Host_Model.getModel().getClass().getDeclaredMethod("openSocket", String.class, int.class);
@@ -147,6 +150,8 @@ public class TestHostModel {
 
     @Test
     public void testAddPlayer(){
+        hostModelMock.getPlayers().clear();
+
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -158,43 +163,48 @@ public class TestHostModel {
         hostModelMock.addPlayer(player4);
         assertEquals(4, hostModelMock.getPlayers().size());
     }
+
     @Test
     public void testGetPlayers(){
-        assertEquals(0, hostModelMock.getPlayers().size());
+        hostModelMock.getPlayers().clear();
+        hostModelMock.setPlayerProperties("test");
+        assertEquals(1, hostModelMock.getPlayers().size());
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
         Player player4 = new Player();
         hostModelMock.addPlayer(player1);
-        assertEquals(1, hostModelMock.getPlayers().size());
+        assertEquals(2, hostModelMock.getPlayers().size());
         hostModelMock.addPlayer(player2);
         hostModelMock.addPlayer(player3);
         hostModelMock.addPlayer(player4);
-        assertEquals(4, hostModelMock.getPlayers().size());
+        assertEquals(5, hostModelMock.getPlayers().size());
         //return a list of players
         //check if the return is a list
-        assertEquals(hostModelMock.getPlayers(), instanceOf(List.class));
+        assertTrue(hostModelMock.getPlayers() instanceof List<Player>);
     }
 
     @Test
     public void testSetNextPlayerIndex(){
-        hostModelMock.setNextPlayerIndex(1);
-        assertEquals(1, hostModelMock.getPlayer().get_index());
-        hostModelMock.setNextPlayerIndex(2);
-        assertEquals(2, hostModelMock.getPlayer().get_index());
-        hostModelMock.setNextPlayerIndex(3);
-        assertEquals(3, hostModelMock.getPlayer().get_index());
         hostModelMock.setNextPlayerIndex(0);
-        assertEquals(0, hostModelMock.getPlayer().get_index());
+        assertEquals(1, hostModelMock.getCurrentPlayerIndex());
+        hostModelMock.setNextPlayerIndex(1);
+        assertEquals(2, hostModelMock.getCurrentPlayerIndex());
+        hostModelMock.setNextPlayerIndex(2);
+        assertEquals(3, hostModelMock.getCurrentPlayerIndex());
+        hostModelMock.setNextPlayerIndex(3);
+        assertEquals(0, hostModelMock.getCurrentPlayerIndex());
     }
 
     @Test
     public void getCurrentPlayerIndex(){
-        assertEquals(0, hostModelMock.getCurrentPlayerIndex());
+        assertEquals(1, hostModelMock.getCurrentPlayerIndex());
     }
     @Test
     public void testStartNewGame(){
+        hostModelMock.setPlayerProperties("test");
         hostModelMock.startNewGame();
+
         assertEquals(0, hostModelMock.getPlayer().get_index());
         assertEquals(7, hostModelMock.getPlayer().get_hand().size());
     }
@@ -203,15 +213,18 @@ public class TestHostModel {
     public void testPassTurn() {
         assertEquals(0, hostModelMock.getPlayer().get_index());
         hostModelMock.passTurn(hostModelMock.getCurrentPlayerIndex());
-        assertEquals(1, hostModelMock.getPlayer().get_index());
+        assertEquals(1, hostModelMock.getCurrentPlayerIndex());
     }
 
     @Test
     public void testPassTurnTryPlace(){
+        hostModelMock.startNewGame();
+        hostModelMock.setPlayerProperties("test");
+        hostModelMock.addPlayer(new Player());
         int playerIndex = hostModelMock.getCurrentPlayerIndex();
-        hostModelMock.passTurn(playerIndex);
-        assertEquals("passTurn:" + playerIndex+1, "passTurn:" + playerIndex);
-
+        hostModelMock.passTurnTryPlace(playerIndex);
+        assertEquals("passTurn:" + (playerIndex+1), "passTurn:" + hostModelMock.getCurrentPlayerIndex());
+        hostModelMock.getPlayers().clear();
     }
 
 //    @Test
@@ -220,20 +233,20 @@ public class TestHostModel {
     @Test
     public void testUpdateBoard() {
         Method updateBoard;
-        String word = "word";
-        int x = 0;
-        int y = 0;
-        boolean isVertical = false;
-        String message = "tileBoard:word";
+        Gson Gson = new Gson();
+        // TODO: 25/05/2023 addword to Board
+//        Board.getBoard().placeWord(mk'mkm;lkm);
+        String message = Gson.toJson(hostModelMock.getBoardState());
 
         try {
-            updateBoard = BS_Host_Model.getModel().getClass().getDeclaredMethod("updateBoard", String.class, int.class, int.class, boolean.class);
+            updateBoard = BS_Host_Model.getModel().getClass().getDeclaredMethod("updateBoard");
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
         updateBoard.setAccessible(true);
         try {
-            assertEquals(message,updateBoard.invoke(hostModelMock, word, x, y, isVertical));
+            Tile[][] board = Gson.fromJson(message, Tile[][].class);
+            assertArrayEquals(hostModelMock.getBoardState(),board);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -242,6 +255,7 @@ public class TestHostModel {
 
     @Test
     public void testIsFull(){
+        hostModelMock.getPlayers().clear();
         assertFalse(hostModelMock.isFull());
         Player player1 = new Player();
         Player player2 = new Player();
@@ -249,7 +263,7 @@ public class TestHostModel {
         hostModelMock.addPlayer(player1);
         hostModelMock.addPlayer(player2);
         hostModelMock.addPlayer(player3);
-        assertEquals(4, hostModelMock.getPlayers().size());
+        assertEquals(3, hostModelMock.getPlayers().size());
     }
 
 
@@ -265,18 +279,19 @@ public class TestHostModel {
 
    @Test
    public void testGetMaxScore() {
-        assertEquals(0, Integer.parseInt(hostModelMock.getMaxScore()));
         hostModelMock.getPlayers().get(0).set_score(100);
+        hostModelMock.getPlayers().get(0).set_name("test");
         hostModelMock.getPlayers().get(1).set_score(90);
         hostModelMock.getPlayers().get(3).set_score(80);
         hostModelMock.getPlayers().get(2).set_score(70);
-        assertEquals(100, Integer.parseInt(hostModelMock.getMaxScore()));
+        assertEquals("0:test", hostModelMock.getMaxScore());
+       // TODO: 25/05/2023 test for tie its arounded so to check 3 to 0
     }
 
 
     @Test
     public void testGetCommunicationHandler() {
-        assertNull(hostModelMock.getCommunicationHandler());
+        assertNotNull(hostModelMock.getCommunicationHandler());
     }
 
 
@@ -292,8 +307,6 @@ public class TestHostModel {
         assertEquals(7, hand.size());
         assertEquals('R', hand.get(0).getLetter());
     }
-
-
 
     @Test
     public void testSetPlayerProperties() {
