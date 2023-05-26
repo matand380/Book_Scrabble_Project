@@ -5,6 +5,7 @@ import Model.BS_Host_Model;
 import Model.GameData.Board;
 import Model.GameData.Player;
 import Model.GameData.Tile;
+import Model.GameData.Word;
 import Model.GameLogic.ClientCommunicationHandler;
 import Model.GameLogic.HostCommunicationHandler;
 import Model.GameLogic.MyServer;
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +109,7 @@ public class TestHostModel {
     @Test
     public void testIsHost() {
         assertTrue(hostModelMock.isHost());
+
     }
 
     @Test
@@ -227,8 +230,8 @@ public class TestHostModel {
         hostModelMock.getPlayers().clear();
     }
 
-//    @Test
-//    public void testTryPlaceWord() {}
+    @Test
+    public void testTryPlaceWord() {}
 
     @Test
     public void testUpdateBoard() {
@@ -266,34 +269,32 @@ public class TestHostModel {
         assertEquals(3, hostModelMock.getPlayers().size());
     }
 
-
-//    @Test
-//    public void testChallengeWord() {
-//        String word = "word";
-//        assertEquals(,hostModelMock.challengeWord(word, Integer.toString(hostModelMock.getCurrentPlayerIndex())));
-//
-//        communicationHandlerMock.outMessages("challengeWord:" + hostModelMock.getPlayer().get_index() + ":" + word);
-//        assertEquals("challengeWord:0:word", "challengeWord:" + hostModelMock.getPlayer().get_index() + ":" + word);
-//        // TODO: Implement test for challengeWord method
-//    }
-
-   @Test
-   public void testGetMaxScore() {
+    @Test
+    public void testGetMaxScore() {
         hostModelMock.getPlayers().get(0).set_score(100);
         hostModelMock.getPlayers().get(0).set_name("test");
         hostModelMock.getPlayers().get(1).set_score(90);
         hostModelMock.getPlayers().get(3).set_score(80);
         hostModelMock.getPlayers().get(2).set_score(70);
         assertEquals("0:test", hostModelMock.getMaxScore());
-       // TODO: 25/05/2023 test for tie its arounded so to check 3 to 0
-    }
 
+        hostModelMock.getPlayers().get(0).set_score(110);
+        hostModelMock.getPlayers().get(1).set_score(110);
+        hostModelMock.getPlayers().get(3).set_score(105);
+        assertEquals("0:test", hostModelMock.getMaxScore());
+
+        hostModelMock.getPlayers().get(3).set_score(120);
+        hostModelMock.getPlayers().get(0).set_score(120);
+        hostModelMock.getPlayers().get(1).set_score(112);
+        hostModelMock.getPlayers().get(1).set_score(113);
+        assertEquals("3:Default", hostModelMock.getMaxScore());
+
+    }
 
     @Test
     public void testGetCommunicationHandler() {
         assertNotNull(hostModelMock.getCommunicationHandler());
     }
-
 
     @Test
     public void testGetCurrentPlayerHand() {
@@ -315,5 +316,26 @@ public class TestHostModel {
     }
 
 //    @Test
-//    public void testRequestChallengeActivation(){}
+//    public void testChallengeWord() {
+//        String word = "word";
+//        String message = "challengeWord:" + hostModelMock.getPlayer().get_index() + ":" + word;
+//        Player player = new Player();
+//        player.set_name("test");
+//        hostModelMock.setPlayerProperties("hostTest");
+//        hostModelMock.addPlayer(player);
+//
+//        Tile[] tiles = new Tile[4];
+//        tiles[0] = new Tile('W', 4);
+//        tiles[1] = new Tile('O', 1);
+//        tiles[2] = new Tile('R', 1);
+//        tiles[3] = new Tile('D', 2);
+//
+//        Word word1 = new Word(tiles, 0, 0, false);
+//        Board.getBoard().placeWord(word1);
+//
+//        assertFalse(hostModelMock.challengeWord(word,Integer.toString(hostModelMock.getCurrentPlayerIndex())));
+//
+//        // TODO: Implement test for challengeWord method
+//        //print the board
+//    }
 }
