@@ -154,7 +154,7 @@ public class MyServer {
         return ip;
     }
 
-    public void updateAll(Object s) {
+    public void updateAll(String s) {
         //foreach socket in map send s
         clientsMap.forEach((id, socket) -> {
             PrintWriter out;

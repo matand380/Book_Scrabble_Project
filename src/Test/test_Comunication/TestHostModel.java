@@ -40,7 +40,7 @@ public class TestHostModel {
     };
     MyServer serverMock = new MyServer(4444, communicationHandlerMock){
         @Override
-        public void updateAll(Object message) {
+        public void updateAll(String message) {
             System.out.println(message);
         }
         @Override
@@ -53,7 +53,7 @@ public class TestHostModel {
     @Before
     public void setup() {
         hostModelMock = BS_Host_Model.getModel();
-        new Thread(()->serverMock.start()).start();
+        serverMock.start();
     }
 
     @Test
