@@ -1,41 +1,56 @@
 package Model.GameData;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-public class Tile {
-    public
-    final char letter;
-    final int _score;
+public class Tile implements Serializable, ObjectFactory {
+    public char getLetter() {
+        return letter;
+    }
+
+    public int get_score() {
+        return _score;
+    }
+
+     final char letter;
+     final int _score;
+
+
+    public Tile() {
+        this.letter = ' ';
+        this._score = 0;
+    }
 
     /**
      * The Tile function is a constructor for the Tile class.
      * It takes in two parameters, a character and an integer.
      * The character represents the letter of the tile, while
      * the integer represents its score value.
-     *<p>
-     * @param _letter _letter Set the letter of the tile
-     * @param _score _score Set the score of a tile
+     * <p>
      *
+     * @param _letter _letter Set the letter of the tile
+     * @param _score  _score Set the score of a tile
      */
     public Tile(char _letter, int _score) {
         this.letter = _letter;
         this._score = _score;
     }
-    public int getScore(){
+
+    public int getScore() {
         return _score;
     }
+
     /**
      * The equals function is used to compare two objects.
      * In this case, we are comparing two tiles.
      * The function returns true if the letter and score of both tiles are equal, otherwise it returns false.
-     *<p>
+     * <p>
+     *
      * @param o o Compare the object passed in to the current instance of tile
-     *
      * @return True if the two objects are equal
-     *
      */
     @Override
     public boolean equals(Object o) {
@@ -53,14 +68,23 @@ public class Tile {
      * <p>
      *
      * @return The letter and score of the tile
-     *
      */
     @Override
     public int hashCode() {
         return Objects.hash(letter, _score);
     }
 
-    public static class Bag {
+    /**
+     * The create function is used to create a new instance of the Tile class.
+     *
+     * @return A tile object
+     */
+    @Override
+    public Object create() {
+        return new Tile();
+    }
+
+    public static class Bag implements Serializable, ObjectFactory {
         public
         int[] _quantitiesCounter;
         final int[] _defaultQuantities = new int[]{9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
@@ -70,9 +94,8 @@ public class Tile {
         /**
          * The Bag function is a constructor that creates an array of 26 tiles, each with its own letter and point value.
          * The function also creates an array of integers that keeps track of how many tiles are left in the bag for each letter.
-         *
          */
-        public Bag() {
+        private Bag() {
             this._quantitiesCounter = new int[]{9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
             this._tilesArray = new Tile[26];
             _tilesArray[0] = new Tile('A', 1);
@@ -106,8 +129,8 @@ public class Tile {
         /**
          * The getRand function returns a random tile from the bag.
          * <p>
-         * @return A random tile from the bag
          *
+         * @return A random tile from the bag
          */
         public Tile getRand() {
             if (size() > 0) {
@@ -131,10 +154,9 @@ public class Tile {
         /**
          * The getTile function returns a tile from the bag.
          * <p>
+         *
          * @param c c Determine the index of the tile in the array
-         *
          * @return The tile that corresponds to the letter c
-         *
          */
         public Tile getTile(char c) {
             if (size() > 0) {
@@ -152,8 +174,8 @@ public class Tile {
         /**
          * The put function adds a tile to the bag.
          * <p>
-         * @param t t Determine the letter of the tile to be put into the bag
          *
+         * @param t t Determine the letter of the tile to be put into the bag
          */
         public void put(Tile t) {
             if (size() < 98) {
@@ -170,7 +192,6 @@ public class Tile {
          * <p>
          *
          * @return The number of elements in the bag
-         *
          */
         public int size() {
             int count = 0;
@@ -183,11 +204,16 @@ public class Tile {
         /**
          * The getQuantities function returns a copy of the quantities array.
          * <p>
-         * @return The quantities array
          *
+         * @return The quantities array
          */
         public int[] getQuantities() {
             return this._quantitiesCounter.clone();
+        }
+
+
+        private static class BagHolder {
+            private static final Bag bagInstance = new Bag();
         }
 
         /**
@@ -195,23 +221,25 @@ public class Tile {
          * <p>
          *
          * @return A bag object
-         *
          */
         public static Bag getBag() {
-            if (bagInstance == null)
-                return bagInstance = new Bag();
-            return bagInstance;
+            return BagHolder.bagInstance;
         }
 
         public void remove() {
             //remove single tile from bag
-            for(int i = 0; i < _quantitiesCounter.length; i++) {
-                if(_quantitiesCounter[i] > 0) {
+            for (int i = 0; i < _quantitiesCounter.length; i++) {
+                if (_quantitiesCounter[i] > 0) {
                     _quantitiesCounter[i]--;
                     break;
                 }
             }
 
+        }
+
+        @Override
+        public Bag create() {
+            return Bag.getBag();
         }
     }
 }

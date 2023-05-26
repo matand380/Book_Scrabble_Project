@@ -4,7 +4,7 @@ import Model.GameData.Board;
 import Model.GameData.Tile;
 import Model.GameData.Word;
 
-import static Model.GameData.MainTrain.get;
+import static Model.GameData.matanTests.get;
 
 public class testBoard {
     /**

@@ -1,9 +1,10 @@
 package Model.GameData;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Word {
+public class Word implements Serializable, ObjectFactory {
     Tile[] tiles;
     int row;
     int col;
@@ -25,6 +26,17 @@ public class Word {
         this.row = row;
         this.col = col;
         this.vertical = vertical;
+    }
+
+    /**
+     * The Word function is a default constructor that creates a new Word object.
+     * @return A word object
+     */
+    public Word() {
+        this.tiles = new Tile[0];
+        this.row = 0;
+        this.col = 0;
+        this.vertical = false;
     }
 
     /**
@@ -104,4 +116,54 @@ public class Word {
         return result;
     }
 
+    /**
+     * The create function is used to create a new instance of the Word class.
+     * @return A new word object with the parameters given
+     */
+    @Override
+    public Object create() {
+        return new Word(new Tile[0], 0, 0, false);
+    }
+
+    /**
+     * The toMessage function takes the tiles in a move and converts them into a string.
+     * The string is formatted as follows:
+     * 		The letters of each tile are concatenated together, with an underscore (_) representing null tiles.
+     * 		The row, column, and vertical boolean are appended to the end of this string separated by colons (:).
+     * <p>
+     * @return A string
+     *
+     */
+    public String toMessage(){
+        StringBuilder sb = new StringBuilder();
+        for(Tile tile : this.tiles){
+            if(tile == null){
+                sb.append("_");
+                continue;
+            }
+            sb.append(tile.letter);
+        }
+        sb.append(":").append(this.row).append(":").append(this.col).append(":").append(this.vertical);
+        return sb.toString();
+    }
+
+    /**
+     * The toString function returns a string representation of the Word object.
+     *
+     * <p>
+     * @return The letters of the tiles in the rack
+     *
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Tile tile : this.tiles) {
+            if (tile == null) {
+                sb.append("_");
+                continue;
+            }
+            sb.append(tile.letter);
+        }
+        return sb.toString();
+    }
 }

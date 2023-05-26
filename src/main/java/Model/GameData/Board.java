@@ -1,8 +1,13 @@
 package Model.GameData;
 
-import java.util.ArrayList;
 
-public class Board {
+import Model.BS_Host_Model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.concurrent.Future;
+
+public class Board implements Serializable, ObjectFactory {
     private static final int width = 15;
     private static final int height = 15;
     private static Board single_instance = null;
@@ -11,13 +16,13 @@ public class Board {
     int wordCounter = 0;
     boolean wScount = false;
     ArrayList<Word> wordOnBoard = new ArrayList<>();
-
+    private int passCounter = 0;
     /**
      * The Board function creates a new board object.
      * It initializes the mainBoard and scoreBoard arrays to null and 0 respectively.
      * It then sets the values of each tile in scoreBoard to their respective scores, as shown on a Scrabble board.
      */
-    public Board() {
+    private Board() {
         mainBoard = new Tile[15][15];
         for (int i = 0; i < 15; i++)
             for (int j = 0; j < 15; j++)
@@ -98,9 +103,11 @@ public class Board {
      * @return The single instance of the board class
      */
     public static Board getBoard() {
-        if (single_instance == null)
-            return single_instance = new Board();
-        return single_instance;
+        return BoardHolder.boardInstance;
+    }
+
+    public int getWordCounter() {
+        return wordCounter;
     }
 
     /**
@@ -110,7 +117,7 @@ public class Board {
      *
      * @return A copy of the mainboard array
      */
-    Tile[][] getTiles() {
+    public Tile[][] getTiles() {
         return mainBoard.clone();
     }
 
@@ -235,8 +242,40 @@ public class Board {
         return true;
     }
 
+    /**
+     * The dictionaryLegal function checks if a word is legal in the dictionary which is stored in the game server.
+     *<p>
+     *
+     * @param  w Check if the word is legal
+     *
+     * @return True if the word is in the dictionary,
+     *
+     */
     private boolean dictionaryLegal(Word w) {
-        return true;
+
+        Word forQuery = checkWordNull(w);
+        String stringWord = forQuery.toString();
+
+        Future<String> res = BS_Host_Model.getModel().getCommunicationHandler().executor.submit(() -> {
+            BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
+            return BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        });
+
+        String response = null;
+        try {
+            response = res.get();
+        } catch (Exception e) {
+            System.out.println("Error: dictionaryLegal");
+        }
+//        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+        String[] splitResponse = response.split(":");
+        if (splitResponse[0].equals("Q")) {
+            return splitResponse[1].equals("true");
+        } else {
+            System.out.println("Error: dictionaryLegal");
+            return false;
+        }
+
     }
 
     /**
@@ -303,14 +342,13 @@ public class Board {
         return new Word(tiles, rowBegin, col, true);
     }
 
-
     /**
      * The checkHorizontalWord function checks the horizontal word that is formed by a tile placed on the board.
      * <p>
      *
-     * @param row  row Determine the row that the tile is being placed in
-     * @param col  col Determine the column of the tile that is being placed
-     * @param tile tile Add the tile to the word
+     * @param row  row Determines the row that the tile is being placed in
+     * @param col  col Determines the column of the tile that is being placed
+     * @param tile tile Adds the tile to the word
      * @return A word object
      */
     private Word checkHorizontalWord(int row, int col, Tile tile) {
@@ -380,7 +418,7 @@ public class Board {
      * <p>
      *
      * @param w w Pass the word that is being scored
-     * @return The score of the all the words that are formed by placing the tiles from this word on the board
+     * @return The score of all the words that are formed by placing the tiles from this word on the board
      */
     int getScore(Word w) {
         int score = 0;
@@ -388,18 +426,16 @@ public class Board {
         return score;
     }
 
-
     /**
      * The wordScore function takes in a Word object and returns the score of that word.
      * The function first initializes the score to 0, then iterates through each tile in the word.
      * For each tile, it checks if there is a multiplier on that space on the board (double or triple letter).
      * If so, it multiplies by 2 or 3 respectively and adds to total score.
      * It also checks for double/triple word multipliers.
-     *<p>
-     * @param  w Get the tiles, row and column of the word
+     * <p>
      *
+     * @param w Get the tiles, row and column of the word
      * @return The score of the word multiplied by the doubleWordMultiplier and tripleWordMultiplier
-     *
      */
     private int wordScore(Word w) {
         int score = 0;
@@ -440,6 +476,14 @@ public class Board {
         return score;
     }
 
+    public int getPassCounter() {
+        return passCounter;
+    }
+
+    public void setPassCounter(int passCounter) {
+        this.passCounter = passCounter;
+
+    }
 
     /**
      * The tryPlaceWord function takes in a Word object and checks if the word is legal.
@@ -464,7 +508,7 @@ public class Board {
             } else return 0;
         }
         wordCounter += newWord.size();
-        placeWord(w);
+        BS_Host_Model.getModel().currentPlayerWords = newWord;
         return sum;
     }
 
@@ -476,7 +520,7 @@ public class Board {
      * @param w the Word object representing the word to be placed on the board
      */
 
-    private void placeWord(Word w) {
+    public void placeWord(Word w) {
         for (int i = 0; i < w.getTiles().length; i++) {
             if (w.isVertical()) {
                 if (w.tiles[i] == null) continue;
@@ -486,6 +530,15 @@ public class Board {
                 mainBoard[w.getRow()][w.col + i] = w.tiles[i];
             }
         }
+    }
+
+    @Override
+    public Board create() {
+        return getBoard();
+    }
+
+    private static class BoardHolder {
+        private static final Board boardInstance = new Board();
     }
 }
 
