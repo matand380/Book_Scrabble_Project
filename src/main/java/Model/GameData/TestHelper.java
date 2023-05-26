@@ -1,14 +1,11 @@
 package Model.GameData;
 
-import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
 import Model.GameData.Tile.Bag;
 
-import java.util.Scanner;
-
 import static java.lang.Thread.sleep;
 
-public class matanTests {
+public class TestHelper {
 
 
     public static void testBag() {

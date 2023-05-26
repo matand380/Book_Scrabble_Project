@@ -382,7 +382,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         notifyObservers("tileBoard updated");
         //for testing
         System.out.println("host tileBoard");
-        System.out.println(matanTests.formatTiles(BS_Host_Model.getModel().getBoardState()));
+        System.out.println(TestHelper.formatTiles(BS_Host_Model.getModel().getBoardState()));
     }
 
     /**
