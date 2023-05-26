@@ -53,7 +53,7 @@ public class TestHostModel {
     @Before
     public void setup() {
         hostModelMock = BS_Host_Model.getModel();
-        new Thread(()->hostModelMock.getCommunicationServer().start());
+        new Thread(()->serverMock.start()).start();
     }
 
     @Test
@@ -115,7 +115,7 @@ public class TestHostModel {
     @Test
     public void testOpenSocket(){
         String ip="127.0.0.1";
-        int port=23456;
+        int port=4444;
         Method openSocket;
         try {
             openSocket = BS_Host_Model.getModel().getClass().getDeclaredMethod("openSocket", String.class, int.class);
