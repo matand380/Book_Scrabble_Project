@@ -6,9 +6,6 @@
 
 <p align="center" style="font-size: 18px; color: #808080; font-family: 'Arial', sans-serif;">Welcome to the <strong>Scrabble Game</strong>! Challenge your friends in this digital version of the classic board game. Test your word-building skills, strategic thinking, and aim for the highest score!</p>
 
----
-
-
 ## Features
 
 ✨ **Multiplayer Mode:** Play against friends locally or online  
@@ -18,11 +15,13 @@
 💥 **Bonus Squares:** Strategically use special bonus squares to increase your score  
 ⏱️ **Turn-based Gameplay:** Experience the classic turn-based gameplay of the original board game
 
+
 ## Collaborators
 * [Dan Davidovich](https://github.com/Davidovichdan)
 * [Eviatar Didon](https://github.com/Eviatar109)
 * [Matan Drabkin](https://github.com/matand380)
 * [Tal Avraham](https://github.com/Tavraham)
+
 
 ## How to Play ?
 
@@ -38,11 +37,11 @@
  <img src="src/main/resources/images/d04bd8bd-1354-4c3c-b3fd-ac57c6fdc61c_f1600x768.jpeg" alt="Scrabble Logo" width="400" height="100">
 
 ## Video links
+
 * Demo video - will be added
 * Project presentation video - will be added
 
 [Back to Top](#scrabble-game)
-
 
 ## Project Scope
 * This is our final project in Advanced Software Development course at the College of Management, conducted by Dr. Eliahu Khalastchi.
@@ -62,9 +61,11 @@ The potential risks associated with this project are:
 * Team conflicts - Planning and executing a real programming project for the first time.
 
 The following mitigation strategies will be implemented:
+
 * Regular scope reviews to ensure project stays on track.
 * Continuous testing and debugging to address technical difficulties.
 * Open communication and collaboration to prevent and resolve team conflicts.
+
 
 [Back to Top](#scrabble-game)
 
@@ -73,6 +74,7 @@ The following mitigation strategies will be implemented:
 <img width="1209" alt="צילום מסך 2023-04-09 ב-23 27 49" src="https://user-images.githubusercontent.com/73496652/230795013-478c38ad-7f3a-4a9f-a9c1-1b6f1614f604.png">
 
 ## Teams and work division
+
 ## <img width="1181" alt="Book Scrabble Project" src="https://github.com/matand380/Book_Scrabble_Project/assets/73496652/11591d3a-af3a-4918-be06-7bd709181704">
 
 [Back to Top](#scrabble-game)
