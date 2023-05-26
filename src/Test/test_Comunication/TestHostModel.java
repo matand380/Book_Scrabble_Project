@@ -1,26 +1,18 @@
 package test_Comunication;
 
-import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
-import Model.GameData.Board;
 import Model.GameData.Player;
 import Model.GameData.Tile;
-import Model.GameData.Word;
-import Model.GameLogic.ClientCommunicationHandler;
 import Model.GameLogic.HostCommunicationHandler;
 import Model.GameLogic.MyServer;
 import com.google.gson.Gson;
-import static org.junit.Assert.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.lang.reflect.Method;
-import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import static org.junit.Assert.*;
 
 
 
@@ -285,7 +277,6 @@ public class TestHostModel {
         Method updateBoard;
         Gson Gson = new Gson();
         // TODO: 25/05/2023 add word to Board
-//        Board.getBoard().placeWord(mk'mkm;lkm);
         String message = Gson.toJson(hostModelMock.getBoardState());
 
         try {

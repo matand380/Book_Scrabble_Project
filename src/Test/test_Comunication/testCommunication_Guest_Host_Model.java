@@ -2,13 +2,10 @@ package test_Comunication;
 
 import Model.BS_Guest_Model;
 import Model.BS_Host_Model;
-
 import Model.GameData.Board;
 import Model.GameData.Player;
 import Model.GameData.Tile;
 import Model.GameData.Word;
-
-
 import java.util.Scanner;
 
 ////TODOS
