@@ -47,10 +47,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
         //for testing
-        System.out.println("Pick host port number : ");
-        Scanner scanner = new Scanner(System.in);
-        int port = scanner.nextInt();
-        communicationServer = new MyServer(port, communicationHandler);
+//        System.out.println("Pick host port number : ");
+//        Scanner scanner = new Scanner(System.in);
+//        int port = scanner.nextInt();
+        communicationServer = new MyServer(23346, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
 
     }

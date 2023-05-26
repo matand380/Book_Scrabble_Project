@@ -51,7 +51,15 @@ public class TestHostModel {
     @Before
     public void setup() {
         hostModelMock = BS_Host_Model.getModel();
-        serverMock.start();
+
+    }
+    @Test
+    public void testStartNewGame() {
+        hostModelMock.setPlayerProperties("test");
+        hostModelMock.startNewGame();
+
+        assertEquals(0, hostModelMock.getPlayer().get_index());
+        assertEquals(7, hostModelMock.getPlayer().get_hand().size());
     }
 
     @Test
@@ -92,7 +100,7 @@ public class TestHostModel {
 
     @Test
     public void testGetCommunicationServer() {
-        assertNotNull(hostModelMock.getCommunicationServer());
+        assertTrue(hostModelMock.getCommunicationServer().isRunning());
     }
 
     @Test
@@ -113,6 +121,7 @@ public class TestHostModel {
 
     @Test
     public void testOpenSocket() throws IOException {
+        serverMock.start();
         String ip = "127.0.0.1";
         int port = 4444;
         Method openSocket;
@@ -128,8 +137,6 @@ public class TestHostModel {
             throw new RuntimeException(e);
         }
         assertNotNull(hostModelMock.getGameSocket());
-        hostModelMock.getGameSocket().close();
-
 
     }
 
@@ -205,14 +212,6 @@ public class TestHostModel {
         assertEquals(1, hostModelMock.getCurrentPlayerIndex());
     }
 
-    @Test
-    public void testStartNewGame() {
-        hostModelMock.setPlayerProperties("test");
-        hostModelMock.startNewGame();
-
-        assertEquals(0, hostModelMock.getPlayer().get_index());
-        assertEquals(7, hostModelMock.getPlayer().get_hand().size());
-    }
 
     @Test
     public void testPassTurn() {
@@ -223,7 +222,7 @@ public class TestHostModel {
 
     @Test
     public void testPassTurnTryPlace() {
-        hostModelMock.startNewGame();
+       // hostModelMock.startNewGame();
         hostModelMock.setPlayerProperties("test");
         hostModelMock.addPlayer(new Player());
         int playerIndex = hostModelMock.getCurrentPlayerIndex();
