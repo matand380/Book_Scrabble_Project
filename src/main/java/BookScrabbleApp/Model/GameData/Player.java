@@ -1,5 +1,7 @@
 package BookScrabbleApp.Model.GameData;
 
+import BookScrabbleApp.Model.BS_Host_Model;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ public class Player implements Serializable, ObjectFactory {
     private int _score;
     private List<Tile> _hand;
     private String tileLottery;
+
 
     /**
      * The Player function is a constructor for the Player class.
@@ -162,11 +165,13 @@ public class Player implements Serializable, ObjectFactory {
      * @param _score Set the score of the player
      */
     public void set_score(int _score) {
-        if (_score >= 0)
+        if (_score >= 0) {
             this._score = _score;
-        else {
+        } else {
             this._score = 0;
         }
+        BS_Host_Model.getModel().getScores().remove(this);
+        BS_Host_Model.getModel().getScores().add(this);
     }
 
     /**

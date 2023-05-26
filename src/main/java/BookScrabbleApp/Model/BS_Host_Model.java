@@ -36,6 +36,14 @@ public class BS_Host_Model extends Observable implements BS_Model {
     String challengeInfo;
     private List<Player> players;
 
+    //compare players by score
+
+    public Queue<Player> getScores() {
+        return scores;
+    }
+
+    Queue<Player> scores = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
+
     /**
      * The BS_Host_Model function is a singleton class that creates the host model for the game.
      */
@@ -187,6 +195,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public void addPlayer(Player p) {
         this.players.add(p);
+        this.scores.add(p);
     }
 
     /**
@@ -573,22 +582,23 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public String getMaxScore() {
         // TODO: 24/05/2023 need more work
-
-        int maxScore = Collections.max(players.stream().map(Player::get_score).collect(Collectors.toList()));
-
-        Deque<Player> maxScorePlayers = new ArrayDeque<>();
-        for (Player player : players) {
-            if (player.get_score() == maxScore) {
-                maxScorePlayers.add(player);
-            }
-        }
-
-        if (maxScorePlayers.size() == 1) {
-            Player winner = maxScorePlayers.getFirst();
-            return winner.get_index() + ":" + winner.get_name();
-        } else {
-            return getMaxScoreWithTie(maxScorePlayers);
-        }
+        Player winner = scores.poll();
+        return winner.get_index() + ":" + winner.get_name();
+//        int maxScore = Collections.max(players.stream().map(Player::get_score).collect(Collectors.toList()));
+//
+//        Deque<Player> maxScorePlayers = new ArrayDeque<>();
+//        for (Player player : players) {
+//            if (player.get_score() == maxScore) {
+//                maxScorePlayers.add(player);
+//            }
+//        }
+//
+//        if (maxScorePlayers.size() == 1) {
+//            Player winner = maxScorePlayers.getFirst();
+//            return winner.get_index() + ":" + winner.get_name();
+//        } else {
+//            return getMaxScoreWithTie(maxScorePlayers);
+//        }
     }
 
     private String getMaxScoreWithTie(Deque<Player> maxScorePlayers) {
