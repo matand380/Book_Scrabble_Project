@@ -9,11 +9,13 @@ import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.*;
 
 
 public class TestHostModel {
@@ -25,6 +27,7 @@ public class TestHostModel {
         public String messagesFromGameServer() {
             return "String passed";
         }
+
         @Override
         public void messagesToGameServer(String message) {
             System.out.println(message);
@@ -32,11 +35,12 @@ public class TestHostModel {
 
 
     };
-    MyServer serverMock = new MyServer(4444, communicationHandlerMock){
+    MyServer serverMock = new MyServer(4444, communicationHandlerMock) {
         @Override
         public void updateAll(String message) {
             System.out.println(message);
         }
+
         @Override
         public void updateSpecificPlayer(String id, Object obj) {
             System.out.println(obj);
@@ -63,7 +67,7 @@ public class TestHostModel {
     }
 
     @Test
-    public void testSetGetChallengeInfo(){
+    public void testSetGetChallengeInfo() {
         String challengeInfo = "0:word";
         Method setChallengeInfo;
         Method getChallengeInfo;
@@ -71,13 +75,14 @@ public class TestHostModel {
             setChallengeInfo = BS_Host_Model.getModel().getClass().getDeclaredMethod("setChallengeInfo", String.class);
             getChallengeInfo = BS_Host_Model.getModel().getClass().getDeclaredMethod("getChallengeInfo");
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);}
+            throw new RuntimeException(e);
+        }
 
         setChallengeInfo.setAccessible(true);
         getChallengeInfo.setAccessible(true);
 
-        try{
-            setChallengeInfo.invoke(hostModelMock,challengeInfo);
+        try {
+            setChallengeInfo.invoke(hostModelMock, challengeInfo);
             assertEquals(challengeInfo, getChallengeInfo.invoke(hostModelMock));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -107,9 +112,9 @@ public class TestHostModel {
     }
 
     @Test
-    public void testOpenSocket(){
-        String ip="127.0.0.1";
-        int port=4444;
+    public void testOpenSocket() throws IOException {
+        String ip = "127.0.0.1";
+        int port = 4444;
         Method openSocket;
         try {
             openSocket = BS_Host_Model.getModel().getClass().getDeclaredMethod("openSocket", String.class, int.class);
@@ -122,6 +127,9 @@ public class TestHostModel {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        assertNotNull(hostModelMock.getGameSocket());
+        hostModelMock.getGameSocket().close();
+
 
     }
 
@@ -146,7 +154,7 @@ public class TestHostModel {
     }
 
     @Test
-    public void testAddPlayer(){
+    public void testAddPlayer() {
         hostModelMock.getPlayers().clear();
 
         Player player1 = new Player();
@@ -162,7 +170,7 @@ public class TestHostModel {
     }
 
     @Test
-    public void testGetPlayers(){
+    public void testGetPlayers() {
         hostModelMock.getPlayers().clear();
         hostModelMock.setPlayerProperties("test");
         assertEquals(1, hostModelMock.getPlayers().size());
@@ -176,13 +184,12 @@ public class TestHostModel {
         hostModelMock.addPlayer(player3);
         hostModelMock.addPlayer(player4);
         assertEquals(5, hostModelMock.getPlayers().size());
-        //return a list of players
-        //check if the return is a list
+
         assertTrue(hostModelMock.getPlayers() instanceof List<Player>);
     }
 
     @Test
-    public void testSetNextPlayerIndex(){
+    public void testSetNextPlayerIndex() {
         hostModelMock.setNextPlayerIndex(0);
         assertEquals(1, hostModelMock.getCurrentPlayerIndex());
         hostModelMock.setNextPlayerIndex(1);
@@ -194,11 +201,12 @@ public class TestHostModel {
     }
 
     @Test
-    public void getCurrentPlayerIndex(){
+    public void getCurrentPlayerIndex() {
         assertEquals(1, hostModelMock.getCurrentPlayerIndex());
     }
+
     @Test
-    public void testStartNewGame(){
+    public void testStartNewGame() {
         hostModelMock.setPlayerProperties("test");
         hostModelMock.startNewGame();
 
@@ -214,61 +222,27 @@ public class TestHostModel {
     }
 
     @Test
-    public void testPassTurnTryPlace(){
+    public void testPassTurnTryPlace() {
         hostModelMock.startNewGame();
         hostModelMock.setPlayerProperties("test");
         hostModelMock.addPlayer(new Player());
         int playerIndex = hostModelMock.getCurrentPlayerIndex();
         hostModelMock.passTurnTryPlace(playerIndex);
-        assertEquals("passTurn:" + (playerIndex+1), "passTurn:" + hostModelMock.getCurrentPlayerIndex());
+        assertEquals("passTurn:" + (playerIndex + 1), "passTurn:" + hostModelMock.getCurrentPlayerIndex());
         hostModelMock.getPlayers().clear();
     }
 
     @Test
     public void testTryPlaceWord() {
-        /**this method is checked in the test communication**/
-
-//        String message = "tryPlaceWord:" + hostModelMock.getPlayer().get_index() + ":" + "word";
-//        Player player = new Player();
-//        player.set_name("test");
-//        hostModelMock.setPlayerProperties("hostTest");
-//        hostModelMock.addPlayer(player);
-//
-//        Tile[] tiles = new Tile[4];
-//        tiles[0] = new Tile('W', 4);
-//        tiles[1] = new Tile('O', 1);
-//        tiles[2] = new Tile('R', 1);
-//        tiles[3] = new Tile('D', 2);
-//
-//        Word word1 = new Word(tiles, 7, 5, false);
-//        Board.getBoard().tryPlaceWord(word1);
-//
-//        assertEquals(message, hostModelMock.challengeWord("word",Integer.toString(hostModelMock.getCurrentPlayerIndex())));
+        //this method is checked in the test communication
 
 
     }
 
     @Test
     public void testChallengeWord() {
-        /**this method is checked in the test communication**/
+        //this method is checked in the test communication
 
-
-//        String message = "challengeWord:" + hostModelMock.getPlayer().get_index() + ":" + "word";
-//        Player player = new Player();
-//        player.set_name("test");
-//        hostModelMock.setPlayerProperties("hostTest");
-//        hostModelMock.addPlayer(player);
-//
-//        Tile[] tiles = new Tile[4];
-//        tiles[0] = new Tile('W', 4);
-//        tiles[1] = new Tile('O', 1);
-//        tiles[2] = new Tile('R', 1);
-//        tiles[3] = new Tile('D', 2);
-//
-//        Word word1 = new Word(tiles, 7, 5, false);
-//        Board.getBoard().placeWord(word1);
-//
-//        communicationHandlerMock.messagesToGameServer("C:"+word1);
 
     }
 
@@ -287,7 +261,7 @@ public class TestHostModel {
         updateBoard.setAccessible(true);
         try {
             Tile[][] board = Gson.fromJson(message, Tile[][].class);
-            assertArrayEquals(hostModelMock.getBoardState(),board);
+            assertArrayEquals(hostModelMock.getBoardState(), board);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -295,7 +269,7 @@ public class TestHostModel {
     }
 
     @Test
-    public void testIsFull(){
+    public void testIsFull() {
         hostModelMock.getPlayers().clear();
         assertFalse(hostModelMock.isFull());
         Player player1 = new Player();
