@@ -10,6 +10,7 @@ import Model.GameData.Word;
 
 
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 ////TODOS
 //todo:if address is already in use give the option to change the port
@@ -21,8 +22,8 @@ import java.util.Scanner;
 
 
 public class testCommunication_Guest_Host_Model {
-    static int localPortForClientToConnect = 23446;
-    static int ServerPortToConnect = 12346;
+    static int localPortForClientToConnect = 23346;
+    static int ServerPortToConnect = 20500;
 
     public static void main(String[] args) {
         System.out.println("Enter the local port:" + localPortForClientToConnect);
@@ -224,11 +225,36 @@ public class testCommunication_Guest_Host_Model {
     public static Tile[] get(String s) {
         BS_Host_Model host = BS_Host_Model.getModel();
         Tile[] ts = new Tile[s.length()];
-        int i = 0;
-        for (char c : s.toCharArray()) {
-            ts[i] = Tile.Bag.getBag().getTile(c);
-            //Tile.Bag.getBag()._quantitiesCounter[c-'A']++;
-            i++;
+        for (int i=0;i<s.length();i++) {
+            char c = s.charAt(i);
+            switch (c) {
+                case 'A' -> ts[i] = new Tile('A', 1);
+                case 'B' -> ts[i] = new Tile('B', 3);
+                case 'C' -> ts[i] = new Tile('C', 3);
+                case 'D' -> ts[i] = new Tile('D', 2);
+                case 'E' -> ts[i] = new Tile('E', 1);
+                case 'F' -> ts[i] = new Tile('F', 4);
+                case 'G' -> ts[i] = new Tile('G', 2);
+                case 'H' -> ts[i] = new Tile('H', 4);
+                case 'I' -> ts[i] = new Tile('I', 1);
+                case 'J' -> ts[i] = new Tile('J', 8);
+                case 'K' -> ts[i] = new Tile('K', 5);
+                case 'L' -> ts[i] = new Tile('L', 1);
+                case 'M' -> ts[i] = new Tile('M', 3);
+                case 'N' -> ts[i] = new Tile('N', 1);
+                case 'O' -> ts[i] = new Tile('O', 1);
+                case 'P' -> ts[i] = new Tile('P', 3);
+                case 'Q' -> ts[i] = new Tile('Q', 10);
+                case 'R' -> ts[i] = new Tile('R', 1);
+                case 'S' -> ts[i] = new Tile('S', 1);
+                case 'T' -> ts[i] = new Tile('T', 1);
+                case 'U' -> ts[i] = new Tile('U', 1);
+                case 'V' -> ts[i] = new Tile('V', 4);
+                case 'W' -> ts[i] = new Tile('W', 4);
+                case 'X' -> ts[i] = new Tile('X', 8);
+                case 'Y' -> ts[i] = new Tile('Y', 4);
+                case 'Z' -> ts[i] = new Tile('Z', 10);
+            }
         }
         return ts;
     }
