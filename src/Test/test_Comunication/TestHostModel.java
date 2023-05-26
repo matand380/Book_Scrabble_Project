@@ -10,6 +10,9 @@ import Model.GameLogic.ClientCommunicationHandler;
 import Model.GameLogic.HostCommunicationHandler;
 import Model.GameLogic.MyServer;
 import com.google.gson.Gson;
+import static org.junit.Assert.*;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,8 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.*;
+
 
 public class TestHostModel {
 
@@ -231,13 +233,58 @@ public class TestHostModel {
     }
 
     @Test
-    public void testTryPlaceWord() {}
+    public void testTryPlaceWord() {
+        /**this method is checked in the test communication**/
+
+//        String message = "tryPlaceWord:" + hostModelMock.getPlayer().get_index() + ":" + "word";
+//        Player player = new Player();
+//        player.set_name("test");
+//        hostModelMock.setPlayerProperties("hostTest");
+//        hostModelMock.addPlayer(player);
+//
+//        Tile[] tiles = new Tile[4];
+//        tiles[0] = new Tile('W', 4);
+//        tiles[1] = new Tile('O', 1);
+//        tiles[2] = new Tile('R', 1);
+//        tiles[3] = new Tile('D', 2);
+//
+//        Word word1 = new Word(tiles, 7, 5, false);
+//        Board.getBoard().tryPlaceWord(word1);
+//
+//        assertEquals(message, hostModelMock.challengeWord("word",Integer.toString(hostModelMock.getCurrentPlayerIndex())));
+
+
+    }
+
+    @Test
+    public void testChallengeWord() {
+        /**this method is checked in the test communication**/
+
+
+//        String message = "challengeWord:" + hostModelMock.getPlayer().get_index() + ":" + "word";
+//        Player player = new Player();
+//        player.set_name("test");
+//        hostModelMock.setPlayerProperties("hostTest");
+//        hostModelMock.addPlayer(player);
+//
+//        Tile[] tiles = new Tile[4];
+//        tiles[0] = new Tile('W', 4);
+//        tiles[1] = new Tile('O', 1);
+//        tiles[2] = new Tile('R', 1);
+//        tiles[3] = new Tile('D', 2);
+//
+//        Word word1 = new Word(tiles, 7, 5, false);
+//        Board.getBoard().placeWord(word1);
+//
+//        communicationHandlerMock.messagesToGameServer("C:"+word1);
+
+    }
 
     @Test
     public void testUpdateBoard() {
         Method updateBoard;
         Gson Gson = new Gson();
-        // TODO: 25/05/2023 addword to Board
+        // TODO: 25/05/2023 add word to Board
 //        Board.getBoard().placeWord(mk'mkm;lkm);
         String message = Gson.toJson(hostModelMock.getBoardState());
 
@@ -266,7 +313,7 @@ public class TestHostModel {
         hostModelMock.addPlayer(player1);
         hostModelMock.addPlayer(player2);
         hostModelMock.addPlayer(player3);
-        assertEquals(3, hostModelMock.getPlayers().size());
+        Assert.assertEquals(3, hostModelMock.getPlayers().size());
     }
 
     @Test
@@ -315,27 +362,5 @@ public class TestHostModel {
         assertEquals("test", hostModelMock.getPlayer().get_name());
     }
 
-//    @Test
-//    public void testChallengeWord() {
-//        String word = "word";
-//        String message = "challengeWord:" + hostModelMock.getPlayer().get_index() + ":" + word;
-//        Player player = new Player();
-//        player.set_name("test");
-//        hostModelMock.setPlayerProperties("hostTest");
-//        hostModelMock.addPlayer(player);
-//
-//        Tile[] tiles = new Tile[4];
-//        tiles[0] = new Tile('W', 4);
-//        tiles[1] = new Tile('O', 1);
-//        tiles[2] = new Tile('R', 1);
-//        tiles[3] = new Tile('D', 2);
-//
-//        Word word1 = new Word(tiles, 0, 0, false);
-//        Board.getBoard().placeWord(word1);
-//
-//        assertFalse(hostModelMock.challengeWord(word,Integer.toString(hostModelMock.getCurrentPlayerIndex())));
-//
-//        // TODO: Implement test for challengeWord method
-//        //print the board
-//    }
+
 }
