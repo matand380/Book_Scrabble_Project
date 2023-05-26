@@ -1,10 +1,10 @@
 package test_Comunication;
 
-import Model.BS_Host_Model;
-import Model.GameData.Player;
-import Model.GameData.Tile;
-import Model.GameLogic.HostCommunicationHandler;
-import Model.GameLogic.MyServer;
+import BookScrabbleApp.Model.BS_Host_Model;
+import BookScrabbleApp.Model.GameData.Player;
+import BookScrabbleApp.Model.GameData.Tile;
+import BookScrabbleApp.Model.GameLogic.HostCommunicationHandler;
+import BookScrabbleApp.Model.GameLogic.MyServer;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Before;

@@ -11,7 +11,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="stage" prefHeight="413.0" prefWidth="453.0" style="-fx-background-image: url('../images/Logo.JPG');" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.HelloController">
+<AnchorPane fx:id="stage" prefHeight="413.0" prefWidth="453.0" style="-fx-background-image: url('../images/Logo.JPG');" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.HelloController">
    <children>
    
           <Label fx:id="welcomeText" layoutX="110.0" layoutY="131.0" onDragEntered="#onHelloButtonClick" prefHeight="49.0" prefWidth="214.0" textFill="#fcfafa" textOverrun="CENTER_ELLIPSIS" AnchorPane.bottomAnchor="233.0" AnchorPane.leftAnchor="110.0" AnchorPane.rightAnchor="129.0" AnchorPane.topAnchor="131.0">

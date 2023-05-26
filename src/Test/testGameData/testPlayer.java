@@ -1,6 +1,7 @@
 package testGameData;
 
-import Model.GameData.*;
+import BookScrabbleApp.Model.GameData.Player;
+import BookScrabbleApp.Model.GameData.Tile;
 
 import java.util.List;
 

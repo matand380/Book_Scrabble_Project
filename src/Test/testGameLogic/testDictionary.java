@@ -1,6 +1,6 @@
 package testGameLogic;
 
-import Model.GameLogic.Dictionary;
+import GameServer.Dictionary;
 
 public class testDictionary {
     public static void main(String[] args) {

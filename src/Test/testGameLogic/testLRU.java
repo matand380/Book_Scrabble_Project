@@ -1,7 +1,8 @@
 package testGameLogic;
 
-import Model.GameLogic.CacheReplacementPolicy;
-import Model.GameLogic.LRU;
+import GameServer.CacheReplacementPolicy;
+import GameServer.LRU;
+
 
 public class testLRU {
     public static void main(String[] args) {

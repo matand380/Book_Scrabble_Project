@@ -1,6 +1,11 @@
 package testGameLogic;
 
-import Model.GameLogic.*;
+import GameServer.BookScrabbleHandler;
+import BookScrabbleApp.Model.GameLogic.ClientHandler;
+import GameServer.DictionaryManager;
+import BookScrabbleApp.Model.GameLogic.*;
+import BookScrabbleApp.Model.GameData.*;
+import GameServer.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -89,7 +94,7 @@ public class testServer {
         String[] t2 = writeFile("t2.txt");
         String[] t3 = writeFile("t3.txt");
 
-        DictionaryManager dm = DictionaryManager.getDictionaryManager();
+        DictionaryManager dm = DictionaryManager.get();
 
         if (!dm.query("t1.txt", "t2.txt", t2[4])) System.out.println("1 problem for Dictionary Manager query ");
         if (!dm.query("t1.txt", "t2.txt", t1[9])) System.out.println("2 problem for Dictionary Manager query");
@@ -128,7 +133,7 @@ public class testServer {
 
         Random r = new Random();
         int port = 6000 + r.nextInt(1000);
-        MyServer s = new MyServer(port, new BookScrabbleHandler());
+        GameServer s = new GameServer(port, new BookScrabbleHandler());
         new Thread(() -> runClient(port, "Q,s1.txt,s2.txt," + s1[1], true));
         new Thread(() -> runClient(port, "Q,s1.txt,s2.txt," + s2[4], true));
         new Thread(() -> runClient(port, "Q,s1.txt,s2.txt,2" + s1[1], false));

@@ -1,10 +1,10 @@
 package testGameData;//test the board class located in the model package
 
-import Model.GameData.Board;
-import Model.GameData.Tile;
-import Model.GameData.Word;
+import BookScrabbleApp.Model.GameData.Board;
+import BookScrabbleApp.Model.GameData.Tile;
+import BookScrabbleApp.Model.GameData.Word;
 
-import static Model.GameData.TestHelper.get;
+import static BookScrabbleApp.Model.GameData.TestHelper.get;
 
 public class testBoard {
     /**

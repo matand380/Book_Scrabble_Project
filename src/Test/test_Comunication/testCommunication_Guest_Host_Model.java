@@ -1,20 +1,12 @@
 package test_Comunication;
 
-import Model.BS_Guest_Model;
-import Model.BS_Host_Model;
-import Model.GameData.Board;
-import Model.GameData.Player;
-import Model.GameData.Tile;
-import Model.GameData.Word;
+import BookScrabbleApp.Model.BS_Guest_Model;
+import BookScrabbleApp.Model.BS_Host_Model;
+import BookScrabbleApp.Model.GameData.Board;
+import BookScrabbleApp.Model.GameData.Player;
+import BookScrabbleApp.Model.GameData.Tile;
+import BookScrabbleApp.Model.GameData.Word;
 import java.util.Scanner;
-
-////TODOS
-//todo:if address is already in use give the option to change the port
-//TODO: update score after place word
-//TODO: limit the number of clients
-//todo: no handler for try place word at ClientCommunicationHandler
-//todo: host.tryPlaceWord(w1); not comparing between the hand and the rack
-//todo: words arnt at the correct position when placing a word
 
 
 public class testCommunication_Guest_Host_Model {

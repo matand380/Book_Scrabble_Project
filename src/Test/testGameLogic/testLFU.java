@@ -1,7 +1,8 @@
 package testGameLogic;
 
-import Model.GameLogic.CacheReplacementPolicy;
-import Model.GameLogic.LFU;
+import GameServer.CacheReplacementPolicy;
+import GameServer.LFU;
+
 
 public class testLFU {
     public static void main(String[] args) {

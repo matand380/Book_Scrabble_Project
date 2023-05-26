@@ -1,6 +1,6 @@
 package testGameData;
 
-import Model.GameData.*;
+import BookScrabbleApp.Model.GameData.Tile;
 
 public class testBag {
     public static void main(String[] args) {

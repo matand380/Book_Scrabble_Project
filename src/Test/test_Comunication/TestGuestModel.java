@@ -1,16 +1,13 @@
 package test_Comunication;
 
-import Model.BS_Guest_Model;
-import Model.GameData.Player;
-import Model.GameData.Tile;
-import Model.GameLogic.ClientCommunicationHandler;
+import BookScrabbleApp.Model.BS_Guest_Model;
+import BookScrabbleApp.Model.GameData.Player;
+import BookScrabbleApp.Model.GameData.Tile;
+import BookScrabbleApp.Model.GameLogic.ClientCommunicationHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.*;
 
 import static org.junit.Assert.*;

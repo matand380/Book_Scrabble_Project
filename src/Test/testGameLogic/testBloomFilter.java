@@ -1,6 +1,6 @@
 package testGameLogic;
 
-import Model.GameLogic.BloomFilter;
+import GameServer.BloomFilter;
 
 public class testBloomFilter {
     public static void main(String[] args) {

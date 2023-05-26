@@ -1,6 +1,6 @@
 package testGameLogic;
 
-import Model.GameLogic.IOSearcher;
+import GameServer.IOSearcher;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
