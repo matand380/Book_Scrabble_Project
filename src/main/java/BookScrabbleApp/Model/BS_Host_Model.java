@@ -581,24 +581,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
 
     public String getMaxScore() {
-        // TODO: 24/05/2023 need more work
         Player winner = scores.poll();
         return winner.get_index() + ":" + winner.get_name();
-//        int maxScore = Collections.max(players.stream().map(Player::get_score).collect(Collectors.toList()));
-//
-//        Deque<Player> maxScorePlayers = new ArrayDeque<>();
-//        for (Player player : players) {
-//            if (player.get_score() == maxScore) {
-//                maxScorePlayers.add(player);
-//            }
-//        }
-//
-//        if (maxScorePlayers.size() == 1) {
-//            Player winner = maxScorePlayers.getFirst();
-//            return winner.get_index() + ":" + winner.get_name();
-//        } else {
-//            return getMaxScoreWithTie(maxScorePlayers);
-//        }
+
     }
 
     private String getMaxScoreWithTie(Deque<Player> maxScorePlayers) {
