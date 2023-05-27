@@ -3,7 +3,6 @@ package BookScrabbleApp.Model.GameData;
 import BookScrabbleApp.Model.BS_Host_Model;
 import BookScrabbleApp.Model.GameData.Tile.Bag;
 
-import static java.lang.Thread.sleep;
 
 public class TestHelper {
 

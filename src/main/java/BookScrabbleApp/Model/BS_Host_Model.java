@@ -34,15 +34,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Map<String, String> playerToSocketID = new HashMap<>();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     String challengeInfo;
-    private List<Player> players;
-
-    //compare players by score
-
-    public Queue<Player> getScores() {
-        return scores;
-    }
-
     Queue<Player> scores = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
+
+    private List<Player> players;
 
     /**
      * The BS_Host_Model function is a singleton class that creates the host model for the game.
@@ -73,6 +67,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return HostModelHelper.model_instance;
     }
 
+    public Queue<Player> getScores() {
+        return scores;
+    }
+
     /**
      * The getPlayer function returns the player object.
      * <p>
@@ -90,7 +88,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @return A string containing the challenge info
      * @see BS_Host_Model#setChallengeInfo(String)
      */
-    private String getChallengeInfo() {
+    String getChallengeInfo() {
         return challengeInfo;
     }
 
@@ -100,7 +98,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      *
      * @param challengeInfo Set the challenge info variable
      */
-    private void setChallengeInfo(String challengeInfo) {
+    void setChallengeInfo(String challengeInfo) {
         this.challengeInfo = challengeInfo;
     }
 
@@ -265,14 +263,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
         hasChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());
     }
+
     /**
      * The passTurnTryPlace function is called after a player tries to place a word on the board.
      * It sets the next player index to be the current player index, and then checks if the game is over.
      * If it isn't, it updates all clients with a passTurn message containing the currentPlayerIndex.
+     *
      * @param playerIndex Determine which player is passing the turn
      */
     public void passTurnTryPlace(int playerIndex) {
-        setNextPlayerIndex(currentPlayerIndex);
+        setNextPlayerIndex(playerIndex);
         BS_Host_Model.getModel().board.setPassCounter(0);
         if (isGameOver()) {
             gameIsOver = true;
@@ -411,7 +411,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * It shuts down the executor, closes the communication server, and notifies all clients that they can exit their games.
      * <p>
      */
-    private void endGame() {
+     void endGame() {
         executor.shutdown();
         getCommunicationServer().close();
         notifyAll(); // notify the main that the game is over
@@ -428,11 +428,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * If it is valid, then the challenger loses 10 points and if invalid, then they gain 10 points.
      * <p>
      *
-     * @param  word Send the word to be challenged to the game server
-     * @param  index Identify the player who is challenging
-     *
+     * @param word  Send the word to be challenged to the game server
+     * @param index Identify the player who is challenging
      * @return A boolean value
-     *
      */
     public boolean challengeWord(String word, String index) {
 
@@ -586,15 +584,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     }
 
-    private String getMaxScoreWithTie(Deque<Player> maxScorePlayers) {
-
-        if (maxScorePlayers.getFirst() == players.get(currentPlayerIndex))
-            return maxScorePlayers.getLast().get_index() + ":" + maxScorePlayers.getLast().get_name();
-        else
-            return maxScorePlayers.getFirst().get_index() + ":" + maxScorePlayers.getFirst().get_name();
-
-    }
-
 
     /**
      * The getCommunicationHandler function returns the communicationHandler object.
@@ -608,7 +597,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     /**
      * The getCurrentPlayerScore function returns the current player's score.
-     *<p>
+     * <p>
+     *
      * @return The score of the current player
      */
     @Override
