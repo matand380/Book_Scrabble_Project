@@ -283,7 +283,7 @@ public class TestHostModel {
     @Test
     public void testGetMaxScore() {
         hostModelMock.getPlayers().clear();
-        hostModelMock.getScores().clear();
+        hostModelMock.getScoresManager().clear();
         Player player1 = new Player();
         player1.set_index(0);
         Player player2 = new Player();

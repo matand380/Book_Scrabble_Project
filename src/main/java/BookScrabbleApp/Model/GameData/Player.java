@@ -170,8 +170,8 @@ public class Player implements Serializable, ObjectFactory {
         } else {
             this._score = 0;
         }
-        BS_Host_Model.getModel().getScores().remove(this);
-        BS_Host_Model.getModel().getScores().add(this);
+        BS_Host_Model.getModel().getScoresManager().remove(this);
+        BS_Host_Model.getModel().getScoresManager().add(this);
     }
 
     /**

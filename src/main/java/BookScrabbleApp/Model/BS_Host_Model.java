@@ -14,7 +14,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -34,7 +33,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Map<String, String> playerToSocketID = new HashMap<>();
     ExecutorService executor = Executors.newSingleThreadExecutor();
     String challengeInfo;
-    Queue<Player> scores = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
+    Queue<Player> scoresManager = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
 
     private List<Player> players;
 
@@ -67,8 +66,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return HostModelHelper.model_instance;
     }
 
-    public Queue<Player> getScores() {
-        return scores;
+    public Queue<Player> getScoresManager() {
+        return scoresManager;
     }
 
     /**
@@ -193,7 +192,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public void addPlayer(Player p) {
         this.players.add(p);
-        this.scores.add(p);
+        this.scoresManager.add(p);
     }
 
     /**
@@ -454,7 +453,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         if (splitResponse[0].equals("C")) {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
-                // FIXME: 18/05/2023 wrong update of scores
                 updateScores();
                 return true;
             } else {
@@ -558,7 +556,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             isGameOver = true;
         if (Tile.Bag.getBag().size() == 0)
             for (Player p : players)
-                if (p.get_hand().size() == 0) {
+                if (p.get_hand().isEmpty()) {
                     isGameOver = true;
                     break;
                 }
@@ -579,7 +577,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      */
 
     public String getMaxScore() {
-        Player winner = scores.poll();
+        Player winner = scoresManager.poll();
         return winner.get_index() + ":" + winner.get_name();
 
     }
@@ -652,12 +650,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param challengeInfo Set the challengeinfo variable
      */
     public void requestChallengeActivation(String challengeInfo) {
-        // Set the challengeInfo challengerIndex:word
-        this.setChallengeInfo(challengeInfo);
         String challengerIndex = this.getChallengeInfo().split(":")[0];
-        String forChallenge = this.challengeInfo.split(":")[1];
         // Set the challengeRequested flag to indicate a challenge is requested
-        // TODO: 18/05/2023 if(challengeActivated.get()) send message back to client that challenge is already activated
         if (challengeActivated.get()) {
             if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
                 communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
@@ -667,6 +661,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
             }
         } else {
             challengeActivated.set(true);
+            this.setChallengeInfo(challengeInfo);
+
         }
     }
 

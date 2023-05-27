@@ -4,7 +4,6 @@ import java.net.Socket;
 import java.util.*;
 
 import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameData.*;
 import BookScrabbleApp.Model.GameLogic.MyServer;
 
 public class BookScrabbleHostFacade extends Observable implements Observer {
@@ -50,7 +49,7 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
     }
 
     public Queue<Player> getScores() {
-        return hostModel.getScores();
+        return hostModel.getScoresManager();
     }
 
     public Map<String, String> getPlayerToSocketID() {
@@ -111,7 +110,7 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        // TODO: 27/05/2023 everything will be passed to the viewModel
+        // everything will be passed to the viewModel
         setChanged();
         notifyObservers(arg);
     }
