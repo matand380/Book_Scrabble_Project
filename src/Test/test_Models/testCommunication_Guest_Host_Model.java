@@ -1,4 +1,4 @@
-package test_Comunication;
+package test_Models;
 
 import BookScrabbleApp.Model.BS_Guest_Model;
 import BookScrabbleApp.Model.BS_Host_Model;
