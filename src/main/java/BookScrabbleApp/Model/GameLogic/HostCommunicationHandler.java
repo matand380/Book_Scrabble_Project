@@ -33,10 +33,10 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     public HostCommunicationHandler() {
         //put all the methods in the map for being able to invoke them in handleRequests
-        handlers.put("passTurn", (message) -> {
-            BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1]));
-        });
-        handlers.put("addPlayer", (message) -> {
+        handlers.put("passTurn", message ->
+            BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
+
+        handlers.put("addPlayer", message -> {
             Player p = new Player();
             p.set_socketID(message[1]);
             p.set_name(message[2]);
@@ -47,7 +47,7 @@ public class HostCommunicationHandler implements ClientHandler {
             BS_Host_Model.getModel().notifyObservers("playersListSize:" + BS_Host_Model.getModel().getPlayers().size());
         });
 
-        handlers.put("tryPlaceWord", (message) -> {
+        handlers.put("tryPlaceWord", message -> {
             String PlayerIndex = message[1];
             String word = message[2];
             int row = Integer.parseInt(message[3]);
@@ -63,23 +63,21 @@ public class HostCommunicationHandler implements ClientHandler {
             BS_Host_Model.getModel().tryPlaceWord(w);
         });
 
-        handlers.put("challengeWord", (message) -> {
+        handlers.put("challengeWord", message -> {
             String PlayerIndex = message[1];
             String word = message[2];
-            boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch((w1) -> w1.toString().equals(word));
+            boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch(w1 -> w1.toString().equals(word));
             if (exist) {
                 String challengeInfo = PlayerIndex + ":" + word;
                 BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
-//                BS_Host_Model.getModel().challengeWord(word, PlayerIndex);
             }
             else
             {
                 BS_Host_Model.getModel().hostLogger.log(System.Logger.Level.ERROR,"Player " + PlayerIndex + " tried to challenge a word that doesn't exist");
             }
-            // TODO: 06/05/2023 handle challengeWord case
         });
 
-        handlers.put("endGame", (message) -> {
+        handlers.put("endGame", message -> {
             String id = message[1];
             try {
                 BS_Host_Model.getModel().getCommunicationServer().clientsMap.get(id).close();

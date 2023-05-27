@@ -28,7 +28,7 @@ public class ClientCommunicationHandler {
      */
     public ClientCommunicationHandler() {
         //put all the methods in the map for being able to invoke them
-        handlers.put("sortAndSetIndex", (message) -> {
+        handlers.put("sortAndSetIndex", message -> {
             String[] key = message.split(":");
             int size = Integer.parseInt(key[1]);
             BS_Guest_Model.getModel().playersScores = new String[size];
@@ -42,17 +42,17 @@ public class ClientCommunicationHandler {
             }
         });
 
-        handlers.put("wordsForChallenge", (message) -> {
+        handlers.put("wordsForChallenge", message -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
 
-        handlers.put("passTurn", (message) -> {
+        handlers.put("passTurn", message -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
 
-        handlers.put("winner", (message) -> {
+        handlers.put("winner", message -> {
             String[] key = message.split(":");
             int index = Integer.parseInt(key[1]);
             String winnerName = key[2];
@@ -60,14 +60,14 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
         });
 
-        handlers.put("ping", (message) -> {
+        handlers.put("ping", message -> {
             String[] key = message.split(":");
             String socketID = key[1];
             BS_Guest_Model.getModel().getPlayer().set_socketID(socketID);
             outMessages("addPlayer:" + socketID + ":" + BS_Guest_Model.getModel().getPlayer().get_name());
         });
 
-        handlers.put("hand", (message) -> {
+        handlers.put("hand", message -> {
             String hand = message.substring(5);
             Gson gson = new Gson();
             Tile[] newTiles = gson.fromJson(hand, Tile[].class);
@@ -77,7 +77,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers("hand updated");
         });
 
-        handlers.put("tileBoard", (message) -> {
+        handlers.put("tileBoard", message -> {
             String tiles = message.substring(10);
             Gson gson = new Gson();
             Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
@@ -89,7 +89,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers("tileBoard updated");
         });
 
-        handlers.put("playersScores", (message) -> {
+        handlers.put("playersScores", message -> {
             String scores = message.substring(14);
             Gson gson = new Gson();
             String[] newScores = gson.fromJson(scores, String[].class);
@@ -98,17 +98,17 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers("playersScores updated");
         });
 
-        handlers.put("challengeSuccess", (message) -> {
+        handlers.put("challengeSuccess", message -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
 
-        handlers.put("invalidWord", (message) -> {
+        handlers.put("invalidWord", message -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
 
-        handlers.put("challengeAlreadyActivated", (message) -> {
+        handlers.put("challengeAlreadyActivated", message -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });

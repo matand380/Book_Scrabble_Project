@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
 public class Board implements Serializable, ObjectFactory {
     private static final int width = 15;
     private static final int height = 15;
-    private static Board single_instance = null;
     Tile[][] mainBoard;
     char[][] scoreBoard;
     int wordCounter = 0;
@@ -267,7 +266,6 @@ public class Board implements Serializable, ObjectFactory {
         } catch (Exception e) {
             System.out.println("Error: dictionaryLegal");
         }
-//        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
         String[] splitResponse = response.split(":");
         if (splitResponse[0].equals("Q")) {
             return splitResponse[1].equals("true");
