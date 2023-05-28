@@ -31,7 +31,7 @@ public class ClientCommunicationHandler {
         handlers.put("sortAndSetIndex", message -> {
             String[] key = message.split(":");
             int size = Integer.parseInt(key[1]);
-            BS_Guest_Model.getModel().playersScores = new String[size];
+            BS_Guest_Model.getModel().setPlayersScores(new String[size]);
             for (int i = 0; i < size; i++) {
                 String[] player = key[i + 2].split(",");
                 if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
@@ -57,7 +57,7 @@ public class ClientCommunicationHandler {
             int index = Integer.parseInt(key[1]);
             String winnerName = key[2];
             BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().playersScores[index] + winnerName);
+            BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().getPlayersScores()[index] + winnerName);
         });
 
         handlers.put("ping", message -> {

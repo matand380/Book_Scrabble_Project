@@ -33,6 +33,8 @@
 6. Continue playing until all players have used all their tiles or no more valid moves are possible.
 7. The player with the highest score at the end of the game wins.
 
+* For more information, please refer to the User Manual — will be added
+
  <img src="src/main/resources/images/d04bd8bd-1354-4c3c-b3fd-ac57c6fdc61c_f1600x768.jpeg" alt="Scrabble Logo" width="400" height="100">
 
 ## Video links

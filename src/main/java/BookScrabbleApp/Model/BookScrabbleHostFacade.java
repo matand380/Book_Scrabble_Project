@@ -104,6 +104,10 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
         return hostModel.gameIsOver;
     }
 
+    public String[] getPlayersScores() {
+        return hostModel.getPlayersScores();
+    }
+
     public void endGame() {
         hostModel.endGame();
     }

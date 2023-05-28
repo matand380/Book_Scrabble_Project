@@ -34,7 +34,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     ExecutorService executor = Executors.newSingleThreadExecutor();
     String challengeInfo;
     Queue<Player> scoresManager = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
-
+    String[] PlayersScores;
     private List<Player> players;
 
     /**
@@ -47,6 +47,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
         player = new Player();
+
 
         //for testing
 //        System.out.println("Pick host port number : ");
@@ -410,7 +411,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * It shuts down the executor, closes the communication server, and notifies all clients that they can exit their games.
      * <p>
      */
-     void endGame() {
+    void endGame() {
         executor.shutdown();
         getCommunicationServer().close();
         notifyAll(); // notify the main that the game is over
@@ -445,8 +446,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         } catch (InterruptedException | ExecutionException e) {
             hostLogger.log(System.Logger.Level.ERROR, "Thread challengeWord interrupted");
         }
-//        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("C:" + word);
-//        String response = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
+
 
         // handle the response
         String[] splitResponse = response.split(":");
@@ -578,7 +578,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public String getMaxScore() {
         Player winner = scoresManager.poll();
-        return winner.get_index() + ":" + winner.get_name();
+        if (winner == null) {
+            return "No winner";
+        } else {
+            return winner.get_index() + ":" + winner.get_name();
+        }
 
     }
 
@@ -664,6 +668,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
             this.setChallengeInfo(challengeInfo);
 
         }
+    }
+
+    /**
+     * The getPlayersScores function returns an array of strings, each string containing the score of a player.
+     * <p>
+     *
+     * @return An array of strings
+     */
+    public String[] getPlayersScores() {
+        String[] scores = new String[players.size()];
+        for (int i = 0; i < players.size(); i++) {
+            scores[i] = String.valueOf(players.get(i).get_score());
+        }
+        return scores;
     }
 
     private static class HostModelHelper {

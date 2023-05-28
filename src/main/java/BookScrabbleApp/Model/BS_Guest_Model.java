@@ -10,7 +10,11 @@ import java.util.Observable;
 import java.util.regex.Pattern;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
-    public String[] playersScores;
+    public String[] getPlayersScores() {
+        return playersScores;
+    }
+
+    String[] playersScores;
     Socket socket;
     Tile[][] tileBoard = new Tile[15][15];
     Tile[][] tempBoard = new Tile[15][15];
@@ -22,7 +26,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      */
     private BS_Guest_Model() {
         player = new Player();
-        playersScores = new String[0];
+
     }
 
     /**

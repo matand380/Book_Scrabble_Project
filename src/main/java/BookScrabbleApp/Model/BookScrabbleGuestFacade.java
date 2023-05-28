@@ -57,6 +57,10 @@ public class BookScrabbleGuestFacade extends Observable implements Observer {
         guestModel.setPlayerProperties(name);
     }
 
+    public String[] getPlayersScores() {
+        return guestModel.getPlayersScores();
+    }
+    
     public ClientCommunicationHandler getCommunicationHandler() {
         return guestModel.getCommunicationHandler();
     }

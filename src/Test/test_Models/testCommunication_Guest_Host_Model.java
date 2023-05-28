@@ -115,6 +115,7 @@ public class testCommunication_Guest_Host_Model {
                 //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
                 host.tryPlaceWord(new Word(get(w.toUpperCase()), row, col, vertical));
                 try {
+                    System.out.println("updating the board");
                     Thread.sleep(15000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
