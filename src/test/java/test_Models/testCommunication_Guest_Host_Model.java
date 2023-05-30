@@ -113,7 +113,7 @@ public class testCommunication_Guest_Host_Model {
 
             if (host.getPlayers().get(host.getCurrentPlayerIndex()).get_index() == host.getPlayer().get_index()) {
                 //host.requestChallengeActivation(host.getPlayers().get(host.getCurrentPlayerIndex()) + "HORN");
-                host.tryPlaceWord(new Word(get(w.toUpperCase()), row, col, vertical));
+                host.tryPlaceWord(w.toUpperCase(), row, col, vertical);
                 try {
                     System.out.println("updating the board");
                     Thread.sleep(15000);
@@ -230,14 +230,11 @@ public class testCommunication_Guest_Host_Model {
 
     private static void test_WordCounter() {//need to rewrite
         BS_Host_Model host = BS_Host_Model.getModel();
-        Word w1 = new Word(get("BORN"), 7, 5, false);
-        Word w2 = new Word(get("BORN"), 2, 2, false);
-        Word w3 = new Word(get("BORN"), 3, 3, false);
-        host.tryPlaceWord(w1);
+        host.tryPlaceWord("BORN", 7, 5, false);
         System.out.println(formatTiles(host.getBoardState()));
-        host.tryPlaceWord(w2);
+        host.tryPlaceWord("BORN", 2, 2, false);
         System.out.println(formatTiles(host.getBoardState()));
-        host.tryPlaceWord(w3);
+        host.tryPlaceWord("BORN", 3, 3, false);
         System.out.println(formatTiles(host.getBoardState()));
 
         if (Board.getBoard().getWordCounter() != 3)

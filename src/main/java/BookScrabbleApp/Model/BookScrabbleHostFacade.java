@@ -22,8 +22,8 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
     public void setChallengeInfo(String challengeInfo) {
         hostModel.setChallengeInfo(challengeInfo);
     }
-    public void tryPlaceWord(Word word) {
-        hostModel.tryPlaceWord(word);
+    public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
+        hostModel.tryPlaceWord(word, x, y, isVertical);
     }
     public void openSocket(String ip, int port) {
         hostModel.openSocket(ip, port);
@@ -43,6 +43,10 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
     public void setNextPlayerIndex(int index) {
         hostModel.setNextPlayerIndex(index);
     }
+    public void endGame() {
+        hostModel.endGame();
+    }
+
 
 
     //get something
@@ -66,9 +70,6 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
     }
     public boolean isFull() {
         return hostModel.isFull();
-    }
-    public void endGame() {
-        hostModel.endGame();
     }
     public Player getPlayer() {
         return hostModel.getPlayer();

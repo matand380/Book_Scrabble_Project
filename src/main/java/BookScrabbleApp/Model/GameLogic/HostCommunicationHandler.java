@@ -53,14 +53,8 @@ public class HostCommunicationHandler implements ClientHandler {
             int row = Integer.parseInt(message[3]);
             int col = Integer.parseInt(message[4]);
             boolean direction = message[5].equals("true");
-            char[] buildWord = word.toCharArray();
-            Player current = BS_Host_Model.getModel().getPlayers().stream().filter(p1 -> p1.get_index() == Integer.parseInt(PlayerIndex)).findFirst().get();
-            Tile[] tiles = new Tile[word.length()];
-            for (int i = 0; i < word.length(); i++) {
-                tiles[i] = current.charToTile(buildWord[i]);
-            }
-            Word w = new Word(tiles, row, col, direction);
-            BS_Host_Model.getModel().tryPlaceWord(w);
+
+            BS_Host_Model.getModel().tryPlaceWord(word, row, col, direction);
         });
 
         handlers.put("challengeWord", message -> {

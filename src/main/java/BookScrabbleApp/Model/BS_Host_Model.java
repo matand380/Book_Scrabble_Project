@@ -299,9 +299,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
      *
      * <p>
      *
-     * @param word Get the word that the player is trying to place
+     * @param stringWord Get the word that the player is trying to place
      */
-    public void tryPlaceWord(Word word) {
+    public void tryPlaceWord(String stringWord, int row, int col, boolean direction) {
+        char[] buildWord = stringWord.toCharArray();
+        Player current = getPlayers().get(currentPlayerIndex);
+        Tile[] tiles = new Tile[stringWord.length()];
+        for (int i = 0; i < stringWord.length(); i++) {
+            tiles[i] = current.charToTile(buildWord[i]);
+        }
+        Word word = new Word(tiles, row, col, direction);
         int score = Board.getBoard().tryPlaceWord(word);
         if (score > 0) {
 
