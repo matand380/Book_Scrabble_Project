@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class HelloController {
+public class GUIController {
     @FXML
     private Label welcomeText;
     @FXML
