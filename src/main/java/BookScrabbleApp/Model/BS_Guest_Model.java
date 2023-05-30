@@ -135,7 +135,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public void setBoard(Tile[][] boardTiles) {
         this.tileBoard = boardTiles;
         setChanged();
-        notifyObservers("board:");
+        notifyObservers("tileBoard updated");
     }
 
     /**
