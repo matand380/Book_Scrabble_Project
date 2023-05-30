@@ -10,14 +10,14 @@ public class BS_ViewModel extends Observable implements Observer {
     private Map<String, Consumer<String>> viewCommandsFromClient = new HashMap<>();
 
     public BS_ViewModel() {
-        viewCommandsFromClient.put("hand", message -> {
+        viewCommandsFromClient.put("hand updated", message -> {
             //The hand of the player is updated
 
             // TODO: 30/05/2023 update the hand in the view
         });
 
         // FIXME: 30/05/2023: tileBoard or board?
-        viewCommandsFromClient.put("tileBoard", message -> {
+        viewCommandsFromClient.put("tileBoard updated", message -> {
             //The board is updated
             // TODO: 30/05/2023 update the board in the view
         });
