@@ -33,7 +33,7 @@ public class BS_ViewModel extends Observable implements Observer {
             // TODO: 30/05/2023 update the player with the words challenge in the view
         });
 
-        viewCommandsFromClient.put("playersScores", message -> {
+        viewCommandsFromClient.put("playersScores updated", message -> {
             //The scores of the players are updated
             // TODO: 30/05/2023 update the scores in the view
         });
