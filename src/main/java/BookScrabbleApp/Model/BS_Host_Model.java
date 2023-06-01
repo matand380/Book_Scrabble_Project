@@ -194,8 +194,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void addPlayer(Player p) {
         this.players.add(p);
         this.scoresManager.add(p);
-        setChanged();
-        notifyObservers("playersListSize:" + BS_Host_Model.getModel().getPlayers().size());
+
     }
 
     /**
@@ -280,9 +279,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
             gameIsOver = true;
             return;
         }
-        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
+        communicationServer.updateAll("turnPassed:" + getCurrentPlayerIndex());// notify all clients
         setChanged();
-        notifyObservers("passTurn:" + getCurrentPlayerIndex());
+        notifyObservers("turnPassed:" + getCurrentPlayerIndex());
     }
 
     /**

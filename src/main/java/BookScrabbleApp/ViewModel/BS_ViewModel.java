@@ -14,7 +14,7 @@ public interface BS_ViewModel {
 
     void tryPlaceWord(String word, int row, int col, boolean isVertical);
 
-    void passTurn(int playerIndex);
+    void passTurn();
 
     void setPlayerProperties(String name);
 

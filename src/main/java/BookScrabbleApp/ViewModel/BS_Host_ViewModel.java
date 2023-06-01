@@ -45,11 +45,12 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             setBoard();
         });
 
-        updatesMap.put("passTurn", message -> {
+        updatesMap.put("turnPassed", message -> {
             String[] messageSplit = message.split(":");
             int playerIndex = Integer.parseInt(messageSplit[1]);
             //The turn is updated
-            passTurn(playerIndex);
+            setChanged();
+            notifyObservers("turnPassed");
         });
 
         updatesMap.put("wordsForChallenge", message -> {
@@ -195,12 +196,15 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     }
 
     @Override
-    public void passTurn(int playerIndex) {
+    public void passTurn() {
+        int playerIndex = hostFacade.getPlayer().get_index();
+        //will be called from the view
         hostFacade.passTurn(playerIndex);
     }
 
     @Override
     public void setPlayerProperties(String name) {
+        //will be called from the view with the TextField value of the player name
         hostFacade.setPlayerProperties(name);
 
     }
@@ -224,17 +228,17 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     @Override
     public void update(Observable o, Object arg) {
-        String message = (String) arg;
-        String[] messageSplit = message.split(":");
-        String updateType = messageSplit[0];
-        if (updatesMap.containsKey(updateType)) {
-        updatesMap.get(updateType).accept(message);
+        if (o instanceof BookScrabbleHostFacade) {
+            String message = (String) arg;
+            String[] messageSplit = message.split(":");
+            String updateType = messageSplit[0];
+            if (updatesMap.containsKey(updateType)) {
+                updatesMap.get(updateType).accept(message);
+            } else {
+                setChanged();
+                notifyObservers("Error in updates handling ");
+            }
         }
-        else {
-            setChanged();
-            notifyObservers("Error in updates handling ");
-        }
-
 
     }
 }

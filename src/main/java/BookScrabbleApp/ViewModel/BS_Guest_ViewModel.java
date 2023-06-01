@@ -76,7 +76,8 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
 
     @Override
     public void update(Observable o, Object arg) {
-        if (o == BS_Host_Model.getModel())
+
+        if (o == BS_Host_Model.getModel()) // FIXME: 01/06/2023 should be guest facade
             if (arg instanceof String) {
                 String key = (String) arg;
                 String[] message = key.split(":");
@@ -121,6 +122,11 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     }
 
     @Override
+    public void passTurn() {
+
+    }
+
+    @Override
     public void challengeRequest(String challengeWord) {
 
     }
@@ -135,10 +141,6 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
         //put here all the "put" of the map
     }
 
-    @Override
-    public void passTurn(int playerIndex) {
-
-    }
 
     @Override
     public void setPlayerProperties(String name) {
