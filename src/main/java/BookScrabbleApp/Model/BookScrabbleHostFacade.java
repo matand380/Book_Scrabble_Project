@@ -103,6 +103,7 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         // everything will be passed to the viewModel
         setChanged();
-        notifyObservers(arg);
+        String argString = (String) arg;
+        notifyObservers(argString);
     }
 }

@@ -80,6 +80,7 @@ public class BookScrabbleGuestFacade extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         setChanged();
-        notifyObservers(arg);
+        String argString = (String) arg;
+        notifyObservers(argString);
     }
 }

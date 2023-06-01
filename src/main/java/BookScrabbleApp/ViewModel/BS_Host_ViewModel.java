@@ -21,7 +21,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     public List<SimpleStringProperty> viewableWordsForChallenge; // words for challenge array
     BookScrabbleHostFacade hostFacade;
-    private Map<String, Consumer<String>> updatesMap;
+    private Map<String, Consumer<String>> updatesMap; //map of all the updates
+
 
     public BS_Host_ViewModel() {
         super();
@@ -223,6 +224,16 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     @Override
     public void update(Observable o, Object arg) {
+        String message = (String) arg;
+        String[] messageSplit = message.split(":");
+        String updateType = messageSplit[0];
+        if (updatesMap.containsKey(updateType)) {
+        updatesMap.get(updateType).accept(message);
+        }
+        else {
+            setChanged();
+            notifyObservers("Error in updates handling ");
+        }
 
 
     }
