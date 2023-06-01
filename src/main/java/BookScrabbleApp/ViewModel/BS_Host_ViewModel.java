@@ -105,7 +105,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             String score = hostFacade.getPlayersScores()[playerIndex];
             winnerProperty.setValue("The winner is: " + winner + "with a score of " + score);
             setChanged();
-            notifyObservers();
+            notifyObservers("winner updated");
         });
 
         updatesMap.put("endGame", message -> {
@@ -139,7 +139,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
         }
         setChanged();
-        notifyObservers();
+        notifyObservers("wordsForChallenge updated");
     }
 
     /**
@@ -159,7 +159,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             }
         }
         setChanged();
-        notifyObservers();
+        notifyObservers("board updated");
 
 
     }
@@ -206,7 +206,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             viewableHand.get(i).setScore(hostFacade.getPlayer().get_hand().get(i).getScore());
         }
         setChanged();
-        notifyObservers();
+        notifyObservers("hand updated");
 
     }
 
@@ -221,7 +221,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             viewableScores.get(i).setValue(String.valueOf(hostFacade.getPlayers().get(i).get_score()));
         }
         setChanged();
-        notifyObservers();
+        notifyObservers("scores updated");
 
     }
 
