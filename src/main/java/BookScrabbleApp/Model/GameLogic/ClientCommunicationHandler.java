@@ -47,7 +47,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().notifyObservers(message);
         });
 
-        handlers.put("passTurn", message -> {
+        handlers.put("turnPassed", message -> {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });

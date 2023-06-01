@@ -25,7 +25,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
             // TODO: 30/05/2023 update the board in the view
         });
 
-        viewCommandsFromClient.put("passTurn", message -> {
+        viewCommandsFromClient.put("turnPassed", message -> {
             //The turn is updated
             // TODO: 30/05/2023 update the turn in the view
             // TODO: 30/05/2023 test if the player is the current player and if so, enable the buttons
@@ -128,6 +128,11 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     @Override
     public void endGame() {
 
+    }
+
+    @Override
+    public void initializeUpdateMap() {
+        //put here all the "put" of the map
     }
 
     @Override

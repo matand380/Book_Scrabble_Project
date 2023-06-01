@@ -5,10 +5,8 @@ import BookScrabbleApp.Model.GameData.Tile;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel {
 
@@ -20,13 +18,80 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public List<ViewableTile> viewableHand; //player hand
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; // scores array
+
+    private Map<String, Consumer<String>> updatesMap;
+
     BookScrabbleHostFacade hostFacade;
 
     public BS_Host_ViewModel() {
         super();
         hostFacade = new BookScrabbleHostFacade();
         hostFacade.addObserver(this);
+        initializeProperties();
+        initializeUpdateMap();
 
+    }
+
+    @Override
+    public void initializeUpdateMap() {
+        updatesMap.put("hand updated", message -> {
+            //The hand of the player is updated
+            setHand();
+        });
+
+        // FIXME: 30/05/2023: tileBoard or board?
+        updatesMap.put("tileBoard updated", message -> {
+            setBoard();
+        });
+
+        updatesMap.put("passTurn", message -> {
+            String[] messageSplit = message.split(":");
+            int playerIndex = Integer.parseInt(messageSplit[1]);
+            //The turn is updated
+            passTurn(playerIndex);
+        });
+
+        updatesMap.put("wordsForChallenge", message -> {
+            //Words for challenge is coming
+            // TODO: 30/05/2023 update the player with the words challenge in the view
+        });
+
+        updatesMap.put("playersScores updated", message -> {
+            //The scores of the players are updated
+            // TODO: 30/05/2023 update the scores in the view
+        });
+
+        updatesMap.put("invalidWord", message -> {
+            //The word is invalid
+            // TODO: 30/05/2023 pop up the word is invalid in the view
+        });
+
+        updatesMap.put("challengeAlreadyActivated", message -> {
+            //The challenge is already activated
+            // TODO: 30/05/2023 pop up the 'challenge is already activated' in the view
+        });
+
+        updatesMap.put("winner", message -> {
+            // TODO: 30/05/2023 pop up the winner in the view
+        });
+
+        updatesMap.put("endGame", message -> {
+            // TODO: 30/05/2023  show the winner in the view
+            // TODO: 30/05/2023  show end game window in the view
+        });
+
+        // FIXME: 30/05/2023 check if we need this function
+        updatesMap.put("sortAndSetIndex", message -> {
+            //The index of the player is updated
+            //??????
+        });
+
+        // FIXME: 30/05/2023 check if we need this function
+        updatesMap.put("challengeSuccess", message -> {
+            //The challenge is successful
+            //pop up the challenge is successful in the view
+            //?????
+        });
     }
 
     @Override
@@ -37,12 +102,15 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
                 viewableBoard.get(i).get(j).setScore(hostFacade.getBoardState()[i][j].getScore());
             }
         }
+        setChanged();
+        notifyObservers();
 
 
     }
 
     @Override
     public void initializeProperties() {
+        updatesMap = new HashMap<>();
         winnerProperty = new SimpleStringProperty();
         challengeWord = new SimpleStringProperty();
         viewableHand = new ArrayList<>();
@@ -70,6 +138,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
                 viewableHand.get(i).setLetter(hostFacade.getPlayer().get_hand().get(i).getLetter());
                 viewableHand.get(i).setScore(hostFacade.getPlayer().get_hand().get(i).getScore());
             }
+        setChanged();
+        notifyObservers();
 
     }
 
@@ -78,6 +148,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         for (int i = 0; i < hostFacade.getPlayers().size(); i++) {
             viewableScores.get(i).setValue(String.valueOf(hostFacade.getPlayers().get(i).get_score()));
         }
+        setChanged();
+        notifyObservers();
 
     }
 
@@ -95,10 +167,12 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     @Override
     public void passTurn(int playerIndex) {
 
+
     }
 
     @Override
     public void setPlayerProperties(String name) {
+        hostFacade.setPlayerProperties(name);
 
     }
 
@@ -119,6 +193,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     }
     @Override
     public void update(Observable o, Object arg) {
+
 
     }
 }

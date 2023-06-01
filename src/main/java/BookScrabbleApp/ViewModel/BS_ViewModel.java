@@ -22,5 +22,7 @@ public interface BS_ViewModel {
 
     void endGame();
 
+    void initializeUpdateMap();
+
 
 }

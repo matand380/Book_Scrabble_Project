@@ -261,9 +261,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
             gameIsOver = true;
             return;
         }
-        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
+        communicationServer.updateAll("turnPassed:" + getCurrentPlayerIndex());// notify all clients
         setChanged();
-        notifyObservers("passTurn:" + getCurrentPlayerIndex());
+        notifyObservers("turnPassed:" + getCurrentPlayerIndex());
     }
 
     /**
@@ -537,7 +537,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         communicationServer.updateSpecificPlayer(id, "hand:" + json);
         if (currentPlayerIndex == BS_Host_Model.getModel().player.get_index()) {
             setChanged();
-            notifyObservers("hand:" + json);
+            notifyObservers("hand updated");
         }
     }
 
