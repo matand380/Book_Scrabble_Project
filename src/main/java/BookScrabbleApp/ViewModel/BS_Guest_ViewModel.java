@@ -9,7 +9,7 @@ import java.util.function.*;
 public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewModel {
 
     BookScrabbleGuestFacade guestFacade;
-
+    String winner;
     private Map<String, Consumer<String>> viewCommandsFromClient = new HashMap<>();
 
     public BS_Guest_ViewModel() {
@@ -74,8 +74,6 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
         });
     }
 
-    String winner;
-
     @Override
     public void update(Observable o, Object arg) {
         if (o == BS_Host_Model.getModel())
@@ -93,27 +91,52 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     }
 
     @Override
-    public void initializeBoard() {
+    public void setBoard() {
 
     }
 
     @Override
-    public void initializeHand() {
+    public void setHand() {
 
     }
 
     @Override
-    public void initializeScores() {
+    public void setScore() {
 
     }
 
     @Override
-    public void initializeCommunicationAttributes() {
+    public void initializeProperties() {
 
     }
 
     @Override
     public void openSocket() {
+
+    }
+
+    @Override
+    public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
+
+    }
+
+    @Override
+    public void challengeRequest(String challengeWord) {
+
+    }
+
+    @Override
+    public void endGame() {
+
+    }
+
+    @Override
+    public void passTurn(int playerIndex) {
+
+    }
+
+    @Override
+    public void setPlayerProperties(String name) {
 
     }
 }

@@ -10,27 +10,24 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel{
+public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel {
 
     SimpleStringProperty ip;
     SimpleStringProperty port;
 
     BookScrabbleHostFacade hostFacade;
-    StringProperty winnerProperty = new SimpleStringProperty(); //winner
-    List<ViewableTile> viewableHand = new ArrayList<>(); //player hand
+    StringProperty winnerProperty; //winner
+    List<ViewableTile> viewableHand; //player hand
     List<List<ViewableTile>> viewableBoard; //game board
-    List<SimpleStringProperty> viewableScores = new ArrayList<>(); // scores array
+    List<SimpleStringProperty> viewableScores; // scores array
 
     public BS_Host_ViewModel() {
         super();
         hostFacade = new BookScrabbleHostFacade();
         hostFacade.addObserver(this);
-        initializeBoard();
-        initializeHand();
-        initializeScores();
-
 
     }
+
 
     @Override
     public void update(Observable o, Object arg) {
@@ -38,21 +35,41 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     }
 
     @Override
-    public void initializeBoard() {
-        viewableBoard = new ArrayList<>();
+    public void setBoard() {
         for (int i = 0; i < 15; i++) {
-            List<ViewableTile> row = new ArrayList<>();
             for (int j = 0; j < 15; j++) {
-                row.add(new ViewableTile(hostFacade.getBoardState()[i][j].getLetter(), hostFacade.getBoardState()[i][j].getScore()));
+                viewableBoard.get(i).get(j).setLetter(hostFacade.getBoardState()[i][j].getLetter());
+                viewableBoard.get(i).get(j).setScore(hostFacade.getBoardState()[i][j].getScore());
             }
-            viewableBoard.add(row);
         }
 
 
     }
 
     @Override
-    public void initializeHand() {
+    public void initializeProperties() {
+        winnerProperty = new SimpleStringProperty();
+        viewableHand = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            viewableHand.add(new ViewableTile(' ', 0));
+        }
+        viewableBoard = new ArrayList<>();
+        for (int i = 0; i < 15; i++) {
+            List<ViewableTile> row = new ArrayList<>();
+            for (int j = 0; j < 15; j++) {
+                row.add(new ViewableTile(' ', 0));
+            }
+            viewableBoard.add(row);
+        }
+        viewableScores = new ArrayList<>();
+        ip = new SimpleStringProperty();
+        port = new SimpleStringProperty();
+
+
+    }
+
+    @Override
+    public void setHand() {
         viewableHand = new ArrayList<>();
         for (Tile tile : hostFacade.getCurrentPlayerHand()) {
             viewableHand.add(new ViewableTile(tile.getLetter(), tile.getScore()));
@@ -61,7 +78,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     }
 
     @Override
-    public void initializeScores() {
+    public void setScore() {
         viewableScores = new ArrayList<>();
         for (int i = 0; i < hostFacade.getPlayers().size(); i++) {
             viewableScores.add(new SimpleStringProperty(String.valueOf(hostFacade.getPlayers().get(i).get_score())));
@@ -69,14 +86,40 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     }
 
-    @Override
-    public void initializeCommunicationAttributes() {
-        ip = new SimpleStringProperty();
-        port = new SimpleStringProperty();
-    }
 
     @Override
     public void openSocket() {
         hostFacade.openSocket(ip.get(), Integer.parseInt(port.get()));
+    }
+
+    @Override
+    public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
+
+    }
+
+    @Override
+    public void passTurn(int playerIndex) {
+
+    }
+
+    @Override
+    public void setPlayerProperties(String name) {
+
+    }
+
+    public void startNewGame() {
+        hostFacade.startNewGame();
+    }
+
+    @Override
+    public void challengeRequest(String challengeWord) {
+        int playerIndex = hostFacade.getPlayer().get_index();
+        String challengeRequest = playerIndex + ":" + challengeWord;
+        hostFacade.requestChallengeActivation(challengeRequest);
+    }
+
+    @Override
+    public void endGame() {
+        hostFacade.endGame();
     }
 }

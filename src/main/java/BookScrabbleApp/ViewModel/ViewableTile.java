@@ -5,6 +5,24 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class ViewableTile extends Tile {
 
+
+
+    public SimpleStringProperty letterProperty() {
+        return letter;
+    }
+
+    public SimpleStringProperty scoreProperty() {
+        return score;
+    }
+
+    public void setLetter(char letter) {
+        this.letter.set(String.valueOf(letter));
+    }
+
+    public void setScore(int score) {
+        this.score.set(String.valueOf(score));
+    }
+
     SimpleStringProperty letter;
     SimpleStringProperty score;
 
