@@ -144,4 +144,9 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     public void setPlayerProperties(String name) {
 
     }
+
+    @Override
+    public void setWordsForChallenge(List<String> wordsList) {
+
+    }
 }

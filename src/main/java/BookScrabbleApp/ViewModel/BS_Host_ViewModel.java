@@ -18,6 +18,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public List<ViewableTile> viewableHand; //player hand
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; // scores array
+
+    public List<SimpleStringProperty> viewableWordsForChallenge; // words for challenge array
     BookScrabbleHostFacade hostFacade;
     private Map<String, Consumer<String>> updatesMap;
 
@@ -55,37 +57,46 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             int wordsAmount = Integer.parseInt(messageSplit[1]);
             String words = messageSplit[2];
             String[] wordsSplit = words.split(",");
+            List<String> wordsList = new ArrayList<>();
+            for (int i = 0; i < wordsAmount; i++) {
+                wordsList.add(wordsSplit[i]);
+            }
+            setWordsForChallenge(wordsList);
+            wordsList.clear();
+
         });
 
         updatesMap.put("playersScores updated", message -> {
             //The scores of the players are updated
-            // TODO: 30/05/2023 update the scores in the view
+            setScore();
         });
 
         updatesMap.put("invalidWord", message -> {
-            //The word is invalid
-            // TODO: 30/05/2023 pop up the word is invalid in the view
+            setChanged();
+            notifyObservers("invalidWord");
         });
 
         updatesMap.put("challengeAlreadyActivated", message -> {
             //The challenge is already activated
-            // TODO: 30/05/2023 pop up the 'challenge is already activated' in the view
+            setChanged();
+            notifyObservers("challengeAlreadyActivated");
         });
 
         updatesMap.put("winner", message -> {
-            // TODO: 30/05/2023 pop up the winner in the view
+            // TODO: 30/05/2023 pop up the winner in the view and end game button
             String[] messageSplit = message.split(":");
             int playerIndex = Integer.parseInt(messageSplit[1]);
             String winner = messageSplit[2];
             String score = hostFacade.getPlayersScores()[playerIndex];
-            winnerProperty.setValue("The winner is: " +winner + "with a score of " + score);
+            winnerProperty.setValue("The winner is: " + winner + "with a score of " + score);
             setChanged();
             notifyObservers();
         });
 
         updatesMap.put("endGame", message -> {
-            // TODO: 30/05/2023  show the winner in the view
-            // TODO: 30/05/2023  show end game window in the view
+            // TODO: 01/06/2023 all the clients are disconnected, view should enable the end game button
+            setChanged();
+            notifyObservers("endGame");
         });
 
         // FIXME: 30/05/2023 check if we need this function
@@ -96,10 +107,17 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
         // FIXME: 30/05/2023 check if we need this function
         updatesMap.put("challengeSuccess", message -> {
-            //The challenge is successful
-            //pop up the challenge is successful in the view
-            //?????
+            setChanged();
+            notifyObservers("challengeSuccess");
         });
+    }
+
+    public void setWordsForChallenge(List<String> wordsList) {
+        for (int i = 0; i < wordsList.size(); i++) {
+            viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
+        }
+        setChanged();
+        notifyObservers();
     }
 
     @Override
@@ -121,6 +139,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         updatesMap = new HashMap<>();
         winnerProperty = new SimpleStringProperty();
         challengeWord = new SimpleStringProperty();
+        viewableWordsForChallenge = new ArrayList<>();
         viewableHand = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             viewableHand.add(new ViewableTile(' ', 0));
@@ -194,6 +213,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         int playerIndex = hostFacade.getPlayer().get_index();
         String challengeRequest = playerIndex + ":" + challengeWord;
         hostFacade.requestChallengeActivation(challengeRequest);
+        viewableWordsForChallenge.clear(); // TODO: 01/06/2023 check if we need this
     }
 
     @Override

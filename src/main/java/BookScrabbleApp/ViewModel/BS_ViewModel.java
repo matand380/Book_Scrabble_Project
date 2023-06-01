@@ -1,5 +1,7 @@
 package BookScrabbleApp.ViewModel;
 
+import java.util.List;
+
 public interface BS_ViewModel {
 
     void setBoard();
@@ -23,6 +25,8 @@ public interface BS_ViewModel {
     void endGame();
 
     void initializeUpdateMap();
+
+    void setWordsForChallenge(List<String> wordsList);
 
 
 }
