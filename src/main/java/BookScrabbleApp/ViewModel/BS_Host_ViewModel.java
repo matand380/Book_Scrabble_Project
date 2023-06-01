@@ -18,10 +18,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public List<ViewableTile> viewableHand; //player hand
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; // scores array
-
-    private Map<String, Consumer<String>> updatesMap;
-
     BookScrabbleHostFacade hostFacade;
+    private Map<String, Consumer<String>> updatesMap;
 
     public BS_Host_ViewModel() {
         super();
@@ -73,6 +71,13 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
         updatesMap.put("winner", message -> {
             // TODO: 30/05/2023 pop up the winner in the view
+            String[] messageSplit = message.split(":");
+            int playerIndex = Integer.parseInt(messageSplit[1]);
+            String winner = messageSplit[2];
+            String score = hostFacade.getPlayersScores()[playerIndex];
+            winnerProperty.setValue("The winner is: " +winner + "with a score of " + score);
+            setChanged();
+            notifyObservers();
         });
 
         updatesMap.put("endGame", message -> {
@@ -134,10 +139,10 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     @Override
     public void setHand() {
-       for (int i = 0; i < hostFacade.getPlayer().get_hand().size(); i++) {
-                viewableHand.get(i).setLetter(hostFacade.getPlayer().get_hand().get(i).getLetter());
-                viewableHand.get(i).setScore(hostFacade.getPlayer().get_hand().get(i).getScore());
-            }
+        for (int i = 0; i < hostFacade.getPlayer().get_hand().size(); i++) {
+            viewableHand.get(i).setLetter(hostFacade.getPlayer().get_hand().get(i).getLetter());
+            viewableHand.get(i).setScore(hostFacade.getPlayer().get_hand().get(i).getScore());
+        }
         setChanged();
         notifyObservers();
 
@@ -161,13 +166,14 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     @Override
     public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
+        // TODO: 01/06/2023 need to take care for the word binding
+        hostFacade.tryPlaceWord(word, row, col, isVertical);
 
     }
 
     @Override
     public void passTurn(int playerIndex) {
-
-
+        hostFacade.passTurn(playerIndex);
     }
 
     @Override
@@ -191,6 +197,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public void endGame() {
         hostFacade.endGame();
     }
+
     @Override
     public void update(Observable o, Object arg) {
 

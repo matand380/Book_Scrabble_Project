@@ -323,7 +323,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             String words = sb.toString();
             BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
             setChanged();
-            notifyObservers("wordsForChallenge:" + words);
+            notifyObservers("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
             //if the current player is the host, then the host's viewModel wan't display the challenge words
 
             LockSupport.parkNanos(10000000000L); //park for 10 seconds
