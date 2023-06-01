@@ -50,8 +50,11 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         });
 
         updatesMap.put("wordsForChallenge", message -> {
-            //Words for challenge is coming
-            // TODO: 30/05/2023 update the player with the words challenge in the view
+            //"wordsForChallenge:" + currentPlayerWords.size() + ":" + words
+            String[] messageSplit = message.split(":");
+            int wordsAmount = Integer.parseInt(messageSplit[1]);
+            String words = messageSplit[2];
+            String[] wordsSplit = words.split(",");
         });
 
         updatesMap.put("playersScores updated", message -> {

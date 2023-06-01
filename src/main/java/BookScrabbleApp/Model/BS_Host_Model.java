@@ -318,7 +318,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             StringBuilder sb = new StringBuilder();
             for (Word w : currentPlayerWords) {
                 sb.append(w.toString());
-                sb.append(":");
+                sb.append(",");
             }
             String words = sb.toString();
             BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
