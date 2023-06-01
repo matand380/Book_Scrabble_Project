@@ -12,25 +12,20 @@ import java.util.Observer;
 
 public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel {
 
-    SimpleStringProperty ip;
-    SimpleStringProperty port;
+    public SimpleStringProperty ip;
+    public SimpleStringProperty port;
 
+    public SimpleStringProperty challengeWord;
+    public StringProperty winnerProperty; //winner
+    public List<ViewableTile> viewableHand; //player hand
+    public List<List<ViewableTile>> viewableBoard; //game board
+    public List<SimpleStringProperty> viewableScores; // scores array
     BookScrabbleHostFacade hostFacade;
-    StringProperty winnerProperty; //winner
-    List<ViewableTile> viewableHand; //player hand
-    List<List<ViewableTile>> viewableBoard; //game board
-    List<SimpleStringProperty> viewableScores; // scores array
 
     public BS_Host_ViewModel() {
         super();
         hostFacade = new BookScrabbleHostFacade();
         hostFacade.addObserver(this);
-
-    }
-
-
-    @Override
-    public void update(Observable o, Object arg) {
 
     }
 
@@ -49,6 +44,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     @Override
     public void initializeProperties() {
         winnerProperty = new SimpleStringProperty();
+        challengeWord = new SimpleStringProperty();
         viewableHand = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             viewableHand.add(new ViewableTile(' ', 0));
@@ -70,18 +66,17 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     @Override
     public void setHand() {
-        viewableHand = new ArrayList<>();
-        for (Tile tile : hostFacade.getCurrentPlayerHand()) {
-            viewableHand.add(new ViewableTile(tile.getLetter(), tile.getScore()));
-        }
+       for (int i = 0; i < hostFacade.getPlayer().get_hand().size(); i++) {
+                viewableHand.get(i).setLetter(hostFacade.getPlayer().get_hand().get(i).getLetter());
+                viewableHand.get(i).setScore(hostFacade.getPlayer().get_hand().get(i).getScore());
+            }
 
     }
 
     @Override
     public void setScore() {
-        viewableScores = new ArrayList<>();
         for (int i = 0; i < hostFacade.getPlayers().size(); i++) {
-            viewableScores.add(new SimpleStringProperty(String.valueOf(hostFacade.getPlayers().get(i).get_score())));
+            viewableScores.get(i).setValue(String.valueOf(hostFacade.getPlayers().get(i).get_score()));
         }
 
     }
@@ -89,7 +84,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     @Override
     public void openSocket() {
-        hostFacade.openSocket(ip.get(), Integer.parseInt(port.get()));
+        hostFacade.openSocket(ip.getValue(), Integer.parseInt(port.getValue()));
     }
 
     @Override
@@ -121,5 +116,9 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     @Override
     public void endGame() {
         hostFacade.endGame();
+    }
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }

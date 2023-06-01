@@ -194,6 +194,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void addPlayer(Player p) {
         this.players.add(p);
         this.scoresManager.add(p);
+        setChanged();
+        notifyObservers("playersListSize:" + BS_Host_Model.getModel().getPlayers().size());
     }
 
     /**
@@ -234,7 +236,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 String json = gson.toJson(tiles);
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
             } else {
-                hasChanged();
+                setChanged();
                 notifyObservers("hand updated");
             }
 
@@ -260,7 +262,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             return;
         }
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
-        hasChanged();
+        setChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());
     }
 
@@ -279,7 +281,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             return;
         }
         communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
-        hasChanged();
+        setChanged();
         notifyObservers("passTurn:" + getCurrentPlayerIndex());
     }
 
@@ -320,7 +322,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             }
             String words = sb.toString();
             BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
-            hasChanged();
+            setChanged();
             notifyObservers("wordsForChallenge:" + words);
             //if the current player is the host, then the host's viewModel wan't display the challenge words
 
@@ -341,7 +343,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     if (isGameOver()) {
                         gameIsOver = true;
                         communicationServer.updateAll("endGame");
-                        hasChanged();
+                        setChanged();
                         notifyObservers("endGame");
                         return;
                     }
@@ -350,7 +352,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     if (id != null)
                         communicationServer.updateSpecificPlayer(id, "challengeSuccess");
                     else {
-                        hasChanged();
+                        setChanged();
                         notifyObservers("challengeSuccess");
                     }
                     passTurn(currentPlayerIndex);
@@ -379,7 +381,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (id != null)
                 communicationServer.updateSpecificPlayer(id, "invalidWord");
             else {
-                hasChanged();
+                setChanged();
                 notifyObservers("invalidWord");
             }
         }
@@ -395,7 +397,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         Gson gson = new Gson();
         String json = gson.toJson(Board.getBoard().getTiles());
         communicationServer.updateAll("tileBoard:" + json);
-        hasChanged();
+        setChanged();
         notifyObservers("tileBoard updated");
         //for testing
         System.out.println("host tileBoard");
@@ -485,7 +487,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         Gson gson = new Gson();
         String playersScores = gson.toJson(scores);
         communicationServer.updateAll("playersScores:" + playersScores);
-        hasChanged();
+        setChanged();
         notifyObservers("playersScores updated");
     }
 
@@ -498,7 +500,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).set_index(i);
         }
-        hasChanged();
+        setChanged();
         notifyObservers("sortAndSetIndex" + player.get_index()); // this is host index
         StringBuilder allPlayers = new StringBuilder();
         for (Player p : players) {
@@ -534,7 +536,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         String json = gson.toJson(players.get(currentPlayerIndex).get_hand());
         communicationServer.updateSpecificPlayer(id, "hand:" + json);
         if (currentPlayerIndex == BS_Host_Model.getModel().player.get_index()) {
-            hasChanged();
+            setChanged();
             notifyObservers("hand:" + json);
         }
     }
@@ -569,7 +571,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 }
         if (isGameOver) {
             communicationServer.updateAll("winner:" + getMaxScore());
-            hasChanged();
+            setChanged();
             notifyObservers("winner:" + getMaxScore());
         }
         return isGameOver;
@@ -667,7 +669,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
                 communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
             } else {
-                hasChanged();
+                setChanged();
                 notifyObservers("challengeAlreadyActivated");
             }
         } else {

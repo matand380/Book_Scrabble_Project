@@ -43,8 +43,7 @@ public class HostCommunicationHandler implements ClientHandler {
             BS_Host_Model.getModel().getPlayerToSocketID().put(p.get_name(), p.get_socketID());
             p.setTileLottery();
             BS_Host_Model.getModel().addPlayer(p);
-            BS_Host_Model.getModel().hasChanged();
-            BS_Host_Model.getModel().notifyObservers("playersListSize:" + BS_Host_Model.getModel().getPlayers().size());
+
         });
 
         handlers.put("tryPlaceWord", message -> {

@@ -16,11 +16,11 @@ public class ViewableTile extends Tile {
     }
 
     public void setLetter(char letter) {
-        this.letter.set(String.valueOf(letter));
+        this.letter.setValue(String.valueOf(letter));
     }
 
     public void setScore(int score) {
-        this.score.set(String.valueOf(score));
+        this.score.setValue(String.valueOf(score));
     }
 
     SimpleStringProperty letter;
