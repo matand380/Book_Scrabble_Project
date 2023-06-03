@@ -332,6 +332,5 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
                 notifyObservers("Error in updates handling ");
             }
         }
-
     }
 }
