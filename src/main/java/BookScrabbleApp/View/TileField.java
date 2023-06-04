@@ -59,7 +59,5 @@ TextField score;
         getChildren().addAll(tileBackground, contentBox);
     }
 
-    public void update(Observable o, Object arg) {
 
-    }
 }
