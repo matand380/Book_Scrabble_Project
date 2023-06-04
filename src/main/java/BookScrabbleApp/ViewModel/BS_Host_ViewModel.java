@@ -63,7 +63,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             int playerIndex = Integer.parseInt(messageSplit[1]);
             //The turn is updated
             setChanged();
-            notifyObservers("turnPassed");
+            notifyObservers("turnPassed:" + playerIndex);
         });
 
         updatesMap.put("wordsForChallenge", message -> {
@@ -114,16 +114,17 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             notifyObservers("endGame");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
-        updatesMap.put("sortAndSetIndex", message -> {
-            //The index of the player is updated
-            //??????
-        });
 
         // FIXME: 30/05/2023 check if we need this function
         updatesMap.put("challengeSuccess", message -> {
             setChanged();
             notifyObservers("challengeSuccess");
+        });
+
+        // FIXME: 30/05/2023 check if we need this function
+        updatesMap.put("sortAndSetIndex", message -> {
+            //The index of the player is updated
+            //??????
         });
     }
 
@@ -289,8 +290,6 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
      * The challengeRequest function is called when the user clicks on the challenge button.
      * It sends a request to the server to activate a challenge, and then clears all of the viewable words for challenge.
      * @param challengeWord Pass the challenge word to the server
-     *
-     *
      */
     @Override
     public void challengeRequest(String challengeWord) {
