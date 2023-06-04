@@ -21,7 +21,10 @@ public class ScrabbleApplication extends Application {
        try{
            FXMLLoader fxmlLoader = new FXMLLoader(ScrabbleApplication.class.getResource("/View/startScreen.fxml"));
            Scene scene = new Scene(fxmlLoader.load(), 600, 600);
-         //  stage.setTitle("Hello!");
+
+           StartScreen startScreen = fxmlLoader.getController();
+           startScreen.setStage(stage); // Set the stage object
+
            stage.setScene(scene);
            stage.show();
        }
