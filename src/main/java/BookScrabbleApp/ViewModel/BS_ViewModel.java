@@ -28,5 +28,4 @@ public interface BS_ViewModel {
 
     void setWordsForChallenge(List<String> wordsList);
 
-
 }
