@@ -28,7 +28,7 @@ public class Dictionary {
         this.cacheWithLRU = new CacheManager(400, LRU);
         this.LFU = new LFU();
         this.cacheWithLFU = new CacheManager(100, LFU);
-        this.filter = new BloomFilter(8192, "MD5", "SHA1", "SHA-256", "SHA-512");
+        this.filter = new BloomFilter(32768, "MD5", "SHA1", "SHA-256", "SHA-512");
         try {
             for (String name : fileNames) {
                 StringBuilder sb = new StringBuilder();

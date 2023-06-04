@@ -42,6 +42,8 @@ public class GameServer {
      * @throws Exception If an exception occurred
      */
     private void runServer() throws Exception {
+//        InetAddress ipAddress = InetAddress.getByName("127.0.0.1");
+
         ServerSocket server = new ServerSocket(port);
         server.setSoTimeout(1000);
         System.Logger logger = System.getLogger("MyServer");

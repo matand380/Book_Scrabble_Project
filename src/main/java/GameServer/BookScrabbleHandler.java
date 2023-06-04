@@ -58,10 +58,12 @@ public class BookScrabbleHandler implements ClientHandler {
             String[] books = booksList.toArray(new String[booksList.size()]);
             if (line.charAt(0) == 'Q') {
                 if (DictionaryManager.get().query(books)) {
+                    System.out.println("Q:true");
                     out.println("Q:true\n");
                     out.flush();
                 } else {
                     out.println("Q:false\n");
+                    System.out.println("Q:false");
                     out.flush();
                 }
             } else if (line.charAt(0) == 'C') {
