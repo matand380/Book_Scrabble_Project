@@ -31,8 +31,7 @@ public class GUIController implements Observer, Initializable {
 
     @Override
     public void initialize (URL url, ResourceBundle rb){
-//        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Logo.JPG")));
-//        imageView.setImage(image);
+
         System.out.println("welcome!");
 
     }

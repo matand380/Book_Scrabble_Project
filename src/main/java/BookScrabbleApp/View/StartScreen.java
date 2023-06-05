@@ -24,13 +24,16 @@ import java.util.ResourceBundle;
 public class StartScreen implements Initializable {
     BS_Host_ViewModel bsHostModel;
     BS_Guest_ViewModel bsGuestModel;
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
+
     @FXML
     private Label welcomeText;
     @FXML
     private Button hostModButton;
     @FXML
     private Button guestModButton;
-    Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -48,22 +51,22 @@ public class StartScreen implements Initializable {
         delay.play();
     }
 
-    public void createHost(ActionEvent actionEvent) {
+    public void createHost(ActionEvent actionEvent) throws IOException {
         bsHostModel = new BS_Host_ViewModel();
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/HostScreen.fxml"));
-            Parent secondFXML = fxmlLoader.load();
-            Scene scene = new Scene(secondFXML);
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (Exception e) {
-            System.out.println("Error with changing screen from start to Host");
-        }
+        root = FXMLLoader.load(getClass().getResource("/View/HostScreen.fxml"));
+        stage = (Stage) welcomeText.getScene().getWindow();
+        scene = new Scene(root,320,240);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void createGuest(ActionEvent actionEvent) {
-        bsGuestModel = new BS_Guest_ViewModel();
+    public void createGuest(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(getClass().getResource("/View/GuestScreen.fxml"));
+
+        stage = (Stage) welcomeText.getScene().getWindow();
+        scene = new Scene(root,320,240);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void showMainView() {
