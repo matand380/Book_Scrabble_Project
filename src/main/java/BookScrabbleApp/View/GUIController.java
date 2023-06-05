@@ -30,10 +30,12 @@ public class GUIController implements Observer, Initializable {
     }
 
     @Override
-    public void initialize (URL url, ResourceBundle rb){
-
-        System.out.println("welcome!");
-
+    public void initialize(URL url, ResourceBundle rb) {
+        Image backgroundImage = new Image(getClass().getResourceAsStream("/images/board.JPG"));
+        imageView.setImage(backgroundImage);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setCache(true);
     }
 
 
@@ -42,6 +44,4 @@ public class GUIController implements Observer, Initializable {
 
     }
 
-    public void initialize(ActionEvent actionEvent) {
-    }
 }

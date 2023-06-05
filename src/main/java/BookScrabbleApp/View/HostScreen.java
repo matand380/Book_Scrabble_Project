@@ -1,5 +1,6 @@
 package BookScrabbleApp.View;
 
+import BookScrabbleApp.ViewModel.BS_Host_ViewModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,9 +71,9 @@ public class HostScreen implements Initializable {
     }
 
     public void next(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("nextHostWindow.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/View/NewGameBoard.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root,320,240);
         stage.setScene(scene);
         stage.show();
     }

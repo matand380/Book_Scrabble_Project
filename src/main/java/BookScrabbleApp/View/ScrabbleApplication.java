@@ -18,7 +18,8 @@ public class ScrabbleApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-       try{
+
+        // welcomeText.setText("Welcome to Scrabble Application!!!");
            FXMLLoader fxmlLoader = new FXMLLoader(ScrabbleApplication.class.getResource("/View/startScreen.fxml"));
            Scene scene = new Scene(fxmlLoader.load(), 600, 600);
 
@@ -27,10 +28,7 @@ public class ScrabbleApplication extends Application {
 
            stage.setScene(scene);
            stage.show();
-       }
-       catch (Exception e) {
-           System.out.println("ec");
-       }
+
     }
 
 }

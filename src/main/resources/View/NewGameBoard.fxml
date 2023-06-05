@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane prefHeight="489.0" prefWidth="697.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GUIController">
+   <center>
+       <StackPane>
+       <ImageView fx:id="imageView" fitHeight="351.0" fitWidth="503.0" style="-fx-background-image: url('@../images/board.JPG'); -fx-background-repeat: stretch; -fx-background-size: cover;">
+           <image>
+               <Image url="@../images/board.JPG" />
+           </image>
+       </ImageView>
+       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="349.0" prefWidth="499.0" style="-fx-grid-lines-visible: TRUE;">
+
+          <columnConstraints>
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+              <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+      
+                                                                      </columnConstraints>
+          <rowConstraints>
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+              <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+      </GridPane>
+       </StackPane>
+   </center>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Menu">
+            <items>
+              <MenuItem mnemonicParsing="false" text="END GAME" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="RULES" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+
+</BorderPane>

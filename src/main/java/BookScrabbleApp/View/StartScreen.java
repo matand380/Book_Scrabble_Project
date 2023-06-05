@@ -44,7 +44,7 @@ public class StartScreen implements Initializable {
         delay.setOnFinished(event -> {
             // After 3 seconds, change the welcomeText label or perform other actions
             welcomeText.setText("Ready to play Scrabble!");
-            showMainView();
+            //showMainView();
         });
 
         // Start the delay
@@ -71,7 +71,7 @@ public class StartScreen implements Initializable {
 
     private void showMainView() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/mainGameScreen.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/startScreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 320, 240);
             stage.setScene(scene);
             stage.show();
