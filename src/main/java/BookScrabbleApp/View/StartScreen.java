@@ -55,7 +55,7 @@ public class StartScreen implements Initializable {
         bsHostModel = new BS_Host_ViewModel();
         root = FXMLLoader.load(getClass().getResource("/View/HostScreen.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root,320,240);
+        scene = new Scene(root,600, 600);
         stage.setScene(scene);
         stage.show();
     }
@@ -64,7 +64,7 @@ public class StartScreen implements Initializable {
         root = FXMLLoader.load(getClass().getResource("/View/GuestScreen.fxml"));
 
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root,320,240);
+        scene = new Scene(root,600, 600);
         stage.setScene(scene);
         stage.show();
     }
@@ -72,7 +72,7 @@ public class StartScreen implements Initializable {
     private void showMainView() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/View/startScreen.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+            Scene scene = new Scene(fxmlLoader.load(), 600, 600);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

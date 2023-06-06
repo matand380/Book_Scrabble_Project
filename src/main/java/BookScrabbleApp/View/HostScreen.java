@@ -73,7 +73,7 @@ public class HostScreen implements Initializable {
     public void next(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(getClass().getResource("/View/NewGameBoard.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root,320,240);
+        scene = new Scene(root,600, 600);
         stage.setScene(scene);
         stage.show();
     }
