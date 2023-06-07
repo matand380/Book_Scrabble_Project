@@ -10,4 +10,6 @@ module view.book_scrabble_project {
 
     opens BookScrabbleApp.View to javafx.fxml;
     exports BookScrabbleApp.View;
+    exports BookScrabbleApp;
+    opens BookScrabbleApp to javafx.fxml;
 }

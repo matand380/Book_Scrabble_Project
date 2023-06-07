@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -22,6 +23,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StartScreen implements Initializable {
+    public static String name;
+    @FXML
+    public TextField nameTextFiled;
     BS_Host_ViewModel bsHostModel;
     BS_Guest_ViewModel bsGuestModel;
     private Stage stage;
@@ -53,6 +57,9 @@ public class StartScreen implements Initializable {
 
     public void createHost(ActionEvent actionEvent) throws IOException {
         bsHostModel = new BS_Host_ViewModel();
+        name = nameTextFiled.getText();
+        bsHostModel.setPlayerProperties(name);
+
         root = FXMLLoader.load(getClass().getResource("/View/HostScreen.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root,600, 600);
@@ -61,6 +68,9 @@ public class StartScreen implements Initializable {
     }
 
     public void createGuest(ActionEvent actionEvent) throws IOException {
+        bsGuestModel = new BS_Guest_ViewModel();
+        name = nameTextFiled.getText();
+        bsGuestModel.setPlayerProperties(name);
         root = FXMLLoader.load(getClass().getResource("/View/GuestScreen.fxml"));
 
         stage = (Stage) welcomeText.getScene().getWindow();
