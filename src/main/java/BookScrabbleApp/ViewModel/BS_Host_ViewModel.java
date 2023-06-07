@@ -178,6 +178,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         winnerProperty = new SimpleStringProperty();
         challengeWord = new SimpleStringProperty();
         viewableWordsForChallenge = new ArrayList<>();
+        ip = new SimpleStringProperty();
+        port = new SimpleStringProperty();
         viewableHand = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             viewableHand.add(new ViewableTile(' ', 0));
