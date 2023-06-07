@@ -121,11 +121,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             notifyObservers("challengeSuccess");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
-        updatesMap.put("sortAndSetIndex", message -> {
-            //The index of the player is updated
-            //??????
-        });
+
     }
 
     /**
