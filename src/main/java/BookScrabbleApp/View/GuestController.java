@@ -1,13 +1,10 @@
 package BookScrabbleApp.View;
 
-import BookScrabbleApp.Model.*;
 import BookScrabbleApp.ViewModel.*;
 import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
-
-import java.util.regex.*;
 
 public class GuestController {
     //start method
