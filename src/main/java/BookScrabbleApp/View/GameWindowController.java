@@ -315,6 +315,7 @@ public class GameWindowController implements Observer, Initializable {
                 if (gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).isLocked()) {
                     return;
                 }
+                // TODO: 08/06/should return a tile instead of word
                 wordForTryPlace.removeIf(t -> t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow());
                 redrawYourWord(wordForTryPlace);
                 gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText("");
