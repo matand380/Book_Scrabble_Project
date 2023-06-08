@@ -37,6 +37,8 @@ public class GameWindowController implements Observer, Initializable {
     GridCanvas gameBoard = new GridCanvas();
     @FXML
     GridPane yourWord = new GridPane();
+    @FXML
+    Button startNewGameBtn;
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
@@ -254,6 +256,7 @@ public class GameWindowController implements Observer, Initializable {
 
     public void startNewGame() {
         this.hostViewModel.startNewGame();
+        startNewGameBtn.setVisible(false);
     }
 
     private void rollBack() {

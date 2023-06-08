@@ -165,7 +165,7 @@
                         </Label>
                         <Label fx:id="scorePlayer4" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" />
                 </AnchorPane>
-                <JFXButton onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
+                <JFXButton fx:id="startNewGameBtn" onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
                     <styleClass>
                         <String fx:value="button" />
                         <String fx:value="font" />
