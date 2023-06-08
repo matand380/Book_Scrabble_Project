@@ -359,14 +359,19 @@ public class GameWindowController implements Observer, Initializable {
         int lastTileRow = lastTile.tileRow;
         int lastTileCol = lastTile.tileCol;
 
-        boolean adjacent = (t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
-                || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1);
+        boolean adjacent = ((t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
+                || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1)) && wordForTryPlace.get(0).tileCol <= t.tileCol;
 
         boolean vertical = false;
 
         if (adjacent && wordForTryPlace.size() > 1) {
             // Check if the word is horizontal or vertical
             vertical = wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
+            if (vertical) {
+                if (wordForTryPlace.get(0).tileRow - 1 == lastTileRow) {
+                    return false;
+                }
+            }
         } else
             return adjacent;
 
@@ -385,8 +390,6 @@ public class GameWindowController implements Observer, Initializable {
         }
         return true;
     }
-
-
 }
 
 
