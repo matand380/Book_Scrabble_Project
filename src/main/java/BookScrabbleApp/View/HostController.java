@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class HostController {
     private Stage stage;
@@ -97,7 +98,7 @@ public class HostController {
     @FXML
     public void switchToGameWindow() throws Exception {
         if (nameTextFiled.getText().equals("")) {
-            name = "Player1";
+            name = "Guest"+ UUID.randomUUID().toString().substring(0,4);
         } else {
             name = nameTextFiled.getText();
         }
