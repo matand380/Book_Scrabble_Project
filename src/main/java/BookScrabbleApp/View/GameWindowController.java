@@ -149,23 +149,28 @@ public class GameWindowController implements Observer, Initializable {
 
     @FXML
     protected void onTryButtonClick() {
-        StringBuilder word = new StringBuilder();
         if (wordForTryPlace.size() > 1) {
-            boolean direction = false;
-            for (TileField t : wordForTryPlace) {
-                word.append(t.letter.getText());
-            }
-            if (wordForTryPlace.size() > 0) {
-                if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
-                    direction = true;
+            if (checkFirstWord()) {
+                StringBuilder word = new StringBuilder();
+                boolean direction = false;
+                for (TileField t : wordForTryPlace) {
+                    word.append(t.letter.getText());
                 }
-            }
-            hostViewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-            wordForTryPlace.clear();
-            yourWord.getChildren().clear();
-            for (TileField t : handFields) {
-                t.setUnlocked();
-            }
+                if (wordForTryPlace.size() > 0) {
+                    if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
+                        direction = true;
+                    }
+                }
+                hostViewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
+                wordForTryPlace.clear();
+                yourWord.getChildren().clear();
+                for (TileField t : handFields) {
+                    t.setUnlocked();
+                }
+            }else
+                alertPopUp("First Word Error","First Word Error","First Word as to be on the star");
+        }else{
+            alertPopUp("Word Error","Word Error","Word as to be at least tow letter");
         }
         Platform.runLater(() -> gameBoard.requestFocus());
     }
@@ -205,11 +210,11 @@ public class GameWindowController implements Observer, Initializable {
         }
     }
 
-    private void invalidWord() {
+    private void alertPopUp(String title, String header, String text) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Invalid Word");
-        alert.setHeaderText("Invalid Word");
-        alert.setContentText("The word you tried to place is invalid");
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(text);
         alert.showAndWait();
 
         rollBack();
@@ -236,7 +241,7 @@ public class GameWindowController implements Observer, Initializable {
         });
         updatesMap.put("invalidWord", message -> {
             //The word is invalid
-            invalidWord();
+            alertPopUp("Invalid Word","Invalid Word","The word you tried to place is invalid");
         });
     }
 
@@ -368,12 +373,7 @@ public class GameWindowController implements Observer, Initializable {
 
         if (adjacent && wordForTryPlace.size() > 1) {
             // Check if the word is horizontal or vertical
-            vertical = wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
-            if (vertical) {
-                if (wordForTryPlace.get(0).tileRow - 1 == lastTileRow) {
-                    return false;
-                }
-            }
+            vertical = isVertical(wordForTryPlace);
         } else
             return adjacent;
 
@@ -391,6 +391,20 @@ public class GameWindowController implements Observer, Initializable {
             }
         }
         return true;
+    }
+
+    private boolean isVertical(List<TileField> wordTryPlace) {
+        return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
+    }
+
+    /**
+     * The checkFirstWord function checks if the first word is placed on a star.
+     * The first word must be placed at the center of the board.
+     * <p>
+     * @return True if the first word is placed
+     */
+    private boolean checkFirstWord() {
+        return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
     }
 }
 
