@@ -43,10 +43,22 @@ public class HostController {
             invalidIPorPort.setText("Please enter IP and Port");
         }
         else {
-            invalidIPorPort.setText("Game server connected");
-            host.ip.bindBidirectional(IpTextFiled.textProperty());
-            host.port.bindBidirectional(PortTextFiled.textProperty());
-            host.openSocket();
+            boolean connected = true;
+                host.ip.bindBidirectional(IpTextFiled.textProperty());
+                host.port.bindBidirectional(PortTextFiled.textProperty());
+            try {
+                host.openSocket();
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Connect Error");
+                alert.setHeaderText("Connect Error");
+                alert.setContentText("The game server not connected");
+                alert.showAndWait();
+                connected = false;
+            }
+            if (connected) {
+                invalidIPorPort.setText("Game server connected");
+            }
         }
     }
 

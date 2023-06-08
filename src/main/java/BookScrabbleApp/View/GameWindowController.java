@@ -1,9 +1,6 @@
 package BookScrabbleApp.View;
 
 import BookScrabbleApp.*;
-import BookScrabbleApp.Model.*;
-import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameData.Tile;
 import BookScrabbleApp.ViewModel.*;
 import javafx.application.*;
 import javafx.beans.property.*;
@@ -12,7 +9,6 @@ import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
-
 import java.net.*;
 import java.util.*;
 import java.util.function.*;
