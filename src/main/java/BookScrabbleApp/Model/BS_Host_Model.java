@@ -1,21 +1,16 @@
 package BookScrabbleApp.Model;
 
 import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameLogic.HostCommunicationHandler;
-import BookScrabbleApp.Model.GameLogic.MyServer;
+import BookScrabbleApp.Model.GameLogic.*;
+import com.google.gson.*;
 
-import java.io.IOException;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.LockSupport;
-import java.util.regex.Pattern;
-
-import com.google.gson.Gson;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+import java.util.concurrent.locks.*;
+import java.util.regex.*;
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -325,7 +320,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             notifyObservers("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
             //if the current player is the host, then the host's viewModel wan't display the challenge words
 
-            LockSupport.parkNanos(10000000000L); //park for 10 seconds
+            LockSupport.parkNanos(3000000000L); //park for 3 seconds
             if (challengeActivated.get()) {
                 //execute challengeWord method
                 boolean result = false;

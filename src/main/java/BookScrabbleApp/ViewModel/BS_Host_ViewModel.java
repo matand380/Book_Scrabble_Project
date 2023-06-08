@@ -1,16 +1,15 @@
 package BookScrabbleApp.ViewModel;
 
-import BookScrabbleApp.Model.BookScrabbleHostFacade;
-import BookScrabbleApp.Model.GameData.Tile;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import BookScrabbleApp.Model.*;
+import BookScrabbleApp.Model.GameData.*;
+import javafx.beans.property.*;
 
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.function.*;
 
 public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel {
 
-    public SimpleStringProperty ip;
+    public SimpleStringProperty ip ;
 
     public SimpleStringProperty port;
 
@@ -63,7 +62,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             int playerIndex = Integer.parseInt(messageSplit[1]);
             //The turn is updated
             setChanged();
-            notifyObservers("turnPassed:" + playerIndex);
+            notifyObservers("turnPassed");
         });
 
         updatesMap.put("wordsForChallenge", message -> {
@@ -114,14 +113,17 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             notifyObservers("endGame");
         });
 
+        // FIXME: 30/05/2023 check if we need this function
+        updatesMap.put("sortAndSetIndex", message -> {
+            //The index of the player is updated
+            //??????
+        });
 
         // FIXME: 30/05/2023 check if we need this function
         updatesMap.put("challengeSuccess", message -> {
             setChanged();
             notifyObservers("challengeSuccess");
         });
-
-
     }
 
     /**
@@ -132,11 +134,14 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
      *
      */
     public void setWordsForChallenge(List<String> wordsList) {
-        for (int i = 0; i < wordsList.size(); i++) {
-            viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
+        if (wordsList.size() > 1) {
+            for (int i = 0; i < wordsList.size(); i++) {
+                viewableWordsForChallenge.add(new SimpleStringProperty());
+                viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
+            }
+            setChanged();
+            notifyObservers("wordsForChallenge updated");
         }
-        setChanged();
-        notifyObservers("wordsForChallenge updated");
     }
 
     /**
@@ -151,8 +156,10 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public void setBoard() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                viewableBoard.get(i).get(j).setLetter(hostFacade.getBoardState()[i][j].getLetter());
-                viewableBoard.get(i).get(j).setScore(hostFacade.getBoardState()[i][j].getScore());
+                if (hostFacade.getBoardState()[i][j] != null) {
+                    viewableBoard.get(i).get(j).setLetter(hostFacade.getBoardState()[i][j].getLetter());
+                    viewableBoard.get(i).get(j).setScore(hostFacade.getBoardState()[i][j].getScore());
+                }
             }
         }
         setChanged();
@@ -174,9 +181,9 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         winnerProperty = new SimpleStringProperty();
         challengeWord = new SimpleStringProperty();
         viewableWordsForChallenge = new ArrayList<>();
+        viewableHand = new ArrayList<>();
         ip = new SimpleStringProperty();
         port = new SimpleStringProperty();
-        viewableHand = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             viewableHand.add(new ViewableTile(' ', 0));
         }
@@ -217,6 +224,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     @Override
     public void setScore() {
         for (int i = 0; i < hostFacade.getPlayers().size(); i++) {
+            viewableScores.add(new SimpleStringProperty());
             viewableScores.get(i).setValue(String.valueOf(hostFacade.getPlayers().get(i).get_score()));
         }
         setChanged();
@@ -249,7 +257,6 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
         // TODO: 01/06/2023 need to take care for the word binding
         hostFacade.tryPlaceWord(word, row, col, isVertical);
-
     }
 
     /**
@@ -265,7 +272,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 
     /**
      * The setPlayerProperties function is called from the view with the TextField value of the player name.
-        * It then calls a function in the hostFacade that will set the name of the player.
+     * It then calls a function in the hostFacade that will set the name of the player.
      * <p>
      * @param name Set the name of the player
      */
@@ -288,6 +295,8 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
      * The challengeRequest function is called when the user clicks on the challenge button.
      * It sends a request to the server to activate a challenge, and then clears all of the viewable words for challenge.
      * @param challengeWord Pass the challenge word to the server
+     *
+     *
      */
     @Override
     public void challengeRequest(String challengeWord) {
@@ -313,21 +322,22 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
      *
      * @param  o Determine the type of observable object that is being passed in
      * @param  arg Pass the message from the observable to this observer
-        private void updateplayerlist(string message) {
-            string[] playerlist = message
+    private void updateplayerlist(string message) {
+    string[] playerlist = message
      */
     @Override
     public void update(Observable o, Object arg) {
-        if (o instanceof BookScrabbleHostFacade) {
-            String message = (String) arg;
-            String[] messageSplit = message.split(":");
-            String updateType = messageSplit[0];
-            if (updatesMap.containsKey(updateType)) {
-                updatesMap.get(updateType).accept(message);
-            } else {
-                setChanged();
-                notifyObservers("Error in updates handling ");
-            }
+//        if (o instanceof BookScrabbleHostFacade) {
+        String message = (String) arg;
+        String[] messageSplit = message.split(":");
+        String updateType = messageSplit[0];
+        if (updatesMap.containsKey(updateType)) {
+            updatesMap.get(updateType).accept(message);
+        } else {
+            setChanged();
+            notifyObservers("Error in updates handling ");
         }
+//        }
     }
+
 }

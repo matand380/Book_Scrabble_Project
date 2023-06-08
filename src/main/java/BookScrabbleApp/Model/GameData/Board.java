@@ -134,8 +134,6 @@ public class Board implements Serializable, ObjectFactory {
         boolean notRequireReplacement;
         boolean tileConnected;
         if (gridLegal) {
-            if (wordCounter == 0)
-                return checkFirstWord(w);
             tileConnected = checkIfConnected(w);
             notRequireReplacement = notRequireLetterReplacement(w);
             return tileConnected && notRequireReplacement;
@@ -152,25 +150,6 @@ public class Board implements Serializable, ObjectFactory {
      */
     private boolean checkIfInside(Word w) {
         return w.getCol() < height && w.getRow() < width && w.getCol() >= 0 && w.getRow() >= 0;
-    }
-
-    /**
-     * The checkFirstWord function checks if the first word is placed on a star.
-     * The first word must be placed at the center of the board.
-     * <p>
-     *
-     * @param  word Check if the word is vertical or horizontal
-     * @return True if the first word is placed
-     */
-    private boolean checkFirstWord(Word word) {
-        if (mainBoard[7][7] == null) {
-            if (word.isVertical() && word.getCol() == 7 && word.getRow() <= 7)
-                return word.getRow() + word.getTiles().length >= 7 && word.getRow() + word.getTiles().length < width;
-            else if (!word.isVertical() && word.getRow() == 7 && word.getCol() <= 7)
-                return word.getCol() + word.getTiles().length >= 7 && word.getCol() + word.getTiles().length < height;
-
-        }
-        return false;
     }
 
     /**

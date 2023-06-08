@@ -1,7 +1,7 @@
 package BookScrabbleApp.ViewModel;
 
-import BookScrabbleApp.Model.GameData.Tile;
-import javafx.beans.property.SimpleStringProperty;
+import BookScrabbleApp.Model.GameData.*;
+import javafx.beans.property.*;
 
 public class ViewableTile extends Tile {
 

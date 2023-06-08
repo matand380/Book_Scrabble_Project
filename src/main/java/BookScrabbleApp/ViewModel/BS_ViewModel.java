@@ -1,6 +1,6 @@
 package BookScrabbleApp.ViewModel;
 
-import java.util.List;
+import java.util.*;
 
 public interface BS_ViewModel {
 
@@ -27,5 +27,6 @@ public interface BS_ViewModel {
     void initializeUpdateMap();
 
     void setWordsForChallenge(List<String> wordsList);
+
 
 }

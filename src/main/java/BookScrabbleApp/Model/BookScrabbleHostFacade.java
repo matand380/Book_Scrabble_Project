@@ -1,10 +1,10 @@
 package BookScrabbleApp.Model;
 
-import java.net.Socket;
-import java.util.*;
-
 import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameLogic.MyServer;
+import BookScrabbleApp.Model.GameLogic.*;
+
+import java.net.*;
+import java.util.*;
 
 public class BookScrabbleHostFacade extends Observable implements Observer {
     private BS_Host_Model hostModel;
