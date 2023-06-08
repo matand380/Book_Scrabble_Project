@@ -150,20 +150,22 @@ public class GameWindowController implements Observer, Initializable {
     @FXML
     protected void onTryButtonClick() {
         StringBuilder word = new StringBuilder();
-        boolean direction = false;
-        for (TileField t : wordForTryPlace) {
-            word.append(t.letter.getText());
-        }
-        if (wordForTryPlace.size() > 0) {
-            if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
-                direction = true;
+        if (wordForTryPlace.size() > 1) {
+            boolean direction = false;
+            for (TileField t : wordForTryPlace) {
+                word.append(t.letter.getText());
             }
-        }
-        hostViewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-        wordForTryPlace.clear();
-        yourWord.getChildren().clear();
-        for (TileField t : handFields) {
-            t.setUnlocked();
+            if (wordForTryPlace.size() > 0) {
+                if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
+                    direction = true;
+                }
+            }
+            hostViewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
+            wordForTryPlace.clear();
+            yourWord.getChildren().clear();
+            for (TileField t : handFields) {
+                t.setUnlocked();
+            }
         }
         Platform.runLater(() -> gameBoard.requestFocus());
     }
