@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<?import BookScrabbleApp.GridCanvas?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="865.0" prefWidth="1512.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.gameWindowController">
+    <bottom>
+        <AnchorPane prefHeight="211.0" prefWidth="1512.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox fx:id="TryAndPassVBox" layoutY="14.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
+                    <children>
+                        <JFXButton fx:id="PassTurnButton" onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Pass Turn">
+                            <styleClass>
+                                <String fx:value="button" />
+                                <String fx:value="font" />
+                            </styleClass>
+                        </JFXButton>
+                        <JFXButton fx:id="TryPlaceWordButton" layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Try Place">
+                            <styleClass>
+                                <String fx:value="button" />
+                                <String fx:value="font" />
+                            </styleClass>
+                        </JFXButton>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                    </padding>
+                </VBox>
+                <AnchorPane layoutX="277.0" layoutY="39.0" prefHeight="92.0" prefWidth="926.0">
+                    <children>
+                        <GridPane fx:id="handGrid" gridLinesVisible="true" layoutX="15.0" layoutY="12.0" prefHeight="136.0" prefWidth="945.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                        </GridPane>
+                    </children>
+                </AnchorPane>
+                <VBox fx:id="SortVbox" layoutX="1320.0" layoutY="16.0" prefHeight="196.0" prefWidth="192.0" spacing="10.0">
+                    <padding>
+                        <Insets bottom="10.0" top="10.0" />
+                    </padding>
+                    <children>
+                        <JFXButton fx:id="SortABCButton" onAction="#onSortABCButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Sort ABC">
+                            <styleClass>
+                                <String fx:value="button" />
+                                <String fx:value="font" />
+                            </styleClass>
+                        </JFXButton>
+                        <JFXButton fx:id="SortScoreButton" layoutX="10.0" layoutY="20.0" onAction="#onSortScoreButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Sort Score">
+                            <styleClass>
+                                <String fx:value="button" />
+                                <String fx:value="font" />
+                            </styleClass>
+                        </JFXButton>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </bottom>
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <AnchorPane BorderPane.alignment="CENTER">
+            <children>
+                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>
+                <!--            <Canvas height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0" />-->
+                <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Label>
+                <GridPane fx:id="yourWord" layoutX="1056.0" layoutY="142.0" prefHeight="31.4" prefWidth="220.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                </GridPane>
+            </children>
+        </AnchorPane>
+    </center>
+    <left>
+        <VBox fx:id="AvatarVbox" prefHeight="578.0" prefWidth="214.0" spacing="5.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets />
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="10.0" left="40.0" right="20.0" top="10.0" />
+            </padding>
+            <children>
+                <AnchorPane prefHeight="571.0" prefWidth="191.0">
+                    <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                        <Label fx:id="namePlayer1" layoutX="32.0" layoutY="50.0" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="CENTER">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="scorePlayer1" layoutX="55.0" layoutY="85.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="namePlayer2" layoutX="32.0" layoutY="153.0" prefHeight="30.0" prefWidth="84.0">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="scorePlayer2" layoutX="55.0" layoutY="184.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="namePlayer3" layoutX="32.0" layoutY="256.0" prefHeight="30.0" prefWidth="84.0">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="scorePlayer3" layoutX="55.0" layoutY="284.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="namePlayer4" layoutX="32.0" layoutY="357.0" prefHeight="30.0" prefWidth="84.0">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="scorePlayer4" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" />
+                    </children>
+                </AnchorPane>
+                <JFXButton fx:id="SortABCButton1" onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../../../buttonTest.css" text="Start">
+                    <styleClass>
+                        <String fx:value="button" />
+                        <String fx:value="font" />
+                    </styleClass>
+                </JFXButton>
+            </children>
+        </VBox>
+    </left>
+</BorderPane>
