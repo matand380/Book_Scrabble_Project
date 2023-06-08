@@ -20,6 +20,16 @@ public class TileField extends StackPane {
     private boolean isLocked;
     private boolean isSelect;
 
+    public boolean isUpdate() {
+        return isUpdate;
+    }
+
+    public void setUpdate() {
+        isUpdate = true;
+    }
+
+    private boolean isUpdate = false;
+
     public int tileCol;
     public int tileRow;
 

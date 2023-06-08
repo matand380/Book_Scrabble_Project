@@ -163,7 +163,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             }
         }
         setChanged();
-        notifyObservers("board updated");
+        notifyObservers("tileBoard updated");
 
 
     }

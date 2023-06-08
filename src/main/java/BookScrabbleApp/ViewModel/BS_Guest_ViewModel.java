@@ -66,7 +66,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
             }
         }
         setChanged();
-        notifyObservers("board updated");
+        notifyObservers("tileBoard updated");
     }
 
     /**

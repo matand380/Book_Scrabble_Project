@@ -232,6 +232,13 @@ public class GameWindowController implements Observer, Initializable {
 
         updatesMap.put("tileBoard updated", message -> {
             gameBoard.setTileFields(boardFields);
+            gameBoard.tileFields.forEach(row -> {
+                row.forEach(tileField -> {
+                   if (!tileField.isUpdate()){
+                       tileField.setUpdate();
+                    }
+                });
+            });
         });
 
         updatesMap.put("scores updated", message -> {

@@ -106,10 +106,10 @@ public class HostController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
-        stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(e -> Platform.exit());
         GameWindowController controller = loader.getController();
         controller.setViewModel(host);
     }
