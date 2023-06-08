@@ -20,12 +20,12 @@
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Button fx:id="startGameButton" layoutX="1172.0" layoutY="615.0" onAction="#switchToGameWindow" prefHeight="100.0" prefWidth="211.0" text="Start">
+            <Button  layoutX="1172.0" layoutY="615.0" onAction="#switchToGameWindow" prefHeight="100.0" prefWidth="211.0" text="Start" stylesheets="@../buttonStyleSheets.css">
                 <font>
                     <Font size="49.0" />
                 </font>
             </Button>
-            <Label fx:id="welcomeText111" layoutX="605.0" layoutY="521.0" prefHeight="69.0" prefWidth="132.0" text="Name:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
+            <Label  layoutX="605.0" layoutY="521.0" prefHeight="69.0" prefWidth="132.0" text="Name:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
                 <font>
                     <Font size="39.0" />
                 </font>
@@ -41,12 +41,12 @@
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Label fx:id="welcomeText1111" layoutX="185.0" layoutY="295.0" prefHeight="69.0" prefWidth="201.0" text="your port:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
+            <Label  layoutX="185.0" layoutY="295.0" prefHeight="69.0" prefWidth="201.0" text="your port:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
                 <font>
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Label fx:id="welcomeText11111" layoutX="231.0" layoutY="194.0" prefHeight="69.0" prefWidth="158.0" text="your ip:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
+            <Label  layoutX="231.0" layoutY="194.0" prefHeight="69.0" prefWidth="158.0" text="your ip:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
                 <font>
                     <Font size="39.0" />
                 </font>
@@ -56,7 +56,7 @@
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Button fx:id="startGameButton1" layoutX="1172.0" layoutY="471.0" onAction="#initializeNextHostWindow" prefHeight="100.0" prefWidth="211.0" text="Get">
+            <Button  layoutX="1172.0" layoutY="471.0" onAction="#initializeNextHostWindow" stylesheets="@../buttonStyleSheets.css" prefHeight="100.0" prefWidth="211.0" text="Get">
                 <font>
                     <Font size="49.0" />
                 </font>

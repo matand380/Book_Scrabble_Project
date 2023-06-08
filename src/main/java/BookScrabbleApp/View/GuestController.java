@@ -41,14 +41,13 @@ public class GuestController {
     @FXML
     public void startGameWindow() throws Exception {
         BS_Guest_ViewModel guestViewModel = new BS_Guest_ViewModel();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tsetViewModel/gameWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        gameWindowController gameWindowController = loader.getController();
+        GameWindowController gameWindowController = loader.getController();
         gameWindowController.setViewModel(guestViewModel);
-
     }
 }

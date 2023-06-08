@@ -1,11 +1,8 @@
 package BookScrabbleApp;
 
 import BookScrabbleApp.View.*;
-import javafx.event.*;
 import javafx.scene.canvas.*;
-import javafx.scene.input.*;
 import javafx.scene.paint.*;
-
 import java.util.*;
 
 public class GridCanvas extends Canvas {
