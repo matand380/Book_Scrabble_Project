@@ -35,7 +35,7 @@ public class TileField extends StackPane {
 
         setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                gameWindowController.selectedTileField = TileField.this;
+                GameWindowController.selectedTileField = TileField.this;
                 event.consume();
                 setSelect(true);
             }

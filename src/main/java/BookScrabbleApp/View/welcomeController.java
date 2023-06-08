@@ -16,7 +16,7 @@ public class welcomeController {
 
     @FXML
     public void switchToHostWindow() throws Exception {
-        root = FXMLLoader.load(getClass().getResource("/com/example/tsetViewModel/hostWindow.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostServerWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -24,7 +24,7 @@ public class welcomeController {
     }
     @FXML
     public void switchToGuestWindow() throws Exception {
-        root = FXMLLoader.load(getClass().getResource("/com/example/tsetViewModel/guestWindow.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/guestWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

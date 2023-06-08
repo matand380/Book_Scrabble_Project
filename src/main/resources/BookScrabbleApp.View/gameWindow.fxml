@@ -18,19 +18,19 @@
 <?import javafx.scene.text.Font?>
 
 <?import BookScrabbleApp.GridCanvas?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="865.0" prefWidth="1512.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.gameWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="865.0" prefWidth="1512.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
         <AnchorPane prefHeight="211.0" prefWidth="1512.0" BorderPane.alignment="CENTER">
             <children>
-                <VBox fx:id="TryAndPassVBox" layoutY="14.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
+                <VBox  layoutY="14.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
                     <children>
-                        <JFXButton fx:id="PassTurnButton" onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Pass Turn">
+                        <JFXButton  onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Pass Turn">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
                             </styleClass>
                         </JFXButton>
-                        <JFXButton fx:id="TryPlaceWordButton" layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Try Place">
+                        <JFXButton  layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
@@ -59,24 +59,22 @@
                         </GridPane>
                     </children>
                 </AnchorPane>
-                <VBox fx:id="SortVbox" layoutX="1320.0" layoutY="16.0" prefHeight="196.0" prefWidth="192.0" spacing="10.0">
+                <VBox  layoutX="1320.0" layoutY="16.0" prefHeight="196.0" prefWidth="192.0" spacing="10.0">
                     <padding>
                         <Insets bottom="10.0" top="10.0" />
                     </padding>
-                    <children>
-                        <JFXButton fx:id="SortABCButton" onAction="#onSortABCButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Sort ABC">
+                        <JFXButton  onAction="#onSortABCButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Sort ABC">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
                             </styleClass>
                         </JFXButton>
-                        <JFXButton fx:id="SortScoreButton" layoutX="10.0" layoutY="20.0" onAction="#onSortScoreButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../../../buttonTest.css" text="Sort Score">
+                        <JFXButton  layoutX="10.0" layoutY="20.0" onAction="#onSortScoreButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Sort Score">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
                             </styleClass>
                         </JFXButton>
-                    </children>
                 </VBox>
             </children>
         </AnchorPane>
@@ -130,16 +128,14 @@
         </AnchorPane>
     </center>
     <left>
-        <VBox fx:id="AvatarVbox" prefHeight="578.0" prefWidth="214.0" spacing="5.0" BorderPane.alignment="CENTER">
+        <VBox  prefHeight="578.0" prefWidth="214.0" spacing="5.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets />
             </BorderPane.margin>
             <padding>
                 <Insets bottom="10.0" left="40.0" right="20.0" top="10.0" />
             </padding>
-            <children>
                 <AnchorPane prefHeight="571.0" prefWidth="191.0">
-                    <children>
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
@@ -168,15 +164,13 @@
                             </font>
                         </Label>
                         <Label fx:id="scorePlayer4" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" />
-                    </children>
                 </AnchorPane>
-                <JFXButton fx:id="SortABCButton1" onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../../../buttonTest.css" text="Start">
+                <JFXButton  onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
                     <styleClass>
                         <String fx:value="button" />
                         <String fx:value="font" />
                     </styleClass>
                 </JFXButton>
-            </children>
         </VBox>
     </left>
 </BorderPane>
