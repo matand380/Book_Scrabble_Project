@@ -152,7 +152,6 @@ public class GameWindowController implements Observer, Initializable {
         StringBuilder word = new StringBuilder();
         boolean direction = false;
         for (TileField t : wordForTryPlace) {
-
             word.append(t.letter.getText());
         }
         if (wordForTryPlace.size() > 0) {
@@ -296,19 +295,19 @@ public class GameWindowController implements Observer, Initializable {
                 }
             } else if (keyEvent.getCode() == KeyCode.UP) {
                 if (gameBoard.getRow() > 0) {
-                    gameBoard.setPlace(gameBoard.getRow(), gameBoard.getCol() - 1);
+                    gameBoard.setPlace(gameBoard.getRow() - 1, gameBoard.getCol());
                 }
             } else if (keyEvent.getCode() == KeyCode.DOWN) {
                 if (gameBoard.getRow() < 14) {
-                    gameBoard.setPlace(gameBoard.getRow(), gameBoard.getCol() + 1);
+                    gameBoard.setPlace(gameBoard.getRow() + 1, gameBoard.getCol());
                 }
             } else if (keyEvent.getCode() == KeyCode.LEFT) {
                 if (gameBoard.getCol() > 0) {
-                    gameBoard.setPlace(gameBoard.getRow() - 1, gameBoard.getCol());
+                    gameBoard.setPlace(gameBoard.getRow(), gameBoard.getCol() - 1);
                 }
             } else if (keyEvent.getCode() == KeyCode.RIGHT) {
                 if (gameBoard.getCol() < 14) {
-                    gameBoard.setPlace(gameBoard.getRow() + 1, gameBoard.getCol());
+                    gameBoard.setPlace(gameBoard.getRow(), gameBoard.getCol() + 1);
                 }
             } else if (keyEvent.getCode() == KeyCode.ENTER) {
                 setTileFieldOnBoard();
@@ -346,10 +345,10 @@ public class GameWindowController implements Observer, Initializable {
                 redrawYourWord(wordForTryPlace);
                 gameBoard.redraw();
             }
-        }
-        else if (selectedTileField != null)
+        } else if (selectedTileField != null)
             selectedTileField.setSelect(false);
     }
+
     private boolean ifConnected(TileField t) {
         if (wordForTryPlace.isEmpty()) {
             return true;

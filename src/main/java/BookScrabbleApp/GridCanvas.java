@@ -49,8 +49,12 @@ public class GridCanvas extends Canvas {
         //if (tileFields != null) {
         double W = getWidth();
         double H = getHeight();
+
         double w = W / colorBoard[0].length;
         double h = H / colorBoard.length;
+
+        double xCoordinate = col * w;
+        double YCoordinate = row * h;
 
         GraphicsContext gc = getGraphicsContext2D();
 
@@ -60,8 +64,8 @@ public class GridCanvas extends Canvas {
             for (int boardCol = 0; boardCol < 15; boardCol++) {
                 if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
                     gc.setFill(getColorForScore(colorBoard[boardRow][boardCol]));
-                    gc.fillRect(boardRow * w , boardCol * h, w, h);
-                    gc.fillText(String.valueOf(colorBoard[boardRow][boardCol]), boardRow * w + w / 2, boardCol * h + h / 2);
+                    gc.fillRect(xCoordinate , YCoordinate, w, h);
+                    gc.fillText(String.valueOf(colorBoard[boardRow][boardCol]), xCoordinate + w / 2, YCoordinate + h / 2);
                 } else{
                     tileFields.get(boardRow).get(boardCol).setLocked();
                     this.placeTileFiled(tileFields.get(boardRow).get(boardCol),boardRow,boardCol);
@@ -69,7 +73,7 @@ public class GridCanvas extends Canvas {
             }
         }
         gc.setFill(Color.rgb(248, 0, 0,0.6));
-        gc.fillRect(row * w, col * h, w, h);
+        gc.fillRect(xCoordinate, YCoordinate, w, h);
         // }
     }
 

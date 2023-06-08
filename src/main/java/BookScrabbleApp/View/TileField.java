@@ -71,22 +71,24 @@ public class TileField extends StackPane {
     public void draw(GraphicsContext gc, int row, int col, double width, double height, int fontSize) {
         this.tileCol = col;
         this.tileRow = row;
+        double xCoordinate = col * width;
+        double YCoordinate = row * height;
 
         // Create background rectangle
         gc.setFill(Color.LIGHTGRAY);
         gc.setStroke(Color.BLACK);
-        gc.fillRect(row * width, col * height, width, height);
-        gc.strokeRect(row * width, col * height, width, height);
+        gc.fillRect(xCoordinate, YCoordinate, width, height);
+        gc.strokeRect(xCoordinate, YCoordinate, width, height);
 
         // Draw letter
         gc.setFont(Font.font("Arial", FontWeight.BOLD, fontSize));
         gc.setFill(Color.BLACK);
-        gc.fillText(String.valueOf(this.letter.getText()), row * width + width / 2, col * height + height / 2);
+        gc.fillText(String.valueOf(this.letter.getText()), xCoordinate + width / 2, YCoordinate + height / 2);
 
         // Draw score
         gc.setFont(Font.font("Arial", FontWeight.NORMAL, fontSize));
         gc.setFill(Color.RED);
-        gc.fillText(String.valueOf(this.score.getText()), row * width + width / 2, col * height + height / 2 + 20);
+        gc.fillText(String.valueOf(this.score.getText()), xCoordinate + width / 2, YCoordinate + height / 2 + 20);
     }
 
     public void setSelect(boolean select) {
