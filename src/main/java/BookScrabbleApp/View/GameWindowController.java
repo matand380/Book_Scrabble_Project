@@ -164,9 +164,9 @@ public class GameWindowController implements Observer, Initializable {
                     t.setUnlocked();
                 }
             }else
-                alertPopUp("First Word Error","First Word Error","First Word as to be on the star");
+                alertPopUp("First Word Error","First Word Error","First Word has to be on the star");
         }else{
-            alertPopUp("Word Error","Word Error","Word as to be at least tow letter");
+            alertPopUp("Word Error","Word Error","Word has to be at least two letters long");
         }
         Platform.runLater(() -> gameBoard.requestFocus());
     }
