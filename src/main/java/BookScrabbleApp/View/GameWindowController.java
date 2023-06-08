@@ -1,9 +1,6 @@
 package BookScrabbleApp.View;
 
 import BookScrabbleApp.*;
-import BookScrabbleApp.Model.*;
-import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameData.Tile;
 import BookScrabbleApp.ViewModel.*;
 import javafx.application.*;
 import javafx.beans.property.*;
@@ -12,7 +9,6 @@ import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
-
 import java.net.*;
 import java.util.*;
 import java.util.function.*;
@@ -168,9 +164,9 @@ public class GameWindowController implements Observer, Initializable {
                     t.setUnlocked();
                 }
             }else
-                alertPopUp("First Word Error","First Word Error","First Word as to be on the star");
+                alertPopUp("First Word Error","First Word Error","First Word has to be on the star");
         }else{
-            alertPopUp("Word Error","Word Error","Word as to be at least tow letter");
+            alertPopUp("Word Error","Word Error","Word has to be at least two letters long");
         }
         Platform.runLater(() -> gameBoard.requestFocus());
     }

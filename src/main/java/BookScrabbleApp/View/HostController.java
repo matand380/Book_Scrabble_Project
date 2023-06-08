@@ -1,6 +1,7 @@
 package BookScrabbleApp.View;
 
 import BookScrabbleApp.ViewModel.*;
+import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -43,10 +44,22 @@ public class HostController {
             invalidIPorPort.setText("Please enter IP and Port");
         }
         else {
-            invalidIPorPort.setText("Game server connected");
-            host.ip.bindBidirectional(IpTextFiled.textProperty());
-            host.port.bindBidirectional(PortTextFiled.textProperty());
-            host.openSocket();
+            boolean connected = true;
+                host.ip.bindBidirectional(IpTextFiled.textProperty());
+                host.port.bindBidirectional(PortTextFiled.textProperty());
+            try {
+                host.openSocket();
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Connect Error");
+                alert.setHeaderText("Connect Error");
+                alert.setContentText("The game server is not connected\n" + "Connect the game server and click submit again");
+                alert.showAndWait();
+                connected = false;
+            }
+            if (connected) {
+                invalidIPorPort.setText("Game server connected");
+            }
         }
     }
 
@@ -54,6 +67,7 @@ public class HostController {
     public void next() throws Exception {
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
+        stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -91,6 +105,7 @@ public class HostController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
+        stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
