@@ -52,7 +52,7 @@ public class HostController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Connect Error");
                 alert.setHeaderText("Connect Error");
-                alert.setContentText("The game server not connected");
+                alert.setContentText("The game server not connected\n" + "Connect the game server and click submit again");
                 alert.showAndWait();
                 connected = false;
             }
