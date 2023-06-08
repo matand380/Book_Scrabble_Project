@@ -357,7 +357,41 @@ public class GameWindowController implements Observer, Initializable {
         else if (selectedTileField != null)
             selectedTileField.setSelect(false);
     }
+    private boolean ifConnected(TileField t) {
+        if (wordForTryPlace.isEmpty()) {
+            return true;
+        }
 
+        TileField lastTile = wordForTryPlace.get(wordForTryPlace.size() - 1);
+        int lastTileRow = lastTile.tileRow;
+        int lastTileCol = lastTile.tileCol;
+
+        boolean adjacent = (t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
+                || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1);
+
+        boolean vertical = false;
+
+        if (adjacent && wordForTryPlace.size() > 1) {
+            // Check if the word is horizontal or vertical
+            vertical = wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
+        } else
+            return adjacent;
+
+        if (vertical) {
+            for (TileField tile : wordForTryPlace) {
+                if (tile.tileCol != t.tileCol) {
+                    return false;
+                }
+            }
+        } else {
+            for (TileField tile : wordForTryPlace) {
+                if (tile.tileRow != t.tileRow) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
 
 }
