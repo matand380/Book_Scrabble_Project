@@ -257,7 +257,6 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
         // TODO: 01/06/2023 need to take care for the word binding
         hostFacade.tryPlaceWord(word, row, col, isVertical);
-
     }
 
     /**

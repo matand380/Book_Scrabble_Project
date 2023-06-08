@@ -237,8 +237,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 hasChanged();
                 notifyObservers("hand updated");
             }
-
-
         });
 
     }

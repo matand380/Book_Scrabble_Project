@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class BookScrabbleApp extends Application {
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BookScrabbleApp.class.getResource("/BookScrabbleApp.View/welcomeWindow.fxml"));
@@ -17,7 +16,6 @@ public class BookScrabbleApp extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
     public static void main(String[] args) {
         launch();
     }

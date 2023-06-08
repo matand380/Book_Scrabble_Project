@@ -14,7 +14,6 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
         hostModel.addObserver(this);
     }
 
-
     //do something methods
     public void passTurn(int playerIndex) {
         hostModel.passTurn(playerIndex);

@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
+
     @FXML
     private Label namePlayer1;
     @FXML
@@ -36,13 +37,10 @@ public class GameWindowController implements Observer, Initializable {
     private Label scorePlayer4;
     @FXML
     GridPane handGrid = new GridPane();
-
     @FXML
-    GridCanvas gameBoard;
-
+    GridCanvas gameBoard = new GridCanvas();
     @FXML
     GridPane yourWord = new GridPane();
-
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
@@ -102,7 +100,6 @@ public class GameWindowController implements Observer, Initializable {
                 hostViewModel.viewableBoard.get(boardRow).get(boardCol).scoreProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).score.textProperty());
             }
         }
-
         //to be removed later on
         namePlayer1.setText(HostController.name);
     }
@@ -139,8 +136,6 @@ public class GameWindowController implements Observer, Initializable {
             }
         });
 
-
-        //added:
         gameBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -150,8 +145,6 @@ public class GameWindowController implements Observer, Initializable {
                     System.out.println("key not found");
             }
         });
-
-
     }
 
     @FXML

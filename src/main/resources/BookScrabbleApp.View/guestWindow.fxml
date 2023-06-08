@@ -19,7 +19,7 @@
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Button  layoutX="1172.0" layoutY="615.0" onAction="#startGameWindow" onKeyReleased="#onPressStart" prefHeight="100.0" prefWidth="211.0" text="Start">
+            <Button  layoutX="1172.0" layoutY="615.0" onAction="#startGameWindow" onKeyReleased="#onPressStart" stylesheets="@../buttonStyleSheets.css" prefHeight="100.0" prefWidth="211.0" text="Start">
                 <font>
                     <Font size="49.0" />
                 </font>

@@ -6,5 +6,6 @@ public class Main {
         System.out.println(gameServer.ip());
         DictionaryManager dictionaryManager = DictionaryManager.get();
         gameServer.start();
+        dictionaryManager.query("aa");
     }
 }

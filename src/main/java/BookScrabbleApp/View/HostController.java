@@ -52,7 +52,7 @@ public class HostController {
 
     @FXML
     public void next() throws Exception {
-        root = FXMLLoader.load(getClass().getResource("/com/example/tsetViewModel/nextHostWindow.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

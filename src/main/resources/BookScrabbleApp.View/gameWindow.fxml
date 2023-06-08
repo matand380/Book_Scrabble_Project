@@ -22,15 +22,15 @@
     <bottom>
         <AnchorPane prefHeight="211.0" prefWidth="1512.0" BorderPane.alignment="CENTER">
             <children>
-                <VBox  layoutY="14.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
+                <VBox layoutY="14.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
                     <children>
-                        <JFXButton  onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Pass Turn">
+                        <JFXButton onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Pass Turn">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
                             </styleClass>
                         </JFXButton>
-                        <JFXButton  layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
+                        <JFXButton layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
@@ -59,17 +59,17 @@
                         </GridPane>
                     </children>
                 </AnchorPane>
-                <VBox  layoutX="1320.0" layoutY="16.0" prefHeight="196.0" prefWidth="192.0" spacing="10.0">
+                <VBox layoutX="1320.0" layoutY="16.0" prefHeight="196.0" prefWidth="192.0" spacing="10.0">
                     <padding>
                         <Insets bottom="10.0" top="10.0" />
                     </padding>
-                        <JFXButton  onAction="#onSortABCButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Sort ABC">
+                        <JFXButton onAction="#onSortABCButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Sort ABC">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
                             </styleClass>
                         </JFXButton>
-                        <JFXButton  layoutX="10.0" layoutY="20.0" onAction="#onSortScoreButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Sort Score">
+                        <JFXButton layoutX="10.0" layoutY="20.0" onAction="#onSortScoreButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Sort Score">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
@@ -104,7 +104,7 @@
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
                 <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>
-                <!--            <Canvas height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0" />-->
+<!--<Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />-->
                 <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                     <font>
                         <Font size="25.0" />
@@ -128,7 +128,7 @@
         </AnchorPane>
     </center>
     <left>
-        <VBox  prefHeight="578.0" prefWidth="214.0" spacing="5.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="578.0" prefWidth="214.0" spacing="5.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets />
             </BorderPane.margin>
@@ -140,12 +140,12 @@
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
-                        <Label fx:id="namePlayer1" layoutX="32.0" layoutY="50.0" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="CENTER">
+                        <Label fx:id="namePlayer1" layoutX="32.0" layoutY="50.0" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="RIGHT" textOverrun="CENTER_ELLIPSIS">
                             <font>
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="scorePlayer1" layoutX="55.0" layoutY="85.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="scorePlayer1" layoutX="55.0" layoutY="85.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" />
                         <Label fx:id="namePlayer2" layoutX="32.0" layoutY="153.0" prefHeight="30.0" prefWidth="84.0">
                             <font>
                                 <Font size="25.0" />
@@ -165,7 +165,7 @@
                         </Label>
                         <Label fx:id="scorePlayer4" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" />
                 </AnchorPane>
-                <JFXButton  onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
+                <JFXButton onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
                     <styleClass>
                         <String fx:value="button" />
                         <String fx:value="font" />
