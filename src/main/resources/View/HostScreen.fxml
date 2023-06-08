@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0"  spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.HostScreen">
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.HostScreen">
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
@@ -25,23 +26,27 @@
                <Font size="39.0" />
             </font>
          </Label>
-         <Label fx:id="welcomeText111" layoutX="84.0" layoutY="312.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
+         <Label fx:id="welcomeText111" layoutX="84.0" layoutY="315.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
             <font>
                <Font size="39.0" />
             </font>
          </Label>
          <TextField fx:id="IpTextFiled" layoutX="186.0" layoutY="237.0" prefHeight="37.0" prefWidth="321.0" text="192.168.1.1" />
          <TextField fx:id="PortTextFiled" layoutX="186.0" layoutY="328.0" prefHeight="37.0" prefWidth="321.0" text="65533" />
-         <Button fx:id="submitBtn" layoutX="365.0" layoutY="426.0" onAction="#submit" prefHeight="88.0" prefWidth="249.0" text="Submit">
-            <font>
-               <Font size="49.0" />
-            </font>
-         </Button>
-         <Button fx:id="startButton" layoutX="116.0" layoutY="426.0" onAction="#next" prefHeight="69.0" prefWidth="211.0" text="Next">
-            <font>
-               <Font size="49.0" />
-            </font>
-         </Button>
+         <Group layoutX="116.0" layoutY="426.0">
+            <children>
+               <Button fx:id="startButton" onAction="#next" prefHeight="69.0" prefWidth="211.0" text="Next">
+                  <font>
+                     <Font size="49.0" />
+                  </font>
+               </Button>
+               <Button fx:id="submitBtn" layoutX="249.0" onAction="#submit" prefHeight="88.0" prefWidth="249.0" text="Submit">
+                  <font>
+                     <Font size="49.0" />
+                  </font>
+               </Button>
+            </children>
+         </Group>
       </children>
    </AnchorPane>
 </VBox>
