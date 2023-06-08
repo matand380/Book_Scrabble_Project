@@ -1,6 +1,5 @@
 package BookScrabbleApp.View;
 
-import BookScrabbleApp.ViewModel.*;
 import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
