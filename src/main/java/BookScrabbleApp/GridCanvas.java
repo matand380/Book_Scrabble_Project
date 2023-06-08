@@ -63,9 +63,11 @@ public class GridCanvas extends Canvas {
         for (int boardRow = 0; boardRow < 15; boardRow++) {
             for (int boardCol = 0; boardCol < 15; boardCol++) {
                 if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
+                    double tileXCoordinate = boardCol * w;
+                    double tileYCoordinate = boardRow * w;
+                    gc.fillText(String.valueOf(colorBoard[boardRow][boardCol]), tileXCoordinate + w / 2, tileYCoordinate + h / 2);
                     gc.setFill(getColorForScore(colorBoard[boardRow][boardCol]));
-                    gc.fillRect(xCoordinate , YCoordinate, w, h);
-                    gc.fillText(String.valueOf(colorBoard[boardRow][boardCol]), xCoordinate + w / 2, YCoordinate + h / 2);
+                    gc.fillRect(tileXCoordinate , tileYCoordinate, w, h);
                 } else{
                     tileFields.get(boardRow).get(boardCol).setLocked();
                     this.placeTileFiled(tileFields.get(boardRow).get(boardCol),boardRow,boardCol);
