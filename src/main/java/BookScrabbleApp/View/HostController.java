@@ -82,7 +82,6 @@ public class HostController {
 
     @FXML
     public void switchToGameWindow() throws Exception {
-        host = new BS_Host_ViewModel();
         name = nameTextFiled.getText();
         host.setPlayerProperties(name);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));

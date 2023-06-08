@@ -1,10 +1,10 @@
 package BookScrabbleApp.Model;
 
-import java.net.Socket;
-import java.util.*;
-
 import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameLogic.MyServer;
+import BookScrabbleApp.Model.GameLogic.*;
+
+import java.net.*;
+import java.util.*;
 
 public class BookScrabbleHostFacade extends Observable implements Observer {
     private BS_Host_Model hostModel;
@@ -13,6 +13,7 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
         hostModel = BS_Host_Model.getModel();
         hostModel.addObserver(this);
     }
+
 
     //do something methods
     public void passTurn(int playerIndex) {
@@ -102,6 +103,7 @@ public class BookScrabbleHostFacade extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         // everything will be passed to the viewModel
         setChanged();
-        notifyObservers(arg);
+        String argString = (String) arg;
+        notifyObservers(argString);
     }
 }
