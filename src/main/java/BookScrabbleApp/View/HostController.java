@@ -1,6 +1,7 @@
 package BookScrabbleApp.View;
 
 import BookScrabbleApp.ViewModel.*;
+import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -66,6 +67,7 @@ public class HostController {
     public void next() throws Exception {
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
+        stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -103,6 +105,7 @@ public class HostController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
+        stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
