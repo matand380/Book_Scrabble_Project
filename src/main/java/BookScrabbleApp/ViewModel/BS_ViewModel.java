@@ -1,28 +1,32 @@
 package BookScrabbleApp.ViewModel;
 
-import BookScrabbleApp.Model.BS_Host_Model;
+import java.util.*;
 
-import java.util.Observable;
-import java.util.Observer;
+public interface BS_ViewModel {
 
-public class BS_ViewModel extends Observable implements Observer {
+    void setBoard();
 
-    String winner;
+    void setHand();
 
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o == BS_Host_Model.getModel())
-            if (arg instanceof String) {
-                String key = (String) arg;
+    void setScore();
 
-                switch (key) {
-                    case "try successful":
-                        //update the host view
+    void initializeProperties();
 
-                        break;
-                }
-            }
+    void tryPlaceWord(String word, int row, int col, boolean isVertical);
+
+    void passTurn();
+
+    void setPlayerProperties(String name);
+
+    void challengeRequest(String challengeWord);
+
+    void openSocket();
+
+    void endGame();
+
+    void initializeUpdateMap();
+
+    void setWordsForChallenge(List<String> wordsList);
 
 
-    }
 }
