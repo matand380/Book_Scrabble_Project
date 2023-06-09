@@ -70,20 +70,10 @@ public class HostController {
 
     @FXML
     public void next() throws Exception {
-        // Get the primary screen
-        Screen screen = Screen.getPrimary();
-
-        // Get the bounds of the screen
-        Rectangle2D bounds = screen.getBounds();
-
-        // Retrieve the screen size
-        double screenWidth = bounds.getWidth();
-        double screenHeight = bounds.getHeight();
-
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root, screenWidth, screenHeight);
+        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
         stage.setScene(scene);
         stage.show();
     }
@@ -121,13 +111,11 @@ public class HostController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root);
+        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());
         GameWindowController controller = loader.getController();
         controller.setViewModel(host);
     }
-
-
 }

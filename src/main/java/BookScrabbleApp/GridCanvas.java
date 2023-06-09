@@ -46,7 +46,6 @@ public class GridCanvas extends Canvas {
     }
 
     public void redraw() {
-        //if (tileFields != null) {
         double W = getWidth();
         double H = getHeight();
 
@@ -75,7 +74,6 @@ public class GridCanvas extends Canvas {
         }
         gc.setFill(Color.rgb(248, 0, 0,0.6));
         gc.fillRect(xCoordinate, YCoordinate, w, h);
-        // }
     }
 
     private Color getColorForScore(char score) {
@@ -98,6 +96,7 @@ public class GridCanvas extends Canvas {
     public int getRow() {
         return row;
     }
+
     public void setPlace(int row, int col) {
         this.col = col;
         this.row = row;
