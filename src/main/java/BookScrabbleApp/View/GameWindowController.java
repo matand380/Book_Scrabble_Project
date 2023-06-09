@@ -149,22 +149,23 @@ public class GameWindowController implements Observer, Initializable {
 
                 TileField clickedTile = gameBoard.tileFields.get(row).get(col);
 
-                if (!clickedTile.letter.getText().equals("")) {
-                    if (gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).isUpdate()) {
-                        selectedTileField.letter.setText(gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).letter.getText());
-                        selectedTileField.tileRow = row;
-                        selectedTileField.tileCol = col;
-                        setYourWord();
-                    } else {
-                        clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
-                        selectedTileField = clickedTile;
-                        selectedTileField.tileRow = row;
-                        selectedTileField.tileCol = col;
-                        clickedTile.setClick(true);
-                        setTileFieldOnBoard();
-                        setYourWord();
+                    if (!clickedTile.letter.getText().equals("")) {
+                        if (gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).isUpdate()) {
+                            selectedTileField.letter.setText("_");
+                            selectedTileField.tileRow = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileRow;
+                            selectedTileField.tileCol = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileCol;
+                            gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
+                            setYourWord();
+                        } else {
+                            clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
+                            selectedTileField = clickedTile;
+                            selectedTileField.tileRow = row;
+                            selectedTileField.tileCol = col;
+                            gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
+                            setTileFieldOnBoard();
+                            setYourWord();
+                        }
                     }
-                }
                 gameBoard.requestFocus();
             }
         });
@@ -216,6 +217,7 @@ public class GameWindowController implements Observer, Initializable {
                         direction = true;
                     }
                 }
+                System.out.println(word);
                 viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
                 wordForTryPlace.clear();
                 yourWord.getChildren().clear();
@@ -261,7 +263,13 @@ public class GameWindowController implements Observer, Initializable {
     private void redrawYourWord(List<TileField> list) {
         yourWord.getChildren().clear();
         for (int i = 0; i < list.size(); i++) {
-            yourWord.add(list.get(i), i, 0);
+            if (list.get(i).letter.getText().equals("_")) {
+                TileField t  = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
+                t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
+                t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
+                yourWord.add(t,i,0);
+            }else
+                yourWord.add(list.get(i), i, 0);
         }
     }
 
