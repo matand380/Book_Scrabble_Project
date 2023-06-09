@@ -473,10 +473,30 @@ public class GameWindowController implements Observer, Initializable {
 
     private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge){
         // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
-        // TODO: 2023-06-09  with a checkBox
-       for(SimpleStringProperty word : wordsForChallenge){
-           Label label = new Label(word.toString());
-       }
+        // TODO: 2023-06-09  with a checkBox for each word
+        ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();
+        dialog.setTitle("Word Selection");
+        dialog.setHeaderText("Select a word to challenge");
+        dialog.setContentText("Words:");
+
+        // Set the list of words for the choice dialog
+
+        dialog.getItems().addAll(wordsForChallenge);
+
+        // Show the dialog and wait for the user's response
+        Optional<SimpleStringProperty> result = dialog.showAndWait();
+
+        // Process the selected word
+        result.ifPresent(selectedWord -> {
+            // TODO: 09/06/2023 sent the word to Challenge
+            hostViewModel.challengeRequest(selectedWord.get());
+            System.out.println("Selected Word: " + selectedWord);
+        });
+
+    }
+
+    public void setWordsForChallengeOnScreen(ActionEvent actionEvent) {
+        setWordsForChallengeOnScreen(hostViewModel.viewableWordsForChallenge);
     }
 }
 
