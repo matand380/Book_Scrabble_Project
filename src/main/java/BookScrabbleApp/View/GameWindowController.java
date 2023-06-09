@@ -183,16 +183,21 @@ public class GameWindowController implements Observer, Initializable {
     @FXML
     protected void onTryButtonClick() {
 
-        for (int boardRow = 0; boardRow < gameBoard.tileFields.size(); boardRow++) {
-            for (int boardCol = 0; boardCol < gameBoard.tileFields.get(boardRow).size(); boardCol++) {
+        for (int boardRow = 0; boardRow < 15; boardRow++) {
+            for (int boardCol = 0; boardCol < 15; boardCol++) {
                 if (!gameBoard.tileFields.get(boardRow).get(boardCol).isUpdate()) {
+                    boolean foundMatchingTile = false;
                     for (TileField tileField : wordForTryPlace) {
-                        if (!(gameBoard.tileFields.get(boardRow).get(boardCol).tileRow == tileField.tileRow &&
-                                gameBoard.tileFields.get(boardRow).get(boardCol).tileCol == tileField.tileCol) ||
-                                !(gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) ) {
-                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
-                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
+                        if (gameBoard.tileFields.get(boardRow).get(boardCol).tileRow == tileField.tileRow &&
+                                gameBoard.tileFields.get(boardRow).get(boardCol).tileCol == tileField.tileCol &&
+                                gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) {
+                            foundMatchingTile = true;
+                            break;
                         }
+                    }
+                    if (!foundMatchingTile) {
+                        gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
+                        gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
                     }
                 }
             }
@@ -359,7 +364,7 @@ public class GameWindowController implements Observer, Initializable {
         return keyEvent -> {
             if (key.isLetterKey()) {
                 for (TileField t : handFields) {
-                    if (t.letter.getText().equals(key.toString())) {
+                    if (t.letter.getText().equals(key.toString()) && !t.isSelect()) {
                         selectedTileField = t;
                         selectedTileField.setSelect(true);
                         selectedTileField.tileRow = gameBoard.getRow();
@@ -383,9 +388,7 @@ public class GameWindowController implements Observer, Initializable {
                 if (gameBoard.getCol() < 14) {
                     gameBoard.setPlace(gameBoard.getRow(), gameBoard.getCol() + 1);
                 }
-            } else if (keyEvent.getCode() == KeyCode.ENTER) {
-                setTileFieldOnBoard();
-            } else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+            }else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
                 if (!gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).isUpdate()) {
                     // TODO: 08/06/should return a tile instead of word
                     wordForTryPlace.removeIf(t -> t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow());
@@ -405,7 +408,7 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void setTileFieldOnBoard() {
-        if (selectedTileField != null && !selectedTileField.isLocked() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
+        if (selectedTileField != null && selectedTileField.isSelect() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
             if (ifConnected(selectedTileField)) {
                 gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).letter.setText(selectedTileField.letter.getText());
                 gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).score.setText(selectedTileField.score.getText());

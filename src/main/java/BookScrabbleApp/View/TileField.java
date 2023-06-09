@@ -17,7 +17,7 @@ public class TileField extends StackPane {
 
     public TextField score;
     private boolean isLocked;
-    private boolean isSelect;
+    private boolean isSelect = false;
 
     private boolean isClick = false;
 
@@ -147,5 +147,9 @@ public class TileField extends StackPane {
     }
     public void setUpdate() {
         isUpdate = true;
+    }
+
+    public boolean isSelect(){
+        return isSelect;
     }
 }
