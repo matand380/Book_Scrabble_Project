@@ -10,15 +10,15 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.welcomeController">
+<VBox xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.welcomeController" stylesheets="@../background.css" >
    <children>
-      <Pane prefHeight="600.0" prefWidth="700.0">
+      <Pane prefHeight="600.0" prefWidth="700.0" stylesheets="@../background.css">
          <children>
-            <ImageView fitHeight="616.0" fitWidth="723.0" layoutX="24.0" layoutY="-9.0" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Logo.JPG" />
-               </image>
-            </ImageView>
+<!--            <ImageView fitHeight="616.0" fitWidth="723.0" layoutX="24.0" layoutY="-9.0" preserveRatio="true" >-->
+<!--               <image>-->
+<!--                  <Image url="@../images/Logo.JPG" />-->
+<!--               </image>-->
+<!--            </ImageView>-->
                <Label fx:id="welcomeText" layoutX="80.0" layoutY="55.0" text="Chose the mode you want to play:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
                    <font>
                        <Font size="39.0" />

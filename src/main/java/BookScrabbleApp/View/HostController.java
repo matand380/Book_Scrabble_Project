@@ -99,6 +99,7 @@ public class HostController {
     public void switchToGameWindow() throws Exception {
         if (nameTextFiled.getText().equals("")) {
             name = "Guest"+ UUID.randomUUID().toString().substring(0,4);
+            name = "Guest"+ UUID.randomUUID().toString().substring(0,4);
         } else {
             name = nameTextFiled.getText();
         }
