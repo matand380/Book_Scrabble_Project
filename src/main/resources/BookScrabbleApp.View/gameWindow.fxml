@@ -17,10 +17,10 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import BookScrabbleApp.GridCanvas?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="865.0" prefWidth="1512.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
+<!--<?import BookScrabbleApp.GridCanvas?>-->
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
-        <AnchorPane prefHeight="211.0" prefWidth="1512.0" BorderPane.alignment="CENTER">
+        <AnchorPane prefHeight="211.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
                 <VBox layoutY="14.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
                     <children>
@@ -103,7 +103,7 @@
     <center>
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
-                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>
+<!--                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>-->
 <!--<Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />-->
                 <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                     <font>
