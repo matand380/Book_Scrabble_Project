@@ -69,7 +69,6 @@ public class GridCanvas extends Canvas {
                     gc.setFill(getColorForScore(colorBoard[boardRow][boardCol]));
                     gc.fillRect(tileXCoordinate , tileYCoordinate, w, h);
                 } else{
-                    tileFields.get(boardRow).get(boardCol).setLocked();
                     this.placeTileFiled(tileFields.get(boardRow).get(boardCol),boardRow,boardCol);
                 }
             }

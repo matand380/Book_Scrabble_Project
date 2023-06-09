@@ -239,6 +239,7 @@ public class GameWindowController implements Observer, Initializable {
                     }
                 });
             });
+            gameBoard.redraw();
         });
 
         updatesMap.put("scores updated", message -> {
@@ -325,18 +326,17 @@ public class GameWindowController implements Observer, Initializable {
             } else if (keyEvent.getCode() == KeyCode.ENTER) {
                 setTileFieldOnBoard();
             } else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
-                if (gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).isLocked()) {
-                    return;
-                }
-                // TODO: 08/06/should return a tile instead of word
-                wordForTryPlace.removeIf(t -> t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow());
-                redrawYourWord(wordForTryPlace);
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText("");
-                gameBoard.redraw();
+                if (!gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).isUpdate()) {
+                    // TODO: 08/06/should return a tile instead of word
+                    wordForTryPlace.removeIf(t -> t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow());
+                    redrawYourWord(wordForTryPlace);
+                    gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText("");
+                    gameBoard.redraw();
 
-                for (TileField t : handFields) {
-                    if (t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow()) {
-                        t.setUnlocked();
+                    for (TileField t : handFields) {
+                        if (t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow()) {
+                            t.setUnlocked();
+                        }
                     }
                 }
             }
@@ -349,6 +349,7 @@ public class GameWindowController implements Observer, Initializable {
             if (ifConnected(selectedTileField)) {
                 gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText(selectedTileField.letter.getText());
                 gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).score.setText(selectedTileField.score.getText());
+                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).setUnlocked();
                 TileField t = new TileField();
                 t.letter.setText(selectedTileField.letter.getText());
                 t.score.setText(selectedTileField.score.getText());

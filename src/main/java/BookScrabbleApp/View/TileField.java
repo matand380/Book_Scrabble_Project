@@ -20,14 +20,6 @@ public class TileField extends StackPane {
     private boolean isLocked;
     private boolean isSelect;
 
-    public boolean isUpdate() {
-        return isUpdate;
-    }
-
-    public void setUpdate() {
-        isUpdate = true;
-    }
-
     private boolean isUpdate = false;
 
     public int tileCol;
@@ -84,9 +76,14 @@ public class TileField extends StackPane {
         double xCoordinate = col * width;
         double YCoordinate = row * height;
 
-        // Create background rectangle
-        gc.setFill(Color.LIGHTGRAY);
-        gc.setStroke(Color.BLACK);
+        if (this.isUpdate()) {
+            gc.setFill(Color.LIGHTGRAY);
+            gc.setStroke(Color.RED);
+            gc.setLineWidth(2);
+        }else{
+            gc.setFill(Color.LIGHTGRAY);
+            gc.setStroke(Color.BLACK);
+        }
         gc.fillRect(xCoordinate, YCoordinate, width, height);
         gc.strokeRect(xCoordinate, YCoordinate, width, height);
 
@@ -121,5 +118,13 @@ public class TileField extends StackPane {
     public void setUnlocked() {
         isLocked = false;
         setSelect(false);
+        isUpdate = false;
+    }
+    public boolean isUpdate() {
+        return isUpdate;
+    }
+
+    public void setUpdate() {
+        isUpdate = true;
     }
 }
