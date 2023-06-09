@@ -41,15 +41,9 @@ public class GameWindowController implements Observer, Initializable {
     @FXML
     Button startNewGameBtn;
 
-    private TileField previousClickedObject = null;
-
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
     BS_ViewModel viewModel;
-
-//    BS_Host_ViewModel hostViewModel;
-//
-//    BS_Guest_ViewModel guestViewModel;
 
     private List<Label> scoresFields;
 
@@ -188,6 +182,23 @@ public class GameWindowController implements Observer, Initializable {
 
     @FXML
     protected void onTryButtonClick() {
+
+        for (int boardRow = 0; boardRow < gameBoard.tileFields.size(); boardRow++) {
+            for (int boardCol = 0; boardCol < gameBoard.tileFields.get(boardRow).size(); boardCol++) {
+                if (!gameBoard.tileFields.get(boardRow).get(boardCol).isUpdate()) {
+                    for (TileField tileField : wordForTryPlace) {
+                        if (!(gameBoard.tileFields.get(boardRow).get(boardCol).tileRow == tileField.tileRow &&
+                                gameBoard.tileFields.get(boardRow).get(boardCol).tileCol == tileField.tileCol) ||
+                                !(gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) ) {
+                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
+                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
+                        }
+                    }
+                }
+            }
+        }
+
+        gameBoard.redraw();
         if (wordForTryPlace.size() > 1) {
             if (checkFirstWord()) {
                 StringBuilder word = new StringBuilder();
@@ -467,7 +478,6 @@ public class GameWindowController implements Observer, Initializable {
         t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
         wordForTryPlace.add(t);
         redrawYourWord(wordForTryPlace);
-
     }
 
     private void removeFromYourWord(TileField removedTile) {

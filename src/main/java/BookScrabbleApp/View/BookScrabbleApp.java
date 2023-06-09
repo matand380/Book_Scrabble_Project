@@ -31,8 +31,8 @@ public class BookScrabbleApp extends Application {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getBounds();
         double[] widthHeight = new double[2];
-        widthHeight[0] = bounds.getWidth();
-        widthHeight[1] = bounds.getHeight();
+        widthHeight[0] = bounds.getWidth() - 50;
+        widthHeight[1] = bounds.getHeight() - 50;
         return widthHeight;
     }
 }
