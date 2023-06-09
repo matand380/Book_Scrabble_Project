@@ -18,7 +18,7 @@
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Button layoutX="450.0" layoutY="429.0" onAction="#next" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Next">
+            <Button fx:id="nextBtn" visible="false" layoutX="450.0" layoutY="429.0" onAction="#next" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Next">
                 <font>
                     <Font size="49.0" />
                 </font>
@@ -40,7 +40,7 @@
                     <Font size="39.0" />
                 </font>
             </Label>
-            <Button layoutX="104.0" layoutY="420.0" onAction="#onPressSubmit" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Submit">
+            <Button  layoutX="104.0" layoutY="420.0" onAction="#onPressSubmit" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Submit">
                 <font>
                     <Font size="49.0" />
                 </font>

@@ -61,6 +61,8 @@ public class GameWindowController implements Observer, Initializable {
 
     private List<TileField> wordForTryPlace;
 
+    private List<SimpleStringProperty> wordsForChallenge;
+
     public void setViewModel(BS_ViewModel ViewModel) {
         if (ViewModel instanceof BS_Host_ViewModel) {
             this.hostViewModel = (BS_Host_ViewModel) ViewModel;
@@ -94,6 +96,14 @@ public class GameWindowController implements Observer, Initializable {
                 boardFields.get(i).add(new TileField());
             }
         }
+        for (int i = 0; i < 15; i++) {
+            wordsForChallenge.add(new SimpleStringProperty());
+        }
+
+        for(int i=0;i<hostViewModel.viewableWordsForChallenge.size();i++){
+            hostViewModel.viewableWordsForChallenge.get(i).bindBidirectional(wordsForChallenge.get(i));
+        }
+
         //bind the board to the board fields
         for (int boardRow = 0; boardRow < hostViewModel.viewableBoard.size(); boardRow++) {
             for (int boardCol = 0; boardCol < hostViewModel.viewableBoard.get(boardRow).size(); boardCol++) {
@@ -150,6 +160,8 @@ public class GameWindowController implements Observer, Initializable {
                     } else {
                         clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
                         selectedTileField = clickedTile;
+                        selectedTileField.tileRow = row;
+                        selectedTileField.tileCol = col;
                         clickedTile.setClick(true);
                         setTileFieldOnBoard();
                         setYourWord();
@@ -271,9 +283,14 @@ public class GameWindowController implements Observer, Initializable {
         updatesMap.put("scores updated", message -> {
             setScoresFields(hostViewModel.viewableScores);
         });
+
         updatesMap.put("invalidWord", message -> {
             //The word is invalid
             alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
+        });
+
+        updatesMap.put("wordsForChallenge updated", message ->{
+            setWordsForChallengeOnScreen(hostViewModel.viewableWordsForChallenge);
         });
     }
 
@@ -453,6 +470,12 @@ public class GameWindowController implements Observer, Initializable {
 
     private void removeFromYourWord(TileField removedTile) {
         wordForTryPlace.removeIf(tileField -> tileField.letter.getText().equals(removedTile.letter.getText()));
+    }
+
+    private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge){
+        // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
+        // TODO: 2023-06-09  with a checkBox 
+        
     }
 }
 

@@ -7,6 +7,7 @@ import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -25,13 +26,15 @@ public class HostController {
     @FXML
     private TextField PortTextFiled = new TextField();
     @FXML
-    private Label yourIp ;
+    private Label yourIp;
     @FXML
     private Label yourPort;
     @FXML
     private Label welcomeText1;
     @FXML
     public TextField nameTextFiled;
+    @FXML
+    private Button nextBtn;
 
     String ip;
     int port;
@@ -44,11 +47,10 @@ public class HostController {
         port = Integer.parseInt(PortTextFiled.getText());
         if (ip.equals("") || port == 0) {
             invalidIPorPort.setText("Please enter IP and Port");
-        }
-        else {
+        } else {
             boolean connected = true;
-                host.ip.bindBidirectional(IpTextFiled.textProperty());
-                host.port.bindBidirectional(PortTextFiled.textProperty());
+            host.ip.bindBidirectional(IpTextFiled.textProperty());
+            host.port.bindBidirectional(PortTextFiled.textProperty());
             try {
                 host.openSocket();
             } catch (Exception e) {
@@ -61,6 +63,7 @@ public class HostController {
             }
             if (connected) {
                 invalidIPorPort.setText("Game server connected");
+                nextBtn.setVisible(true);
             }
         }
     }
@@ -80,7 +83,7 @@ public class HostController {
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root,screenWidth,screenHeight);
+        scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
     }
@@ -109,8 +112,8 @@ public class HostController {
     @FXML
     public void switchToGameWindow() throws Exception {
         if (nameTextFiled.getText().equals("")) {
-            name = "Guest"+ UUID.randomUUID().toString().substring(0,4);
-            name = "Guest"+ UUID.randomUUID().toString().substring(0,4);
+            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
+            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
         } else {
             name = nameTextFiled.getText();
         }
