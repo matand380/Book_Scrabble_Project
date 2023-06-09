@@ -3,6 +3,7 @@ package BookScrabbleApp.View;
 import BookScrabbleApp.ViewModel.*;
 import javafx.application.*;
 import javafx.fxml.*;
+import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
@@ -66,10 +67,20 @@ public class HostController {
 
     @FXML
     public void next() throws Exception {
+        // Get the primary screen
+        Screen screen = Screen.getPrimary();
+
+        // Get the bounds of the screen
+        Rectangle2D bounds = screen.getBounds();
+
+        // Retrieve the screen size
+        double screenWidth = bounds.getWidth();
+        double screenHeight = bounds.getHeight();
+
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root);
+        scene = new Scene(root,screenWidth,screenHeight);
         stage.setScene(scene);
         stage.show();
     }
