@@ -32,7 +32,7 @@ public class BookScrabbleApp extends Application {
         Rectangle2D bounds = screen.getBounds();
         double[] widthHeight = new double[2];
         widthHeight[0] = bounds.getWidth();
-        widthHeight[1] = bounds.getHeight();
+        widthHeight[1] = bounds.getHeight() - 30;
         return widthHeight;
     }
 }
