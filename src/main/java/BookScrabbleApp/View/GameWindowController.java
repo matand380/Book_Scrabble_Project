@@ -100,7 +100,7 @@ public class GameWindowController implements Observer, Initializable {
             wordsForChallenge.add(new SimpleStringProperty());
         }
 
-        for(int i=0;i<hostViewModel.viewableWordsForChallenge.size();i++){
+        for (int i = 0; i < hostViewModel.viewableWordsForChallenge.size(); i++) {
             hostViewModel.viewableWordsForChallenge.get(i).bindBidirectional(wordsForChallenge.get(i));
         }
 
@@ -126,6 +126,7 @@ public class GameWindowController implements Observer, Initializable {
         scoresFields.add(scorePlayer2);
         scoresFields.add(scorePlayer3);
         scoresFields.add(scorePlayer4);
+        wordsForChallenge = new ArrayList<>();
 
         initializeUpdateMap();
         initializeKeyEventMap();
@@ -288,7 +289,7 @@ public class GameWindowController implements Observer, Initializable {
             alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
         });
 
-        updatesMap.put("wordsForChallenge updated", message ->{
+        updatesMap.put("wordsForChallenge updated", message -> {
             setWordsForChallengeOnScreen(hostViewModel.viewableWordsForChallenge);
         });
     }
@@ -455,23 +456,22 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void setYourWord() {
-        if (ifConnected(selectedTileField)) {
-            TileField t = new TileField();
-            t.letter.setText(selectedTileField.letter.getText());
-            t.score.setText(selectedTileField.score.getText());
-            t.tileRow = selectedTileField.tileRow;
-            t.tileCol = selectedTileField.tileCol;
-            t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
-            wordForTryPlace.add(t);
-            redrawYourWord(wordForTryPlace);
-        }
+        TileField t = new TileField();
+        t.letter.setText(selectedTileField.letter.getText());
+        t.score.setText(selectedTileField.score.getText());
+        t.tileRow = selectedTileField.tileRow;
+        t.tileCol = selectedTileField.tileCol;
+        t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
+        wordForTryPlace.add(t);
+        redrawYourWord(wordForTryPlace);
+
     }
 
     private void removeFromYourWord(TileField removedTile) {
         wordForTryPlace.removeIf(tileField -> tileField.letter.getText().equals(removedTile.letter.getText()));
     }
 
-    private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge){
+    private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge) {
         // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
         // TODO: 2023-06-09  with a checkBox for each word
         ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();

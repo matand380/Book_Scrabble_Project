@@ -110,7 +110,7 @@
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
                 <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>
-<Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />
+<!--<Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />-->
                 <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                     <font>
                         <Font size="25.0" />
