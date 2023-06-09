@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<!--<?import BookScrabbleApp.GridCanvas?>-->
+<?import BookScrabbleApp.GridCanvas?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
         <AnchorPane prefHeight="211.0" prefWidth="600.0" BorderPane.alignment="CENTER">
@@ -31,6 +31,12 @@
                             </styleClass>
                         </JFXButton>
                         <JFXButton layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
+                            <styleClass>
+                                <String fx:value="button" />
+                                <String fx:value="font" />
+                            </styleClass>
+                        </JFXButton>
+                        <JFXButton layoutX="5.0" layoutY="112.0" onAction="#setWordsForChallengeOnScreen" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Challenge">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
@@ -103,8 +109,8 @@
     <center>
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
-<!--                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>-->
-<!--<Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />-->
+                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>
+<Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />
                 <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                     <font>
                         <Font size="25.0" />
