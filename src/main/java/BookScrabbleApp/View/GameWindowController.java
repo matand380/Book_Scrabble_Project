@@ -167,7 +167,6 @@ public class GameWindowController implements Observer, Initializable {
                         setYourWord();
                     }
                 }
-
                 gameBoard.requestFocus();
             }
         });
@@ -474,8 +473,10 @@ public class GameWindowController implements Observer, Initializable {
 
     private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge){
         // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
-        // TODO: 2023-06-09  with a checkBox 
-        
+        // TODO: 2023-06-09  with a checkBox
+       for(SimpleStringProperty word : wordsForChallenge){
+           Label label = new Label(word.toString());
+       }
     }
 }
 
