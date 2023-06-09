@@ -1,6 +1,6 @@
 
 .root {
-    -fx-background-image: url("../resources/images/Logo.JPG");
+    -fx-background-image: url("images/Logo.JPG");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 100% 100%;
 }
