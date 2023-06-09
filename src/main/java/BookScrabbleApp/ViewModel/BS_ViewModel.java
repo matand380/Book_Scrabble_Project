@@ -1,8 +1,10 @@
 package BookScrabbleApp.ViewModel;
 
+import javafx.beans.property.*;
+
 import java.util.*;
 
-public interface BS_ViewModel {
+public interface BS_ViewModel extends Observer {
 
     void setBoard();
 
@@ -28,5 +30,15 @@ public interface BS_ViewModel {
 
     void setWordsForChallenge(List<String> wordsList);
 
+    void startNewGame();
+
+    Observable getObservable();
+
+    SimpleStringProperty getChallengeWord();
+    StringProperty getWinnerProperty();
+    List<ViewableTile> getViewableHand();
+    List<List<ViewableTile>> getViewableBoard();
+    List<SimpleStringProperty> getViewableScores();
+    List<SimpleStringProperty> getViewableWordsForChallenge();
 
 }

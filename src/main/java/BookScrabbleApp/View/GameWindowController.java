@@ -45,9 +45,11 @@ public class GameWindowController implements Observer, Initializable {
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
-    BS_Host_ViewModel hostViewModel;
+    BS_ViewModel viewModel;
 
-    BS_Guest_ViewModel guestViewModel;
+//    BS_Host_ViewModel hostViewModel;
+//
+//    BS_Guest_ViewModel guestViewModel;
 
     private List<Label> scoresFields;
 
@@ -63,21 +65,22 @@ public class GameWindowController implements Observer, Initializable {
 
     private List<SimpleStringProperty> wordsForChallenge;
 
-    public void setViewModel(BS_ViewModel ViewModel) {
-        if (ViewModel instanceof BS_Host_ViewModel) {
-            this.hostViewModel = (BS_Host_ViewModel) ViewModel;
-            hostViewModel.addObserver(this);
+    public void setViewModel(BS_ViewModel viewModel) {
+        if (viewModel instanceof BS_Host_ViewModel) {
+            this.viewModel = new BS_Host_ViewModel();
+            this.viewModel.getObservable().addObserver(this);
             initializeWindow();
-        } else if (ViewModel instanceof BS_Guest_ViewModel) {
-            this.guestViewModel = (BS_Guest_ViewModel) ViewModel;
-            guestViewModel.addObserver(this);
+        } else if (viewModel instanceof BS_Guest_ViewModel) {
+            this.viewModel = new BS_Guest_ViewModel();
+            this.viewModel.getObservable().addObserver(this);
+            initializeWindow();
         }
     }
 
     public void initializeWindow() {
         //bind the scores to the text fields
-        for (int i = 0; i < hostViewModel.viewableScores.size(); i++) {
-            hostViewModel.viewableScores.get(i).bind(scoresFields.get(i).textProperty());
+        for (int i = 0; i < viewModel.getViewableScores().size(); i++) {
+            viewModel.getViewableScores().get(i).bind(scoresFields.get(i).textProperty());
         }
 
         for (int i = 0; i < 7; i++) {
@@ -85,9 +88,9 @@ public class GameWindowController implements Observer, Initializable {
         }
 
         //bind the hand to the hand fields
-        for (int i = 0; i < hostViewModel.viewableHand.size(); i++) {
-            hostViewModel.viewableHand.get(i).letterProperty().bindBidirectional(handFields.get(i).letter.textProperty());
-            hostViewModel.viewableHand.get(i).scoreProperty().bindBidirectional(handFields.get(i).score.textProperty());
+        for (int i = 0; i < viewModel.getViewableHand().size(); i++) {
+            viewModel.getViewableHand().get(i).letterProperty().bindBidirectional(handFields.get(i).letter.textProperty());
+            viewModel.getViewableHand().get(i).scoreProperty().bindBidirectional(handFields.get(i).score.textProperty());
         }
 
         for (int i = 0; i < 15; i++) {
@@ -100,15 +103,15 @@ public class GameWindowController implements Observer, Initializable {
             wordsForChallenge.add(new SimpleStringProperty());
         }
 
-        for (int i = 0; i < hostViewModel.viewableWordsForChallenge.size(); i++) {
-            hostViewModel.viewableWordsForChallenge.get(i).bindBidirectional(wordsForChallenge.get(i));
+        for (int i = 0; i < viewModel.getViewableWordsForChallenge().size(); i++) {
+            viewModel.getViewableWordsForChallenge().get(i).bindBidirectional(wordsForChallenge.get(i));
         }
 
         //bind the board to the board fields
-        for (int boardRow = 0; boardRow < hostViewModel.viewableBoard.size(); boardRow++) {
-            for (int boardCol = 0; boardCol < hostViewModel.viewableBoard.get(boardRow).size(); boardCol++) {
-                hostViewModel.viewableBoard.get(boardRow).get(boardCol).letterProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).letter.textProperty());
-                hostViewModel.viewableBoard.get(boardRow).get(boardCol).scoreProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).score.textProperty());
+        for (int boardRow = 0; boardRow < viewModel.getViewableBoard().size(); boardRow++) {
+            for (int boardCol = 0; boardCol < viewModel.getViewableBoard().get(boardRow).size(); boardCol++) {
+                viewModel.getViewableBoard().get(boardRow).get(boardCol).letterProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).letter.textProperty());
+                viewModel.getViewableBoard().get(boardRow).get(boardCol).scoreProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).score.textProperty());
             }
         }
         //to be removed later on
@@ -197,7 +200,7 @@ public class GameWindowController implements Observer, Initializable {
                         direction = true;
                     }
                 }
-                hostViewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
+                viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
                 wordForTryPlace.clear();
                 yourWord.getChildren().clear();
                 for (TileField t : handFields) {
@@ -213,7 +216,7 @@ public class GameWindowController implements Observer, Initializable {
 
     @FXML
     public void onPassButtonClick() {
-        hostViewModel.passTurn();
+        viewModel.passTurn();
         Platform.runLater(() -> gameBoard.requestFocus());
     }
 
@@ -281,7 +284,7 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("scores updated", message -> {
-            setScoresFields(hostViewModel.viewableScores);
+            setScoresFields(viewModel.getViewableScores());
         });
 
         updatesMap.put("invalidWord", message -> {
@@ -290,7 +293,7 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("wordsForChallenge updated", message -> {
-            setWordsForChallengeOnScreen(hostViewModel.viewableWordsForChallenge);
+            setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
         });
     }
 
@@ -306,7 +309,7 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     public void startNewGame() {
-        this.hostViewModel.startNewGame();
+        this.viewModel.startNewGame();
         startNewGameBtn.setVisible(false);
         Platform.runLater(() -> gameBoard.requestFocus());
     }
@@ -489,14 +492,14 @@ public class GameWindowController implements Observer, Initializable {
         // Process the selected word
         result.ifPresent(selectedWord -> {
             // TODO: 09/06/2023 sent the word to Challenge
-            hostViewModel.challengeRequest(selectedWord.get());
+            viewModel.challengeRequest(selectedWord.get());
             System.out.println("Selected Word: " + selectedWord);
         });
 
     }
 
     public void setWordsForChallengeOnScreen(ActionEvent actionEvent) {
-        setWordsForChallengeOnScreen(hostViewModel.viewableWordsForChallenge);
+        setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
     }
 }
 

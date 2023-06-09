@@ -7,7 +7,7 @@ import javafx.beans.property.*;
 import java.util.*;
 import java.util.function.*;
 
-public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel {
+public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
 
     public SimpleStringProperty ip ;
 
@@ -287,6 +287,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
      * The startNewGame function is called when the user clicks on the &quot;Start New Game&quot; button.
      * It calls a function in HostFacade that will start a new game.
      */
+    @Override
     public void startNewGame() {
         hostFacade.startNewGame();
     }
@@ -340,4 +341,38 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 //        }
     }
 
+    @Override
+    public Observable getObservable() {
+        return this;
+    }
+
+    @Override
+    public SimpleStringProperty getChallengeWord() {
+        return this.challengeWord;
+    }
+
+    @Override
+    public StringProperty getWinnerProperty() {
+        return this.winnerProperty;
+    }
+
+    @Override
+    public List<ViewableTile> getViewableHand() {
+        return this.viewableHand;
+    }
+
+    @Override
+    public List<List<ViewableTile>> getViewableBoard() {
+        return this.viewableBoard;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableScores() {
+        return this.viewableScores;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableWordsForChallenge() {
+        return this.viewableWordsForChallenge;
+    }
 }

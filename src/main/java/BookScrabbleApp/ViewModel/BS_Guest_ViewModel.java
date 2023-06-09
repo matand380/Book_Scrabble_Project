@@ -7,7 +7,7 @@ import javafx.beans.property.*;
 import java.util.*;
 import java.util.function.*;
 
-public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewModel {
+public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
     //ip and port of the host
     public SimpleStringProperty hostIp; //ip of the host
@@ -15,7 +15,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
 
     //player properties
     BookScrabbleGuestFacade guestFacade;
-    public List<ViewableTile> viewableHandGuest; //hand of the player
+    public List<ViewableTile> viewableHand; //hand of the player
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; //score array
     public SimpleStringProperty challengeWord; //word for challenge
@@ -75,8 +75,8 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     @Override
     public void setHand() {
         for (int i = 0; i < guestFacade.getPlayer().get_hand().size(); i++) {
-            viewableHandGuest.get(i).setLetter(guestFacade.getPlayer().get_hand().get(i).getLetter());
-            viewableHandGuest.get(i).setScore(guestFacade.getPlayer().get_hand().get(i).getScore());
+            viewableHand.get(i).setLetter(guestFacade.getPlayer().get_hand().get(i).getLetter());
+            viewableHand.get(i).setScore(guestFacade.getPlayer().get_hand().get(i).getScore());
         }
         setChanged();
         notifyObservers("hand updated");
@@ -187,7 +187,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
         hostPort = new SimpleStringProperty();
 
         //player properties
-        viewableHandGuest = new ArrayList<>();
+        viewableHand = new ArrayList<>();
         viewableBoard = new ArrayList<>();
         viewableScores = new ArrayList<>();
 
@@ -200,7 +200,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
 
         //initialize the hand of the player
         for (int i = 0; i < 7; i++) {
-            viewableHandGuest.add(new ViewableTile(' ', 0));
+            viewableHand.add(new ViewableTile(' ', 0));
         }
 
         //initialize the board
@@ -303,5 +303,45 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
             //The index of the player is updated
             //??????
         });
+    }
+
+    @Override
+    public void startNewGame() {
+        return;
+    }
+
+    @Override
+    public Observable getObservable() {
+        return this;
+    }
+
+    @Override
+    public SimpleStringProperty getChallengeWord() {
+        return this.challengeWord;
+    }
+
+    @Override
+    public StringProperty getWinnerProperty() {
+        return this.winnerProperty;
+    }
+
+    @Override
+    public List<ViewableTile> getViewableHand() {
+        return this.viewableHand;
+    }
+
+    @Override
+    public List<List<ViewableTile>> getViewableBoard() {
+        return this.viewableBoard;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableScores() {
+        return this.viewableScores;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableWordsForChallenge() {
+        return this.viewableWordsForChallenge;
     }
 }
