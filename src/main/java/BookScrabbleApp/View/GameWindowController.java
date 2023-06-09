@@ -9,6 +9,7 @@ import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
+
 import java.net.*;
 import java.util.*;
 import java.util.function.*;
@@ -39,6 +40,8 @@ public class GameWindowController implements Observer, Initializable {
     GridPane yourWord = new GridPane();
     @FXML
     Button startNewGameBtn;
+
+    private TileField previousClickedObject = null;
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
@@ -130,6 +133,29 @@ public class GameWindowController implements Observer, Initializable {
         gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                double xCoordinate = mouseEvent.getX();
+                double yCoordinate = mouseEvent.getY();
+
+                int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
+                int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
+
+                TileField clickedTile = gameBoard.tileFields.get(row).get(col);
+
+                if (!clickedTile.letter.getText().equals("")) {
+                    if (gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).isUpdate()) {
+                        selectedTileField.letter.setText(gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).letter.getText());
+                        selectedTileField.tileRow = row;
+                        selectedTileField.tileCol = col;
+                        setYourWord();
+                    } else {
+                        clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
+                        selectedTileField = clickedTile;
+                        clickedTile.setClick(true);
+                        setTileFieldOnBoard();
+                        setYourWord();
+                    }
+                }
+
                 gameBoard.requestFocus();
             }
         });
@@ -165,10 +191,10 @@ public class GameWindowController implements Observer, Initializable {
                 for (TileField t : handFields) {
                     t.setUnlocked();
                 }
-            }else
-                alertPopUp("First Word Error","First Word Error","First Word has to be on the star");
-        }else{
-            alertPopUp("Word Error","Word Error","Word has to be at least two letters long");
+            } else
+                alertPopUp("First Word Error", "First Word Error", "First Word has to be on the star");
+        } else {
+            alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
         }
         Platform.runLater(() -> gameBoard.requestFocus());
     }
@@ -234,8 +260,8 @@ public class GameWindowController implements Observer, Initializable {
             gameBoard.setTileFields(boardFields);
             gameBoard.tileFields.forEach(row -> {
                 row.forEach(tileField -> {
-                   if (!tileField.isUpdate()){
-                       tileField.setUpdate();
+                    if (!tileField.isUpdate()) {
+                        tileField.setUpdate();
                     }
                 });
             });
@@ -247,7 +273,7 @@ public class GameWindowController implements Observer, Initializable {
         });
         updatesMap.put("invalidWord", message -> {
             //The word is invalid
-            alertPopUp("Invalid Word","Invalid Word","The word you tried to place is invalid");
+            alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
         });
     }
 
@@ -265,11 +291,14 @@ public class GameWindowController implements Observer, Initializable {
     public void startNewGame() {
         this.hostViewModel.startNewGame();
         startNewGameBtn.setVisible(false);
+        Platform.runLater(() -> gameBoard.requestFocus());
     }
 
     private void rollBack() {
         for (TileField t : wordForTryPlace) {
-            gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+            if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+            }
         }
 
         gameBoard.redraw();
@@ -347,18 +376,12 @@ public class GameWindowController implements Observer, Initializable {
     private void setTileFieldOnBoard() {
         if (selectedTileField != null && !selectedTileField.isLocked() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
             if (ifConnected(selectedTileField)) {
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText(selectedTileField.letter.getText());
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).score.setText(selectedTileField.score.getText());
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).setUnlocked();
-                TileField t = new TileField();
-                t.letter.setText(selectedTileField.letter.getText());
-                t.score.setText(selectedTileField.score.getText());
-                t.tileRow = gameBoard.getRow();
-                t.tileCol = gameBoard.getCol();
-                t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
-                wordForTryPlace.add(t);
-                redrawYourWord(wordForTryPlace);
+                gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).letter.setText(selectedTileField.letter.getText());
+                gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).score.setText(selectedTileField.score.getText());
+                gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).setUnlocked();
                 gameBoard.redraw();
+            } else if (selectedTileField != null) {
+                selectedTileField.setSelect(false);
             }
         } else if (selectedTileField != null)
             selectedTileField.setSelect(false);
@@ -408,10 +431,28 @@ public class GameWindowController implements Observer, Initializable {
      * The checkFirstWord function checks if the first word is placed on a star.
      * The first word must be placed at the center of the board.
      * <p>
+     *
      * @return True if the first word is placed
      */
     private boolean checkFirstWord() {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
+    }
+
+    private void setYourWord() {
+        if (ifConnected(selectedTileField)) {
+            TileField t = new TileField();
+            t.letter.setText(selectedTileField.letter.getText());
+            t.score.setText(selectedTileField.score.getText());
+            t.tileRow = selectedTileField.tileRow;
+            t.tileCol = selectedTileField.tileCol;
+            t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
+            wordForTryPlace.add(t);
+            redrawYourWord(wordForTryPlace);
+        }
+    }
+
+    private void removeFromYourWord(TileField removedTile) {
+        wordForTryPlace.removeIf(tileField -> tileField.letter.getText().equals(removedTile.letter.getText()));
     }
 }
 

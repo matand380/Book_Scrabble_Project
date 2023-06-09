@@ -9,8 +9,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.text.*;
 
 public class TileField extends StackPane {
 
@@ -19,6 +18,8 @@ public class TileField extends StackPane {
     public TextField score;
     private boolean isLocked;
     private boolean isSelect;
+
+    private boolean isClick = false;
 
     private boolean isUpdate = false;
 
@@ -73,12 +74,17 @@ public class TileField extends StackPane {
     public void draw(GraphicsContext gc, int row, int col, double width, double height, int fontSize) {
         this.tileCol = col;
         this.tileRow = row;
+
         double xCoordinate = col * width;
         double YCoordinate = row * height;
 
         if (this.isUpdate()) {
             gc.setFill(Color.LIGHTGRAY);
             gc.setStroke(Color.RED);
+            gc.setLineWidth(2);
+        }else if(fontSize == 0){
+            gc.setFill(Color.LIGHTGRAY);
+            gc.setStroke(Color.GREEN);
             gc.setLineWidth(2);
         }else{
             gc.setFill(Color.LIGHTGRAY);
@@ -88,14 +94,27 @@ public class TileField extends StackPane {
         gc.strokeRect(xCoordinate, YCoordinate, width, height);
 
         // Draw letter
-        gc.setFont(Font.font("Arial", FontWeight.BOLD, fontSize));
+        String letter = String.valueOf(this.letter.getText());
+        Text letterText = new Text(letter);
+        letterText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        double letterWidth = letterText.getBoundsInLocal().getWidth();
+        double letterHeight = letterText.getBoundsInLocal().getHeight();
+        double letterX = xCoordinate + (width - letterWidth) / 2;
+        double letterY = YCoordinate + (height + letterHeight) / 2 - 4;
+        gc.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         gc.setFill(Color.BLACK);
-        gc.fillText(String.valueOf(this.letter.getText()), xCoordinate + width / 2, YCoordinate + height / 2);
+        gc.fillText(letter, letterX, letterY);
 
         // Draw score
-        gc.setFont(Font.font("Arial", FontWeight.NORMAL, fontSize));
+        String score = String.valueOf(this.score.getText());
+        Text scoreText = new Text(score);
+        scoreText.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
+        double scoreWidth = scoreText.getBoundsInLocal().getWidth();
+        double scoreX = xCoordinate + (width - scoreWidth) - 10;
+        double scoreY = YCoordinate + (height + letterHeight) / 2 + 5;
+        gc.setFont(Font.font("Arial", FontWeight.NORMAL, 12));
         gc.setFill(Color.RED);
-        gc.fillText(String.valueOf(this.score.getText()), xCoordinate + width / 2, YCoordinate + height / 2 + 20);
+        gc.fillText(score, scoreX, scoreY);
     }
 
     public void setSelect(boolean select) {
@@ -107,10 +126,6 @@ public class TileField extends StackPane {
         }
     }
 
-    public void setLocked() {
-        isLocked = true;
-    }
-
     public boolean isLocked() {
         return isLocked;
     }
@@ -119,11 +134,17 @@ public class TileField extends StackPane {
         isLocked = false;
         setSelect(false);
         isUpdate = false;
+        isClick = false;
+    }
+    public void setClick(boolean click){
+        isClick = click;
+    }
+    public boolean isClick(){
+        return isClick;
     }
     public boolean isUpdate() {
         return isUpdate;
     }
-
     public void setUpdate() {
         isUpdate = true;
     }
