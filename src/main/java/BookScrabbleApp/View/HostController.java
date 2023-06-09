@@ -62,7 +62,7 @@ public class HostController {
                 connected = false;
             }
             if (connected) {
-                invalidIPorPort.setText("Game server connected");
+//                invalidIPorPort.setText("Game server connected");
                 nextBtn.setVisible(true);
             }
         }
