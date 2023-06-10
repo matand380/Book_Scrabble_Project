@@ -167,30 +167,30 @@
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
-                        <Label fx:id="namePlayer1" layoutX="32.0" layoutY="50.0" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="RIGHT" textOverrun="CENTER_ELLIPSIS">
+                        <Label fx:id="namePlayer1" visible="false" layoutX="32.0" layoutY="50.0" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="RIGHT" textOverrun="CENTER_ELLIPSIS">
                             <font>
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="scorePlayer1" layoutX="55.0" layoutY="85.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" />
-                        <Label fx:id="namePlayer2" layoutX="32.0" layoutY="153.0" prefHeight="30.0" prefWidth="84.0">
+                        <Label fx:id="scorePlayer1" visible="false" layoutX="55.0" layoutY="85.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" />
+                        <Label fx:id="namePlayer2" visible="false" layoutX="32.0" layoutY="153.0" prefHeight="30.0" prefWidth="84.0">
                             <font>
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="scorePlayer2" layoutX="55.0" layoutY="184.0" prefHeight="17.0" prefWidth="34.0" />
-                        <Label fx:id="namePlayer3" layoutX="32.0" layoutY="256.0" prefHeight="30.0" prefWidth="84.0">
+                        <Label fx:id="scorePlayer2" visible="false" layoutX="55.0" layoutY="184.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="namePlayer3" visible="false" layoutX="32.0" layoutY="256.0" prefHeight="30.0" prefWidth="84.0">
                             <font>
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="scorePlayer3" layoutX="55.0" layoutY="284.0" prefHeight="17.0" prefWidth="34.0" />
-                        <Label fx:id="namePlayer4" layoutX="32.0" layoutY="357.0" prefHeight="30.0" prefWidth="84.0">
+                        <Label fx:id="scorePlayer3" visible="false" layoutX="55.0" layoutY="284.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="namePlayer4" visible="false" layoutX="32.0" layoutY="357.0" prefHeight="30.0" prefWidth="84.0">
                             <font>
                                 <Font size="25.0" />
                             </font>
                         </Label>
-                        <Label fx:id="scorePlayer4" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" />
+                        <Label fx:id="scorePlayer4" visible="false" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" />
                 </AnchorPane>
                 <JFXButton fx:id="startNewGameBtn" onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
                     <styleClass>

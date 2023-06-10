@@ -54,6 +54,8 @@ public class GameWindowController implements Observer, Initializable {
 
     private List<Label> scoresFields;
 
+    private List<Label> nameFields;
+
     private List<TileField> handFields;
 
     List<List<TileField>> boardFields;
@@ -93,20 +95,9 @@ public class GameWindowController implements Observer, Initializable {
     //initialize the window
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        scoresFields = new ArrayList<>();
-        handFields = new ArrayList<>();
-        boardFields = new ArrayList<>();
-        updatesMap = new HashMap<>();
-        wordForTryPlace = new ArrayList<>();
-        scoresFields.add(scorePlayer1);
-        scoresFields.add(scorePlayer2);
-        scoresFields.add(scorePlayer3);
-        scoresFields.add(scorePlayer4);
-        wordsForChallenge = new ArrayList<>();
-
+        initializeProperties();
         initializeUpdateMap();
         initializeKeyEventMap();
-
 
         for (int boardRow = 0; boardRow < 15; boardRow++) {
             boardFields.add(new ArrayList<>());
@@ -160,6 +151,27 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
+    private void  initializeProperties() {
+        //initialize properties
+        handFields = new ArrayList<>();
+        boardFields = new ArrayList<>();
+        updatesMap = new HashMap<>();
+        wordForTryPlace = new ArrayList<>();
+        wordsForChallenge = new ArrayList<>();
+
+        //initialize the scores and names fields
+        scoresFields = new ArrayList<>();
+        nameFields = new ArrayList<>();
+        nameFields.add(namePlayer1);
+        scoresFields.add(scorePlayer1);
+        nameFields.add(namePlayer2);
+        scoresFields.add(scorePlayer2);
+        nameFields.add(namePlayer3);
+        scoresFields.add(scorePlayer3);
+        nameFields.add(namePlayer4);
+        scoresFields.add(scorePlayer4);
+    }
+
     private void initializeUpdateMap() {
         updatesMap.put("hand updated", message -> {
             //The hand of the player is updated
@@ -196,14 +208,12 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("turnPassed", message -> {
-            System.out.println("\nplayer index:" + viewModel.getPlayerIndex() + "\n");
-            if (!(viewModel.getPlayerIndex() == Integer.parseInt(message.split(":")[1]))) {
-                tryPlaceBtn.setDisable(true);
-                passTurnBtn.setDisable(true);
-            } else {
-                tryPlaceBtn.setDisable(false);
-                passTurnBtn.setDisable(false);
-            }
+            String currentPlayerIndex = message.split(":")[1];
+            passTurn(currentPlayerIndex);
+        });
+
+        updatesMap.put("playersName updated", message -> {
+            setNamesFields(viewModel.getViewableNames());
         });
     }
 
@@ -211,6 +221,7 @@ public class GameWindowController implements Observer, Initializable {
         //bind the scores to the text fields
         for (int i = 0; i < viewModel.getViewableScores().size(); i++) {
             viewModel.getViewableScores().get(i).bind(scoresFields.get(i).textProperty());
+            viewModel.getViewableNames().get(i).bind(nameFields.get(i).textProperty());
         }
 
         for (int i = 0; i < 7; i++) {
@@ -367,7 +378,6 @@ public class GameWindowController implements Observer, Initializable {
         Platform.runLater(() -> gameBoard.requestFocus());
     }
 
-
     @FXML
     public void onPassButtonClick() {
         viewModel.passTurn();
@@ -398,6 +408,14 @@ public class GameWindowController implements Observer, Initializable {
     private void setScoresFields(List<SimpleStringProperty> list) {
         for (int i = 0; i < list.size(); i++) {
             scoresFields.get(i).setText(list.get(i).get());
+        }
+    }
+
+    private void setNamesFields(List<SimpleStringProperty> viewableNames) {
+        for (int i = 0; i < viewableNames.size(); i++) {
+            nameFields.get(i).setText(viewableNames.get(i).getValue());
+            nameFields.get(i).setVisible(true);
+            scoresFields.get(i).setVisible(true);
         }
     }
 
@@ -443,9 +461,21 @@ public class GameWindowController implements Observer, Initializable {
             System.out.println("Selected Word: " + selectedWord);
         });
     }
+
     public void ChallengeOnScreen(ActionEvent actionEvent) {
         setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
     }
+
+    private void passTurn(String indexCurrentPlayer) {
+        if (!(viewModel.getPlayerIndex() == Integer.parseInt(indexCurrentPlayer))) {
+            tryPlaceBtn.setDisable(true);
+            passTurnBtn.setDisable(true);
+        } else {
+            tryPlaceBtn.setDisable(false);
+            passTurnBtn.setDisable(false);
+        }
+    }
+
     private void removeFromYourWord(TileField removedTile) {
         wordForTryPlace.removeIf(tileField -> tileField.tileRow == removedTile.tileRow && tileField.tileCol == removedTile.tileCol && tileField.letter.getText().equals(removedTile.letter.getText()));
     }

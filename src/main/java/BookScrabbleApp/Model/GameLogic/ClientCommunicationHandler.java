@@ -112,6 +112,11 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().hasChanged();
             BS_Guest_Model.getModel().notifyObservers(message);
         });
+
+        handlers.put("playersName", message -> {
+            BS_Guest_Model.getModel().hasChanged();
+            BS_Guest_Model.getModel().notifyObservers(message);
+        });
     }
 
     /**

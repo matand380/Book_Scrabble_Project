@@ -17,6 +17,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     public List<ViewableTile> viewableHand; //hand of the player
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; //score array
+    public List<SimpleStringProperty> viewableName; //score array
     public SimpleStringProperty challengeWord; //word for challenge
     public List<SimpleStringProperty> viewableWordsForChallenge; //words for challenge
     public StringProperty winnerProperty; //winner of the game
@@ -40,14 +41,14 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (o instanceof BookScrabbleGuestFacade) {
-            String key = (String) arg;
-            String[] message = key.split(":");
-            String command = message[0];
-            if (updatesMap.containsKey(command))
-                updatesMap.get(command).accept(key);
-            else
-                System.out.println("Command not found");
+        String message = (String) arg;
+        String[] messageSplit = message.split(":");
+        String updateType = messageSplit[0];
+        if (updatesMap.containsKey(updateType)) {
+            updatesMap.get(updateType).accept(message);
+        } else {
+            setChanged();
+            notifyObservers("Error in updates handling ");
         }
     }
 
@@ -189,6 +190,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
         viewableHand = new ArrayList<>();
         viewableBoard = new ArrayList<>();
         viewableScores = new ArrayList<>();
+        viewableName = new ArrayList<>();
 
         //challenge properties
         challengeWord = new SimpleStringProperty();
@@ -297,10 +299,15 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
             notifyObservers("challengeSuccess");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
-        updatesMap.put("sortAndSetIndex", message -> {
-            //The index of the player is updated
-            //??????
+        updatesMap.put("playersName", message -> {
+            String[] messageSplit = message.split(":");
+            int size = Integer.parseInt(messageSplit[1]);
+            for (int i = 0; i < size; i++) {
+                viewableName.add(new SimpleStringProperty());
+                viewableName.get(i).setValue(messageSplit[i+2]);
+            }
+            setChanged();
+            notifyObservers("playersName updated");
         });
     }
 
@@ -347,5 +354,10 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     @Override
     public List<SimpleStringProperty> getViewableWordsForChallenge() {
         return this.viewableWordsForChallenge;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableNames() {
+        return this.viewableName;
     }
 }

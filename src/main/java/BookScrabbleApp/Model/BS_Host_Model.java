@@ -231,12 +231,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
             } else {
                 setChanged();
-                notifyObservers("hand updated");
+                notifyObservers("hand updated" + ":playersName");
             }
-
-
         });
-
+        StringBuilder playersName = new StringBuilder();
+        for(Player p : players) {
+            playersName.append(p.get_name()).append(":");
+        }
+        communicationServer.updateAll("playersName:" + players.size() + ":" + playersName.toString());
+        setChanged();
+        notifyObservers("playersName:" + players.size() + ":" + playersName.toString());
     }
 
     /**
@@ -503,7 +507,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         String allPlayersString = allPlayers.toString();
 
         BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetIndex:" + players.size() + ":" + allPlayersString);
-
     }
 
     /**

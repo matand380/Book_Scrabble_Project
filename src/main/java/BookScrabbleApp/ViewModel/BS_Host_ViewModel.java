@@ -18,6 +18,7 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
     public List<ViewableTile> viewableHand; //player hand
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; // scores array
+    public List<SimpleStringProperty> viewableName; //score array
 
     public List<SimpleStringProperty> viewableWordsForChallenge; // words for challenge array
     BookScrabbleHostFacade hostFacade;
@@ -113,10 +114,15 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
             notifyObservers("endGame");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
-        updatesMap.put("sortAndSetIndex", message -> {
-            //The index of the player is updated
-            //??????
+        updatesMap.put("playersName", message -> {
+            String[] messageSplit = message.split(":");
+            int size = Integer.parseInt(messageSplit[1]);
+            for (int i = 0; i < size; i++) {
+                viewableName.add(new SimpleStringProperty());
+                viewableName.get(i).setValue(messageSplit[i+2]);
+            }
+            setChanged();
+            notifyObservers("playersName updated");
         });
 
         // FIXME: 30/05/2023 check if we need this function
@@ -164,8 +170,6 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
         }
         setChanged();
         notifyObservers("tileBoard updated");
-
-
     }
 
     /**
@@ -196,10 +200,9 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
             viewableBoard.add(row);
         }
         viewableScores = new ArrayList<>();
+        viewableName = new ArrayList<>();
         ip = new SimpleStringProperty();
         port = new SimpleStringProperty();
-
-
     }
 
     /**
@@ -383,5 +386,10 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
 
     public void startHostServer(){
         new Thread(()->hostFacade.getCommunicationServer().start()).start();
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableNames() {
+        return this.viewableName;
     }
 }
