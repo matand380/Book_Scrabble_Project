@@ -131,7 +131,7 @@ public class TestHelper {
 
         Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
         t.start();
-//
+
         try {
             Thread.sleep(8000); //wait for server to start
         } catch (InterruptedException e) {

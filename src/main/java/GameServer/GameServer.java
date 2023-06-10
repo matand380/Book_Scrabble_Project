@@ -136,7 +136,7 @@ public class GameServer {
     public String getPublicIp() {
         String ip = null;
         try {
-            URL url = new URL("https://api.ipify.org");
+            URL url = new URL("https://ifconfig.me/ip");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             ip = in.readLine();
             in.close();
