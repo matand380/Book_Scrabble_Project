@@ -8,6 +8,8 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -18,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import BookScrabbleApp.GridCanvas?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1518.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
         <AnchorPane prefHeight="211.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <children>
@@ -36,7 +38,7 @@
                                 <String fx:value="font" />
                             </styleClass>
                         </JFXButton>
-                        <JFXButton layoutX="5.0" layoutY="112.0" onAction="#setWordsForChallengeOnScreen" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Challenge">
+                        <JFXButton layoutX="5.0" layoutY="112.0" onAction="#ChallengeOnScreen" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Challenge">
                             <styleClass>
                                 <String fx:value="button" />
                                 <String fx:value="font" />
@@ -109,8 +111,13 @@
     <center>
         <AnchorPane BorderPane.alignment="CENTER">
             <children>
-                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="245.0" layoutY="14.0" styleClass="grid-canvas" width="600.0"/>
-<!--                <Canvas height="600.0" layoutX="245.0" layoutY="14.0" width="600.0" />-->
+            <ImageView fitHeight="650.0" fitWidth="650.0" layoutX="245.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/borderCavnvas.png" />
+               </image>
+            </ImageView>
+                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="271.0" layoutY="37.0" styleClass="grid-canvas" width="600.0"/>
+<!--                <Canvas height="600.0" layoutX="271.0" layoutY="37.0" width="600.0" />-->
                 <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                     <font>
                         <Font size="25.0" />

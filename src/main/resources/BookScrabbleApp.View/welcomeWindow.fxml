@@ -6,23 +6,21 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane fx:id="mainWindow" prefHeight="610.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.welcomeController">
    <bottom>
       <Group BorderPane.alignment="CENTER">
          <children>
          <!--      <Button onAction="#switchToHostWindow" text="Host">-->
-                   <Button onAction="#switchToHostWindow" stylesheets="@../buttonStyleSheets.css" text="Host">
+                   <Button layoutX="-83.0" layoutY="-54.0" onAction="#switchToHostWindow" prefHeight="62.0" prefWidth="151.0" stylesheets="@../buttonStyleSheets.css" text="Host">
                    <font>
                        <Font size="49.0" />
                    </font>
                </Button>
-         <!--      <Button onAction="#switchToGuestWindow" text="Guest">-->
-             <Button layoutX="327.0" onAction="#switchToGuestWindow" stylesheets="@../buttonStyleSheets.css" text="Guest">
-                   <font>
-                       <Font size="49.0" />
-                   </font>
-               </Button>
+            <Button layoutX="313.0" layoutY="-54.0" onAction="#switchToGuestWindow" prefHeight="62.0" prefWidth="151.0" stylesheets="@../buttonStyleSheets.css" text="Guest">
+               <font>
+                  <Font size="49.0" />
+               </font>
+            </Button>
          </children>
       </Group>
    </bottom>

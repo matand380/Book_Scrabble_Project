@@ -35,9 +35,12 @@ public class HostController {
     public TextField nameTextFiled;
     @FXML
     private Button nextBtn;
+    @FXML
+    private Button submitBtn;
 
     String ip;
     int port;
+
     public static String name;
     BS_Host_ViewModel host = new BS_Host_ViewModel();
 
@@ -64,6 +67,7 @@ public class HostController {
             if (connected) {
 //                invalidIPorPort.setText("Game server connected");
                 nextBtn.setVisible(true);
+                submitBtn.onActionProperty().set(null);
             }
         }
     }

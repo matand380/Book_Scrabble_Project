@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="634.0" prefWidth="801.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.HostController">
+<BorderPane prefHeight="800.0" prefWidth="1400.0" stylesheets="@../background.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.HostController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -29,44 +29,40 @@
       </BorderPane>
    </bottom>
    <center>
-      <BorderPane BorderPane.alignment="CENTER">
-         <center>
-            <Pane prefHeight="86.0" prefWidth="342.0">
+      <Pane prefHeight="86.0" prefWidth="342.0">
+         <children>
+            <Group layoutX="454.0" layoutY="134.0">
                <children>
-                  <Group layoutX="179.0" layoutY="103.0">
-                     <children>
-                              <Label layoutY="61.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
-                                  <font>
-                                      <Font size="39.0" />
-                                  </font>
-                              </Label>
-                              <TextField fx:id="IpTextFiled" layoutX="80.0" layoutY="24.0" prefHeight="37.0" prefWidth="321.0" text="127.0.0.1" />
-                              <Label layoutX="36.0" prefHeight="69.0" prefWidth="62.0" text="ip:" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
-                                  <font>
-                                      <Font size="39.0" />
-                                  </font>
-                              </Label>
-                              <TextField fx:id="PortTextFiled" layoutX="80.0" layoutY="85.0" prefHeight="37.0" prefWidth="321.0" text="20500" />
-                     </children>
-                  </Group>
-                        <Button layoutX="257.0" layoutY="242.0" onAction="#onPressSubmit" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Submit">
-                            <font>
-                                <Font size="49.0" />
-                            </font>
-                        </Button>
-                        <Button fx:id="nextBtn" layoutX="257.0" layoutY="352.0" onAction="#next" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Next" visible="false">
-                            <font>
-                                <Font size="49.0" />
-                            </font>
-                        </Button>
-                        <Label fx:id="welcomeText" layoutX="231.0" layoutY="18.0" prefHeight="98.0" prefWidth="353.0" text="Welcome to the Host" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                        <Label layoutY="61.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
                             <font>
                                 <Font size="39.0" />
                             </font>
                         </Label>
+                        <TextField fx:id="IpTextFiled" layoutX="80.0" layoutY="24.0" prefHeight="37.0" prefWidth="321.0" text="127.0.0.1" />
+                        <Label layoutX="36.0" prefHeight="69.0" prefWidth="62.0" text="ip:" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                            <font>
+                                <Font size="39.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="PortTextFiled" layoutX="80.0" layoutY="85.0" prefHeight="37.0" prefWidth="321.0" text="20500" />
                </children>
-            </Pane>
-         </center>
-      </BorderPane>
+            </Group>
+                  <Button fx:id="submitBtn" layoutX="547.0" layoutY="335.0" onAction="#onPressSubmit" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Submit">
+                      <font>
+                          <Font size="39.0" />
+                      </font>
+                  </Button>
+                  <Button fx:id="nextBtn" layoutX="548.0" layoutY="453.0" onAction="#next" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Next" visible="false">
+                      <font>
+                          <Font size="49.0" />
+                      </font>
+                  </Button>
+                  <Label fx:id="welcomeText" layoutX="468.0" layoutY="32.0" prefHeight="98.0" prefWidth="456.0" text="Welcome to the Host" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                      <font>
+                          <Font size="48.0" />
+                      </font>
+                  </Label>
+         </children>
+      </Pane>
    </center>
 </BorderPane>

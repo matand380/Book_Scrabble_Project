@@ -2,6 +2,7 @@ package BookScrabbleApp;
 
 import BookScrabbleApp.View.*;
 import javafx.scene.canvas.*;
+import javafx.scene.image.*;
 import javafx.scene.paint.*;
 import java.util.*;
 
@@ -64,28 +65,25 @@ public class GridCanvas extends Canvas {
                 if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
                     double tileXCoordinate = boardCol * w;
                     double tileYCoordinate = boardRow * w;
-                    gc.fillText(String.valueOf(colorBoard[boardRow][boardCol]), tileXCoordinate + w / 2, tileYCoordinate + h / 2);
-                    gc.setFill(getColorForScore(colorBoard[boardRow][boardCol]));
+                    gc.drawImage(getColorForScore(colorBoard[boardRow][boardCol]), tileXCoordinate, tileYCoordinate, w, h);
                     gc.fillRect(tileXCoordinate , tileYCoordinate, w, h);
                 } else{
                     this.placeTileFiled(tileFields.get(boardRow).get(boardCol),boardRow,boardCol);
                 }
             }
         }
-        gc.setFill(Color.rgb(248, 0, 0,0.6));
+        gc.setFill(Color.rgb(0, 0, 0,0.1));
         gc.fillRect(xCoordinate, YCoordinate, w, h);
     }
 
-    private Color getColorForScore(char score) {
-        // Assign colors based on the score characters
-        return switch (score) {
-            case 'r' -> Color.rgb(174, 204, 228); // pale blue triple word score
-            case 'p' -> Color.rgb(128, 0, 128); // pale blue double letter score
-            case 'b' -> Color.BLUE; // blue triple letter score
-            case 'y' -> Color.YELLOW; // yellow double word score
-            case 's' -> Color.rgb(255, 165, 0); // orange star
-            case '0' -> Color.rgb(0, 128, 0); // green normal tile
-            default -> Color.WHITE; // default color for empty cells
+    private Image getColorForScore(char score) {
+         return switch (score) {
+            case 'r' -> new Image(getClass().getResource("/images/tripleWord.png").toExternalForm()); // pale blue triple word score
+            case 'p' -> new Image(getClass().getResource("/images/doubleLetter.png").toExternalForm()); // pale blue double letter score
+            case 'b' -> new Image(getClass().getResource("/images/tripleLetter.png").toExternalForm()); // blue triple letter score
+            case 'y' -> new Image(getClass().getResource("/images/doubleWord.png").toExternalForm()); // yellow double word score
+            case 's' -> new Image(getClass().getResource("/images/starLetter.png").toExternalForm()); // orange star
+            default -> new Image(getClass().getResource("/images/0Score.png").toExternalForm());
         };
     }
 
