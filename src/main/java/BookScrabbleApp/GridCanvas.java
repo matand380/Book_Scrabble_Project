@@ -77,12 +77,12 @@ public class GridCanvas extends Canvas {
 
     private Image getColorForScore(char score) {
          return switch (score) {
-            case 'r' -> new Image(getClass().getResource("/images/tripleWord.png").toExternalForm()); // pale blue triple word score
-            case 'p' -> new Image(getClass().getResource("/images/doubleLetter.png").toExternalForm()); // pale blue double letter score
-            case 'b' -> new Image(getClass().getResource("/images/tripleLetter.png").toExternalForm()); // blue triple letter score
-            case 'y' -> new Image(getClass().getResource("/images/doubleWord.png").toExternalForm()); // yellow double word score
-            case 's' -> new Image(getClass().getResource("/images/starLetter.png").toExternalForm()); // orange star
-            default -> new Image(getClass().getResource("/images/0Score.png").toExternalForm());
+            case 'r' -> new Image(getClass().getResource("/images/board/tripleWord.png").toExternalForm()); // pale blue triple word score
+            case 'p' -> new Image(getClass().getResource("/images/board/doubleLetter.png").toExternalForm()); // pale blue double letter score
+            case 'b' -> new Image(getClass().getResource("/images/board/tripleLetter.png").toExternalForm()); // blue triple letter score
+            case 'y' -> new Image(getClass().getResource("/images/board/doubleWord.png").toExternalForm()); // yellow double word score
+            case 's' -> new Image(getClass().getResource("/images/board/starLetter.png").toExternalForm()); // orange star
+            default -> new Image(getClass().getResource("/images/board/0Score.png").toExternalForm());
         };
     }
 

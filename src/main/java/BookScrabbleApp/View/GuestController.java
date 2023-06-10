@@ -34,7 +34,7 @@ public class GuestController {
 
     String ip;
     int port;
-    BS_Guest_ViewModel guest;
+    BS_Guest_ViewModel guest = new BS_Guest_ViewModel();
 
     @FXML
     public void onPressSubmit() throws Exception {

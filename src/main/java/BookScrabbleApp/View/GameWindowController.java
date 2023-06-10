@@ -8,7 +8,7 @@ import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 
 import java.net.*;
 import java.util.*;
@@ -387,7 +387,7 @@ public class GameWindowController implements Observer, Initializable {
         t.score.setText(selectedTileField.score.getText());
         t.tileRow = selectedTileField.tileRow;
         t.tileCol = selectedTileField.tileCol;
-        t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
+        t.createTile(yourWord.getWidth() / 7, yourWord.getHeight());
         wordForTryPlace.add(t);
         redrawYourWord(wordForTryPlace);
     }
@@ -441,22 +441,21 @@ public class GameWindowController implements Observer, Initializable {
     private void redrawHand(List<TileField> list) {
         handGrid.getChildren().clear();
         for (int i = 0; i < list.size(); i++) {
-            handFields.get(i).createTile(list.get(i).letter, list.get(i).score, handGrid.getWidth() / 7, handGrid.getHeight(), 28);
-            handGrid.add(list.get(i), i, 0);
+            handGrid.add(list.get(i).createTile(handGrid.getWidth() / 7, handGrid.getHeight()), i, 0);
         }
     }
 
     private void redrawYourWord(List<TileField> list) {
         yourWord.getChildren().clear();
         for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).letter.getText().equals("_")) {
+            if (list.get(i).letter.getText().equals("_")) { //tile from board//
                 TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
                 t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
                 t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
-                t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
+                t.createTile(yourWord.getWidth() / 7, yourWord.getHeight());
                 yourWord.add(t, i, 0);
-            } else
-                yourWord.add(list.get(i), i, 0);
+            } else //tile from hand//
+                yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
         }
     }
 

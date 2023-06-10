@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -15,12 +16,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<!--<?import BookScrabbleApp.GridCanvas?>-->
-
+<?import BookScrabbleApp.GridCanvas?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1518.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
@@ -124,11 +125,11 @@
                   <children>
                   <ImageView fitHeight="650.0" fitWidth="650.0" layoutX="245.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/borderCavnvas.png" />
+                        <Image url="@../images/board/borderCavnvas.png" />
                      </image>
                   </ImageView>
-      <!--                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="271.0" layoutY="37.0" styleClass="grid-canvas" width="600.0"/>-->
-      <!--                <Canvas height="600.0" layoutX="271.0" layoutY="37.0" width="600.0" />-->
+                      <GridCanvas fx:id="gameBoard" height="600.0" layoutX="271.0" layoutY="37.0" styleClass="grid-canvas" width="600.0"/>
+<!--                      <Canvas height="600.0" layoutX="271.0" layoutY="37.0" width="600.0" />-->
                       <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                           <font>
                               <Font size="25.0" />
