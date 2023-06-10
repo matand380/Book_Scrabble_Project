@@ -316,27 +316,35 @@ public class GameWindowController implements Observer, Initializable {
             if (checkFirstWord()) {
                 StringBuilder word = new StringBuilder();
                 boolean direction = false;
+                int count = 0;
                 for (TileField t : wordForTryPlace) {
+                    if (t.letter.getText().equals("_")) {
+                        count++;
+                    }
                     word.append(t.letter.getText());
                 }
-                if (wordForTryPlace.size() > 0) {
-                    if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
-                        direction = true;
+                if (count != wordForTryPlace.size()) {
+                    if (wordForTryPlace.size() > 0) {
+                        if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
+                            direction = true;
+                        }
                     }
-                }
-                viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-                wordForTryPlace.clear();
-                yourWord.getChildren().clear();
-                for (TileField t : handFields) {
-                    t.setUnlocked();
-                }
+                    viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
+                    wordForTryPlace.clear();
+                    yourWord.getChildren().clear();
+                    for (TileField t : handFields) {
+                        t.setUnlocked();
+                    }
+                } else
+                    alertPopUp("Error in word", "Error in word", "Must have at least one letter from your hand");
             } else
                 alertPopUp("First Word Error", "First Word Error", "First Word has to be on the star");
-        } else {
+    } else
             alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
-        }
-        Platform.runLater(() -> gameBoard.requestFocus());
-    }
+
+        Platform.runLater(()->gameBoard.requestFocus());
+}
+
 
     @FXML
     public void onPassButtonClick() {
