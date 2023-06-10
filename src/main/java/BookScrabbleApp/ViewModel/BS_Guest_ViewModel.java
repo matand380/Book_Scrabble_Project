@@ -33,6 +33,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
      * 2. initializeUpdateMap() initializes the updatesMap, which is a map of all the updates from the guest.
      */
     public BS_Guest_ViewModel() {
+        super();
         guestFacade = new BookScrabbleGuestFacade();
         guestFacade.addObserver(this);
         initializeProperties();
@@ -44,6 +45,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
         String message = (String) arg;
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
+        System.out.println("Guest ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
             System.out.println(updateType);
             updatesMap.get(updateType).accept(message);

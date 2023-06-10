@@ -72,7 +72,6 @@ public class GuestController {
             name = nameTextFiled.getText();
         }
         guest.setPlayerProperties(name);
-        BS_Guest_ViewModel guestViewModel = new BS_Guest_ViewModel();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
@@ -83,6 +82,6 @@ public class GuestController {
         stage.setScene(scene);
         stage.show();
         GameWindowController gameWindowController = loader.getController();
-        gameWindowController.setViewModel(guestViewModel);
+        gameWindowController.setViewModel(guest);
     }
 }

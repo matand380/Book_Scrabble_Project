@@ -26,7 +26,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      */
     private BS_Guest_Model() {
         player = new Player();
-
     }
 
     /**
@@ -61,6 +60,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
                 throw new RuntimeException(e);
             }
             communicationHandler = new ClientCommunicationHandler();
+            getCommunicationHandler().setCom();
         }
     }
 
