@@ -10,6 +10,8 @@ import javafx.stage.*;
 import java.io.IOException;
 
 public class BookScrabbleApp extends Application {
+        static final double MIN_WIDTH = 800;
+        static final double MIN_HEIGHT = 600;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -21,6 +23,8 @@ public class BookScrabbleApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/background.css").toExternalForm());
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.setScene(scene);
+        stage.setMinWidth(MIN_WIDTH);
+        stage.setMinHeight(MIN_HEIGHT);
         stage.show();
     }
     public static void main(String[] args) {
@@ -31,8 +35,8 @@ public class BookScrabbleApp extends Application {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getBounds();
         double[] widthHeight = new double[2];
-        widthHeight[0] = bounds.getWidth() - 50;
-        widthHeight[1] = bounds.getHeight() - 50;
+        widthHeight[0] = bounds.getWidth() /2;
+        widthHeight[1] = bounds.getHeight() /2;
         return widthHeight;
     }
 }

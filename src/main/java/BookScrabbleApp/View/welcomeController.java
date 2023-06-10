@@ -32,6 +32,8 @@ public class welcomeController {
         scene = new Scene(root,screenWidth ,screenHeight);
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.setScene(scene);
+        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
+        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT);
         stage.show();
     }
     @FXML
