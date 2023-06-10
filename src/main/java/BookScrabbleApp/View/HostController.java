@@ -15,6 +15,10 @@ public class HostController {
     private Scene scene;
     private Parent root;
     @FXML
+    public Label stringYourIp;
+    @FXML
+    public Label stringYourPort;
+    @FXML
     private Label welcomeText;
     //start method
     @FXML
@@ -94,22 +98,18 @@ public class HostController {
         return ip;
     }
 
-
-
-
-
-
-
     @FXML
     private void initializeNextHostWindow() {
-        //welcomeText1.setText("Welcome this is the host window");
+        stringYourIp.setVisible(true);
+        stringYourPort.setVisible(true);
         yourIp.setText(getPublicIp());
         yourPort.setText(String.valueOf(port));//doesn't work yet
+
     }
 
     @FXML
     public void switchToGameWindow() throws Exception {
-        if (nameTextFiled.getText().equals("")) {
+        if (nameTextFiled.getText().equals("Enter your name here")) {
             name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
             name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
         } else {
