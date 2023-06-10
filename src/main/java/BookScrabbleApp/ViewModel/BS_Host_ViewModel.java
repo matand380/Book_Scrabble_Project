@@ -62,7 +62,7 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
             int playerIndex = Integer.parseInt(messageSplit[1]);
             //The turn is updated
             setChanged();
-            notifyObservers("turnPassed");
+            notifyObservers("turnPassed:" + playerIndex);
         });
 
         updatesMap.put("wordsForChallenge", message -> {
@@ -339,6 +339,11 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
             notifyObservers("Error in updates handling ");
         }
 //        }
+    }
+
+    @Override
+    public int getPlayerIndex() {
+        return hostFacade.getPlayer().get_index();
     }
 
     @Override

@@ -31,7 +31,7 @@
                   <children>
                       <VBox layoutX="26.0" layoutY="6.0" prefHeight="200.0" prefWidth="190.0" spacing="10.0">
                           <children>
-                              <JFXButton onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Pass Turn">
+                              <JFXButton fx:id="passTurnBtn" onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Pass Turn">
                                   <styleClass>
                                       <String fx:value="button" />
                                       <String fx:value="font" />
@@ -40,13 +40,13 @@
                               <Insets left="10.0" />
                            </padding>
                               </JFXButton>
-                              <JFXButton layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
+                              <JFXButton fx:id="tryPlaceBtn" layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
                                   <styleClass>
                                       <String fx:value="button" />
                                       <String fx:value="font" />
                                   </styleClass>
                               </JFXButton>
-                              <JFXButton layoutX="5.0" layoutY="112.0" onAction="#ChallengeOnScreen" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Challenge">
+                              <JFXButton fx:id="challengeBtn" layoutX="5.0" layoutY="112.0" onAction="#ChallengeOnScreen" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Challenge">
                                   <styleClass>
                                       <String fx:value="button" />
                                       <String fx:value="font" />

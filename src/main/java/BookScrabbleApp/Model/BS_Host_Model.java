@@ -657,19 +657,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param challengeInfo Set the challengeinfo variable
      */
     public void requestChallengeActivation(String challengeInfo) {
-        String challengerIndex = this.getChallengeInfo().split(":")[0];
-        // Set the challengeRequested flag to indicate a challenge is requested
-        if (challengeActivated.get()) {
-            if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
-                communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+        if (this.getChallengeInfo() != null) {
+            String challengerIndex = this.getChallengeInfo().split(":")[0];
+            // Set the challengeRequested flag to indicate a challenge is requested
+            if (challengeActivated.get()) {
+                if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
+                    communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+                } else {
+                    setChanged();
+                    notifyObservers("challengeAlreadyActivated");
+                }
             } else {
-                setChanged();
-                notifyObservers("challengeAlreadyActivated");
+                challengeActivated.set(true);
+                this.setChallengeInfo(challengeInfo);
             }
-        } else {
-            challengeActivated.set(true);
-            this.setChallengeInfo(challengeInfo);
-
         }
     }
 

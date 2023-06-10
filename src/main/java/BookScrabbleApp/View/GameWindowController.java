@@ -40,6 +40,13 @@ public class GameWindowController implements Observer, Initializable {
     GridPane yourWord = new GridPane();
     @FXML
     Button startNewGameBtn;
+    @FXML
+    Button passTurnBtn;
+    @FXML
+    Button challengeBtn;
+    @FXML
+    Button tryPlaceBtn;
+
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
@@ -182,6 +189,21 @@ public class GameWindowController implements Observer, Initializable {
 
         updatesMap.put("wordsForChallenge updated", message -> {
             setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+        });
+
+        updatesMap.put("challengeAlreadyActivated", message -> {
+            alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
+        });
+
+        updatesMap.put("turnPassed", message -> {
+            System.out.println("\nplayer index:" + viewModel.getPlayerIndex() + "\n");
+            if (!(viewModel.getPlayerIndex() == Integer.parseInt(message.split(":")[1]))) {
+                tryPlaceBtn.setDisable(true);
+                passTurnBtn.setDisable(true);
+            } else {
+                tryPlaceBtn.setDisable(false);
+                passTurnBtn.setDisable(false);
+            }
         });
     }
 
@@ -339,11 +361,11 @@ public class GameWindowController implements Observer, Initializable {
                     alertPopUp("Error in word", "Error in word", "Must have at least one letter from your hand");
             } else
                 alertPopUp("First Word Error", "First Word Error", "First Word has to be on the star");
-    } else
+        } else
             alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
 
-        Platform.runLater(()->gameBoard.requestFocus());
-}
+        Platform.runLater(() -> gameBoard.requestFocus());
+    }
 
 
     @FXML
@@ -409,8 +431,7 @@ public class GameWindowController implements Observer, Initializable {
         dialog.setContentText("Words:");
 
         // Set the list of words for the choice dialog
-
-        dialog.getItems().addAll(wordsForChallenge);
+        dialog.getItems().add(wordsForChallenge.get(0));
 
         // Show the dialog and wait for the user's response
         Optional<SimpleStringProperty> result = dialog.showAndWait();
@@ -421,13 +442,13 @@ public class GameWindowController implements Observer, Initializable {
             viewModel.challengeRequest(selectedWord.get());
             System.out.println("Selected Word: " + selectedWord);
         });
-
     }
-
+    public void ChallengeOnScreen(ActionEvent actionEvent) {
+        setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+    }
     private void removeFromYourWord(TileField removedTile) {
         wordForTryPlace.removeIf(tileField -> tileField.tileRow == removedTile.tileRow && tileField.tileCol == removedTile.tileCol && tileField.letter.getText().equals(removedTile.letter.getText()));
     }
-
 
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
@@ -439,11 +460,6 @@ public class GameWindowController implements Observer, Initializable {
 
         rollBack();
     }
-
-    public void ChallengeOnScreen(ActionEvent actionEvent) {
-        setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
-    }
-
 
     //redraw methods
     private void redrawHand(List<TileField> list) {
@@ -460,8 +476,7 @@ public class GameWindowController implements Observer, Initializable {
                 TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
                 t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
                 t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
-                t.createTile(yourWord.getWidth() / 7, yourWord.getHeight());
-                yourWord.add(t, i, 0);
+                yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
             } else //tile from hand//
                 yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
         }

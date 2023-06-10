@@ -305,6 +305,11 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     }
 
     @Override
+    public int getPlayerIndex() {
+        return guestFacade.getPlayer().get_index();
+    }
+
+    @Override
     public void startNewGame() {
         return;
     }

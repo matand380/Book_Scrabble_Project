@@ -32,6 +32,8 @@ public interface BS_ViewModel extends Observer {
 
     void startNewGame();
 
+    int getPlayerIndex();
+
     Observable getObservable();
 
     SimpleStringProperty getChallengeWord();
