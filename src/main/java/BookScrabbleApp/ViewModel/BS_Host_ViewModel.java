@@ -380,4 +380,8 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
     public List<SimpleStringProperty> getViewableWordsForChallenge() {
         return this.viewableWordsForChallenge;
     }
+
+    public void startHostServer(){
+        new Thread(()->hostFacade.getCommunicationServer().start()).start();
+    }
 }

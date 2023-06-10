@@ -109,6 +109,7 @@ public class HostController {
         } else {
             name = nameTextFiled.getText();
         }
+        host.startHostServer();
         host.setPlayerProperties(name);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
