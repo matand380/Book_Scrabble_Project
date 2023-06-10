@@ -19,7 +19,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import BookScrabbleApp.GridCanvas?>
+<!--<?import BookScrabbleApp.GridCanvas?>-->
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1518.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
         <AnchorPane prefHeight="211.0" prefWidth="600.0" BorderPane.alignment="CENTER">
@@ -116,7 +116,7 @@
                   <Image url="@../images/borderCavnvas.png" />
                </image>
             </ImageView>
-                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="271.0" layoutY="37.0" styleClass="grid-canvas" width="600.0"/>
+<!--                <GridCanvas fx:id="gameBoard" height="600.0" layoutX="271.0" layoutY="37.0" styleClass="grid-canvas" width="600.0"/>-->
 <!--                <Canvas height="600.0" layoutX="271.0" layoutY="37.0" width="600.0" />-->
                 <Label layoutX="916.0" layoutY="142.0" prefHeight="30.0" prefWidth="157.0" text="Your Word is:">
                     <font>

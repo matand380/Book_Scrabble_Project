@@ -116,6 +116,8 @@ public class HostController {
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
+        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
+        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT);
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());
