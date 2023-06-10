@@ -76,7 +76,7 @@ public class GameWindowController implements Observer, Initializable {
         } else if (viewModel instanceof BS_Guest_ViewModel) {
             this.viewModel = new BS_Guest_ViewModel();
             this.viewModel.getObservable().addObserver(this);
-            initializeWindow();
+           initializeWindow();
             startNewGameBtn.setVisible(false);
         }
     }
@@ -410,17 +410,21 @@ public class GameWindowController implements Observer, Initializable {
 
     //setters methods
     private void setScoresFields(List<SimpleStringProperty> list) {
-        for (int i = 0; i < list.size(); i++) {
-            scoresFields.get(i).setText(list.get(i).get());
-        }
+        Platform.runLater(() -> {
+            for (int i = 0; i < list.size(); i++) {
+                scoresFields.get(i).setText(list.get(i).getValue());
+            }
+        });
     }
 
     private void setNamesFields(List<SimpleStringProperty> viewableNames) {
-        for (int i = 0; i < viewableNames.size(); i++) {
-            nameFields.get(i).setText(viewableNames.get(i).getValue());
-            nameFields.get(i).setVisible(true);
-            scoresFields.get(i).setVisible(true);
-        }
+        Platform.runLater(() -> {
+            for (int i = 0; i < viewableNames.size(); i++) {
+                nameFields.get(i).setText(viewableNames.get(i).getValue());
+                nameFields.get(i).setVisible(true);
+                scoresFields.get(i).setVisible(true);
+            }
+        });
     }
 
     private void setTileFieldOnBoard() {
@@ -497,23 +501,28 @@ public class GameWindowController implements Observer, Initializable {
 
     //redraw methods
     private void redrawHand(List<TileField> list) {
-        handGrid.getChildren().clear();
-        for (int i = 0; i < list.size(); i++) {
-            handGrid.add(list.get(i).createTile(handGrid.getWidth() / 7, handGrid.getHeight()), i, 0);
-        }
+        Platform.runLater(() -> {
+            handGrid.getChildren().clear();
+            for (int i = 0; i < list.size(); i++) {
+                int finalI = i;
+                handGrid.add(list.get(finalI).createTile(handGrid.getWidth() / 7, handGrid.getHeight()), finalI, 0);
+            }
+        });
     }
 
     private void redrawYourWord(List<TileField> list) {
-        yourWord.getChildren().clear();
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).letter.getText().equals("_")) { //tile from board//
-                TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
-                t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
-                t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
-                yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
-            } else //tile from hand//
-                yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
-        }
+        Platform.runLater(() -> {
+            yourWord.getChildren().clear();
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).letter.getText().equals("_")) { //tile from board//
+                    TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
+                    t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
+                    t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
+                    yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+                } else //tile from hand//
+                    yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+            }
+        });
     }
 
     private void rollBack() {
