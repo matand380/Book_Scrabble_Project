@@ -39,13 +39,13 @@
                   </Label>
             <Group>
                <children>
-                        <Label layoutY="61.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+                        <Label  layoutY="61.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" >
                             <font>
                                 <Font size="39.0" />
                             </font>
                         </Label>
                         <TextField fx:id="IpTextFiled" layoutX="80.0" layoutY="24.0" prefHeight="37.0" prefWidth="321.0" text="127.0.0.1" />
-                        <Label layoutX="36.0" prefHeight="69.0" prefWidth="62.0" text="ip:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+                        <Label  layoutX="36.0" prefHeight="69.0"  prefWidth="62.0" text="ip:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" >
                             <font>
                                 <Font size="39.0" />
                             </font>
