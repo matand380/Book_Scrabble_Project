@@ -96,7 +96,7 @@ public class HostController {
 
     @FXML
     private void initializeNextHostWindow() {
-        welcomeText1.setText("Welcome this is the host window");
+        //welcomeText1.setText("Welcome this is the host window");
         yourIp.setText(getPublicIp());
         yourPort.setText(String.valueOf(port));//doesn't work yet
     }
