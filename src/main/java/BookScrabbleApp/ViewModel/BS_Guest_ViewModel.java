@@ -1,6 +1,5 @@
 package BookScrabbleApp.ViewModel;
 
-import BookScrabbleApp.Model.BS_Host_Model;
 import BookScrabbleApp.Model.BookScrabbleGuestFacade;
 import javafx.beans.property.*;
 

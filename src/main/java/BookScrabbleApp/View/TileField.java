@@ -1,16 +1,11 @@
 package BookScrabbleApp.View;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.*;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.*;
-import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.*;
+
 
 public class TileField extends StackPane {
 

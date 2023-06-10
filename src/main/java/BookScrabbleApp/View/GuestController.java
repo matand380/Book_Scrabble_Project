@@ -3,7 +3,6 @@ package BookScrabbleApp.View;
 import BookScrabbleApp.ViewModel.*;
 import javafx.application.*;
 import javafx.fxml.*;
-import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
