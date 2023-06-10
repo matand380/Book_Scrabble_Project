@@ -29,7 +29,7 @@ public class welcomeController {
 
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostServerWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root,screenWidth ,screenHeight);
+        scene = new Scene(root,BookScrabbleApp.screenSize()[0] ,BookScrabbleApp.screenSize()[1]);
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.setScene(scene);
         stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
