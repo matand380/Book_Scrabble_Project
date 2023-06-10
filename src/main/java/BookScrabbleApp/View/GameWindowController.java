@@ -215,6 +215,10 @@ public class GameWindowController implements Observer, Initializable {
         updatesMap.put("playersName updated", message -> {
             setNamesFields(viewModel.getViewableNames());
         });
+
+        updatesMap.put("gameStart", message -> {
+           initializeWindow();
+        });
     }
 
     public void initializeWindow() {

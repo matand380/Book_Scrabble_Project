@@ -229,6 +229,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (id != null) {
                 String json = gson.toJson(tiles);
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
+                communicationServer.updateSpecificPlayer(id,"gameStart");
             } else {
                 setChanged();
                 notifyObservers("hand updated" + ":playersName");
