@@ -42,9 +42,7 @@ public class GameServer {
      * @throws Exception If an exception occurred
      */
     private void runServer() throws Exception {
-//        InetAddress ipAddress = InetAddress.getByName("127.0.0.1");
-
-        ServerSocket server = new ServerSocket(port);
+        ServerSocket server = new ServerSocket(port, 3);
         server.setSoTimeout(1000);
         System.Logger logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
@@ -138,7 +136,7 @@ public class GameServer {
     public String getPublicIp() {
         String ip = null;
         try {
-            URL url = new URL("https://api.ipify.org");
+            URL url = new URL("https://ifconfig.me/ip");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             ip = in.readLine();
             in.close();

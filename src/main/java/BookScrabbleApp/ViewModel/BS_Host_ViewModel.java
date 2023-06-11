@@ -7,7 +7,7 @@ import javafx.beans.property.*;
 import java.util.*;
 import java.util.function.*;
 
-public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewModel {
+public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
 
     public SimpleStringProperty ip ;
 
@@ -18,6 +18,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
     public List<ViewableTile> viewableHand; //player hand
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; // scores array
+    public List<SimpleStringProperty> viewableName; //score array
 
     public List<SimpleStringProperty> viewableWordsForChallenge; // words for challenge array
     BookScrabbleHostFacade hostFacade;
@@ -62,7 +63,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             int playerIndex = Integer.parseInt(messageSplit[1]);
             //The turn is updated
             setChanged();
-            notifyObservers("turnPassed");
+            notifyObservers("turnPassed:" + playerIndex);
         });
 
         updatesMap.put("wordsForChallenge", message -> {
@@ -113,10 +114,15 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             notifyObservers("endGame");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
-        updatesMap.put("sortAndSetIndex", message -> {
-            //The index of the player is updated
-            //??????
+        updatesMap.put("playersName", message -> {
+            String[] messageSplit = message.split(":");
+            int size = Integer.parseInt(messageSplit[1]);
+            for (int i = 0; i < size; i++) {
+                viewableName.add(new SimpleStringProperty());
+                viewableName.get(i).setValue(messageSplit[i+2]);
+            }
+            setChanged();
+            notifyObservers("playersName updated");
         });
 
         // FIXME: 30/05/2023 check if we need this function
@@ -163,9 +169,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             }
         }
         setChanged();
-        notifyObservers("board updated");
-
-
+        notifyObservers("tileBoard updated");
     }
 
     /**
@@ -196,10 +200,9 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
             viewableBoard.add(row);
         }
         viewableScores = new ArrayList<>();
+        viewableName = new ArrayList<>();
         ip = new SimpleStringProperty();
         port = new SimpleStringProperty();
-
-
     }
 
     /**
@@ -287,6 +290,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
      * The startNewGame function is called when the user clicks on the &quot;Start New Game&quot; button.
      * It calls a function in HostFacade that will start a new game.
      */
+    @Override
     public void startNewGame() {
         hostFacade.startNewGame();
     }
@@ -331,6 +335,7 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
         String message = (String) arg;
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
+        System.out.println("HostViewModel ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
             updatesMap.get(updateType).accept(message);
         } else {
@@ -340,4 +345,52 @@ public class BS_Host_ViewModel extends Observable implements Observer, BS_ViewMo
 //        }
     }
 
+    @Override
+    public int getPlayerIndex() {
+        return hostFacade.getPlayer().get_index();
+    }
+
+    @Override
+    public Observable getObservable() {
+        return this;
+    }
+
+    @Override
+    public SimpleStringProperty getChallengeWord() {
+        return this.challengeWord;
+    }
+
+    @Override
+    public StringProperty getWinnerProperty() {
+        return this.winnerProperty;
+    }
+
+    @Override
+    public List<ViewableTile> getViewableHand() {
+        return this.viewableHand;
+    }
+
+    @Override
+    public List<List<ViewableTile>> getViewableBoard() {
+        return this.viewableBoard;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableScores() {
+        return this.viewableScores;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableWordsForChallenge() {
+        return this.viewableWordsForChallenge;
+    }
+
+    public void startHostServer(){
+        new Thread(()->hostFacade.getCommunicationServer().start()).start();
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableNames() {
+        return this.viewableName;
+    }
 }

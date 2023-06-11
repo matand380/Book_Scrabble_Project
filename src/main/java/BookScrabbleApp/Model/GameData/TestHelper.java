@@ -123,21 +123,21 @@ public class TestHelper {
     public static void main(String[] args) {
 
         BS_Host_Model host = BS_Host_Model.getModel();  //here you will be asked to assign a port for the Host Server
-        host.openSocket("127.0.0.1", 65535); //assign ip and port of the Game Server
+        host.openSocket("127.0.0.1", 20500); //assign ip and port of the Game Server
 
 
         System.out.println(host.getMaxScore());
 
 
-//        Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
-//        t.start();
-//
-//        try {
-//            Thread.sleep(2000); //wait for server to start
-//        } catch (InterruptedException e) {
-//            System.out.println("sleep failed");
-//        }
-//
+        Thread t = new Thread(() -> BS_Host_Model.getModel().getCommunicationServer().start());
+        t.start();
+
+        try {
+            Thread.sleep(8000); //wait for server to start
+        } catch (InterruptedException e) {
+            System.out.println("sleep failed");
+        }
+        host.startNewGame();
 //        BS_Guest_Model client = BS_Guest_Model.getModel();
 //        client.setPlayerProperties("matan");
 //        //choose the same port as you chose in host C'tor, the ip should be 127.0.0.1 - don't change it;

@@ -35,7 +35,7 @@
 
 * For more information, please refer to the User Manual — will be added
 
- <img src="src/main/resources/images/d04bd8bd-1354-4c3c-b3fd-ac57c6fdc61c_f1600x768.jpeg" alt="Scrabble Logo" width="400" height="100">
+ <img src="src/main/resources/images/board/d04bd8bd-1354-4c3c-b3fd-ac57c6fdc61c_f1600x768.jpeg" alt="Scrabble Logo" width="400" height="100">
 
 ## Video links
 

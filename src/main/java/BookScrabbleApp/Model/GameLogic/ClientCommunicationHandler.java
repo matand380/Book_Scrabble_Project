@@ -29,35 +29,19 @@ public class ClientCommunicationHandler {
     public ClientCommunicationHandler() {
         //put all the methods in the map for being able to invoke them
         handlers.put("sortAndSetIndex", message -> {
-            String[] key = message.split(":");
-            int size = Integer.parseInt(key[1]);
-            BS_Guest_Model.getModel().setPlayersScores(new String[size]);
-            for (int i = 0; i < size; i++) {
-                String[] player = key[i + 2].split(",");
-                if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
-                    BS_Guest_Model.getModel().getPlayer().set_index(Integer.parseInt(player[0]));
-                    BS_Guest_Model.getModel().hasChanged();
-                    BS_Guest_Model.getModel().notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
-                }
-            }
+           BS_Guest_Model.getModel().sortAndSetIndex(message);
         });
 
         handlers.put("wordsForChallenge", message -> {
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers(message);
+            BS_Guest_Model.getModel().toFacade(message);
         });
 
         handlers.put("turnPassed", message -> {
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers(message);
+            BS_Guest_Model.getModel().toFacade(message);
         });
 
         handlers.put("winner", message -> {
-            String[] key = message.split(":");
-            int index = Integer.parseInt(key[1]);
-            String winnerName = key[2];
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("winner:" + BS_Guest_Model.getModel().getPlayersScores()[index] + winnerName);
+            BS_Guest_Model.getModel().setWinner(message);
         });
 
         handlers.put("ping", message -> {
@@ -68,47 +52,35 @@ public class ClientCommunicationHandler {
         });
 
         handlers.put("hand", message -> {
-            String hand = message.substring(5);
-            Gson gson = new Gson();
-            Tile[] newTiles = gson.fromJson(hand, Tile[].class);
-            List<Tile> newHand = Arrays.asList(newTiles);
-            BS_Guest_Model.getModel().getPlayer().updateHand(newHand);
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("hand updated");
+            BS_Guest_Model.getModel().setHand(message);
         });
 
         handlers.put("tileBoard", message -> {
-            String tiles = message.substring(10);
-            Gson gson = new Gson();
-            Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
-            //for testing
-            System.out.println("client tileBoard:\n");
-            System.out.println(TestHelper.formatTiles(newTiles));
-            BS_Guest_Model.getModel().setBoard(newTiles);
+               BS_Guest_Model.getModel().setTileBoard(message);
         });
 
         handlers.put("playersScores", message -> {
-            String scores = message.substring(14);
-            Gson gson = new Gson();
-            String[] newScores = gson.fromJson(scores, String[].class);
-            BS_Guest_Model.getModel().setPlayersScores(newScores);
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers("playersScores updated");
+            BS_Guest_Model.getModel().setPlayersScore(message);
         });
 
         handlers.put("challengeSuccess", message -> {
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers(message);
+            BS_Guest_Model.getModel().toFacade(message);
         });
 
         handlers.put("invalidWord", message -> {
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers(message);
+            BS_Guest_Model.getModel().toFacade(message);
         });
 
         handlers.put("challengeAlreadyActivated", message -> {
-            BS_Guest_Model.getModel().hasChanged();
-            BS_Guest_Model.getModel().notifyObservers(message);
+            BS_Guest_Model.getModel().toFacade(message);
+        });
+
+        handlers.put("playersName", message -> {
+            BS_Guest_Model.getModel().toFacade(message);
+        });
+
+        handlers.put("gameStart", message -> {
+            BS_Guest_Model.getModel().toFacade(message);
         });
     }
 
@@ -126,8 +98,9 @@ public class ClientCommunicationHandler {
                 String key = inputQueue.take(); //blocking call
                 String[] message = key.split(":");
                 String methodName = message[0];
+                System.out.println("GuestCom ---- updateType: " + message);
                 if (handlers.get(methodName) != null) {
-                    handlers.get(methodName).accept(key);
+                  handlers.get(methodName).accept(key);
                 } else {
                     System.out.println("No handler for method(Client) :" + methodName);
                 }

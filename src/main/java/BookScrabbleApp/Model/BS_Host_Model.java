@@ -228,15 +228,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             if (id != null) {
                 String json = gson.toJson(tiles);
+                communicationServer.updateSpecificPlayer(id, "gameStart");
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
             } else {
                 setChanged();
-                notifyObservers("hand updated");
+                notifyObservers("hand updated" + ":playersName");
             }
-
-
         });
-
+        StringBuilder playersName = new StringBuilder();
+        for (Player p : players) {
+            playersName.append(p.get_name()).append(":");
+        }
+        communicationServer.updateAll("playersName:" + players.size() + ":" + playersName.toString());
+        setChanged();
+        notifyObservers("playersName:" + players.size() + ":" + playersName.toString());
     }
 
     /**
@@ -503,7 +508,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         String allPlayersString = allPlayers.toString();
 
         BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetIndex:" + players.size() + ":" + allPlayersString);
-
     }
 
     /**
@@ -564,9 +568,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     break;
                 }
         if (isGameOver) {
-            communicationServer.updateAll("winner:" + getMaxScore());
+            String winnerIndexAndName = getMaxScore();
+            communicationServer.updateAll("winner:" + winnerIndexAndName);
+            String[] splitWinner = winnerIndexAndName.split(":");
+            Player winner = players.get(Integer.parseInt(splitWinner[0]));
+
             setChanged();
-            notifyObservers("winner:" + getMaxScore());
+            notifyObservers("winner:" + winner.get_score()+":"+winner.get_name());
         }
         return isGameOver;
     }
@@ -657,19 +665,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param challengeInfo Set the challengeinfo variable
      */
     public void requestChallengeActivation(String challengeInfo) {
-        String challengerIndex = this.getChallengeInfo().split(":")[0];
-        // Set the challengeRequested flag to indicate a challenge is requested
-        if (challengeActivated.get()) {
-            if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
-                communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+        if (this.getChallengeInfo() != null) {
+            String challengerIndex = this.getChallengeInfo().split(":")[0];
+            // Set the challengeRequested flag to indicate a challenge is requested
+            if (challengeActivated.get()) {
+                if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
+                    communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+                } else {
+                    setChanged();
+                    notifyObservers("challengeAlreadyActivated");
+                }
             } else {
-                setChanged();
-                notifyObservers("challengeAlreadyActivated");
+                challengeActivated.set(true);
+                this.setChallengeInfo(challengeInfo);
             }
-        } else {
-            challengeActivated.set(true);
-            this.setChallengeInfo(challengeInfo);
-
         }
     }
 

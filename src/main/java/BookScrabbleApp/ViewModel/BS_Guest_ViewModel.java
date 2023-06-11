@@ -1,13 +1,13 @@
 package BookScrabbleApp.ViewModel;
 
-import BookScrabbleApp.Model.BS_Host_Model;
 import BookScrabbleApp.Model.BookScrabbleGuestFacade;
 import javafx.beans.property.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
-public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewModel {
+public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
     //ip and port of the host
     public SimpleStringProperty hostIp; //ip of the host
@@ -15,15 +15,18 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
 
     //player properties
     BookScrabbleGuestFacade guestFacade;
-    public List<ViewableTile> viewableHandGuest; //hand of the player
+    public List<ViewableTile> viewableHand; //hand of the player
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; //score array
+    public List<SimpleStringProperty> viewableName; //score array
     public SimpleStringProperty challengeWord; //word for challenge
     public List<SimpleStringProperty> viewableWordsForChallenge; //words for challenge
     public StringProperty winnerProperty; //winner of the game
 
     //map of the commands from the client
     private Map<String, Consumer<String>> updatesMap = new HashMap<>();
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     /**
      * The BS_Guest_ViewModel function is the constructor for the BS_Guest_ViewModel class.
@@ -33,6 +36,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
      * 2. initializeUpdateMap() initializes the updatesMap, which is a map of all the updates from the guest.
      */
     public BS_Guest_ViewModel() {
+        super();
         guestFacade = new BookScrabbleGuestFacade();
         guestFacade.addObserver(this);
         initializeProperties();
@@ -41,14 +45,15 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
 
     @Override
     public void update(Observable o, Object arg) {
-        if (o instanceof BookScrabbleGuestFacade) {
-            String key = (String) arg;
-            String[] message = key.split(":");
-            String command = message[0];
-            if (updatesMap.containsKey(command))
-                updatesMap.get(command).accept(key);
-            else
-                System.out.println("Command not found");
+        String message = (String) arg;
+        String[] messageSplit = message.split(":");
+        String updateType = messageSplit[0];
+        System.out.println("GuestViewModel ---- updateType: " + updateType);
+        if (updatesMap.containsKey(updateType)) {
+            executorService.submit(() -> updatesMap.get(updateType).accept(message));
+        } else {
+            setChanged();
+            notifyObservers("Error in updates handling ");
         }
     }
 
@@ -61,12 +66,14 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     public void setBoard() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                viewableBoard.get(i).get(j).setLetter(guestFacade.getBoardState()[i][j].getLetter());
-                viewableBoard.get(i).get(j).setScore(guestFacade.getBoardState()[i][j].getScore());
+                if (guestFacade.getBoardState()[i][j] != null) {
+                    viewableBoard.get(i).get(j).setLetter(guestFacade.getBoardState()[i][j].getLetter());
+                    viewableBoard.get(i).get(j).setScore(guestFacade.getBoardState()[i][j].getScore());
+                }
             }
         }
         setChanged();
-        notifyObservers("board updated");
+        notifyObservers("tileBoard updated");
     }
 
     /**
@@ -75,8 +82,8 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     @Override
     public void setHand() {
         for (int i = 0; i < guestFacade.getPlayer().get_hand().size(); i++) {
-            viewableHandGuest.get(i).setLetter(guestFacade.getPlayer().get_hand().get(i).getLetter());
-            viewableHandGuest.get(i).setScore(guestFacade.getPlayer().get_hand().get(i).getScore());
+            viewableHand.get(i).setLetter(guestFacade.getPlayer().get_hand().get(i).getLetter());
+            viewableHand.get(i).setScore(guestFacade.getPlayer().get_hand().get(i).getScore());
         }
         setChanged();
         notifyObservers("hand updated");
@@ -90,10 +97,21 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
     @Override
     public void setScore() {
         for (int i = 0; i < guestFacade.getPlayersScores().length; i++) {
+            viewableScores.add(new SimpleStringProperty());
             viewableScores.get(i).setValue(guestFacade.getPlayersScores()[i]);
         }
         setChanged();
         notifyObservers("scores updated");
+    }
+
+    public void setViewableName(String[] message){
+        int size = Integer.parseInt(message[1]);
+        for (int i = 0; i < size; i++) {
+            viewableName.add(new SimpleStringProperty());
+            viewableName.get(i).setValue(message[i+2]);
+        }
+        setChanged();
+        notifyObservers("playersName updated");
     }
 
 
@@ -187,9 +205,10 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
         hostPort = new SimpleStringProperty();
 
         //player properties
-        viewableHandGuest = new ArrayList<>();
+        viewableHand = new ArrayList<>();
         viewableBoard = new ArrayList<>();
         viewableScores = new ArrayList<>();
+        viewableName = new ArrayList<>();
 
         //challenge properties
         challengeWord = new SimpleStringProperty();
@@ -200,7 +219,7 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
 
         //initialize the hand of the player
         for (int i = 0; i < 7; i++) {
-            viewableHandGuest.add(new ViewableTile(' ', 0));
+            viewableHand.add(new ViewableTile(' ', 0));
         }
 
         //initialize the board
@@ -298,10 +317,59 @@ public class BS_Guest_ViewModel extends Observable implements Observer, BS_ViewM
             notifyObservers("challengeSuccess");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
-        updatesMap.put("sortAndSetIndex", message -> {
-            //The index of the player is updated
-            //??????
+        updatesMap.put("playersName", message -> {
+            String[] messageSplit = message.split(":");
+            setViewableName(messageSplit);
         });
+    }
+
+    @Override
+    public int getPlayerIndex() {
+        return guestFacade.getPlayer().get_index();
+    }
+
+    @Override
+    public void startNewGame() {
+        return;
+    }
+
+    @Override
+    public Observable getObservable() {
+        return this;
+    }
+
+    @Override
+    public SimpleStringProperty getChallengeWord() {
+        return this.challengeWord;
+    }
+
+    @Override
+    public StringProperty getWinnerProperty() {
+        return this.winnerProperty;
+    }
+
+    @Override
+    public List<ViewableTile> getViewableHand() {
+        return this.viewableHand;
+    }
+
+    @Override
+    public List<List<ViewableTile>> getViewableBoard() {
+        return this.viewableBoard;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableScores() {
+        return this.viewableScores;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableWordsForChallenge() {
+        return this.viewableWordsForChallenge;
+    }
+
+    @Override
+    public List<SimpleStringProperty> getViewableNames() {
+        return this.viewableName;
     }
 }

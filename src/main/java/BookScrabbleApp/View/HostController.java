@@ -8,11 +8,16 @@ import javafx.scene.control.*;
 import javafx.stage.*;
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class HostController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    @FXML
+    public Label stringYourIp;
+    @FXML
+    public Label stringYourPort;
     @FXML
     private Label welcomeText;
     //start method
@@ -23,16 +28,21 @@ public class HostController {
     @FXML
     private TextField PortTextFiled = new TextField();
     @FXML
-    private Label yourIp ;
+    private Label yourIp;
     @FXML
     private Label yourPort;
     @FXML
     private Label welcomeText1;
     @FXML
     public TextField nameTextFiled;
+    @FXML
+    private Button nextBtn;
+    @FXML
+    private Button submitBtn;
 
     String ip;
     int port;
+
     public static String name;
     BS_Host_ViewModel host = new BS_Host_ViewModel();
 
@@ -42,11 +52,10 @@ public class HostController {
         port = Integer.parseInt(PortTextFiled.getText());
         if (ip.equals("") || port == 0) {
             invalidIPorPort.setText("Please enter IP and Port");
-        }
-        else {
+        } else {
             boolean connected = true;
-                host.ip.bindBidirectional(IpTextFiled.textProperty());
-                host.port.bindBidirectional(PortTextFiled.textProperty());
+            host.ip.bindBidirectional(IpTextFiled.textProperty());
+            host.port.bindBidirectional(PortTextFiled.textProperty());
             try {
                 host.openSocket();
             } catch (Exception e) {
@@ -58,7 +67,9 @@ public class HostController {
                 connected = false;
             }
             if (connected) {
-                invalidIPorPort.setText("Game server connected");
+//                invalidIPorPort.setText("Game server connected");
+                nextBtn.setVisible(true);
+                submitBtn.onActionProperty().set(null);
             }
         }
     }
@@ -68,7 +79,7 @@ public class HostController {
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root);
+        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
         stage.setScene(scene);
         stage.show();
     }
@@ -77,7 +88,7 @@ public class HostController {
     public String getPublicIp() {
         String ip = null;
         try {
-            URL url = new URL("https://api.ipify.org");
+            URL url = new URL("https://ifconfig.me/ip");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             ip = in.readLine();
             in.close();
@@ -89,29 +100,33 @@ public class HostController {
 
     @FXML
     private void initializeNextHostWindow() {
-        welcomeText1.setText("Welcome this is the host window");
+        stringYourIp.setVisible(true);
+        stringYourPort.setVisible(true);
         yourIp.setText(getPublicIp());
         yourPort.setText(String.valueOf(port));//doesn't work yet
+
     }
 
     @FXML
     public void switchToGameWindow() throws Exception {
-        if (nameTextFiled.getText().equals("")) {
-            name = "Player1";
+        if (nameTextFiled.getText().equals("Enter your name here")) {
+            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
+            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
         } else {
             name = nameTextFiled.getText();
         }
+        host.startHostServer();
         host.setPlayerProperties(name);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
-        stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root);
+        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
+        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
+        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT);
         stage.setScene(scene);
         stage.show();
+        stage.setOnCloseRequest(e -> Platform.exit());
         GameWindowController controller = loader.getController();
         controller.setViewModel(host);
     }
-
-
 }

@@ -8,9 +8,13 @@ import javafx.event.*;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.scene.shape.*;
+
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
@@ -23,6 +27,14 @@ public class GameWindowController implements Observer, Initializable {
     private Label namePlayer3;
     @FXML
     private Label namePlayer4;
+    @FXML
+    private Rectangle player1Rect;
+    @FXML
+    private Rectangle player2Rect;
+    @FXML
+    private Rectangle player3Rect;
+    @FXML
+    private Rectangle player4Rect;
     @FXML
     private Label scorePlayer1;
     @FXML
@@ -37,14 +49,26 @@ public class GameWindowController implements Observer, Initializable {
     GridCanvas gameBoard = new GridCanvas();
     @FXML
     GridPane yourWord = new GridPane();
+    @FXML
+    Button startNewGameBtn;
+    @FXML
+    Button passTurnBtn;
+    @FXML
+    Button challengeBtn;
+    @FXML
+    Button tryPlaceBtn;
+
+    //ExecutorService executorService = Executors.newFixedThreadPool(4);
+
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
-    BS_Host_ViewModel hostViewModel;
-
-    BS_Guest_ViewModel guestViewModel;
+    BS_ViewModel viewModel;
 
     private List<Label> scoresFields;
+
+    private List<Label> nameFields;
+    private List<Rectangle> rectanglesPlayer;
 
     private List<TileField> handFields;
 
@@ -56,65 +80,39 @@ public class GameWindowController implements Observer, Initializable {
 
     private List<TileField> wordForTryPlace;
 
-    public void setViewModel(BS_ViewModel ViewModel) {
-        if (ViewModel instanceof BS_Host_ViewModel) {
-            this.hostViewModel = (BS_Host_ViewModel) ViewModel;
-            hostViewModel.addObserver(this);
+    private List<SimpleStringProperty> wordsForChallenge;
+
+    public void setViewModel(BS_ViewModel viewModel) {
+        if (viewModel instanceof BS_Host_ViewModel) {
+            this.viewModel = new BS_Host_ViewModel();
+            this.viewModel.getObservable().addObserver(this);
             initializeWindow();
-        } else if (ViewModel instanceof BS_Guest_ViewModel) {
-            this.guestViewModel = (BS_Guest_ViewModel) ViewModel;
-            guestViewModel.addObserver(this);
+        } else if (viewModel instanceof BS_Guest_ViewModel) {
+            this.viewModel = new BS_Guest_ViewModel();
+            this.viewModel.getObservable().addObserver(this);
+            initializeWindow();
+            startNewGameBtn.setVisible(false);
         }
-    }
-
-    public void initializeWindow() {
-        //bind the scores to the text fields
-        for (int i = 0; i < hostViewModel.viewableScores.size(); i++) {
-            hostViewModel.viewableScores.get(i).bind(scoresFields.get(i).textProperty());
-        }
-
-        for (int i = 0; i < 7; i++) {
-            handFields.add(new TileField());
-        }
-
-        //bind the hand to the hand fields
-        for (int i = 0; i < hostViewModel.viewableHand.size(); i++) {
-            hostViewModel.viewableHand.get(i).letterProperty().bindBidirectional(handFields.get(i).letter.textProperty());
-            hostViewModel.viewableHand.get(i).scoreProperty().bindBidirectional(handFields.get(i).score.textProperty());
-        }
-
-        for (int i = 0; i < 15; i++) {
-            boardFields.add(new ArrayList<>());
-            for (int j = 0; j < 15; j++) {
-                boardFields.get(i).add(new TileField());
-            }
-        }
-        //bind the board to the board fields
-        for (int boardRow = 0; boardRow < hostViewModel.viewableBoard.size(); boardRow++) {
-            for (int boardCol = 0; boardCol < hostViewModel.viewableBoard.get(boardRow).size(); boardCol++) {
-                hostViewModel.viewableBoard.get(boardRow).get(boardCol).letterProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).letter.textProperty());
-                hostViewModel.viewableBoard.get(boardRow).get(boardCol).scoreProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).score.textProperty());
-            }
-        }
-        //to be removed later on
-        namePlayer1.setText(HostController.name);
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        scoresFields = new ArrayList<>();
-        handFields = new ArrayList<>();
-        boardFields = new ArrayList<>();
-        updatesMap = new HashMap<>();
-        wordForTryPlace = new ArrayList<>();
-        scoresFields.add(scorePlayer1);
-        scoresFields.add(scorePlayer2);
-        scoresFields.add(scorePlayer3);
-        scoresFields.add(scorePlayer4);
+    public void update(Observable o, Object arg) {
+        String message = (String) arg;
+        String[] messageSplit = message.split(":");
+        String updateType = messageSplit[0];
+        System.out.println("\n -- updateType GameWindow: " + message +" -- \n");
+        if (updatesMap.containsKey(updateType)) {
+            //executorService.submit(() -> updatesMap.get(updateType).accept(message));
+            updatesMap.get(updateType).accept(message);
+        }
+    }
 
+    //initialize the window
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeProperties();
         initializeUpdateMap();
         initializeKeyEventMap();
-
 
         for (int boardRow = 0; boardRow < 15; boardRow++) {
             boardFields.add(new ArrayList<>());
@@ -128,6 +126,31 @@ public class GameWindowController implements Observer, Initializable {
         gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                double xCoordinate = mouseEvent.getX();
+                double yCoordinate = mouseEvent.getY();
+
+                int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
+                int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
+
+                TileField clickedTile = gameBoard.tileFields.get(row).get(col);
+
+                if (!clickedTile.letter.getText().equals("")) {
+                    if (gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).isUpdate()) {
+                        selectedTileField.letter.setText("_");
+                        selectedTileField.tileRow = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileRow;
+                        selectedTileField.tileCol = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileCol;
+                        gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
+                        setYourWord();
+                    } else {
+                        clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
+                        selectedTileField = clickedTile;
+                        selectedTileField.tileRow = row;
+                        selectedTileField.tileCol = col;
+                        gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
+                        setTileFieldOnBoard();
+                        setYourWord();
+                    }
+                }
                 gameBoard.requestFocus();
             }
         });
@@ -143,131 +166,128 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
-    @FXML
-    protected void onTryButtonClick() {
-        if (wordForTryPlace.size() > 1) {
-            if (checkFirstWord()) {
-                StringBuilder word = new StringBuilder();
-                boolean direction = false;
-                for (TileField t : wordForTryPlace) {
-                    word.append(t.letter.getText());
-                }
-                if (wordForTryPlace.size() > 0) {
-                    if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
-                        direction = true;
-                    }
-                }
-                hostViewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-                wordForTryPlace.clear();
-                yourWord.getChildren().clear();
-                for (TileField t : handFields) {
-                    t.setUnlocked();
-                }
-            }else
-                alertPopUp("First Word Error","First Word Error","First Word has to be on the star");
-        }else{
-            alertPopUp("Word Error","Word Error","Word has to be at least two letters long");
-        }
-        Platform.runLater(() -> gameBoard.requestFocus());
-    }
+    private void initializeProperties() {
+        //initialize properties
+        handFields = new ArrayList<>();
+        boardFields = new ArrayList<>();
+        updatesMap = new HashMap<>();
+        wordForTryPlace = new ArrayList<>();
+        wordsForChallenge = new ArrayList<>();
 
-    @FXML
-    public void onPassButtonClick() {
-        hostViewModel.passTurn();
-        Platform.runLater(() -> gameBoard.requestFocus());
-    }
-
-    @FXML
-    protected void onSortABCButtonClick() {
-        handFields.sort(Comparator.comparing(t -> t.letter.getText()));
-        redrawHand(handFields);
-        Platform.runLater(() -> gameBoard.requestFocus());
-    }
-
-    @FXML
-    private void onSortScoreButtonClick() {
-        handFields.sort(Comparator.comparingInt(t -> Integer.parseInt(t.score.getText())));
-        redrawHand(handFields);
-        Platform.runLater(() -> gameBoard.requestFocus());
-    }
-
-    private void redrawHand(List<TileField> list) {
-        handGrid.getChildren().clear();
-        for (int i = 0; i < list.size(); i++) {
-            handFields.get(i).createTile(list.get(i).letter, list.get(i).score, handGrid.getWidth() / 7, handGrid.getHeight(), 28);
-            handGrid.add(list.get(i), i, 0);
-        }
-    }
-
-    private void redrawYourWord(List<TileField> list) {
-        yourWord.getChildren().clear();
-        for (int i = 0; i < list.size(); i++) {
-            yourWord.add(list.get(i), i, 0);
-        }
-    }
-
-    private void alertPopUp(String title, String header, String text) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(text);
-        alert.showAndWait();
-
-        rollBack();
-    }
-
-    private void setScoresFields(List<SimpleStringProperty> list) {
-        for (int i = 0; i < list.size(); i++) {
-            scoresFields.get(i).setText(list.get(i).get());
-        }
+        //initialize the scores and names fields
+        scoresFields = new ArrayList<>();
+        nameFields = new ArrayList<>();
+        rectanglesPlayer = new ArrayList<>();
+        nameFields.add(namePlayer1);
+        scoresFields.add(scorePlayer1);
+        rectanglesPlayer.add(player1Rect);
+        nameFields.add(namePlayer2);
+        scoresFields.add(scorePlayer2);
+        rectanglesPlayer.add(player2Rect);
+        nameFields.add(namePlayer3);
+        scoresFields.add(scorePlayer3);
+        rectanglesPlayer.add(player3Rect);
+        nameFields.add(namePlayer4);
+        scoresFields.add(scorePlayer4);
+        rectanglesPlayer.add(player4Rect);
     }
 
     private void initializeUpdateMap() {
         updatesMap.put("hand updated", message -> {
+            if ((viewModel.getPlayerIndex() != 0)) {
+                tryPlaceBtn.setDisable(true);
+                passTurnBtn.setDisable(true);
+            } else {
+                tryPlaceBtn.setDisable(false);
+                passTurnBtn.setDisable(false);
+            }
             //The hand of the player is updated
             redrawHand(handFields);
         });
 
         updatesMap.put("tileBoard updated", message -> {
-            gameBoard.setTileFields(boardFields);
+                gameBoard.setTileFields(boardFields);
+                gameBoard.tileFields.forEach(row -> {
+                    row.forEach(tileField -> {
+                        if (!tileField.isUpdate()) {
+                            tileField.setUpdate();
+                        }
+                    });
+                });
         });
 
         updatesMap.put("scores updated", message -> {
-            setScoresFields(hostViewModel.viewableScores);
+            setScoresFields(viewModel.getViewableScores());
         });
+
         updatesMap.put("invalidWord", message -> {
             //The word is invalid
-            alertPopUp("Invalid Word","Invalid Word","The word you tried to place is invalid");
+            alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
+        });
+
+//        updatesMap.put("wordsForChallenge updated", message -> {
+//            setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+//        });
+
+        updatesMap.put("challengeAlreadyActivated", message -> {
+            alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
+        });
+
+        updatesMap.put("turnPassed", message -> {
+            String currentPlayerIndex = message.split(":")[1];
+            passTurn(currentPlayerIndex);
+        });
+
+        updatesMap.put("playersName updated", message -> {
+            setNamesFields(viewModel.getViewableNames());
+        });
+
+        updatesMap.put("gameStart", message -> {
+
+            initializeWindow();
         });
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        String message = (String) arg;
-        String[] messageSplit = message.split(":");
-        String updateType = messageSplit[0];
-        System.out.println("updateType: " + message);
-        if (updatesMap.containsKey(updateType)) {
-            updatesMap.get(updateType).accept(message);
-        }
-    }
-
-    public void startNewGame() {
-        this.hostViewModel.startNewGame();
-    }
-
-    private void rollBack() {
-        for (TileField t : wordForTryPlace) {
-            gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+    public void initializeWindow() {
+        //bind the scores to the text fields
+        for (int i = 0; i < viewModel.getViewableScores().size(); i++) {
+            viewModel.getViewableScores().get(i).bind(scoresFields.get(i).textProperty());
+            viewModel.getViewableNames().get(i).bind(nameFields.get(i).textProperty());
         }
 
-        gameBoard.redraw();
-        wordForTryPlace.clear();
-        yourWord.getChildren().clear();
-
-        for (TileField t : handFields) {
-            t.setUnlocked();
+        for (int i = 0; i < 7; i++) {
+            handFields.add(new TileField());
         }
+
+        //bind the hand to the hand fields
+        for (int i = 0; i < viewModel.getViewableHand().size(); i++) {
+            viewModel.getViewableHand().get(i).letterProperty().bindBidirectional(handFields.get(i).letter.textProperty());
+            viewModel.getViewableHand().get(i).scoreProperty().bindBidirectional(handFields.get(i).score.textProperty());
+        }
+
+        for (int i = 0; i < 15; i++) {
+            boardFields.add(new ArrayList<>());
+            for (int j = 0; j < 15; j++) {
+                boardFields.get(i).add(new TileField());
+            }
+        }
+        for (int i = 0; i < 15; i++) {
+            wordsForChallenge.add(new SimpleStringProperty());
+        }
+
+        for (int i = 0; i < viewModel.getViewableWordsForChallenge().size(); i++) {
+            viewModel.getViewableWordsForChallenge().get(i).bindBidirectional(wordsForChallenge.get(i));
+        }
+
+        //bind the board to the board fields
+        for (int boardRow = 0; boardRow < viewModel.getViewableBoard().size(); boardRow++) {
+            for (int boardCol = 0; boardCol < viewModel.getViewableBoard().get(boardRow).size(); boardCol++) {
+                viewModel.getViewableBoard().get(boardRow).get(boardCol).letterProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).letter.textProperty());
+                viewModel.getViewableBoard().get(boardRow).get(boardCol).scoreProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).score.textProperty());
+            }
+        }
+        //to be removed later on
+        namePlayer1.setText(HostController.name);
     }
 
     private void initializeKeyEventMap() {
@@ -288,7 +308,7 @@ public class GameWindowController implements Observer, Initializable {
         return keyEvent -> {
             if (key.isLetterKey()) {
                 for (TileField t : handFields) {
-                    if (t.letter.getText().equals(key.toString())) {
+                    if (t.letter.getText().equals(key.toString()) && !t.isSelect()) {
                         selectedTileField = t;
                         selectedTileField.setSelect(true);
                         selectedTileField.tileRow = gameBoard.getRow();
@@ -312,21 +332,18 @@ public class GameWindowController implements Observer, Initializable {
                 if (gameBoard.getCol() < 14) {
                     gameBoard.setPlace(gameBoard.getRow(), gameBoard.getCol() + 1);
                 }
-            } else if (keyEvent.getCode() == KeyCode.ENTER) {
-                setTileFieldOnBoard();
             } else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
-                if (gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).isLocked()) {
-                    return;
-                }
-                // TODO: 08/06/should return a tile instead of word
-                wordForTryPlace.removeIf(t -> t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow());
-                redrawYourWord(wordForTryPlace);
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText("");
-                gameBoard.redraw();
+                if (!gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).isUpdate()) {
+                    // TODO: 08/06/should return a tile instead of word
+                    removeFromYourWord(gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()));
+                    redrawYourWord(wordForTryPlace);
+                    gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText("");
+                    gameBoard.redraw();
 
-                for (TileField t : handFields) {
-                    if (t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow()) {
-                        t.setUnlocked();
+                    for (TileField t : handFields) {
+                        if (t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow()) {
+                            t.setUnlocked();
+                        }
                     }
                 }
             }
@@ -334,23 +351,239 @@ public class GameWindowController implements Observer, Initializable {
         };
     }
 
-    private void setTileFieldOnBoard() {
-        if (selectedTileField != null && !selectedTileField.isLocked() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
-            if (ifConnected(selectedTileField)) {
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.setText(selectedTileField.letter.getText());
-                gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).score.setText(selectedTileField.score.getText());
-                TileField t = new TileField();
-                t.letter.setText(selectedTileField.letter.getText());
-                t.score.setText(selectedTileField.score.getText());
-                t.tileRow = gameBoard.getRow();
-                t.tileCol = gameBoard.getCol();
-                t.createTile(t.letter, t.score, yourWord.getWidth() / 7, yourWord.getHeight(), 10);
-                wordForTryPlace.add(t);
-                redrawYourWord(wordForTryPlace);
-                gameBoard.redraw();
+    //button handlers
+    @FXML
+    protected void onTryButtonClick() {
+        TileField tile = new TileField();
+        for (int boardRow = 0; boardRow < 15; boardRow++) {
+            for (int boardCol = 0; boardCol < 15; boardCol++) {
+                if (!gameBoard.tileFields.get(boardRow).get(boardCol).isUpdate()) {
+                    boolean foundMatchingTile = false;
+                    for (TileField tileField : wordForTryPlace) {
+                        if (gameBoard.tileFields.get(boardRow).get(boardCol).tileRow == tileField.tileRow &&
+                                gameBoard.tileFields.get(boardRow).get(boardCol).tileCol == tileField.tileCol &&
+                                gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) {
+                            foundMatchingTile = true;
+                            break;
+                        }else{
+                            tile = tileField;
+                        }
+                    }
+                    if (!foundMatchingTile) {
+                        if (boardRow == tile.tileRow && boardCol == tile.tileCol && tile.letter.getText().equals("_")) {
+                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText(tile.letter.getText());
+                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText(tile.score.getText());
+                        }else {
+                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
+                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
+                        }
+                    }
+                }
             }
+        }
+
+        gameBoard.redraw();
+        if (wordForTryPlace.size() > 1) {
+            if (checkFirstWord()) {
+                StringBuilder word = new StringBuilder();
+                boolean direction = false;
+                int count = 0;
+                for (TileField t : wordForTryPlace) {
+                    if (t.letter.getText().equals("_")) {
+                        count++;
+                    }
+                    word.append(t.letter.getText());
+                }
+                if (count != wordForTryPlace.size()) {
+                    if (wordForTryPlace.size() > 0) {
+                        if (wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol) {
+                            direction = true;
+                        }
+                    }
+                    viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
+                    wordForTryPlace.clear();
+                    yourWord.getChildren().clear();
+                    unlockHand();
+                } else
+                    alertPopUp("Word Error", "Word Error", "Must have at least one letter from your hand");
+            } else
+                alertPopUp("Word Error", "Word Error", "First Word has to be on the star");
+        } else
+            alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
+
+        Platform.runLater(() -> gameBoard.requestFocus());
+    }
+
+    @FXML
+    public void onPassButtonClick() {
+        viewModel.passTurn();
+        Platform.runLater(() -> gameBoard.requestFocus());
+    }
+
+    @FXML
+    protected void onSortABCButtonClick() {
+        handFields.sort(Comparator.comparing(t -> t.letter.getText()));
+        redrawHand(handFields);
+        Platform.runLater(() -> gameBoard.requestFocus());
+    }
+
+    @FXML
+    private void onSortScoreButtonClick() {
+        handFields.sort(Comparator.comparingInt(t -> Integer.parseInt(t.score.getText())));
+        redrawHand(handFields);
+        Platform.runLater(() -> gameBoard.requestFocus());
+    }
+
+    public void startNewGame() {
+        this.viewModel.startNewGame();
+        startNewGameBtn.setVisible(false);
+        Platform.runLater(() -> gameBoard.requestFocus());
+    }
+
+    //setters methods
+    private void setScoresFields(List<SimpleStringProperty> list) {
+        Platform.runLater(() -> {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) != null) {
+                    scoresFields.get(i).setText(list.get(i).getValue());
+                }
+            }
+        });
+    }
+
+    private void setNamesFields(List<SimpleStringProperty> viewableNames) {
+        Platform.runLater(() -> {
+            for (int i = 0; i < viewableNames.size(); i++) {
+                nameFields.get(i).setText(viewableNames.get(i).getValue());
+                nameFields.get(i).setVisible(true);
+                scoresFields.get(i).setVisible(true);
+                rectanglesPlayer.get(i).setVisible(true);
+            }
+        });
+    }
+
+    private void setTileFieldOnBoard() {
+        if (selectedTileField != null && selectedTileField.isSelect() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
+            gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).letter.setText(selectedTileField.letter.getText());
+            gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).score.setText(selectedTileField.score.getText());
+            gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).setUnlocked();
+            gameBoard.redraw();
         } else if (selectedTileField != null)
             selectedTileField.setSelect(false);
+    }
+
+    private void setYourWord() {
+        TileField t = new TileField();
+        t.letter.setText(selectedTileField.letter.getText());
+        t.score.setText(selectedTileField.score.getText());
+        t.tileRow = selectedTileField.tileRow;
+        t.tileCol = selectedTileField.tileCol;
+        t.createTile(yourWord.getWidth() / 7, yourWord.getHeight());
+        wordForTryPlace.add(t);
+        redrawYourWord(wordForTryPlace);
+    }
+
+    private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge) {
+        Platform.runLater(() -> {
+            // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
+            // TODO: 2023-06-09  with a checkBox for each word
+            ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();
+            dialog.setTitle("Word Selection");
+            dialog.setHeaderText("Select a word to challenge");
+            dialog.setContentText("Words:");
+
+            // Set the list of words for the choice dialog
+            dialog.getItems().add(wordsForChallenge.get(0));
+
+            // Show the dialog and wait for the user's response
+            Optional<SimpleStringProperty> result = dialog.showAndWait();
+
+            // Process the selected word
+            result.ifPresent(selectedWord -> {
+                // TODO: 09/06/2023 sent the word to Challenge
+                viewModel.challengeRequest(selectedWord.get());
+                System.out.println("Selected Word: " + selectedWord);
+            });
+        });
+    }
+
+    public void ChallengeOnScreen(ActionEvent actionEvent) {
+        setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+    }
+
+    private void passTurn(String indexCurrentPlayer) {
+        if (!(viewModel.getPlayerIndex() == Integer.parseInt(indexCurrentPlayer))) {
+            tryPlaceBtn.setDisable(true);
+            passTurnBtn.setDisable(true);
+        } else {
+            tryPlaceBtn.setDisable(false);
+            passTurnBtn.setDisable(false);
+        }
+    }
+
+    private void removeFromYourWord(TileField removedTile) {
+        wordForTryPlace.removeIf(tileField -> tileField.tileRow == removedTile.tileRow && tileField.tileCol == removedTile.tileCol && tileField.letter.getText().equals(removedTile.letter.getText()));
+    }
+
+    //popUp methods
+    private void alertPopUp(String title, String header, String text) {
+       Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(text);
+            alert.showAndWait();
+            rollBack();
+        });
+    }
+
+    //redraw methods
+    private void redrawHand(List<TileField> list) {
+        Platform.runLater(() -> {
+            handGrid.getChildren().clear();
+            for (int i = 0; i < list.size(); i++) {
+                int finalI = i;
+                handGrid.add(list.get(finalI).createTile(handGrid.getWidth() / 7, handGrid.getHeight()), finalI, 0);
+            }
+        });
+    }
+
+    private void redrawYourWord(List<TileField> list) {
+        Platform.runLater(() -> {
+            yourWord.getChildren().clear();
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).letter.getText().equals("_")) { //tile from board//
+                    TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
+                    t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
+                    t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
+                    yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+                } else //tile from hand//
+                    yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+            }
+        });
+    }
+
+    private void rollBack() {
+       Platform.runLater(() -> {
+            for (TileField t : wordForTryPlace) {
+                if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+                }
+            }
+            gameBoard.redraw();
+            wordForTryPlace.clear();
+            yourWord.getChildren().clear();
+            unlockHand();
+        });
+    }
+
+    private boolean checkFirstWord() {
+        return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
+    }
+
+    //check if these methods is needed
+    private boolean isVertical(List<TileField> wordTryPlace) {
+        return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
     private boolean ifConnected(TileField t) {
@@ -388,19 +621,10 @@ public class GameWindowController implements Observer, Initializable {
         }
         return true;
     }
-
-    private boolean isVertical(List<TileField> wordTryPlace) {
-        return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
-    }
-
-    /**
-     * The checkFirstWord function checks if the first word is placed on a star.
-     * The first word must be placed at the center of the board.
-     * <p>
-     * @return True if the first word is placed
-     */
-    private boolean checkFirstWord() {
-        return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
+    public void unlockHand(){
+        for (TileField t : handFields) {
+            t.setUnlocked();
+        }
     }
 }
 

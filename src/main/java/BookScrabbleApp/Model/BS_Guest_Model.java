@@ -1,28 +1,31 @@
 package BookScrabbleApp.Model;
 
-import BookScrabbleApp.Model.GameData.Player;
-import BookScrabbleApp.Model.GameData.Tile;
+import BookScrabbleApp.Model.GameData.*;
 import BookScrabbleApp.Model.GameLogic.ClientCommunicationHandler;
+import com.google.gson.*;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
-import java.util.Observable;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class BS_Guest_Model extends Observable implements BS_Model {
+    public String[] getPlayersScores() {
+        return playersScores;
+    }
+
     String[] playersScores;
     Socket socket;
     Tile[][] tileBoard = new Tile[15][15];
     Tile[][] tempBoard = new Tile[15][15];
     Player player;
     ClientCommunicationHandler communicationHandler;
+
     /**
      * The BS_Guest_Model function is a constructor that initializes the player and playersScores variables.
      */
     private BS_Guest_Model() {
         player = new Player();
-
     }
 
     /**
@@ -33,10 +36,6 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      */
     public static BS_Guest_Model getModel() {
         return BS_Guest_ModelHolder.BSGuestModelInstance;
-    }
-
-    public String[] getPlayersScores() {
-        return playersScores;
     }
 
     /**
@@ -64,6 +63,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
                 throw new RuntimeException(e);
             }
             communicationHandler = new ClientCommunicationHandler();
+            getCommunicationHandler().setCom();
         }
     }
 
@@ -213,6 +213,27 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return tileBoard;
     }
 
+    public void setTileBoard(String message) {
+        String tiles = message.substring(10);
+        Gson gson = new Gson();
+        Tile[][] newTiles = gson.fromJson(tiles, Tile[][].class);
+        setBoard(newTiles);
+        setChanged();
+        notifyObservers("tileBoard updated");
+    }
+
+    public void setWinner(String message) {
+        String[] key = message.split(":");
+        int index = Integer.parseInt(key[1]);
+        String winnerName = key[2];
+        setChanged();
+        notifyObservers("winner:" + BS_Guest_Model.getModel().getPlayersScores()[index]+ ":" + winnerName);
+    }
+
+    private static class BS_Guest_ModelHolder {
+        private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
+    }
+
     /**
      * The endGame function is called when the game ends.
      * It sends a message to the host that it has ended, and then closes all resources and the connection to the host.
@@ -225,10 +246,46 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setHand(String message) {
+
+        String hand = message.substring(5);
+        Gson gson = new Gson();
+        Tile[] newTiles = gson.fromJson(hand, Tile[].class);
+        List<Tile> newHand = Arrays.asList(newTiles);
+        this.getPlayer().updateHand(newHand);
+        setChanged();
+        notifyObservers("hand updated");
+    }
+
+    public void sortAndSetIndex(String message) {
+        String[] key = message.split(":");
+        int size = Integer.parseInt(key[1]);
+        //  BS_Guest_Model.getModel().setPlayersScores(new String[size]);
+        for (int i = 0; i < size; i++) {
+            String[] player = key[i + 2].split(",");
+            if (player[1].equals(BS_Guest_Model.getModel().getPlayer().get_socketID())) {
+                this.getPlayer().set_index(Integer.parseInt(player[0]));
+                setChanged();
+                notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
+            }
+        }
 
     }
 
-    private static class BS_Guest_ModelHolder {
-        private static final BS_Guest_Model BSGuestModelInstance = new BS_Guest_Model();
+    public void setPlayersScore(String message) {
+            String scores = message.substring(14);
+        Gson gson = new Gson();
+        String[] newScores = gson.fromJson(scores, String[].class);
+        this.setPlayersScores(newScores);
+        setChanged();
+        notifyObservers("playersScores updated");
+
+    }
+
+    public void toFacade(String message) {
+        setChanged();
+        notifyObservers(message);
     }
 }
