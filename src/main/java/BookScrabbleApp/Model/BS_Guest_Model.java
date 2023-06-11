@@ -227,7 +227,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         int index = Integer.parseInt(key[1]);
         String winnerName = key[2];
         setChanged();
-        notifyObservers("winner:" + BS_Guest_Model.getModel().getPlayersScores()[index] + winnerName);
+        notifyObservers("winner:" + BS_Guest_Model.getModel().getPlayersScores()[index]+ ":" + winnerName);
     }
 
     private static class BS_Guest_ModelHolder {

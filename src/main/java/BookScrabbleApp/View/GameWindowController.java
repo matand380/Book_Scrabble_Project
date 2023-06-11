@@ -367,12 +367,13 @@ public class GameWindowController implements Observer, Initializable {
                             break;
                         }else{
                             tile = tileField;
-                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText(tileField.letter.getText());
-                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText(tileField.score.getText());
                         }
                     }
                     if (!foundMatchingTile) {
-                        if (boardRow != tile.tileRow && boardCol != tile.tileCol) {
+                        if (boardRow == tile.tileRow && boardCol == tile.tileCol && tile.letter.getText().equals("_")) {
+                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText(tile.letter.getText());
+                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText(tile.score.getText());
+                        }else {
                             gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
                             gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
                         }

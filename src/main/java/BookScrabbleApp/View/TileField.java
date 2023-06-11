@@ -48,14 +48,8 @@ public class TileField extends StackPane {
 
         double xCoordinate = col * width;
         double YCoordinate = row * height;
-
-        if (this.isUpdate()) {
+        if(!this.letter.getText().equals("_"))
             gc.drawImage(tileToImage(this.letter.getText()), xCoordinate, YCoordinate, width, height);
-        } else if (fontSize == 0) {
-            gc.drawImage(tileToImage(this.letter.getText()), xCoordinate, YCoordinate, width, height);
-        } else {
-            gc.drawImage(tileToImage(this.letter.getText()), xCoordinate, YCoordinate, width, height);
-        }
     }
 
     public void setSelect(boolean select) {
