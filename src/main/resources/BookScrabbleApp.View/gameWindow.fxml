@@ -23,14 +23,13 @@
 
 <?import BookScrabbleApp.GridCanvas?>
 
-
 <ScrollPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
    <content>
       <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1518.0">
           <bottom>
             <HBox alignment="CENTER" BorderPane.alignment="CENTER">
                <children>
-                      <VBox prefHeight="200.0" prefWidth="190.0" spacing="10.0">
+                      <VBox alignment="CENTER" prefHeight="214.0" prefWidth="0.0" spacing="10.0" HBox.hgrow="ALWAYS">
                           <children>
                               <JFXButton fx:id="passTurnBtn" onAction="#onPassButtonClick" prefHeight="82.0" prefWidth="190.0" stylesheets="@../buttonStyleSheets.css" text="Pass Turn">
                                   <styleClass>
@@ -58,9 +57,9 @@
                               <Insets bottom="10.0" top="10.0" />
                           </padding>
                       </VBox>
-                      <AnchorPane prefHeight="92.0" prefWidth="926.0">
+                      <AnchorPane HBox.hgrow="ALWAYS">
                           <children>
-                              <GridPane fx:id="handGrid" gridLinesVisible="true" layoutX="15.0" layoutY="12.0" prefHeight="136.0" prefWidth="945.0">
+                              <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" layoutX="38.0" layoutY="13.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                                   <columnConstraints>
                                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -76,7 +75,7 @@
                               </GridPane>
                           </children>
                       </AnchorPane>
-                      <VBox spacing="10.0">
+                      <VBox alignment="CENTER" prefHeight="214.0" prefWidth="0.0" spacing="10.0" HBox.hgrow="ALWAYS">
                           <padding>
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                           </padding>
@@ -121,7 +120,7 @@
               </MenuBar>
           </top>
           <center>
-            <HBox BorderPane.alignment="CENTER">
+            <HBox fillHeight="false" BorderPane.alignment="CENTER">
                <children>
                     <AnchorPane>
                         <children>
@@ -152,6 +151,9 @@
                                 </rowConstraints>
                             </GridPane>
                         </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                     </AnchorPane>
                </children>
             </HBox>
@@ -164,7 +166,7 @@
                   <padding>
                       <Insets bottom="10.0" left="40.0" right="20.0" top="10.0" />
                   </padding>
-                      <AnchorPane prefHeight="571.0" prefWidth="191.0">
+                      <AnchorPane prefHeight="446.0" prefWidth="154.0">
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
@@ -194,7 +196,7 @@
                               </Label>
                               <Label fx:id="scorePlayer4" layoutX="56.0" layoutY="390.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
                       </AnchorPane>
-                      <JFXButton fx:id="startNewGameBtn" onAction="#startNewGame" prefHeight="125.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
+                      <JFXButton fx:id="startNewGameBtn" alignment="CENTER" onAction="#startNewGame" prefHeight="70.0" prefWidth="154.0" stylesheets="@../buttonStyleSheets.css" text="Start">
                           <styleClass>
                               <String fx:value="button" />
                               <String fx:value="font" />
