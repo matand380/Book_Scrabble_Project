@@ -103,6 +103,16 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
         notifyObservers("scores updated");
     }
 
+    public void setViewableName(String[] message){
+        int size = Integer.parseInt(message[1]);
+        for (int i = 0; i < size; i++) {
+            viewableName.add(new SimpleStringProperty());
+            viewableName.get(i).setValue(message[i+2]);
+        }
+        setChanged();
+        notifyObservers("playersName updated");
+    }
+
 
     /**
      * The openSocket function opens a socket connection to the host.
@@ -308,13 +318,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
         updatesMap.put("playersName", message -> {
             String[] messageSplit = message.split(":");
-            int size = Integer.parseInt(messageSplit[1]);
-            for (int i = 0; i < size; i++) {
-                viewableName.add(new SimpleStringProperty());
-                viewableName.get(i).setValue(messageSplit[i+2]);
-            }
-            setChanged();
-            notifyObservers("playersName updated");
+            setViewableName(messageSplit);
         });
     }
 

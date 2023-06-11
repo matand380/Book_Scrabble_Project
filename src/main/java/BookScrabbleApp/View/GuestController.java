@@ -37,6 +37,13 @@ public class GuestController {
 
     @FXML
     public void onPressSubmit() throws Exception {
+        if (nameTextFiled.getText().equals("")) {
+            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
+            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
+        } else {
+            name = nameTextFiled.getText();
+        }
+        guest.setPlayerProperties(name);
         ip = IpTextFiled.getText();
         port = Integer.parseInt(PortTextFiled.getText());
         if (ip.equals("") || port == 0) {
@@ -65,12 +72,6 @@ public class GuestController {
 
     @FXML
     public void switchToGameWindow() throws Exception {
-        if (nameTextFiled.getText().equals("")) {
-            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
-            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
-        } else {
-            name = nameTextFiled.getText();
-        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
@@ -82,6 +83,5 @@ public class GuestController {
         stage.show();
         GameWindowController gameWindowController = loader.getController();
         gameWindowController.setViewModel(guest);
-        guest.setPlayerProperties(name);
     }
 }

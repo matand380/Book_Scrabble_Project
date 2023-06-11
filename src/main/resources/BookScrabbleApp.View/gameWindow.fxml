@@ -170,10 +170,10 @@
                       <Insets bottom="10.0" left="40.0" right="20.0" top="10.0" />
                   </padding>
                       <AnchorPane prefHeight="446.0" prefWidth="154.0">
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
-                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                              <Rectangle fx:id="player4Rect" visible="false" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="347.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                              <Rectangle fx:id="player3Rect" visible="false" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="244.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                              <Rectangle fx:id="player1Rect" visible="false" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="41.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
+                              <Rectangle fx:id="player2Rect" visible="false" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="84.0" layoutX="21.0" layoutY="141.0" stroke="BLACK" strokeType="INSIDE" width="104.0" />
                               <Label fx:id="namePlayer1" layoutX="32.0" layoutY="50.0" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="RIGHT" textOverrun="CENTER_ELLIPSIS" visible="false">
                                   <font>
                                       <Font size="25.0" />

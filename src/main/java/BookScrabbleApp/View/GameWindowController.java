@@ -9,6 +9,7 @@ import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.*;
 
 import java.net.*;
 import java.util.*;
@@ -26,6 +27,14 @@ public class GameWindowController implements Observer, Initializable {
     private Label namePlayer3;
     @FXML
     private Label namePlayer4;
+    @FXML
+    private Rectangle player1Rect;
+    @FXML
+    private Rectangle player2Rect;
+    @FXML
+    private Rectangle player3Rect;
+    @FXML
+    private Rectangle player4Rect;
     @FXML
     private Label scorePlayer1;
     @FXML
@@ -59,6 +68,7 @@ public class GameWindowController implements Observer, Initializable {
     private List<Label> scoresFields;
 
     private List<Label> nameFields;
+    private List<Rectangle> rectanglesPlayer;
 
     private List<TileField> handFields;
 
@@ -167,14 +177,19 @@ public class GameWindowController implements Observer, Initializable {
         //initialize the scores and names fields
         scoresFields = new ArrayList<>();
         nameFields = new ArrayList<>();
+        rectanglesPlayer = new ArrayList<>();
         nameFields.add(namePlayer1);
         scoresFields.add(scorePlayer1);
+        rectanglesPlayer.add(player1Rect);
         nameFields.add(namePlayer2);
         scoresFields.add(scorePlayer2);
+        rectanglesPlayer.add(player2Rect);
         nameFields.add(namePlayer3);
         scoresFields.add(scorePlayer3);
+        rectanglesPlayer.add(player3Rect);
         nameFields.add(namePlayer4);
         scoresFields.add(scorePlayer4);
+        rectanglesPlayer.add(player4Rect);
     }
 
     private void initializeUpdateMap() {
@@ -435,6 +450,7 @@ public class GameWindowController implements Observer, Initializable {
                 nameFields.get(i).setText(viewableNames.get(i).getValue());
                 nameFields.get(i).setVisible(true);
                 scoresFields.get(i).setVisible(true);
+                rectanglesPlayer.get(i).setVisible(true);
             }
         });
     }
