@@ -48,7 +48,7 @@ public class GridCanvas extends Canvas {
     }
 
     public void redraw() {
-        Platform.runLater(()->{
+
         double W = getWidth();
         double H = getHeight();
 
@@ -75,7 +75,6 @@ public class GridCanvas extends Canvas {
         }
         gc.setFill(Color.rgb(0, 0, 0,0.5));
         gc.fillRect(xCoordinate, YCoordinate, w, h);
-        });
     }
 
 

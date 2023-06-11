@@ -12,6 +12,8 @@ import javafx.scene.layout.*;
 
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
@@ -46,6 +48,8 @@ public class GameWindowController implements Observer, Initializable {
     Button challengeBtn;
     @FXML
     Button tryPlaceBtn;
+
+    ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
@@ -88,7 +92,7 @@ public class GameWindowController implements Observer, Initializable {
         String updateType = messageSplit[0];
         System.out.println("updateType: " + message);
         if (updatesMap.containsKey(updateType)) {
-            updatesMap.get(updateType).accept(message);
+           executorService.submit(()-> updatesMap.get(updateType).accept(message));
         }
     }
 
