@@ -44,10 +44,12 @@ public class MyServer {
      * @throws Exception If an exception occurred
      */
     private void runServer() throws Exception {
-        ServerSocket server = new ServerSocket(port);
+        ServerSocket server = new ServerSocket(port, 3);
         server.setSoTimeout(1000);
         logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
+        logger.log(System.Logger.Level.INFO, this::ip);
+
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
