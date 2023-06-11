@@ -249,7 +249,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     }
 
     public void setHand(String message) {
-        new Thread((()->{
+
         String hand = message.substring(5);
         Gson gson = new Gson();
         Tile[] newTiles = gson.fromJson(hand, Tile[].class);
@@ -257,11 +257,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         this.getPlayer().updateHand(newHand);
         setChanged();
         notifyObservers("hand updated");
-})).start();
     }
 
     public void sortAndSetIndex(String message) {
-      Thread thread = new Thread((()->{
         String[] key = message.split(":");
         int size = Integer.parseInt(key[1]);
         //  BS_Guest_Model.getModel().setPlayersScores(new String[size]);
@@ -273,21 +271,16 @@ public class BS_Guest_Model extends Observable implements BS_Model {
                 notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
             }
         }
-        }));
-        thread.start();
 
     }
 
     public void setPlayersScore(String message) {
-        new Thread((()->{
-
             String scores = message.substring(14);
         Gson gson = new Gson();
         String[] newScores = gson.fromJson(scores, String[].class);
         this.setPlayersScores(newScores);
         setChanged();
         notifyObservers("playersScores updated");
-        })).start();
 
     }
 

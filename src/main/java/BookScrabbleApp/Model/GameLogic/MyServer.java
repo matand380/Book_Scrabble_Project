@@ -52,6 +52,7 @@ public class MyServer {
             try {
                 Socket aClient = server.accept(); // blocking call
                 String clientID = UUID.randomUUID().toString().substring(0, 6);
+                clients.add(aClient);
                 clientsMap.put(clientID, aClient);
                 ping(clientID);
 
@@ -154,17 +155,21 @@ public class MyServer {
 
     public void updateAll(String s) {
         //foreach socket in map send s
-        clientsMap.forEach((id, socket) -> {
-            PrintWriter out;
-            try {
-                out = new PrintWriter(socket.getOutputStream());
-            } catch (IOException e) {
-                logger.log(System.Logger.Level.ERROR, "Error in update all: getting output stream");
-                throw new RuntimeException(e);
-            }
-            out.println(s);
-            out.flush();
-        });
+        for (String id : clientsMap.keySet()) {
+            updateSpecificPlayer(id, s);
+        }
+//        clientsMap.forEach((id, socket) -> {
+//
+//            PrintWriter out;
+//            try {
+//                out = new PrintWriter(socket.getOutputStream());
+//            } catch (IOException e) {
+//                logger.log(System.Logger.Level.ERROR, "Error in update all: getting output stream");
+//                throw new RuntimeException(e);
+//            }
+//            out.println(s);
+//            out.flush();
+//        });
     }
 
     public void updateSpecificPlayer(String id, Object obj) {
