@@ -49,7 +49,7 @@ public class GameWindowController implements Observer, Initializable {
     @FXML
     Button tryPlaceBtn;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(3);
+    //ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
@@ -80,7 +80,7 @@ public class GameWindowController implements Observer, Initializable {
         } else if (viewModel instanceof BS_Guest_ViewModel) {
             this.viewModel = new BS_Guest_ViewModel();
             this.viewModel.getObservable().addObserver(this);
-           initializeWindow();
+            initializeWindow();
             startNewGameBtn.setVisible(false);
         }
     }
@@ -90,9 +90,10 @@ public class GameWindowController implements Observer, Initializable {
         String message = (String) arg;
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
-        System.out.println("updateType: " + message);
+        System.out.println("\n -- updateType GameWindow: " + message +" -- \n");
         if (updatesMap.containsKey(updateType)) {
-           executorService.submit(()-> updatesMap.get(updateType).accept(message));
+            //executorService.submit(() -> updatesMap.get(updateType).accept(message));
+            updatesMap.get(updateType).accept(message);
         }
     }
 
@@ -155,7 +156,7 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
-    private void  initializeProperties() {
+    private void initializeProperties() {
         //initialize properties
         handFields = new ArrayList<>();
         boardFields = new ArrayList<>();
@@ -190,15 +191,14 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("tileBoard updated", message -> {
-            gameBoard.setTileFields(boardFields);
-            gameBoard.tileFields.forEach(row -> {
-                row.forEach(tileField -> {
-                    if (!tileField.isUpdate()) {
-                        tileField.setUpdate();
-                    }
+                gameBoard.setTileFields(boardFields);
+                gameBoard.tileFields.forEach(row -> {
+                    row.forEach(tileField -> {
+                        if (!tileField.isUpdate()) {
+                            tileField.setUpdate();
+                        }
+                    });
                 });
-            });
-            gameBoard.redraw();
         });
 
         updatesMap.put("scores updated", message -> {
@@ -210,9 +210,9 @@ public class GameWindowController implements Observer, Initializable {
             alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
         });
 
-        updatesMap.put("wordsForChallenge updated", message -> {
-            setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
-        });
+//        updatesMap.put("wordsForChallenge updated", message -> {
+//            setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+//        });
 
         updatesMap.put("challengeAlreadyActivated", message -> {
             alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
@@ -229,7 +229,7 @@ public class GameWindowController implements Observer, Initializable {
 
         updatesMap.put("gameStart", message -> {
 
-           initializeWindow();
+            initializeWindow();
         });
     }
 
@@ -461,26 +461,26 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge) {
-        Platform.runLater(()->{
-        // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
-        // TODO: 2023-06-09  with a checkBox for each word
-        ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();
-        dialog.setTitle("Word Selection");
-        dialog.setHeaderText("Select a word to challenge");
-        dialog.setContentText("Words:");
+        Platform.runLater(() -> {
+            // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
+            // TODO: 2023-06-09  with a checkBox for each word
+            ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();
+            dialog.setTitle("Word Selection");
+            dialog.setHeaderText("Select a word to challenge");
+            dialog.setContentText("Words:");
 
-        // Set the list of words for the choice dialog
-        dialog.getItems().add(wordsForChallenge.get(0));
+            // Set the list of words for the choice dialog
+            dialog.getItems().add(wordsForChallenge.get(0));
 
-        // Show the dialog and wait for the user's response
-        Optional<SimpleStringProperty> result = dialog.showAndWait();
+            // Show the dialog and wait for the user's response
+            Optional<SimpleStringProperty> result = dialog.showAndWait();
 
-        // Process the selected word
-        result.ifPresent(selectedWord -> {
-            // TODO: 09/06/2023 sent the word to Challenge
-            viewModel.challengeRequest(selectedWord.get());
-            System.out.println("Selected Word: " + selectedWord);
-        });
+            // Process the selected word
+            result.ifPresent(selectedWord -> {
+                // TODO: 09/06/2023 sent the word to Challenge
+                viewModel.challengeRequest(selectedWord.get());
+                System.out.println("Selected Word: " + selectedWord);
+            });
         });
     }
 

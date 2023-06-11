@@ -4,6 +4,7 @@ import BookScrabbleApp.Model.BookScrabbleGuestFacade;
 import javafx.beans.property.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
@@ -24,6 +25,8 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
     //map of the commands from the client
     private Map<String, Consumer<String>> updatesMap = new HashMap<>();
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     /**
      * The BS_Guest_ViewModel function is the constructor for the BS_Guest_ViewModel class.
@@ -47,8 +50,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
         String updateType = messageSplit[0];
         System.out.println("GuestViewModel ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
-            System.out.println(updateType);
-            updatesMap.get(updateType).accept(message);
+            executorService.submit(() -> updatesMap.get(updateType).accept(message));
         } else {
             setChanged();
             notifyObservers("Error in updates handling ");
@@ -64,8 +66,10 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     public void setBoard() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                viewableBoard.get(i).get(j).setLetter(guestFacade.getBoardState()[i][j].getLetter());
-                viewableBoard.get(i).get(j).setScore(guestFacade.getBoardState()[i][j].getScore());
+                if (guestFacade.getBoardState()[i][j] != null) {
+                    viewableBoard.get(i).get(j).setLetter(guestFacade.getBoardState()[i][j].getLetter());
+                    viewableBoard.get(i).get(j).setScore(guestFacade.getBoardState()[i][j].getScore());
+                }
             }
         }
         setChanged();

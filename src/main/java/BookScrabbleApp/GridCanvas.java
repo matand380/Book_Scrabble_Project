@@ -48,33 +48,34 @@ public class GridCanvas extends Canvas {
     }
 
     public void redraw() {
+        Platform.runLater(()->{
+            double W = getWidth();
+            double H = getHeight();
 
-        double W = getWidth();
-        double H = getHeight();
+            double w = W / colorBoard[0].length;
+            double h = H / colorBoard.length;
 
-        double w = W / colorBoard[0].length;
-        double h = H / colorBoard.length;
+            double xCoordinate = col * w;
+            double YCoordinate = row * h;
 
-        double xCoordinate = col * w;
-        double YCoordinate = row * h;
+            GraphicsContext gc = getGraphicsContext2D();
 
-        GraphicsContext gc = getGraphicsContext2D();
+            gc.clearRect(0, 0, W, H);
 
-        gc.clearRect(0, 0, W, H);
-
-        for (int boardRow = 0; boardRow < 15; boardRow++) {
-            for (int boardCol = 0; boardCol < 15; boardCol++) {
-                if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
-                    double tileXCoordinate = boardCol * w;
-                    double tileYCoordinate = boardRow * w;
-                    gc.drawImage(getColorForScore(colorBoard[boardRow][boardCol]), tileXCoordinate, tileYCoordinate, w, h);
-                } else{
-                    this.placeTileFiled(tileFields.get(boardRow).get(boardCol),boardRow,boardCol);
+            for (int boardRow = 0; boardRow < 15; boardRow++) {
+                for (int boardCol = 0; boardCol < 15; boardCol++) {
+                    if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
+                        double tileXCoordinate = boardCol * w;
+                        double tileYCoordinate = boardRow * w;
+                        gc.drawImage(getColorForScore(colorBoard[boardRow][boardCol]), tileXCoordinate, tileYCoordinate, w, h);
+                    } else {
+                        this.placeTileFiled(tileFields.get(boardRow).get(boardCol), boardRow, boardCol);
+                    }
                 }
             }
-        }
-        gc.setFill(Color.rgb(0, 0, 0,0.5));
-        gc.fillRect(xCoordinate, YCoordinate, w, h);
+            gc.setFill(Color.rgb(0, 0, 0, 0.5));
+            gc.fillRect(xCoordinate, YCoordinate, w, h);
+        });
     }
 
 

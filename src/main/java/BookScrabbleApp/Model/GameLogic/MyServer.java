@@ -48,8 +48,7 @@ public class MyServer {
         server.setSoTimeout(1000);
         logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
-        logger.log(System.Logger.Level.INFO, this::ip);
-
+        logger.log(System.Logger.Level.INFO,ip() +"  "+ port);
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
