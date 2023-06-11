@@ -97,6 +97,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     @Override
     public void setScore() {
         for (int i = 0; i < guestFacade.getPlayersScores().length; i++) {
+            viewableScores.add(new SimpleStringProperty());
             viewableScores.get(i).setValue(guestFacade.getPlayersScores()[i]);
         }
         setChanged();
