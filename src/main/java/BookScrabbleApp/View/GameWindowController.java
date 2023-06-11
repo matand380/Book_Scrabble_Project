@@ -354,7 +354,7 @@ public class GameWindowController implements Observer, Initializable {
     //button handlers
     @FXML
     protected void onTryButtonClick() {
-
+        TileField tile = new TileField();
         for (int boardRow = 0; boardRow < 15; boardRow++) {
             for (int boardCol = 0; boardCol < 15; boardCol++) {
                 if (!gameBoard.tileFields.get(boardRow).get(boardCol).isUpdate()) {
@@ -365,11 +365,17 @@ public class GameWindowController implements Observer, Initializable {
                                 gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) {
                             foundMatchingTile = true;
                             break;
+                        }else{
+                            tile = tileField;
+                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText(tileField.letter.getText());
+                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText(tileField.score.getText());
                         }
                     }
                     if (!foundMatchingTile) {
-                        gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
-                        gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
+                        if (boardRow != tile.tileRow && boardCol != tile.tileCol) {
+                            gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
+                            gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
+                        }
                     }
                 }
             }
@@ -396,13 +402,11 @@ public class GameWindowController implements Observer, Initializable {
                     viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
                     wordForTryPlace.clear();
                     yourWord.getChildren().clear();
-                    for (TileField t : handFields) {
-                        t.setUnlocked();
-                    }
+                    unlockHand();
                 } else
-                    alertPopUp("Error in word", "Error in word", "Must have at least one letter from your hand");
+                    alertPopUp("Word Error", "Word Error", "Must have at least one letter from your hand");
             } else
-                alertPopUp("First Word Error", "First Word Error", "First Word has to be on the star");
+                alertPopUp("Word Error", "Word Error", "First Word has to be on the star");
         } else
             alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
 
@@ -439,7 +443,9 @@ public class GameWindowController implements Observer, Initializable {
     private void setScoresFields(List<SimpleStringProperty> list) {
         Platform.runLater(() -> {
             for (int i = 0; i < list.size(); i++) {
-                scoresFields.get(i).setText(list.get(i).getValue());
+                if (list.get(i) != null) {
+                    scoresFields.get(i).setText(list.get(i).getValue());
+                }
             }
         });
     }
@@ -520,13 +526,14 @@ public class GameWindowController implements Observer, Initializable {
 
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(text);
-        alert.showAndWait();
-
-        rollBack();
+       Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(text);
+            alert.showAndWait();
+            rollBack();
+        });
     }
 
     //redraw methods
@@ -556,17 +563,17 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void rollBack() {
-        for (TileField t : wordForTryPlace) {
-            if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
-                gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+       Platform.runLater(() -> {
+            for (TileField t : wordForTryPlace) {
+                if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+                }
             }
-        }
-        gameBoard.redraw();
-        wordForTryPlace.clear();
-        yourWord.getChildren().clear();
-        for (TileField t : handFields) {
-            t.setUnlocked();
-        }
+            gameBoard.redraw();
+            wordForTryPlace.clear();
+            yourWord.getChildren().clear();
+            unlockHand();
+        });
     }
 
     private boolean checkFirstWord() {
@@ -612,6 +619,11 @@ public class GameWindowController implements Observer, Initializable {
             }
         }
         return true;
+    }
+    public void unlockHand(){
+        for (TileField t : handFields) {
+            t.setUnlocked();
+        }
     }
 }
 
