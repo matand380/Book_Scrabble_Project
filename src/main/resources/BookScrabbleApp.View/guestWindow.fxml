@@ -61,7 +61,7 @@
                               <Font size="39.0" />
                           </font>
                       </Button>
-                      <Button fx:id="switchToGame" layoutY="46.0" onAction="#switchToGameWindow" prefHeight="46.0" prefWidth="183.0" stylesheets="@../buttonStyleSheets.css" text="Start">
+                      <Button fx:id="switchToGame" layoutY="55.0" onAction="#switchToGameWindow" prefHeight="46.0" prefWidth="183.0" stylesheets="@../buttonStyleSheets.css" text="Start" visible="false">
                           <font>
                               <Font size="49.0" />
                           </font>
