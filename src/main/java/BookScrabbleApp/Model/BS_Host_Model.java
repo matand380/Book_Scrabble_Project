@@ -568,9 +568,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     break;
                 }
         if (isGameOver) {
-            communicationServer.updateAll("winner:" + getMaxScore());
+            String winner = getMaxScore();
+            communicationServer.updateAll("winner:" + winner);
             setChanged();
-            notifyObservers("winner:" + getMaxScore());
+            notifyObservers("winner:" + winner);
         }
         return isGameOver;
     }
