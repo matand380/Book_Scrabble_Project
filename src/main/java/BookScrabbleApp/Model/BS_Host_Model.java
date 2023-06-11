@@ -228,7 +228,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             if (id != null) {
                 String json = gson.toJson(tiles);
-                communicationServer.updateSpecificPlayer(id,"gameStart");
+                communicationServer.updateSpecificPlayer(id, "gameStart");
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
             } else {
                 setChanged();
@@ -236,7 +236,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             }
         });
         StringBuilder playersName = new StringBuilder();
-        for(Player p : players) {
+        for (Player p : players) {
             playersName.append(p.get_name()).append(":");
         }
         communicationServer.updateAll("playersName:" + players.size() + ":" + playersName.toString());
@@ -568,10 +568,13 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     break;
                 }
         if (isGameOver) {
-            String winner = getMaxScore();
-            communicationServer.updateAll("winner:" + winner);
+            String winnerIndexAndName = getMaxScore();
+            communicationServer.updateAll("winner:" + winnerIndexAndName);
+            String[] splitWinner = winnerIndexAndName.split(":");
+            Player winner = players.get(Integer.parseInt(splitWinner[0]));
+
             setChanged();
-            notifyObservers("winner:" + winner);
+            notifyObservers("winner:" + winner.get_score()+":"+winner.get_name());
         }
         return isGameOver;
     }
