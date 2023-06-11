@@ -174,6 +174,13 @@ public class GameWindowController implements Observer, Initializable {
 
     private void initializeUpdateMap() {
         updatesMap.put("hand updated", message -> {
+            if ((viewModel.getPlayerIndex() != 0)) {
+                tryPlaceBtn.setDisable(true);
+                passTurnBtn.setDisable(true);
+            } else {
+                tryPlaceBtn.setDisable(false);
+                passTurnBtn.setDisable(false);
+            }
             //The hand of the player is updated
             redrawHand(handFields);
         });
@@ -217,6 +224,7 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("gameStart", message -> {
+
            initializeWindow();
         });
     }
@@ -449,6 +457,7 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge) {
+        Platform.runLater(()->{
         // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
         // TODO: 2023-06-09  with a checkBox for each word
         ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();
@@ -467,6 +476,7 @@ public class GameWindowController implements Observer, Initializable {
             // TODO: 09/06/2023 sent the word to Challenge
             viewModel.challengeRequest(selectedWord.get());
             System.out.println("Selected Word: " + selectedWord);
+        });
         });
     }
 

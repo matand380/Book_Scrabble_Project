@@ -1,6 +1,7 @@
 package BookScrabbleApp;
 
 import BookScrabbleApp.View.*;
+import javafx.application.Platform;
 import javafx.scene.canvas.*;
 import javafx.scene.image.*;
 import javafx.scene.paint.*;
@@ -47,6 +48,7 @@ public class GridCanvas extends Canvas {
     }
 
     public void redraw() {
+        Platform.runLater(()->{
         double W = getWidth();
         double H = getHeight();
 
@@ -73,7 +75,9 @@ public class GridCanvas extends Canvas {
         }
         gc.setFill(Color.rgb(0, 0, 0,0.5));
         gc.fillRect(xCoordinate, YCoordinate, w, h);
+        });
     }
+
 
     private Image getColorForScore(char score) {
          return switch (score) {

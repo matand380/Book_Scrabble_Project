@@ -36,7 +36,7 @@ public class ClientCommunicationHandler {
             BS_Guest_Model.getModel().toFacade(message);
         });
 
-        handlers.put("passTurn", message -> {
+        handlers.put("turnPassed", message -> {
             BS_Guest_Model.getModel().toFacade(message);
         });
 
@@ -100,7 +100,7 @@ public class ClientCommunicationHandler {
                 String methodName = message[0];
                 System.out.println("GuestCom ---- updateType: " + message);
                 if (handlers.get(methodName) != null) {
-                    handlers.get(methodName).accept(key);
+                  handlers.get(methodName).accept(key);
                 } else {
                     System.out.println("No handler for method(Client) :" + methodName);
                 }
