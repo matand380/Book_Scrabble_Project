@@ -31,6 +31,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Queue<Player> scoresManager = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
     String[] PlayersScores;
     private List<Player> players;
+    Thread tryThread;
 
     /**
      * The BS_Host_Model function is a singleton class that creates the host model for the game.
@@ -44,10 +45,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
 
-        //for testing
-//        System.out.println("Pick host port number : ");
-//        Scanner scanner = new Scanner(System.in);
-//        int port = scanner.nextInt();
         communicationServer = new MyServer(23346, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
 
@@ -303,89 +300,91 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param stringWord Get the word that the player is trying to place
      */
     public void tryPlaceWord(String stringWord, int row, int col, boolean direction) {
-        char[] buildWord = stringWord.toCharArray();
-        Player current = getPlayers().get(currentPlayerIndex);
-        Tile[] tiles = new Tile[stringWord.length()];
-        for (int i = 0; i < stringWord.length(); i++) {
-            tiles[i] = current.charToTile(buildWord[i]);
-        }
-        Word word = new Word(tiles, row, col, direction);
-        int score = Board.getBoard().tryPlaceWord(word);
-        if (score > 0) {
-
-            // build the string of words for a challenge, send it to all clients and notify host viewModel
-            StringBuilder sb = new StringBuilder();
-            for (Word w : currentPlayerWords) {
-                sb.append(w.toString());
-                sb.append(",");
+        tryThread = new Thread(() -> {
+            char[] buildWord = stringWord.toCharArray();
+            Player current = getPlayers().get(currentPlayerIndex);
+            Tile[] tiles = new Tile[stringWord.length()];
+            for (int i = 0; i < stringWord.length(); i++) {
+                tiles[i] = current.charToTile(buildWord[i]);
             }
-            String words = sb.toString();
-            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:"+ currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
-            setChanged();
-            notifyObservers("wordsForChallenge:"+ currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
-            //if the current player is the host, then the host's viewModel wan't display the challenge words
+            Word word = new Word(tiles, row, col, direction);
+            int score = Board.getBoard().tryPlaceWord(word);
+            if (score > 0) {
 
-            LockSupport.parkNanos(3000000000L); //park for 3 seconds
-            if (challengeActivated.get()) {
-                //execute challengeWord method
-                boolean result = false;
-                String challengerIndex = this.getChallengeInfo().split(":")[0];
-                String forChallenge = this.challengeInfo.split(":")[1];
-                result = challengeWord(forChallenge, challengerIndex);
-
-                if (result) {
-                    placeAndComplete7(word.toString());
-                    players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-                    updateBoard();
-                    updateScores();
-
-                    if (isGameOver()) {
-                        gameIsOver = true;
-                        communicationServer.updateAll("endGame");
-                        setChanged();
-                        notifyObservers("endGame");
-                        return;
-                    }
-                } else {
-                    String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
-                    if (id != null)
-                        communicationServer.updateSpecificPlayer(id, "challengeSuccess");
-                    else {
-                        setChanged();
-                        notifyObservers("challengeSuccess");
-                    }
-                    passTurn(currentPlayerIndex);
+                // build the string of words for a challenge, send it to all clients and notify host viewModel
+                StringBuilder sb = new StringBuilder();
+                for (Word w : currentPlayerWords) {
+                    sb.append(w.toString());
+                    sb.append(",");
                 }
-
-                challengeActivated.set(false);
-                currentPlayerWords.clear();
-                return;
-            }
-            //if no challenge happened, update the board and complete the hand
-            placeAndComplete7(word.toString());
-            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-            updateBoard();
-            updateScores();
-            if (isGameOver()) {
-                gameIsOver = true;
-                return;
-            }
-            LockSupport.parkNanos(4000000000L); //park for 3 seconds
-            passTurnTryPlace(currentPlayerIndex);
-            currentPlayerWords.clear();
-
-        }
-        // score == 0 means that the word cannot be placed on the board
-        else {
-            String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
-            if (id != null)
-                communicationServer.updateSpecificPlayer(id, "invalidWord");
-            else {
+                String words = sb.toString();
+                BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
                 setChanged();
-                notifyObservers("invalidWord");
-            }
-        }
+                notifyObservers("wordsForChallenge:" + currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
+                //if the current player is the host, then the host's viewModel wan't display the challenge words
 
+                //LockSupport.park();
+                if (challengeActivated.get()) {
+                    //execute challengeWord method
+                    boolean result = false;
+                    String challengerIndex = this.getChallengeInfo().split(":")[0];
+                    String forChallenge = this.challengeInfo.split(":")[1];
+                    result = challengeWord(forChallenge, challengerIndex);
+
+                    if (result) {
+                        placeAndComplete7(word.toString());
+                        players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+                        updateBoard();
+                        updateScores();
+
+                        if (isGameOver()) {
+                            gameIsOver = true;
+                            communicationServer.updateAll("endGame");
+                            setChanged();
+                            notifyObservers("endGame");
+                            return;
+                        }
+                    } else {
+                        String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+                        if (id != null)
+                            communicationServer.updateSpecificPlayer(id, "challengeSuccess");
+                        else {
+                            setChanged();
+                            notifyObservers("challengeSuccess");
+                        }
+                        passTurn(currentPlayerIndex);
+                    }
+
+                    challengeActivated.set(false);
+                    currentPlayerWords.clear();
+                    return;
+                }
+                //if no challenge happened, update the board and complete the hand
+                placeAndComplete7(word.toString());
+                players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+                updateBoard();
+                updateScores();
+                if (isGameOver()) {
+                    gameIsOver = true;
+                    return;
+                }
+                LockSupport.parkNanos(4000000000L); //park for 3 seconds
+                passTurnTryPlace(currentPlayerIndex);
+                currentPlayerWords.clear();
+
+            }
+            // score == 0 means that the word cannot be placed on the board
+            else {
+                String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+                if (id != null)
+                    communicationServer.updateSpecificPlayer(id, "invalidWord");
+                else {
+                    setChanged();
+                    notifyObservers("invalidWord");
+                }
+            }
+        });
+        tryThread.start();
     }
 
     /**
@@ -684,6 +683,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             } else {
                 challengeActivated.set(true);
                 this.setChallengeInfo(challengeInfo);
+                //LockSupport.unpark(tryThread);
             }
         }
     }
@@ -704,6 +704,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
+    }
+
+    public void unPark(){
+        //LockSupport.unpark(tryThread);
+        System.out.println("    unPark called    !!!!!!!!!!!");
     }
 }
 

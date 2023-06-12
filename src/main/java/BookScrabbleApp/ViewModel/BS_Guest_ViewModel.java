@@ -375,4 +375,8 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     public List<SimpleStringProperty> getViewableNames() {
         return this.viewableName;
     }
+    @Override
+    public void unPark(){
+        guestFacade.unPark();
+    }
 }

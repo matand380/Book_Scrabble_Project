@@ -119,6 +119,8 @@ public class HostController {
         host.setPlayerProperties(name);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
         root = loader.load();
+        GameWindowController controller = loader.getController();
+        controller.setViewModel(host);
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
         stage.setResizable(false);
@@ -126,7 +128,5 @@ public class HostController {
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());
-        GameWindowController controller = loader.getController();
-        controller.setViewModel(host);
     }
 }

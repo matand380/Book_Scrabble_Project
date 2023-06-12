@@ -12,13 +12,9 @@ public class TileField extends StackPane {
     public TextField letter;
 
     public TextField score;
-    private boolean isLocked;
     private boolean isSelect = false;
-
     private boolean isClick = false;
-
     private boolean isUpdate = false;
-
     public int tileCol;
     public int tileRow;
 
@@ -26,7 +22,6 @@ public class TileField extends StackPane {
         super();
         this.letter = new TextField();
         this.score = new TextField();
-        this.isLocked = false;
         setPrefSize(135, 200);
     }
 
@@ -55,18 +50,13 @@ public class TileField extends StackPane {
     public void setSelect(boolean select) {
         isSelect = select;
         if (isSelect) {
-            setOpacity(0.5); // Dim the tile when locked
+            setOpacity(0.5);
         } else {
             setOpacity(1.0);
         }
     }
 
-    public boolean isLocked() {
-        return isLocked;
-    }
-
     public void setUnlocked() {
-        isLocked = false;
         setSelect(false);
         isUpdate = false;
         isClick = false;
