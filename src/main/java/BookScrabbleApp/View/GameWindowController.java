@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.*;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 import javafx.util.*;
 
@@ -23,7 +24,10 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
-
+    @FXML
+    public Label instructions;
+    @FXML
+    public Text playingInstruction;
     @FXML
     Label namePlayer1 = new Label();
     @FXML
@@ -102,7 +106,11 @@ public class GameWindowController implements Observer, Initializable {
             this.viewModel.getObservable().addObserver(this);
             initializeWindow();
             startNewGameBtn.setVisible(false);
+
         }
+            instructions.setText("Waiting for host to start the game");
+            instructions.setVisible(true);
+            ;
     }
 
     @Override
@@ -197,8 +205,6 @@ public class GameWindowController implements Observer, Initializable {
         scoresFields = new ArrayList<>();
         nameFields = new ArrayList<>();
         rectanglesPlayer = new ArrayList<>();
-
-
     }
 
     private void initializeUpdateMap() {
@@ -419,6 +425,8 @@ public class GameWindowController implements Observer, Initializable {
                     wordForTryPlace.clear();
                     yourWord.getChildren().clear();
                     unlockHand();
+                    instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
+
                 } else
                     alertPopUp("Word Error", "Word Error", "Must have at least one letter from your hand");
             } else
@@ -433,6 +441,7 @@ public class GameWindowController implements Observer, Initializable {
     public void onPassButtonClick() {
         viewModel.passTurn();
         Platform.runLater(() -> gameBoard.requestFocus());
+        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
     }
 
     @FXML
@@ -452,7 +461,10 @@ public class GameWindowController implements Observer, Initializable {
     public void startNewGame() {
         this.viewModel.startNewGame();
         startNewGameBtn.setVisible(false);
-        Platform.runLater(() -> gameBoard.requestFocus());
+        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
+        playingInstruction.setVisible(true);
+        playingInstruction.setText("chose the position you want to place the tiles\nuse the arrow keys\nselect the word with the mouse\npress tryPlace");
+
     }
 
     //setters methods
@@ -584,6 +596,7 @@ public class GameWindowController implements Observer, Initializable {
             tryPlaceBtn.setDisable(false);
             passTurnBtn.setDisable(false);
         }
+        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
     }
 
     private void removeFromYourWord(TileField removedTile) {
