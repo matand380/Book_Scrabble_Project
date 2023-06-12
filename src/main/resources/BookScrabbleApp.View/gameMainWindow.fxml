@@ -23,13 +23,13 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import BookScrabbleApp.GridCanvas?>
+<!--<?import BookScrabbleApp.GridCanvas?>-->
 
 <BorderPane maxHeight="775.0" maxWidth="1215.0" minHeight="775.0" minWidth="1215.0" prefHeight="775.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
       <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="865.0" BorderPane.alignment="CENTER">
          <children>
-                <VBox alignment="CENTER" prefHeight="121.0" prefWidth="89.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                <VBox alignment="CENTER_LEFT" prefHeight="113.0" prefWidth="0.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <children>
                         <JFXButton fx:id="tryPlaceBtn" layoutX="10.0" layoutY="112.0" onAction="#onTryButtonClick" prefHeight="30.0" prefWidth="150.0" stylesheets="@../buttonStyleSheets.css" text="Try Place">
                             <styleClass>
@@ -56,6 +56,12 @@
                     <padding>
                         <Insets top="10.0" />
                     </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets left="25.0" />
+               </HBox.margin>
                 </VBox>
             <AnchorPane prefHeight="127.0" prefWidth="500.0">
                <HBox.margin>
@@ -101,9 +107,9 @@
                       </GridPane>
                </children>
             </AnchorPane>
-                <VBox alignment="CENTER" prefHeight="153.0" prefWidth="96.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                <VBox alignment="CENTER_RIGHT" prefHeight="113.0" prefWidth="15.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets top="10.0" />
+                        <Insets right="25.0" top="10.0" />
                     </padding>
                         <JFXButton onAction="#onSortABCButtonClick" prefHeight="30.0" prefWidth="150.0" stylesheets="@../buttonStyleSheets.css" text="Sort ABC">
                             <styleClass>
@@ -162,8 +168,8 @@
                   <Image url="@../images/board/borderCavnvas.png" />
                </image>
             </ImageView>
-                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" visible="true" />
-<!--                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />-->
+<!--                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" visible="true" />-->
+                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />
             </children>
          <BorderPane.margin>
             <Insets />
@@ -174,22 +180,22 @@
         </AnchorPane>
     </center>
     <left>
-        <VBox prefHeight="595.0" prefWidth="320.0" spacing="5.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="595.0" prefWidth="253.0" spacing="5.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets />
             </BorderPane.margin>
             <padding>
                 <Insets top="10.0" />
             </padding>
-         <AnchorPane prefHeight="319.0" prefWidth="272.0">
+         <AnchorPane prefHeight="319.0" prefWidth="233.0">
             <VBox.margin>
                <Insets left="20.0" top="10.0" />
             </VBox.margin>
             <children>
                <Group>
                   <children>
-                      <Rectangle fx:id="player1Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" width="200.0"/>
-                                 <Label fx:id="namePlayer1" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="Player1">
+                      <Rectangle fx:id="player1Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+                                 <Label fx:id="namePlayer1" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="Player1" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -203,13 +209,13 @@
                            <Point3D />
                         </rotationAxis>
                                  </Label>
-                                 <Label fx:id="scorePlayer1" alignment="CENTER" layoutX="82.0" layoutY="27.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" />
+                                 <Label fx:id="scorePlayer1" alignment="CENTER" layoutX="82.0" layoutY="27.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" visible="false" />
                   </children>
                </Group>
                <Group layoutY="70.0">
                   <children>
-                                 <Rectangle fx:id="player2Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-                                 <Label fx:id="namePlayer2"  alignment="CENTER"  centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player2">
+                                 <Rectangle fx:id="player2Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+                                 <Label fx:id="namePlayer2" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player2" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -220,13 +226,13 @@
                            <Insets left="10.0" />
                         </padding>
                                  </Label>
-                                 <Label fx:id="scorePlayer2" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" />
+                                 <Label fx:id="scorePlayer2" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" visible="false" />
                   </children>
                </Group>
                <Group layoutY="140.0">
                   <children>
-                                 <Rectangle fx:id="player3Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-                                 <Label fx:id="namePlayer3"  alignment="CENTER"  centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player3">
+                                 <Rectangle fx:id="player3Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+                                 <Label fx:id="namePlayer3" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player3" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -234,13 +240,13 @@
                            <Insets left="10.0" />
                         </padding>
                                  </Label>
-                                 <Label fx:id="scorePlayer3" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" />
+                                 <Label fx:id="scorePlayer3" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
                   </children>
                </Group>
                <Group layoutY="210.0">
                   <children>
-                                 <Rectangle fx:id="player4Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" width="200.0" />
-                                 <Label fx:id="namePlayer4" alignment="CENTER"  centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player4">
+                                 <Rectangle fx:id="player4Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" visible="false" width="200.0" />
+                                 <Label fx:id="namePlayer4" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player4" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -248,7 +254,7 @@
                            <Insets left="10.0" />
                         </padding>
                                  </Label>
-                                 <Label fx:id="scorePlayer4" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" />
+                                 <Label fx:id="scorePlayer4" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
                   </children>
                </Group>
             </children>
@@ -264,7 +270,7 @@
             <Insets right="20.0" />
          </BorderPane.margin>
          <children>
-            <TextArea layoutY="17.0" prefHeight="412.0" prefWidth="200.0" text="instructions " AnchorPane.rightAnchor="0.0" />
+            <TextArea layoutY="17.0" prefHeight="412.0" prefWidth="271.0" text="instructions " AnchorPane.rightAnchor="0.0" />
                    <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="440.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="50.0" prefWidth="120.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
                        <styleClass>
                            <String fx:value="button" />
