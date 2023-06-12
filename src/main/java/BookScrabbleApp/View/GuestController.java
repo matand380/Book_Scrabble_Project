@@ -78,6 +78,7 @@ public class GuestController {
         stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
         stage.setResizable(false);
+        stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
         GameWindowController gameWindowController = loader.getController();

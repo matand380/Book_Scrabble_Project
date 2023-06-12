@@ -122,6 +122,7 @@ public class HostController {
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
         stage.setResizable(false);
+        stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());

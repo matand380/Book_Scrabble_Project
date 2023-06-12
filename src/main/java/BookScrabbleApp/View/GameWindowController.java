@@ -624,7 +624,7 @@ public class GameWindowController implements Observer, Initializable {
                     TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
                     t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
                     t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
-                    yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+                    yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight() - 10), i, 0);
                 } else //tile from hand//
                     yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
             }
