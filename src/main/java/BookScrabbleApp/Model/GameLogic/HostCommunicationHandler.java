@@ -80,6 +80,10 @@ public class HostCommunicationHandler implements ClientHandler {
             }
         });
 
+        handlers.put("unPark", message -> {
+           BS_Host_Model.getModel().unPark();
+        });
+
         executor.submit(this::handleRequests);
         executor.submit(this::messagesFromGameServer);
     }

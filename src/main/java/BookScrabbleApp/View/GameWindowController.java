@@ -551,14 +551,18 @@ public class GameWindowController implements Observer, Initializable {
 
             popupStage.setScene(new Scene(popupRoot, 350, 250));
 
-//            Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
-//                popupStage.close();
-//            }));
-//            popupTimer.setCycleCount(1);
-//
-//            popupTimer.play();
             popupStage.show();
+
+
+            Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
+                popupStage.close();
+            }));
+            popupTimer.setCycleCount(1);
+
+            popupTimer.play();
+
         });
+        viewModel.unPark();
     }
 
     private void passTurn(String indexCurrentPlayer) {
