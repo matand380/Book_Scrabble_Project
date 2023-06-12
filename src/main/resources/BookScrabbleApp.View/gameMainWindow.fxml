@@ -23,8 +23,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import BookScrabbleApp.GridCanvas?>
 
+<?import BookScrabbleApp.GridCanvas?>
 <BorderPane maxHeight="775.0" maxWidth="1215.0" minHeight="775.0" minWidth="1215.0" prefHeight="775.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
       <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="865.0" BorderPane.alignment="CENTER">
@@ -96,7 +96,7 @@
                         <Insets />
                      </opaqueInsets>
                      <padding>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                       </GridPane>
                </children>
@@ -163,7 +163,7 @@
                </image>
             </ImageView>
                 <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />
-<!--                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" nodeOrientation="INHERIT" width="516.0" />-->
+<!--                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />-->
             </children>
          <BorderPane.margin>
             <Insets />
