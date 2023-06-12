@@ -324,6 +324,10 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
             String[] messageSplit = message.split(":");
             setViewableName(messageSplit);
         });
+        updatesMap.put("gameStart", message -> {
+            setChanged();
+            notifyObservers("gameStart");
+        });
     }
 
     @Override

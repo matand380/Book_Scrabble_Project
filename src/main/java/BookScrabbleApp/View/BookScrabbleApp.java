@@ -17,7 +17,6 @@ public class BookScrabbleApp extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BookScrabbleApp.class.getResource("/BookScrabbleApp.View/welcomeWindow.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), screenSize()[0], screenSize()[1]);
-        // TODO: 09/06/2023 make the background to work 
         scene.getStylesheets().add(getClass().getResource("/background.css").toExternalForm());
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.setScene(scene);

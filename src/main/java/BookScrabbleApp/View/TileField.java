@@ -49,17 +49,22 @@ public class TileField extends StackPane {
 
     public void setSelect(boolean select) {
         isSelect = select;
-        if (isSelect) {
-            setOpacity(0.5);
-        } else {
-            setOpacity(1.0);
-        }
     }
 
     public void setUnlocked() {
         setSelect(false);
         isUpdate = false;
         isClick = false;
+    }
+
+    public void copy(TileField tile){
+        this.letter.setText(tile.letter.getText());
+        this.score.setText(tile.score.getText());
+        this.isSelect = tile.isSelect;
+        this.isClick = tile.isClick;
+        this.isUpdate = tile.isUpdate;
+        this.tileCol = tile.tileCol;
+        this.tileRow = tile.tileRow;
     }
 
     public void setClick(boolean click) {

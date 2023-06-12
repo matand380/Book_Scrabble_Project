@@ -161,21 +161,26 @@ public class GameWindowController implements Observer, Initializable {
 
                 TileField clickedTile = gameBoard.tileFields.get(row).get(col);
 
-                if (!clickedTile.letter.getText().equals("")) {
-                    if (gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).isUpdate()) {
-                        selectedTileField.letter.setText("_");
-                        selectedTileField.tileRow = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileRow;
-                        selectedTileField.tileCol = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileCol;
-                        gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
-                        setYourWord();
-                    } else {
-                        clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
-                        selectedTileField = clickedTile;
-                        selectedTileField.tileRow = row;
-                        selectedTileField.tileCol = col;
-                        gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
-                        setTileFieldOnBoard();
-                        setYourWord();
+                boolean adjacent = true;
+
+                if (wordForTryPlace.size() > 0) {
+                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size()-1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size()-1).tileCol);
+                }
+
+                if (adjacent) {
+                    if (!clickedTile.letter.getText().equals("")) {
+                        clickedTile.setSelect(true);
+                        if (clickedTile.isUpdate()) {
+                            selectedTileField = new TileField();
+                            selectedTileField.copy(clickedTile);
+                            selectedTileField.letter.setText("_");
+                            setYourWord();
+                        } else {
+                            selectedTileField = new TileField();
+                            selectedTileField.copy(clickedTile);
+                            setTileFieldOnBoard();
+                            setYourWord();
+                        }
                     }
                 }
                 gameBoard.requestFocus();
@@ -258,7 +263,7 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("gameStart", message -> {
-            initializeWindow();
+            Platform.runLater(() -> gameBoard.requestFocus());
         });
 
         updatesMap.put("winner updated", message -> {
@@ -330,8 +335,8 @@ public class GameWindowController implements Observer, Initializable {
             if (key.isLetterKey()) {
                 for (TileField t : handFields) {
                     if (t.letter.getText().equals(key.toString()) && !t.isSelect()) {
+                        t.setSelect(true);
                         selectedTileField = t;
-                        selectedTileField.setSelect(true);
                         selectedTileField.tileRow = gameBoard.getRow();
                         selectedTileField.tileCol = gameBoard.getCol();
                         setTileFieldOnBoard();
@@ -496,10 +501,7 @@ public class GameWindowController implements Observer, Initializable {
             int tileRow = selectedTileField.tileRow;
             int tileCol = selectedTileField.tileCol;
             if (selectedTileField.isSelect() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
-                gameBoard.tileFields.get(tileRow).get(tileCol).letter.setText(selectedTileField.letter.getText());
-                gameBoard.tileFields.get(tileRow).get(tileCol).score.setText(selectedTileField.score.getText());
-                gameBoard.tileFields.get(tileRow).get(tileCol).tileRow = tileRow;
-                gameBoard.tileFields.get(tileRow).get(tileCol).tileCol = tileCol;
+                gameBoard.tileFields.get(tileRow).get(tileCol).copy(selectedTileField);
                 gameBoard.tileFields.get(tileRow).get(tileCol).setUnlocked();
                 gameBoard.redraw();
             } else if (selectedTileField != null)
@@ -508,15 +510,16 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void setYourWord() {
-//        TileField t = new TileField();
-//        t.letter.setText(selectedTileField.letter.getText());
-//        t.score.setText(selectedTileField.score.getText());
-//        t.tileRow = selectedTileField.tileRow;
-//        t.tileCol = selectedTileField.tileCol;
-        TileField t = selectedTileField;
+        TileField t = new TileField();
+        t.letter.setText(selectedTileField.letter.getText());
+        t.score.setText(selectedTileField.score.getText());
+        t.tileRow = selectedTileField.tileRow;
+        t.tileCol = selectedTileField.tileCol;
+        t.setSelect(true);
         t.createTile(yourWord.getWidth() / 7, yourWord.getHeight() - 10);
         wordForTryPlace.add(t);
         redrawYourWord(wordForTryPlace);
+        selectedTileField = null;
     }
 
     private void showChallengePopup(List<SimpleStringProperty> wordsForChallenge) {
@@ -612,7 +615,7 @@ public class GameWindowController implements Observer, Initializable {
             alert.setContentText(text);
             alert.showAndWait();
 
-            // Platform.runLater(this::rollBack);
+            rollBack();
         });
     }
 
@@ -643,17 +646,16 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void rollBack() {
-        Platform.runLater(() -> {
-            for (TileField t : wordForTryPlace) {
-                if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
-                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
-                }
-            }
-            gameBoard.redraw();
-            wordForTryPlace.clear();
-            yourWord.getChildren().clear();
-            unlockHand();
-        });
+        for (TileField t : wordForTryPlace) {
+            if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+            } else
+                gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
+        }
+        gameBoard.redraw();
+        wordForTryPlace.clear();
+        yourWord.getChildren().clear();
+        unlockHand();
     }
 
     private boolean checkFirstWord() {
@@ -673,7 +675,6 @@ public class GameWindowController implements Observer, Initializable {
         TileField lastTile = wordForTryPlace.get(wordForTryPlace.size() - 1);
         int lastTileRow = lastTile.tileRow;
         int lastTileCol = lastTile.tileCol;
-
         boolean adjacent = ((t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
                 || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1)) && wordForTryPlace.get(0).tileCol <= t.tileCol;
 
