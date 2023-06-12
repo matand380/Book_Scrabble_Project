@@ -2,6 +2,7 @@ package BookScrabbleApp.View;
 
 import BookScrabbleApp.*;
 import BookScrabbleApp.ViewModel.*;
+import javafx.animation.*;
 import javafx.application.*;
 import javafx.beans.property.*;
 import javafx.event.*;
@@ -13,9 +14,11 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.*;
 import javafx.stage.*;
+import javafx.util.*;
 
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
@@ -58,7 +61,7 @@ public class GameWindowController implements Observer, Initializable {
     @FXML
     Button tryPlaceBtn;
 
-    //ExecutorService executorService = Executors.newFixedThreadPool(4);
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
@@ -108,7 +111,7 @@ public class GameWindowController implements Observer, Initializable {
         String updateType = messageSplit[0];
         System.out.println("\n -- updateType GameWindow: " + message + " -- \n");
         if (updatesMap.containsKey(updateType)) {
-            //executorService.submit(() -> updatesMap.get(updateType).accept(message));
+            executorService.submit(() -> updatesMap.get(updateType).accept(message));
             updatesMap.get(updateType).accept(message);
         }
     }
