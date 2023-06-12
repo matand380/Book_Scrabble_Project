@@ -120,14 +120,8 @@ public class HostController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
-        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
-
-        //window sizes
-        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH+100);
-        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT+50);
-        stage.setMaxHeight(BookScrabbleApp.MIN_WIDTH+200);
-        stage.setMaxWidth(BookScrabbleApp.MIN_HEIGHT+200);
-
+        scene = new Scene(root);
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());

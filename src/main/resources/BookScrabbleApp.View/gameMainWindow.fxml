@@ -10,6 +10,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,7 +25,7 @@
 
 <?import BookScrabbleApp.GridCanvas?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="664.0" prefWidth="865.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
+<BorderPane maxHeight="700.0" maxWidth="1100.0" minHeight="700.0" minWidth="1100.0" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
       <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="865.0" BorderPane.alignment="CENTER">
          <children>
@@ -53,32 +54,56 @@
                         </JFXButton>
                     </children>
                     <padding>
-                        <Insets top="80.0" />
+                        <Insets top="10.0" />
                     </padding>
                 </VBox>
-                  <GridPane fx:id="handGrid" alignment="BOTTOM_CENTER" gridLinesVisible="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="500.0">
-                      <columnConstraints>
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      </columnConstraints>
-                      <rowConstraints>
-                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      </rowConstraints>
+            <AnchorPane prefHeight="127.0" prefWidth="500.0">
                <HBox.margin>
                   <Insets top="90.0" />
                </HBox.margin>
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding>
-                  </GridPane>
+               <children>
+                        <GridPane fx:id="handGrid" alignment="BOTTOM_CENTER" gridLinesVisible="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="500.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                        </GridPane>
+                      <GridPane fx:id="yourWord" alignment="TOP_CENTER" layoutX="144.0" layoutY="-47.0" prefHeight="32.0" prefWidth="205.0">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                     </padding>
+                      </GridPane>
+               </children>
+            </AnchorPane>
                 <VBox alignment="CENTER" prefHeight="153.0" prefWidth="96.0" spacing="10.0" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets right="20.0" top="80.0" />
+                        <Insets top="10.0" />
                     </padding>
                         <JFXButton onAction="#onSortABCButtonClick" prefHeight="30.0" prefWidth="150.0" stylesheets="@../buttonStyleSheets.css" text="Sort ABC">
                             <styleClass>
@@ -132,13 +157,13 @@
     <center>
         <AnchorPane prefHeight="500.0" prefWidth="500.0" BorderPane.alignment="TOP_CENTER">
             <children>
-            <ImageView fitHeight="500.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="525.0" fitWidth="533.0" layoutX="35.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/board/borderCavnvas.png" />
                </image>
             </ImageView>
-                                  <GridCanvas fx:id="gameBoard" height="450.0" layoutX="23.0" layoutY="20.0" styleClass="grid-canvas" width="450.0"/>
-<!--                <Canvas height="452.0" nodeOrientation="INHERIT" width="500.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />-->
+                <GridCanvas fx:id="gameBoard" height="485.0" layoutX="54.0" layoutY="28.0" nodeOrientation="INHERIT" width="485.0" />
+<!--                <Canvas height="485.0" layoutX="54.0" layoutY="28.0" nodeOrientation="INHERIT" width="485.0" />-->
             </children>
          <BorderPane.margin>
             <Insets />
@@ -156,15 +181,6 @@
             <padding>
                 <Insets top="10.0" />
             </padding>
-                <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="50.0" prefWidth="120.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
-                    <styleClass>
-                        <String fx:value="button" />
-                        <String fx:value="font" />
-                    </styleClass>
-            <VBox.margin>
-               <Insets left="15.0" />
-            </VBox.margin>
-                </JFXButton>
          <AnchorPane prefHeight="319.0" prefWidth="110.0">
             <VBox.margin>
                <Insets left="20.0" top="10.0" />
@@ -172,7 +188,7 @@
             <children>
                <Group>
                   <children>
-                                 <Rectangle fx:id="player1Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE"  visible="false" width="100.0" />
+                                 <Rectangle fx:id="player1Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" visible="false" width="100.0" />
 <!--                      <Rectangle fx:id="player1Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" visible="false" width="100.0" styleClass="player-rectangle" />-->
                                  <Label fx:id="namePlayer1" prefHeight="30.0" prefWidth="84.0" text="Player1" textAlignment="CENTER" visible="false">
                                      <font>
@@ -244,49 +260,19 @@
         </VBox>
     </left>
    <right>
-      <VBox alignment="CENTER_LEFT" prefHeight="484.0" prefWidth="274.0" spacing="5.0" BorderPane.alignment="CENTER">
-         <children>
-                <Label alignment="CENTER" cacheHint="ROTATE" contentDisplay="CENTER" pickOnBounds="false" prefHeight="27.0" prefWidth="171.0" text="Your Word is:" textAlignment="CENTER" textFill="#6b1111" textOverrun="CENTER_ELLIPSIS">
-             <font>
-                        <Font name="Segoe UI Symbol" size="25.0" />
-                    </font>
-               <VBox.margin>
-                  <Insets left="70.0" />
-               </VBox.margin>
-                </Label>
-                <GridPane fx:id="yourWord" alignment="TOP_CENTER" prefHeight="32.0" prefWidth="205.0" scaleZ="0.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <VBox.margin>
-                  <Insets left="80.0" />
-               </VBox.margin>
-               <rotationAxis>
-                  <Point3D />
-               </rotationAxis>
-                </GridPane>
-         </children>
+      <AnchorPane BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
-         <padding>
-            <Insets top="10.0" />
-         </padding>
-         <rotationAxis>
-            <Point3D />
-         </rotationAxis>
-      </VBox>
+         <children>
+            <TextArea layoutY="17.0" prefHeight="412.0" prefWidth="200.0" text="instructions " />
+                   <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="440.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="50.0" prefWidth="120.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
+                       <styleClass>
+                           <String fx:value="button" />
+                           <String fx:value="font" />
+                       </styleClass>
+                   </JFXButton>
+         </children>
+      </AnchorPane>
    </right>
 </BorderPane>

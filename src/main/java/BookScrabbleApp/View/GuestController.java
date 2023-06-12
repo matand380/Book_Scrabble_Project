@@ -76,9 +76,8 @@ public class GuestController {
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
-        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
-        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT);
+        scene = new Scene(root);
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
         GameWindowController gameWindowController = loader.getController();
