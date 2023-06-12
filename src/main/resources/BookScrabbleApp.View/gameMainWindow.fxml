@@ -10,7 +10,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -170,6 +169,12 @@
             </ImageView>
 <!--                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" visible="true" />-->
                 <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />
+                   <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="13.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="562.0" prefWidth="648.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
+                       <styleClass>
+                           <String fx:value="button" />
+                           <String fx:value="font" />
+                       </styleClass>
+                   </JFXButton>
             </children>
          <BorderPane.margin>
             <Insets />
@@ -265,18 +270,12 @@
         </VBox>
     </left>
    <right>
-      <AnchorPane BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="595.0" prefWidth="253.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets right="20.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
          <children>
-            <TextArea layoutY="17.0" prefHeight="412.0" prefWidth="271.0" text="instructions " AnchorPane.rightAnchor="0.0" />
-                   <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="440.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="50.0" prefWidth="120.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
-                       <styleClass>
-                           <String fx:value="button" />
-                           <String fx:value="font" />
-                       </styleClass>
-                   </JFXButton>
+            <Label />
          </children>
       </AnchorPane>
    </right>
