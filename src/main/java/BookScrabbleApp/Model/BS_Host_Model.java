@@ -370,6 +370,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 gameIsOver = true;
                 return;
             }
+            LockSupport.parkNanos(4000000000L); //park for 3 seconds
             passTurnTryPlace(currentPlayerIndex);
             currentPlayerWords.clear();
 
