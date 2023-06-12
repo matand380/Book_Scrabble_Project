@@ -74,6 +74,8 @@ public class GuestController {
     public void switchToGameWindow() throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
         root = loader.load();
+        GameWindowController controller = loader.getController();
+        controller.setViewModel(guest);
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
         scene = new Scene(root);
@@ -81,7 +83,5 @@ public class GuestController {
         stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
-        GameWindowController gameWindowController = loader.getController();
-        gameWindowController.setViewModel(guest);
     }
 }

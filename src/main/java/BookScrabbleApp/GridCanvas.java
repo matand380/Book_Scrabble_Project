@@ -66,27 +66,29 @@ public class GridCanvas extends Canvas {
                 for (int boardCol = 0; boardCol < 15; boardCol++) {
                     if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
                         double tileXCoordinate = boardCol * w;
-                        double tileYCoordinate = boardRow * w;
+                        double tileYCoordinate = boardRow * h;
                         gc.drawImage(getImageForGrid(colorBoard[boardRow][boardCol]), tileXCoordinate, tileYCoordinate, w, h);
                     } else {
                         this.placeTileFiled(tileFields.get(boardRow).get(boardCol), boardRow, boardCol);
                     }
                 }
             }
-            gc.setFill(Color.rgb(0, 0, 0, 0.5));
+            gc.setFill(Color.rgb(0, 0, 0, 0.6));
             gc.fillRect(xCoordinate, YCoordinate, w, h);
         });
     }
 
 
     private Image getImageForGrid(char score) {
-         return switch (score) {
-            case 'r' -> new Image(getClass().getResource("/images/board/tripleWord.png").toExternalForm()); // pale blue triple word score
-            case 'p' -> new Image(getClass().getResource("/images/board/doubleLetter.png").toExternalForm()); // pale blue double letter score
-            case 'b' -> new Image(getClass().getResource("/images/board/tripleLetter.png").toExternalForm()); // blue triple letter score
-            case 'y' -> new Image(getClass().getResource("/images/board/doubleWord.png").toExternalForm()); // yellow double word score
-            case 's' -> new Image(getClass().getResource("/images/board/starLetter.png").toExternalForm()); // orange star
-            default -> new Image(getClass().getResource("/images/board/0Score.png").toExternalForm());
+        double imageSize = 70; // Set the desired image size
+
+        return switch (score) {
+            case 'r' -> new Image(getClass().getResource("/images/board/tripleWord.png").toExternalForm(), imageSize, imageSize, true, true);
+            case 'p' -> new Image(getClass().getResource("/images/board/doubleLetter.png").toExternalForm(), imageSize, imageSize, true, true);
+            case 'b' -> new Image(getClass().getResource("/images/board/tripleLetter.png").toExternalForm(), imageSize, imageSize, true, true);
+            case 'y' -> new Image(getClass().getResource("/images/board/doubleWord.png").toExternalForm(), imageSize, imageSize, true, true);
+            case 's' -> new Image(getClass().getResource("/images/board/starLetter.png").toExternalForm(), imageSize, imageSize, true, true);
+            default -> new Image(getClass().getResource("/images/board/0Score.png").toExternalForm(), imageSize, imageSize, true, true);
         };
     }
 
