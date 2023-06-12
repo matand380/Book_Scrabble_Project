@@ -117,12 +117,17 @@ public class HostController {
         }
         host.startHostServer();
         host.setPlayerProperties(name);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
         root = loader.load();
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
-        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
-        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT);
+
+        //window sizes
+        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH+100);
+        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT+100);
+        stage.setMaxHeight(BookScrabbleApp.MIN_WIDTH+300);
+        stage.setMaxWidth(BookScrabbleApp.MIN_HEIGHT+300);
+
         stage.setScene(scene);
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());
