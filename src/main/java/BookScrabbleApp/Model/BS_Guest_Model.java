@@ -121,8 +121,7 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      * @param word Send the word to be challenged
      */
     public void challengeWord(String word) {
-        String playerIndex = String.valueOf(player.get_index());
-        communicationHandler.outMessages("challengeWord:" + playerIndex + ":" + word);
+        communicationHandler.outMessages("challengeWord:" + word);
     }
 
     /**

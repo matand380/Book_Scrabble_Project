@@ -182,11 +182,9 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
     @Override
     public void setWordsForChallenge(List<String> wordsList) {
-        for (int i = 0; i < wordsList.size(); i++) {
-            viewableWordsForChallenge.add(new SimpleStringProperty(wordsList.get(i)));
+        for (String s : wordsList) {
+            viewableWordsForChallenge.add(new SimpleStringProperty(s));
         }
-        setChanged();
-        notifyObservers("wordsForChallenge updated");
     }
 
     /**
@@ -274,10 +272,13 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
             for (int i = 0; i < wordsAmount; i++) {
                 wordsList.add(wordsSplit[i]);
             }
-            setWordsForChallenge(wordsList);
-            wordsList.clear();
-            setChanged();
-            notifyObservers("wordsForChallenge updated:" + playerIndex);
+            if (playerIndex != guestFacade.getPlayer().get_index()) {
+                setWordsForChallenge(wordsList);
+                wordsList.clear();
+                setChanged();
+                notifyObservers("wordsForChallenge updated:" + playerIndex);
+            }else
+                wordsList.clear();
         });
 
         updatesMap.put("playersScores updated", message -> {

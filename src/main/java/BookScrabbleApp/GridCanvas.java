@@ -33,8 +33,8 @@ public class GridCanvas extends Canvas {
         super();
         this.tileFields = new ArrayList<>();
         this.getStyleClass().add("grid-canvas");
-        col = 0;
-        row = 0;
+        col = 7;
+        row = 7;
     }
 
     public void setTileFields(List<List<TileField>> tileFields) {

@@ -106,7 +106,7 @@ public class GameWindowController implements Observer, Initializable {
         String message = (String) arg;
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
-        System.out.println("\n -- updateType GameWindow: " + message +" -- \n");
+        System.out.println("\n -- updateType GameWindow: " + message + " -- \n");
         if (updatesMap.containsKey(updateType)) {
             //executorService.submit(() -> updatesMap.get(updateType).accept(message));
             updatesMap.get(updateType).accept(message);
@@ -212,14 +212,14 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("tileBoard updated", message -> {
-                gameBoard.setTileFields(boardFields);
-                gameBoard.tileFields.forEach(row -> {
-                    row.forEach(tileField -> {
-                        if (!tileField.isUpdate()) {
-                            tileField.setUpdate();
-                        }
-                    });
+            gameBoard.setTileFields(boardFields);
+            gameBoard.tileFields.forEach(row -> {
+                row.forEach(tileField -> {
+                    if (!tileField.isUpdate()) {
+                        tileField.setUpdate();
+                    }
                 });
+            });
         });
 
         updatesMap.put("scores updated", message -> {
@@ -232,9 +232,7 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("wordsForChallenge updated", message -> {
-            if(!(Integer.parseInt(message.split(":")[1]) == viewModel.getPlayerIndex())){
-                    showChallengePopup(viewModel.getViewableWordsForChallenge());
-            }
+            Platform.runLater(() -> showChallengePopup(viewModel.getViewableWordsForChallenge()));
         });
 
         updatesMap.put("challengeAlreadyActivated", message -> {
@@ -380,7 +378,7 @@ public class GameWindowController implements Observer, Initializable {
                                 gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) {
                             foundMatchingTile = true;
                             break;
-                        }else{
+                        } else {
                             tile = tileField;
                         }
                     }
@@ -388,7 +386,7 @@ public class GameWindowController implements Observer, Initializable {
                         if (boardRow == tile.tileRow && boardCol == tile.tileCol && tile.letter.getText().equals("_")) {
                             gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText(tile.letter.getText());
                             gameBoard.tileFields.get(boardRow).get(boardCol).score.setText(tile.score.getText());
-                        }else {
+                        } else {
                             gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
                             gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
                         }
@@ -458,7 +456,7 @@ public class GameWindowController implements Observer, Initializable {
     //setters methods
     private void setScoresFields(List<SimpleStringProperty> list) {
         Platform.runLater(() -> {
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < list.size() - 1; i++) {
                 if (list.get(i) != null) {
                     scoresFields.get(i).setText(list.get(i).getValue());
                 }
@@ -523,56 +521,58 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void showChallengePopup(List<SimpleStringProperty> wordsForChallenge) {
-        Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.setTitle("Scrabble Challenge");
+        Platform.runLater(() -> {
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setTitle("Scrabble Challenge");
 
-        VBox popupRoot = new VBox(10);
-        popupRoot.setAlignment(Pos.CENTER);
-        popupRoot.setPadding(new Insets(10));
+            VBox popupRoot = new VBox(10);
+            popupRoot.setAlignment(Pos.CENTER);
+            popupRoot.setPadding(new Insets(10));
 
-        Label titleLabel = new Label("Words for challenge:");
-        popupRoot.getChildren().add(titleLabel);
+            Label titleLabel = new Label("Words for challenge:");
+            popupRoot.getChildren().add(titleLabel);
 
-        StringBuilder challengeWord = new StringBuilder();
+            StringBuilder challengeWord = new StringBuilder();
 
-        for (int i = 0; i < wordsForChallenge.size(); i++) {
-            CheckBox checkBox = new CheckBox(wordsForChallenge.get(i).toString());
-            int finalI = i;
-            checkBox.setOnAction(e -> {
-                if (checkBox.isSelected()) {
-                    challengeWord.setLength(0);
-                    challengeWord.append(wordsForChallenge.get(finalI).toString());
-                    for(Node node : popupRoot.getChildren()){
-                        if(node instanceof CheckBox && !node.equals(checkBox)){
-                            ((CheckBox) node).setSelected(false);
+            for (int i = 0; i < wordsForChallenge.size(); i++) {
+                CheckBox checkBox = new CheckBox(wordsForChallenge.get(i).get());
+                int finalI = i;
+                checkBox.setOnAction(e -> {
+                    if (checkBox.isSelected()) {
+                        challengeWord.setLength(0);
+                        challengeWord.append(wordsForChallenge.get(finalI).get());
+                        for (Node node : popupRoot.getChildren()) {
+                            if (node instanceof CheckBox && !node.equals(checkBox)) {
+                                ((CheckBox) node).setSelected(false);
+                            }
                         }
+                    } else {
+                        challengeWord.setLength(0);
                     }
-                }else {
-                    challengeWord.setLength(0);
-                }
-            });
+                });
 
                 popupRoot.getChildren().add(checkBox);
-        }
+            }
 
-        Button challengeButton = new Button("Challenge");
-        challengeButton.setOnAction(e -> {
-            viewModel.challengeRequest(challengeWord.toString());
-            popupStage.close();
+            Button challengeButton = new Button("Challenge");
+            challengeButton.setOnAction(e -> {
+                viewModel.challengeRequest(challengeWord.toString());
+                popupStage.close();
+            });
+
+            popupRoot.getChildren().add(challengeButton);
+
+            popupStage.setScene(new Scene(popupRoot, 350, 250));
+
+//            Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
+//                popupStage.close();
+//            }));
+//            popupTimer.setCycleCount(1);
+//
+//            popupTimer.play();
+            popupStage.show();
         });
-
-        popupRoot.getChildren().add(challengeButton);
-
-        popupStage.setScene(new Scene(popupRoot, 350, 250));
-
-        Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
-            popupStage.close();
-        }));
-        popupTimer.setCycleCount(1);
-
-        popupTimer.play();
-        popupStage.showAndWait();
     }
 
     public void ChallengeOnScreen(ActionEvent actionEvent) {
@@ -595,13 +595,13 @@ public class GameWindowController implements Observer, Initializable {
 
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
-       Platform.runLater(() -> {
+        Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(header);
             alert.setContentText(text);
             alert.showAndWait();
-            rollBack();
+           Platform.runLater(() -> rollBack());
         });
     }
 
@@ -632,7 +632,7 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     private void rollBack() {
-       Platform.runLater(() -> {
+        Platform.runLater(() -> {
             for (TileField t : wordForTryPlace) {
                 if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
                     gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
@@ -689,7 +689,8 @@ public class GameWindowController implements Observer, Initializable {
         }
         return true;
     }
-    public void unlockHand(){
+
+    public void unlockHand() {
         for (TileField t : handFields) {
             t.setUnlocked();
         }
