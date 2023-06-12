@@ -43,7 +43,7 @@ public class GridCanvas extends Canvas {
     }
 
     public void placeTileFiled(TileField tile,int tileRow, int tileCol) {
-        if(tile != null)
+        if(tile != null && !tile.letter.getText().equals("_"))
             tile.draw(getGraphicsContext2D(), tileRow, tileCol, this.getWidth()/15, this.getHeight()/15,15);
     }
 
@@ -67,7 +67,7 @@ public class GridCanvas extends Canvas {
                     if (tileFields.get(boardRow).get(boardCol).letter.getText().equals("")) {
                         double tileXCoordinate = boardCol * w;
                         double tileYCoordinate = boardRow * w;
-                        gc.drawImage(getColorForScore(colorBoard[boardRow][boardCol]), tileXCoordinate, tileYCoordinate, w, h);
+                        gc.drawImage(getImageForGrid(colorBoard[boardRow][boardCol]), tileXCoordinate, tileYCoordinate, w, h);
                     } else {
                         this.placeTileFiled(tileFields.get(boardRow).get(boardCol), boardRow, boardCol);
                     }
@@ -79,7 +79,7 @@ public class GridCanvas extends Canvas {
     }
 
 
-    private Image getColorForScore(char score) {
+    private Image getImageForGrid(char score) {
          return switch (score) {
             case 'r' -> new Image(getClass().getResource("/images/board/tripleWord.png").toExternalForm()); // pale blue triple word score
             case 'p' -> new Image(getClass().getResource("/images/board/doubleLetter.png").toExternalForm()); // pale blue double letter score
