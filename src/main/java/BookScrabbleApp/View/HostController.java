@@ -124,9 +124,9 @@ public class HostController {
 
         //window sizes
         stage.setMinWidth(BookScrabbleApp.MIN_WIDTH+100);
-        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT+100);
-        stage.setMaxHeight(BookScrabbleApp.MIN_WIDTH+300);
-        stage.setMaxWidth(BookScrabbleApp.MIN_HEIGHT+300);
+        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT+50);
+        stage.setMaxHeight(BookScrabbleApp.MIN_WIDTH+200);
+        stage.setMaxWidth(BookScrabbleApp.MIN_HEIGHT+200);
 
         stage.setScene(scene);
         stage.show();
