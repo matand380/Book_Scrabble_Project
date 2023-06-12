@@ -23,3 +23,20 @@
 .font:hover{
     -fx-text-fill: #0AFFF0;
 }
+.start-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 10px 20px;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2px;
+    -fx-border-radius: 25px;
+}
+
+.player-rectangle {
+    -fx-fill: #234a6e00;
+    -fx-stroke: black;
+    -fx-stroke-width: 1px;
+    -fx-arc-width: 10px;
+    -fx-arc-height: 10px;
+}
