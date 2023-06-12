@@ -23,8 +23,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <?import BookScrabbleApp.GridCanvas?>
+
 <BorderPane maxHeight="775.0" maxWidth="1215.0" minHeight="775.0" minWidth="1215.0" prefHeight="775.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
       <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="865.0" BorderPane.alignment="CENTER">
@@ -162,7 +162,7 @@
                   <Image url="@../images/board/borderCavnvas.png" />
                </image>
             </ImageView>
-                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />
+                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" visible="true" />
 <!--                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />-->
             </children>
          <BorderPane.margin>
@@ -262,10 +262,10 @@
    <right>
       <AnchorPane BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets />
+            <Insets right="20.0" />
          </BorderPane.margin>
          <children>
-            <TextArea layoutY="17.0" prefHeight="412.0" prefWidth="200.0" text="instructions " />
+            <TextArea layoutY="17.0" prefHeight="412.0" prefWidth="200.0" text="instructions " AnchorPane.rightAnchor="0.0" />
                    <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="440.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="50.0" prefWidth="120.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
                        <styleClass>
                            <String fx:value="button" />
