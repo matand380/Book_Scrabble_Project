@@ -320,9 +320,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 sb.append(",");
             }
             String words = sb.toString();
-            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
+            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:"+ currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
             setChanged();
-            notifyObservers("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
+            notifyObservers("wordsForChallenge:"+ currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
             //if the current player is the host, then the host's viewModel wan't display the challenge words
 
             LockSupport.parkNanos(3000000000L); //park for 3 seconds
@@ -558,9 +558,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @return True when the game is over
      */
     public boolean isGameOver() {
-        boolean isGameOver = false;
-        if (board.getPassCounter() == getPlayers().size()) //all the players pass turns
-            isGameOver = true;
+        boolean isGameOver = board.getPassCounter() == getPlayers().size();
+        //all the players pass turns
         if (Tile.Bag.getBag().size() == 0)
             for (Player p : players)
                 if (p.get_hand().isEmpty()) {
@@ -569,12 +568,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 }
         if (isGameOver) {
             String winnerIndexAndName = getMaxScore();
-            communicationServer.updateAll("winner:" + winnerIndexAndName);
-            String[] splitWinner = winnerIndexAndName.split(":");
-            Player winner = players.get(Integer.parseInt(splitWinner[0]));
+            if (!winnerIndexAndName.equals("No winner")) {
+                communicationServer.updateAll("winner:" + winnerIndexAndName);
+                String[] splitWinner = winnerIndexAndName.split(":");
+                Player winner = players.get(Integer.parseInt(splitWinner[0]));
 
-            setChanged();
-            notifyObservers("winner:" + winner.get_score()+":"+winner.get_name());
+                setChanged();
+                notifyObservers("winner:" + winner.get_score()+":"+winner.get_name());
+            } else {
+                communicationServer.updateAll("endGame");
+                setChanged();
+                notifyObservers("endGame");
+            }
         }
         return isGameOver;
     }

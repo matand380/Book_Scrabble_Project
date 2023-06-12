@@ -2,14 +2,20 @@ package BookScrabbleApp.View;
 
 import BookScrabbleApp.*;
 import BookScrabbleApp.ViewModel.*;
+import javafx.animation.*;
 import javafx.application.*;
 import javafx.beans.property.*;
+import javafx.collections.*;
 import javafx.event.*;
 import javafx.fxml.*;
+import javafx.geometry.*;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.*;
+import javafx.stage.*;
+import javafx.util.*;
 
 import java.net.*;
 import java.util.*;
@@ -225,9 +231,11 @@ public class GameWindowController implements Observer, Initializable {
             alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
         });
 
-//        updatesMap.put("wordsForChallenge updated", message -> {
-//            setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
-//        });
+        updatesMap.put("wordsForChallenge updated", message -> {
+            if(!(Integer.parseInt(message.split(":")[1]) == viewModel.getPlayerIndex())){
+                    showChallengePopup(viewModel.getViewableWordsForChallenge());
+            }
+        });
 
         updatesMap.put("challengeAlreadyActivated", message -> {
             alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
@@ -243,8 +251,15 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("gameStart", message -> {
-
             initializeWindow();
+        });
+
+        updatesMap.put("winner updated", message -> {
+            alertPopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
+        });
+
+        updatesMap.put("endGame", message -> {
+            alertPopUp("Game Over", "Game Over", "The Game is over with no winner");
         });
     }
 
@@ -507,8 +522,61 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
+    private void showChallengePopup(List<SimpleStringProperty> wordsForChallenge) {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle("Scrabble Challenge");
+
+        VBox popupRoot = new VBox(10);
+        popupRoot.setAlignment(Pos.CENTER);
+        popupRoot.setPadding(new Insets(10));
+
+        Label titleLabel = new Label("Words for challenge:");
+        popupRoot.getChildren().add(titleLabel);
+
+        StringBuilder challengeWord = new StringBuilder();
+
+        for (int i = 0; i < wordsForChallenge.size(); i++) {
+            CheckBox checkBox = new CheckBox(wordsForChallenge.get(i).toString());
+            int finalI = i;
+            checkBox.setOnAction(e -> {
+                if (checkBox.isSelected()) {
+                    challengeWord.setLength(0);
+                    challengeWord.append(wordsForChallenge.get(finalI).toString());
+                    for(Node node : popupRoot.getChildren()){
+                        if(node instanceof CheckBox && !node.equals(checkBox)){
+                            ((CheckBox) node).setSelected(false);
+                        }
+                    }
+                }else {
+                    challengeWord.setLength(0);
+                }
+            });
+
+                popupRoot.getChildren().add(checkBox);
+        }
+
+        Button challengeButton = new Button("Challenge");
+        challengeButton.setOnAction(e -> {
+            viewModel.challengeRequest(challengeWord.toString());
+            popupStage.close();
+        });
+
+        popupRoot.getChildren().add(challengeButton);
+
+        popupStage.setScene(new Scene(popupRoot, 350, 250));
+
+        Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            popupStage.close();
+        }));
+        popupTimer.setCycleCount(1);
+
+        popupTimer.play();
+        popupStage.showAndWait();
+    }
+
     public void ChallengeOnScreen(ActionEvent actionEvent) {
-        setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+        showChallengePopup(viewModel.getViewableWordsForChallenge());
     }
 
     private void passTurn(String indexCurrentPlayer) {

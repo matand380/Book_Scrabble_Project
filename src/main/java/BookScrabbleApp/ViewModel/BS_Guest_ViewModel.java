@@ -266,8 +266,9 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
         updatesMap.put("wordsForChallenge", message -> {
             //Words for challenge is coming
             String[] messageSplit = message.split(":");
-            int wordsAmount = Integer.parseInt(messageSplit[1]);
-            String words = messageSplit[2];
+            int playerIndex = Integer.parseInt(messageSplit[1]);
+            int wordsAmount = Integer.parseInt(messageSplit[2]);
+            String words = messageSplit[3];
             String[] wordsSplit = words.split(",");
             List<String> wordsList = new ArrayList<>();
             for (int i = 0; i < wordsAmount; i++) {
@@ -275,6 +276,8 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
             }
             setWordsForChallenge(wordsList);
             wordsList.clear();
+            setChanged();
+            notifyObservers("wordsForChallenge updated:" + playerIndex);
         });
 
         updatesMap.put("playersScores updated", message -> {
@@ -287,14 +290,13 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
             String[] messageSplit = message.split(":");
             int playerIndex = Integer.parseInt(messageSplit[1]);
             String winner = messageSplit[2];
-            String score = guestFacade.getPlayersScores()[playerIndex];
-            winnerProperty.setValue("The winner is: " + winner + "with a score of " + score);
+            String score = messageSplit[1];
+            winnerProperty.setValue("The winner is: " + winner + " with a score of " + score);
             setChanged();
             notifyObservers("winner updated");
         });
 
         updatesMap.put("endGame", message -> {
-            endGame();
             setChanged();
             notifyObservers("endGame");
         });
