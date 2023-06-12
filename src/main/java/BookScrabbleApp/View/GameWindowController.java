@@ -19,6 +19,7 @@ import javafx.util.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
@@ -512,11 +513,15 @@ public class GameWindowController implements Observer, Initializable {
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.setTitle("Scrabble Challenge");
 
+            popupStage.initStyle(StageStyle.UTILITY);
+
             VBox popupRoot = new VBox(10);
             popupRoot.setAlignment(Pos.CENTER);
             popupRoot.setPadding(new Insets(10));
 
             Label titleLabel = new Label("Words for challenge:");
+            Label clockLabel = new Label("Time left: ");
+            popupRoot.getChildren().add(clockLabel);
             popupRoot.getChildren().add(titleLabel);
 
             StringBuilder challengeWord = new StringBuilder();
@@ -554,13 +559,19 @@ public class GameWindowController implements Observer, Initializable {
             popupStage.show();
 
 
-            Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
-                popupStage.close();
+            AtomicInteger timeLeft = new AtomicInteger(7); // Time in seconds
+            clockLabel.setText("Time left: " + timeLeft);
+
+            Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                timeLeft.getAndDecrement();
+                clockLabel.setText("Time left: " + timeLeft);
+                if (timeLeft.get() == 0) {
+                    popupStage.close();
+                }
             }));
-            popupTimer.setCycleCount(1);
+            popupTimer.setCycleCount(timeLeft.get());
 
             popupTimer.play();
-
         });
         viewModel.unPark();
     }
