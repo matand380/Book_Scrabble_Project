@@ -432,15 +432,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * It shuts down the executor, closes the communication server, and notifies all clients that they can exit their games.
      * <p>
      */
-    void endGame() {
+    public void endGame() {
+        setChanged();
+        notifyObservers("endGameHost");
         executor.shutdown();
         getCommunicationServer().close();
-        notifyAll(); // notify the main that the game is over
-        // 16/05/2023 server will be notified about the winner;
-        // 16/05/2023 its close button will be disabled while clientsMap is not empty
-        //16/05/2023 when clientsMap will be empty the button will be enabled
-        // 16/05/2023 press the button will execute the endGame method
-
+        notifyAll();
     }
 
     /**
@@ -594,8 +591,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 notifyObservers("winner:" + winner.get_score()+":"+winner.get_name());
             } else {
                 communicationServer.updateAll("endGame");
-                setChanged();
-                notifyObservers("endGame");
+                if (communicationServer.clients.isEmpty()){
+                    setChanged();
+                    notifyObservers("endGameHost");
+                }
             }
         }
         return isGameOver;

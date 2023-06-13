@@ -46,4 +46,6 @@ public interface BS_ViewModel extends Observer {
     List<SimpleStringProperty> getViewableNames();
 
     void unPark();
+
+    boolean isHost();
 }

@@ -137,7 +137,6 @@ public class GameWindowController implements Observer, Initializable {
         System.out.println("\n -- updateType GameWindow: " + message + " -- \n");
         if (updatesMap.containsKey(updateType)) {
             executorService.submit(() -> updatesMap.get(updateType).accept(message));
-            updatesMap.get(updateType).accept(message);
         }
     }
 
@@ -292,11 +291,15 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("winner updated", message -> {
+            if(!viewModel.isHost()){
+                viewModel.endGame();
+                endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
+            }
             alertPopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
         });
 
-        updatesMap.put("endGame", message -> {
-            alertPopUp("Game Over", "Game Over", "The Game is over with no winner");
+        updatesMap.put("endGameHost", message -> {
+            endGamePopUp("Game Over", "Game Over", "The Game is over with no winner");
         });
     }
 
@@ -563,7 +566,7 @@ public class GameWindowController implements Observer, Initializable {
                 checkBox.setOnAction(e -> {
                     if (checkBox.isSelected()) {
                         challengeWord.setLength(0);
-                        challengeWord.append(wordsForChallenge.get(finalI).get());
+                        challengeWord.append(wordsForChallenge.get(finalI).getValue());
                         for (Node node : popupRoot.getChildren()) {
                             if (node instanceof CheckBox && !node.equals(checkBox)) {
                                 ((CheckBox) node).setSelected(false);
@@ -681,14 +684,47 @@ public class GameWindowController implements Observer, Initializable {
         return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
-
-
     public void unlockHand() {
         for (TileField t : handFields) {
             t.setUnlocked();
         }
     }
 
+    public void endGamePopUp(String title, String header, String text) {
+        Platform.runLater(() -> {
+            Stage primaryStage = new Stage();
+
+            // Create the header label
+            Label headerLabel = new Label(header);
+            headerLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+            // Create the content label
+            Label contentLabel = new Label(text);
+
+            // Create the button and add an event handler
+            Button closeButton = new Button("Exit Game");
+            closeButton.setOnAction(event -> {
+                // Close the pop-up window and exit the program
+                primaryStage.close();
+                System.exit(0);
+            });
+
+            // Create a layout container for the header, content, and button
+            VBox layout = new VBox(headerLabel, contentLabel, closeButton);
+            layout.setSpacing(10);
+
+            // Create the scene and set the layout
+            Scene scene = new Scene(layout, 300, 200);
+
+            // Set the pop-up window as a modal dialog
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.setTitle(title);
+            primaryStage.setScene(scene);
+
+            // Show the pop-up window
+            primaryStage.show();
+        });
+    }
 }
 
 

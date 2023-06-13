@@ -141,6 +141,12 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
             setChanged();
             notifyObservers("challengeSuccess");
         });
+
+        updatesMap.put("endGameHost", message -> {
+            setChanged();
+            notifyObservers("endGameHost");
+        });
+
     }
 
     /**
@@ -401,5 +407,10 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
     @Override
     public void unPark(){
         hostFacade.unPark();
+    }
+
+    @Override
+    public boolean isHost(){
+        return true;
     }
 }

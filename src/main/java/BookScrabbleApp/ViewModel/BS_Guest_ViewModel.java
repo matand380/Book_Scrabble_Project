@@ -383,4 +383,9 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     public void unPark(){
         guestFacade.unPark();
     }
+
+    @Override
+    public boolean isHost(){
+        return false;
+    }
 }
