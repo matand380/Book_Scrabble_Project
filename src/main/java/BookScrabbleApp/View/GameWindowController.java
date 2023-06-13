@@ -116,8 +116,8 @@ public class GameWindowController implements Observer, Initializable {
         turnInstruction.setText("Use the arrows to position the cursor where you\n" +
                 "want to add a Tile.\n" + "Use the keyboard to type the desired Tile.\n" + "Select the Tiles with the mouse to validate them.\n" +
                 "If your word is legal, it will be placed on the board,\n" + "and you will earn points.\n" + "Bonuses will be awarded if applicable.\n");
-                CHInstructionTitle.setText("Challenge instructions:");
-                challengeInstructions.setText("When the 'Challenge' pop-up appears,\n" +"select the checkbox\n" +
+        CHInstructionTitle.setText("Challenge instructions:");
+        challengeInstructions.setText("When the 'Challenge' pop-up appears,\n" + "select the checkbox\n" +
                 "next to the word you want to challenge.\n" +
                 "Click the challenge button.\n" +
                 "Please note that you have only 7 seconds.\n" +
@@ -181,7 +181,7 @@ public class GameWindowController implements Observer, Initializable {
                 boolean adjacent = true;
 
                 if (wordForTryPlace.size() > 0) {
-                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size()-1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size()-1).tileCol);
+                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
                 }
 
                 if (adjacent) {
@@ -248,8 +248,8 @@ public class GameWindowController implements Observer, Initializable {
                 row.forEach(tileField -> {
                     if (!tileField.isUpdate()) {
                         tileField.setUpdate();
-                        tileField.setSelect(false);
                     }
+                    tileField.setSelect(false);
                 });
             });
             Platform.runLater(() -> {
@@ -293,15 +293,16 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("winner updated", message -> {
-            if(!viewModel.isHost()){
+            if (!viewModel.isHost()) {
                 viewModel.endGame();
                 endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
+            } else if (viewModel.getViewableNames().size() == 1) {
+                endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
             }
-            alertPopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
         });
 
         updatesMap.put("endGameHost", message -> {
-            endGamePopUp("Game Over", "Game Over", "The Game is over with no winner");
+            endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
         });
     }
 
@@ -360,6 +361,16 @@ public class GameWindowController implements Observer, Initializable {
         keyEventsMap.put(KeyCode.ENTER, functionForEachKey(KeyCode.ENTER));
     }
 
+    /**
+     * The functionForEachKey is a helper function that returns an EventHandler&lt;KeyEvent&gt; object.
+     * The returned EventHandler&lt;KeyEvent&gt; object handles the KeyEvents for each key on the keyboard.
+     * If a letter key is pressed, then it will select the TileField in handFields with that letter and set selectedTileField to be this TileField.
+     * If an arrow key (up, down, left or right) is pressed, then it will move gameBoard's cursor accordingly.
+     * If backspace is pressed the function check is this tile is from the board (update from the server)
+     * or from the hand and remove it accordingly.
+     *
+     * @return A function that is called when a key is pressed
+     */
     private EventHandler<KeyEvent> functionForEachKey(KeyCode key) {
         return keyEvent -> {
             if (key.isLetterKey()) {
@@ -493,7 +504,11 @@ public class GameWindowController implements Observer, Initializable {
         startNewGameBtn.setVisible(false);
     }
 
-    //setters methods
+    /**
+     * The setScoresFields function is used to set the text of the scoresFields list.
+     * This function is called by updateScores() when it receives a message from the server
+     * containing updated score information for all players.
+     */
     private void setScoresFields(List<SimpleStringProperty> list) {
         Platform.runLater(() -> {
             for (int i = 0; i < list.size(); i++) {
@@ -504,19 +519,26 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
+    /**
+     * The setNamesFields function is used to set the names of the players in their respective fields.
+     *
+     * @param ;SimpleStringProperty&gt; viewableNames Set the names of the players in the game
+     */
     private void setNamesFields(List<SimpleStringProperty> viewableNames) {
         Platform.runLater(() -> {
             for (int i = 0; i < viewableNames.size(); i++) {
                 nameFields.get(i).setText(viewableNames.get(i).getValue());
                 nameFields.get(i).setVisible(true);
-
                 scoresFields.get(i).setVisible(true);
-
                 rectanglesPlayer.get(i).setVisible(true);
             }
         });
     }
 
+    /**
+     * The setTileFieldOnBoard function is used to set the selected tile field on the board.
+     * It checks if a tile field has been selected and if it has, it sets that tile field on the board.
+     */
     private void setTileFieldOnBoard() {
         if (selectedTileField != null) {
             int tileRow = selectedTileField.tileRow;
@@ -562,13 +584,14 @@ public class GameWindowController implements Observer, Initializable {
 
             StringBuilder challengeWord = new StringBuilder();
 
-            for (int i = 0; i < wordsForChallenge.size(); i++) {
-                CheckBox checkBox = new CheckBox(wordsForChallenge.get(i).get());
-                int finalI = i;
+            for (SimpleStringProperty simpleStringProperty : wordsForChallenge) {
+                CheckBox checkBox = new CheckBox(simpleStringProperty.get());
+                String[] word = new String[1];
+                word[0] = simpleStringProperty.getValue();
                 checkBox.setOnAction(e -> {
                     if (checkBox.isSelected()) {
                         challengeWord.setLength(0);
-                        challengeWord.append(wordsForChallenge.get(finalI).getValue());
+                        challengeWord.append(word[0]);
                         for (Node node : popupRoot.getChildren()) {
                             if (node instanceof CheckBox && !node.equals(checkBox)) {
                                 ((CheckBox) node).setSelected(false);
@@ -630,16 +653,16 @@ public class GameWindowController implements Observer, Initializable {
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
         Platform.runLater(() -> {
-                for (TileField t : wordForTryPlace) {
-                    if (gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
-                        gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
-                    } else
-                        gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
-                }
-                gameBoard.redraw();
-                wordForTryPlace.clear();
-                yourWord.getChildren().clear();
-                unlockHand();
+            for (TileField t : wordForTryPlace) {
+                if (gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
+                } else
+                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+            }
+            gameBoard.redraw();
+            wordForTryPlace.clear();
+            yourWord.getChildren().clear();
+            unlockHand();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(header);
@@ -674,7 +697,6 @@ public class GameWindowController implements Observer, Initializable {
             }
         });
     }
-
 
 
     private boolean checkFirstWord() {
