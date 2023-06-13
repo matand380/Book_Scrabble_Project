@@ -13,6 +13,12 @@ public class BookScrabbleApp extends Application {
         static final double MIN_WIDTH = 800;
         static final double MIN_HEIGHT = 600;
 
+    /**
+     * The start function is the first function that runs when the program starts.
+     * It loads in all of the necessary files and sets up a scene for them to be displayed on.
+     * @param stage Set the stage to be displayed
+     * @return A stage, which is the main window of the application
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BookScrabbleApp.class.getResource("/BookScrabbleApp.View/welcomeWindow.fxml"));
