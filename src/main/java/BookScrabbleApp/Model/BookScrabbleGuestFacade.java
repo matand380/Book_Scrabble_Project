@@ -83,4 +83,8 @@ public class BookScrabbleGuestFacade extends Observable implements Observer {
         System.out.println("GuestFacade ---- updateType: " + message);
         notifyObservers(message);
     }
+
+    public void unPark() {
+        guestModel.unPark();
+    }
 }

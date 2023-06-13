@@ -27,9 +27,7 @@ public class HostCommunicationHandler implements ClientHandler {
     /**
      * The HostCommunicationHandler function is responsible for handling all the requests from the clients.
      * It uses a map of functions to invoke them when needed.
-     *<p>
-     *
-     *
+     * <p>
      */
     public HostCommunicationHandler() {
         //put all the methods in the map for being able to invoke them in handleRequests
@@ -62,7 +60,7 @@ public class HostCommunicationHandler implements ClientHandler {
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch(w1 -> w1.toString().equals(word));
             if (exist) {
                 String challengeInfo = PlayerIndex + ":" + word;
-                BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
+               BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
             }
             else
             {
@@ -74,9 +72,17 @@ public class HostCommunicationHandler implements ClientHandler {
             String id = message[1];
             try {
                 BS_Host_Model.getModel().getCommunicationServer().clientsMap.get(id).close();
+                BS_Host_Model.getModel().getCommunicationServer().clientsMap.remove(id);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+           if(BS_Host_Model.getModel().getCommunicationServer().clientsMap.size() == 0){
+               BS_Host_Model.getModel().endGame();
+           }
+        });
+
+        handlers.put("unPark", message -> {
+            BS_Host_Model.getModel().unPark();
         });
 
         executor.submit(this::handleRequests);
@@ -90,9 +96,7 @@ public class HostCommunicationHandler implements ClientHandler {
      * one of its handlers. The handler will then process that request and send it back to
      * whoever requested it. This function runs as long as there are requests in the queue,
      * or until communicationServer stops running (which happens when all threads have been closed).
-        *<p>
-     *
-     *
+     * <p>
      */
     public void handleRequests() {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
@@ -121,10 +125,8 @@ public class HostCommunicationHandler implements ClientHandler {
      * function will take in a key from the inputStream (which comes from the client), put it into
      * an ArrayBlockingQueue called &quot;inputQueue&quot;, then wait for another key to be sent by repeating this process.
      *
-     * @param  inputStream Read data from the client
-     * @param  outputStream Write to the client
-     *
-     *
+     * @param inputStream  Read data from the client
+     * @param outputStream Write to the client
      */
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
@@ -148,8 +150,7 @@ public class HostCommunicationHandler implements ClientHandler {
 
     /**
      * The close function closes the connection to the server.
-     *<p>
-     *
+     * <p>
      */
     @Override
     public void close() {
@@ -162,11 +163,9 @@ public class HostCommunicationHandler implements ClientHandler {
 
     /**
      * The messagesToGameServer function is used to send messages from the client to the game server.
-     *<p>
+     * <p>
      *
      * @param key Send a message to the game server
-     *
-     *
      */
     public void messagesToGameServer(String key) {
         if (key != null) {

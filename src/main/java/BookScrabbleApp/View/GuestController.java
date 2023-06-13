@@ -72,16 +72,16 @@ public class GuestController {
 
     @FXML
     public void switchToGameWindow() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
         root = loader.load();
+        GameWindowController controller = loader.getController();
+        controller.setViewModel(guest);
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
-        stage.setMinWidth(BookScrabbleApp.MIN_WIDTH);
-        stage.setMinHeight(BookScrabbleApp.MIN_HEIGHT);
+        scene = new Scene(root);
+        stage.setResizable(false);
+        stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
-        GameWindowController gameWindowController = loader.getController();
-        gameWindowController.setViewModel(guest);
     }
 }

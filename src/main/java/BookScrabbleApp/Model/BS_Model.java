@@ -22,5 +22,5 @@ public interface BS_Model {
 
     boolean isHost();
 
-
+    void unPark();
 }

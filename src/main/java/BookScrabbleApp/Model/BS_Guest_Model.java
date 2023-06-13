@@ -118,11 +118,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      * The challengeWord function is used to challenge a word that has been played by another player.
      * The function takes in the word that is being challenged as a parameter and sends it to the host.
      *
-     * @param word Send the word to be challenged
+     * @param indexAndWord Send the word to be challenged
      */
-    public void challengeWord(String word) {
-        String playerIndex = String.valueOf(player.get_index());
-        communicationHandler.outMessages("challengeWord:" + playerIndex + ":" + word);
+    public void challengeWord(String indexAndWord) {
+        communicationHandler.outMessages("challengeWord:" + indexAndWord);
     }
 
     /**
@@ -287,5 +286,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
     public void toFacade(String message) {
         setChanged();
         notifyObservers(message);
+    }
+
+    public void unPark(){
+        communicationHandler.outMessages("unPark:");
     }
 }

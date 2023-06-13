@@ -34,7 +34,7 @@
 <!--                  <Image url="@../images/Logo.JPG" />-->
 <!--               </image>-->
 <!--            </ImageView>-->
-         <Label fx:id="welcomeText" text="Chose the mode you want to play:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" BorderPane.alignment="CENTER">
+         <Label fx:id="welcomeText" text="Choose the mode you want to play:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" BorderPane.alignment="CENTER">
              <font>
                  <Font size="39.0" />
              </font>

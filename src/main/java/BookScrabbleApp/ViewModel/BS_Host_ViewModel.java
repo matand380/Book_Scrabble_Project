@@ -5,11 +5,13 @@ import BookScrabbleApp.Model.GameData.*;
 import javafx.beans.property.*;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.*;
 
-public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
+public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
 
-    public SimpleStringProperty ip ;
+    public SimpleStringProperty ip;
 
     public SimpleStringProperty port;
 
@@ -24,6 +26,8 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
     BookScrabbleHostFacade hostFacade;
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
+    ExecutorService executor = Executors.newFixedThreadPool(3);
+
 
     /**
      * The BS_Host_ViewModel function is the constructor for the BS_Host_ViewModel class.
@@ -31,7 +35,6 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
      * It also calls two other functions, initializeProperties() and initializeUpdateMap(), which are explained below.
      * initializeProperties() initializes all the properties of the class.
      * initializeUpdateMap() initializes the updatesMap, which is a map of all the updates.
-     *
      */
     public BS_Host_ViewModel() {
         super();
@@ -69,16 +72,24 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
         updatesMap.put("wordsForChallenge", message -> {
             //"wordsForChallenge:" + currentPlayerWords.size() + ":" + words
             String[] messageSplit = message.split(":");
-            int wordsAmount = Integer.parseInt(messageSplit[1]);
-            String words = messageSplit[2];
+            int playerIndex = Integer.parseInt(messageSplit[1]);
+            int wordsAmount = Integer.parseInt(messageSplit[2]);
+            String words = messageSplit[3];
             String[] wordsSplit = words.split(",");
             List<String> wordsList = new ArrayList<>();
             for (int i = 0; i < wordsAmount; i++) {
                 wordsList.add(wordsSplit[i]);
             }
-            setWordsForChallenge(wordsList);
-            wordsList.clear();
-
+            if (playerIndex != hostFacade.getPlayer().get_index()) {
+                setWordsForChallenge(wordsList);
+                wordsList.clear();
+                setChanged();
+                notifyObservers("wordsForChallenge updated:" + playerIndex);
+            }
+            else
+            {
+                wordsList.clear();
+            }
         });
 
         updatesMap.put("playersScores updated", message -> {
@@ -102,8 +113,8 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
             String[] messageSplit = message.split(":");
             int playerIndex = Integer.parseInt(messageSplit[1]);
             String winner = messageSplit[2];
-            String score = hostFacade.getPlayersScores()[playerIndex];
-            winnerProperty.setValue("The winner is: " + winner + "with a score of " + score);
+            String score = messageSplit[1];
+            winnerProperty.setValue("The winner is: " + winner + " with a score of " + score);
             setChanged();
             notifyObservers("winner updated");
         });
@@ -119,16 +130,20 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
             int size = Integer.parseInt(messageSplit[1]);
             for (int i = 0; i < size; i++) {
                 viewableName.add(new SimpleStringProperty());
-                viewableName.get(i).setValue(messageSplit[i+2]);
+                viewableName.get(i).setValue(messageSplit[i + 2]);
             }
             setChanged();
             notifyObservers("playersName updated");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
         updatesMap.put("challengeSuccess", message -> {
             setChanged();
             notifyObservers("challengeSuccess");
+        });
+
+        updatesMap.put("endGameHost", message -> {
+            setChanged();
+            notifyObservers("endGameHost");
         });
     }
 
@@ -136,17 +151,13 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
      * The setWordsForChallenge function takes in a list of strings and sets the value of each viewable word to
      * one of those strings. It then notifies observers that it has changed.
      * <p>
-     * @param wordsList Set the words for the challenge
      *
+     * @param wordsList Set the words for the challenge
      */
     public void setWordsForChallenge(List<String> wordsList) {
-        if (wordsList.size() > 1) {
-            for (int i = 0; i < wordsList.size(); i++) {
-                viewableWordsForChallenge.add(new SimpleStringProperty());
-                viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
-            }
-            setChanged();
-            notifyObservers("wordsForChallenge updated");
+        for (int i = 0; i < wordsList.size(); i++) {
+            viewableWordsForChallenge.add(new SimpleStringProperty());
+            viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
         }
     }
 
@@ -155,8 +166,6 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
      * the board. This function is called by HostFacade whenever a change has been made to
      * the board, and it notifies all observers that there has been a change.
      * <p>
-     *
-     *
      */
     @Override
     public void setBoard() {
@@ -177,7 +186,6 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
      * It also creates a HashMap called updatesMap, which is used to store information about what has been updated
      * and needs to be displayed on the GUI. The function also creates an ArrayList called viewableScores, which stores
      * information about each player's score and name. This list is then bound to a List<TextField> in MainGUI so that it can be displayed there.
-     *
      */
     @Override
     public void initializeProperties() {
@@ -248,18 +256,16 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
     /**
      * The tryPlaceWord function is used to place a word on the board.
      * It does this by taking in the word, row, column, and orientation from the GUI and passing them to the HostFacade.
-     *<p>
-     * @param  word Pass the word that is being placed on the board
-     * @param  row Specify the row where the word is to be placed
-     * @param  col Determine the column of the board where the word will be placed
-     * @param  isVertical Determine if the word is placed vertically or horizontally
+     * <p>
      *
-     *
+     * @param word       Pass the word that is being placed on the board
+     * @param row        Specify the row where the word is to be placed
+     * @param col        Determine the column of the board where the word will be placed
+     * @param isVertical Determine if the word is placed vertically or horizontally
      */
     @Override
     public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
-        // TODO: 01/06/2023 need to take care for the word binding
-        hostFacade.tryPlaceWord(word, row, col, isVertical);
+        executor.submit(()->hostFacade.tryPlaceWord(word, row, col, isVertical));
     }
 
     /**
@@ -277,6 +283,7 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
      * The setPlayerProperties function is called from the view with the TextField value of the player name.
      * It then calls a function in the hostFacade that will set the name of the player.
      * <p>
+     *
      * @param name Set the name of the player
      */
     @Override
@@ -298,9 +305,8 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
     /**
      * The challengeRequest function is called when the user clicks on the challenge button.
      * It sends a request to the server to activate a challenge, and then clears all of the viewable words for challenge.
+     *
      * @param challengeWord Pass the challenge word to the server
-     *
-     *
      */
     @Override
     public void challengeRequest(String challengeWord) {
@@ -324,10 +330,10 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
      * The update function then calls the appropriate method in this class to handle that change.
      * <p>
      *
-     * @param  o Determine the type of observable object that is being passed in
-     * @param  arg Pass the message from the observable to this observer
-    private void updateplayerlist(string message) {
-    string[] playerlist = message
+     * @param o   Determine the type of observable object that is being passed in
+     * @param arg Pass the message from the observable to this observer
+     *            private void updateplayerlist(string message) {
+     *            string[] playerlist = message
      */
     @Override
     public void update(Observable o, Object arg) {
@@ -337,7 +343,7 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
         String updateType = messageSplit[0];
         System.out.println("HostViewModel ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
-            updatesMap.get(updateType).accept(message);
+          executor.submit(()->  updatesMap.get(updateType).accept(message));
         } else {
             setChanged();
             notifyObservers("Error in updates handling ");
@@ -385,12 +391,22 @@ public class BS_Host_ViewModel extends Observable  implements BS_ViewModel {
         return this.viewableWordsForChallenge;
     }
 
-    public void startHostServer(){
-        new Thread(()->hostFacade.getCommunicationServer().start()).start();
+    public void startHostServer() {
+        new Thread(() -> hostFacade.getCommunicationServer().start()).start();
     }
 
     @Override
     public List<SimpleStringProperty> getViewableNames() {
         return this.viewableName;
+    }
+
+    @Override
+    public void unPark(){
+        hostFacade.unPark();
+    }
+
+    @Override
+    public boolean isHost(){
+        return true;
     }
 }

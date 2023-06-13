@@ -44,4 +44,8 @@ public interface BS_ViewModel extends Observer {
     List<SimpleStringProperty> getViewableWordsForChallenge();
 
     List<SimpleStringProperty> getViewableNames();
+
+    void unPark();
+
+    boolean isHost();
 }

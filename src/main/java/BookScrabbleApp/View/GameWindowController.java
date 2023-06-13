@@ -2,47 +2,61 @@ package BookScrabbleApp.View;
 
 import BookScrabbleApp.*;
 import BookScrabbleApp.ViewModel.*;
+import javafx.animation.*;
 import javafx.application.*;
 import javafx.beans.property.*;
 import javafx.event.*;
 import javafx.fxml.*;
+import javafx.geometry.*;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.*;
+import javafx.scene.text.Text;
+import javafx.stage.*;
+import javafx.util.*;
 
 import java.net.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
 
     @FXML
-    private Label namePlayer1;
+    public Text turnInstructionTitle;
     @FXML
-    private Label namePlayer2;
+    public Text turnInstruction;
     @FXML
-    private Label namePlayer3;
+    public Text CHInstructionTitle;
     @FXML
-    private Label namePlayer4;
+    public Text challengeInstructions;
     @FXML
-    private Rectangle player1Rect;
+    Label namePlayer1 = new Label();
     @FXML
-    private Rectangle player2Rect;
+    Label namePlayer2 = new Label();
     @FXML
-    private Rectangle player3Rect;
+    Label namePlayer3 = new Label();
     @FXML
-    private Rectangle player4Rect;
+    Label namePlayer4 = new Label();
     @FXML
-    private Label scorePlayer1;
+    Rectangle player1Rect = new Rectangle();
     @FXML
-    private Label scorePlayer2;
+    Rectangle player2Rect = new Rectangle();
     @FXML
-    private Label scorePlayer3;
+    Rectangle player3Rect = new Rectangle();
     @FXML
-    private Label scorePlayer4;
+    Rectangle player4Rect = new Rectangle();
+    @FXML
+    Label scorePlayer1 = new Label();
+    @FXML
+    Label scorePlayer2 = new Label();
+    @FXML
+    Label scorePlayer3 = new Label();
+    @FXML
+    Label scorePlayer4 = new Label();
     @FXML
     GridPane handGrid = new GridPane();
     @FXML
@@ -54,11 +68,9 @@ public class GameWindowController implements Observer, Initializable {
     @FXML
     Button passTurnBtn;
     @FXML
-    Button challengeBtn;
-    @FXML
     Button tryPlaceBtn;
 
-    //ExecutorService executorService = Executors.newFixedThreadPool(4);
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
@@ -82,6 +94,25 @@ public class GameWindowController implements Observer, Initializable {
 
     private List<SimpleStringProperty> wordsForChallenge;
 
+    /**
+     * The GameWindowController Constructor initialize the properties of the GameWindowController class.
+     * It also initializes two maps, one for updating and one for key events.
+     *
+     * @return A gameWindowController object
+     */
+    public GameWindowController() {
+        initializeProperties();
+        initializeUpdateMap();
+        initializeKeyEventMap();
+    }
+
+    /**
+     * The setViewModel function is used to set the viewModel of the class (Host or Guest) according to what the player chose.
+     * this function is called from the host or guest controller.
+     *
+     * @param //BS_ViewModel viewModel Determine which viewmodel to use
+     * @return A bs_viewmodel object
+     */
     public void setViewModel(BS_ViewModel viewModel) {
         if (viewModel instanceof BS_Host_ViewModel) {
             this.viewModel = new BS_Host_ViewModel();
@@ -92,27 +123,67 @@ public class GameWindowController implements Observer, Initializable {
             this.viewModel.getObservable().addObserver(this);
             initializeWindow();
             startNewGameBtn.setVisible(false);
+
         }
+        turnInstructionTitle.setText("Turn instructions:");
+        turnInstruction.setText("Use the arrows to position the cursor where you\n" +
+                "want to add a Tile.\n" + "Use the keyboard to type the desired Tile.\n" + "Select the Tiles with the mouse to validate them.\n" +
+                "If your word is legal, it will be placed on the board,\n" + "and you will earn points.\n" + "Bonuses will be awarded if applicable.\n");
+        CHInstructionTitle.setText("Challenge instructions:");
+        challengeInstructions.setText("When the 'Challenge' pop-up appears,\n" + "select the checkbox\n" +
+                "next to the word you want to challenge.\n" +
+                "Click the challenge button.\n" +
+                "Please note that you have only 7 seconds.\n" +
+                "After that, the window will disappear");
+        turnInstructionTitle.setVisible(true);
+        turnInstructionTitle.underlineProperty().setValue(true);
+        CHInstructionTitle.setVisible(true);
+        CHInstructionTitle.underlineProperty().setValue(true);
     }
 
+    /**
+     * The update function is called by the observable object when it changes.
+     * The update function then calls a method in the updatesMap that corresponds to
+     * the type of update that was sent from the observable object.
+     * This allows for
+     * different types of updates to be handled differently.
+     *
+     * @param //Observable o Identify the observable that is calling the update function
+     * @param //Object     arg Pass the message from the observable object to this observer
+     * @return A string which is then used to determine what function to call
+     */
     @Override
     public void update(Observable o, Object arg) {
         String message = (String) arg;
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
-        System.out.println("\n -- updateType GameWindow: " + message +" -- \n");
+        System.out.println("\n -- updateType GameWindow: " + message + " -- \n");
         if (updatesMap.containsKey(updateType)) {
-            //executorService.submit(() -> updatesMap.get(updateType).accept(message));
-            updatesMap.get(updateType).accept(message);
+            executorService.submit(() -> updatesMap.get(updateType).accept(message));
         }
     }
 
-    //initialize the window
+    /**
+     * The initialize function is called when the FXML file is loaded.
+     * It sets up all the fields in the game board, and adds them to a 15*15 array.
+     * It also sets up event handlers for mouse clicks and key presses on the game board.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        initializeProperties();
-        initializeUpdateMap();
-        initializeKeyEventMap();
+        nameFields.add(namePlayer1);
+        scoresFields.add(scorePlayer1);
+        rectanglesPlayer.add(player1Rect);
+        namePlayer1.getStyleClass().add("player-name");
+
+        nameFields.add(namePlayer2);
+        scoresFields.add(scorePlayer2);
+        rectanglesPlayer.add(player2Rect);
+        nameFields.add(namePlayer3);
+        scoresFields.add(scorePlayer3);
+        rectanglesPlayer.add(player3Rect);
+        nameFields.add(namePlayer4);
+        scoresFields.add(scorePlayer4);
+        rectanglesPlayer.add(player4Rect);
 
         for (int boardRow = 0; boardRow < 15; boardRow++) {
             boardFields.add(new ArrayList<>());
@@ -122,39 +193,7 @@ public class GameWindowController implements Observer, Initializable {
         }
         gameBoard.setTileFields(boardFields);
 
-        //focus on the board
-        gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                double xCoordinate = mouseEvent.getX();
-                double yCoordinate = mouseEvent.getY();
-
-                int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
-                int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
-
-                TileField clickedTile = gameBoard.tileFields.get(row).get(col);
-
-                if (!clickedTile.letter.getText().equals("")) {
-                    if (gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).isUpdate()) {
-                        selectedTileField.letter.setText("_");
-                        selectedTileField.tileRow = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileRow;
-                        selectedTileField.tileCol = gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).tileCol;
-                        gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
-                        setYourWord();
-                    } else {
-                        clickedTile.draw(gameBoard.getGraphicsContext2D(), row, col, gameBoard.getWidth() / 15, gameBoard.getHeight() / 15, 0);
-                        selectedTileField = clickedTile;
-                        selectedTileField.tileRow = row;
-                        selectedTileField.tileCol = col;
-                        gameBoard.tileFields.get(clickedTile.tileRow).get(clickedTile.tileCol).setClick(true);
-                        setTileFieldOnBoard();
-                        setYourWord();
-                    }
-                }
-                gameBoard.requestFocus();
-            }
-        });
-
+        gameBoard.setOnMouseClicked(this::handleMouseClicked);
         gameBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -164,6 +203,7 @@ public class GameWindowController implements Observer, Initializable {
                     System.out.println("key not found");
             }
         });
+
     }
 
     private void initializeProperties() {
@@ -178,18 +218,6 @@ public class GameWindowController implements Observer, Initializable {
         scoresFields = new ArrayList<>();
         nameFields = new ArrayList<>();
         rectanglesPlayer = new ArrayList<>();
-        nameFields.add(namePlayer1);
-        scoresFields.add(scorePlayer1);
-        rectanglesPlayer.add(player1Rect);
-        nameFields.add(namePlayer2);
-        scoresFields.add(scorePlayer2);
-        rectanglesPlayer.add(player2Rect);
-        nameFields.add(namePlayer3);
-        scoresFields.add(scorePlayer3);
-        rectanglesPlayer.add(player3Rect);
-        nameFields.add(namePlayer4);
-        scoresFields.add(scorePlayer4);
-        rectanglesPlayer.add(player4Rect);
     }
 
     private void initializeUpdateMap() {
@@ -206,14 +234,20 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("tileBoard updated", message -> {
-                gameBoard.setTileFields(boardFields);
-                gameBoard.tileFields.forEach(row -> {
-                    row.forEach(tileField -> {
-                        if (!tileField.isUpdate()) {
-                            tileField.setUpdate();
-                        }
-                    });
+            gameBoard.setTileFields(boardFields);
+            gameBoard.tileFields.forEach(row -> {
+                row.forEach(tileField -> {
+                    if (!tileField.isUpdate()) {
+                        tileField.setUpdate();
+                    }
+                    tileField.setSelect(false);
                 });
+            });
+            Platform.runLater(() -> {
+                wordForTryPlace.clear();
+                yourWord.getChildren().clear();
+                unselectedHand();
+            });
         });
 
         updatesMap.put("scores updated", message -> {
@@ -225,12 +259,15 @@ public class GameWindowController implements Observer, Initializable {
             alertPopUp("Invalid Word", "Invalid Word", "The word you tried to place is invalid");
         });
 
-//        updatesMap.put("wordsForChallenge updated", message -> {
-//            setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
-//        });
+        updatesMap.put("wordsForChallenge updated", message -> {
+            showChallengePopup(viewModel.getViewableWordsForChallenge());
+        });
 
         updatesMap.put("challengeAlreadyActivated", message -> {
             alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
+        });
+        updatesMap.put("challengeSuccess", message -> {
+            alertPopUp("challengeSuccess", "challengeSuccess", "challenge succeed and \nthe challenger get 10 points bonus");
         });
 
         updatesMap.put("turnPassed", message -> {
@@ -243,8 +280,20 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("gameStart", message -> {
+            Platform.runLater(() -> gameBoard.requestFocus());
+        });
 
-            initializeWindow();
+        updatesMap.put("winner updated", message -> {
+            if (!viewModel.isHost()) {
+                viewModel.endGame();
+                endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
+            } else if (viewModel.getViewableNames().size() == 1) {
+                endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
+            }
+        });
+
+        updatesMap.put("endGameHost", message -> {
+            endGamePopUp("Game Over", "Game Over", viewModel.getWinnerProperty().get() + "\n" + "We would love to see you again!");
         });
     }
 
@@ -271,6 +320,7 @@ public class GameWindowController implements Observer, Initializable {
                 boardFields.get(i).add(new TileField());
             }
         }
+
         for (int i = 0; i < 15; i++) {
             wordsForChallenge.add(new SimpleStringProperty());
         }
@@ -286,8 +336,6 @@ public class GameWindowController implements Observer, Initializable {
                 viewModel.getViewableBoard().get(boardRow).get(boardCol).scoreProperty().bindBidirectional(boardFields.get(boardRow).get(boardCol).score.textProperty());
             }
         }
-        //to be removed later on
-        namePlayer1.setText(HostController.name);
     }
 
     private void initializeKeyEventMap() {
@@ -304,13 +352,66 @@ public class GameWindowController implements Observer, Initializable {
         keyEventsMap.put(KeyCode.ENTER, functionForEachKey(KeyCode.ENTER));
     }
 
+    /**
+     * The handleMouseClicked function is called when the user clicks on a tile.
+     * It checks if the clicked tile is adjacent to the last selected tile, and if it is,
+     * it adds that tile to wordForTryPlace.
+     * If not, then nothing happens.
+     * @param //MouseEvent event Get the x and y coordinates of the mouse click
+     */
+    private void handleMouseClicked(MouseEvent event) {
+
+            double xCoordinate = event.getX();
+            double yCoordinate = event.getY();
+
+            int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
+            int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
+
+            TileField clickedTile = gameBoard.tileFields.get(row).get(col);
+
+            boolean adjacent = true;
+
+            if (wordForTryPlace.size() > 0) {
+                adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
+            }
+
+            if (adjacent) {
+                if (!clickedTile.letter.getText().equals("") && !clickedTile.isSelect()) {
+                    clickedTile.setSelect(true);
+                    if (clickedTile.isUpdate()) {
+                        selectedTileField = new TileField();
+                        selectedTileField.copy(clickedTile);
+                        selectedTileField.letter.setText("_");
+                        setYourWord();
+                    } else {
+                        selectedTileField = new TileField();
+                        selectedTileField.copy(clickedTile);
+                        setTileFieldOnBoard();
+                        setYourWord();
+                    }
+                }
+            }
+            gameBoard.requestFocus();
+        }
+
+
+    /**
+     * The functionForEachKey is a helper function that returns an EventHandler&lt;KeyEvent&gt; object.
+     * The returned EventHandler&lt;KeyEvent&gt; object handles the KeyEvents for each key on the keyboard.
+     * If a letter key is pressed, then it will select the TileField in handFields with that letter and set selectedTileField to be this TileField.
+     * If an arrow key (up, down, left or right) is pressed, then it will move gameBoard's cursor accordingly.
+     * If backspace is pressed the function check is this tile is from the board (update from the server)
+     * or from the hand and remove it accordingly.
+     *
+     * @return A function that is called when a key is pressed
+     */
     private EventHandler<KeyEvent> functionForEachKey(KeyCode key) {
         return keyEvent -> {
             if (key.isLetterKey()) {
                 for (TileField t : handFields) {
                     if (t.letter.getText().equals(key.toString()) && !t.isSelect()) {
+                        t.setSelect(true);
                         selectedTileField = t;
-                        selectedTileField.setSelect(true);
                         selectedTileField.tileRow = gameBoard.getRow();
                         selectedTileField.tileCol = gameBoard.getCol();
                         setTileFieldOnBoard();
@@ -342,7 +443,7 @@ public class GameWindowController implements Observer, Initializable {
 
                     for (TileField t : handFields) {
                         if (t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow()) {
-                            t.setUnlocked();
+                            t.setUnselected();
                         }
                     }
                 }
@@ -365,7 +466,7 @@ public class GameWindowController implements Observer, Initializable {
                                 gameBoard.tileFields.get(boardRow).get(boardCol).letter.getText().equals(tileField.letter.getText())) {
                             foundMatchingTile = true;
                             break;
-                        }else{
+                        } else {
                             tile = tileField;
                         }
                     }
@@ -373,7 +474,7 @@ public class GameWindowController implements Observer, Initializable {
                         if (boardRow == tile.tileRow && boardCol == tile.tileCol && tile.letter.getText().equals("_")) {
                             gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText(tile.letter.getText());
                             gameBoard.tileFields.get(boardRow).get(boardCol).score.setText(tile.score.getText());
-                        }else {
+                        } else {
                             gameBoard.tileFields.get(boardRow).get(boardCol).letter.setText("");
                             gameBoard.tileFields.get(boardRow).get(boardCol).score.setText("");
                         }
@@ -401,9 +502,7 @@ public class GameWindowController implements Observer, Initializable {
                         }
                     }
                     viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-                    wordForTryPlace.clear();
-                    yourWord.getChildren().clear();
-                    unlockHand();
+
                 } else
                     alertPopUp("Word Error", "Word Error", "Must have at least one letter from your hand");
             } else
@@ -412,6 +511,8 @@ public class GameWindowController implements Observer, Initializable {
             alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
 
         Platform.runLater(() -> gameBoard.requestFocus());
+        String name = viewModel.getViewableNames().get(viewModel.getPlayerIndex()).toString();
+
     }
 
     @FXML
@@ -437,39 +538,54 @@ public class GameWindowController implements Observer, Initializable {
     public void startNewGame() {
         this.viewModel.startNewGame();
         startNewGameBtn.setVisible(false);
-        Platform.runLater(() -> gameBoard.requestFocus());
     }
 
-    //setters methods
+    /**
+     * The setScoresFields function is used to set the text of the scoresFields list.
+     * This function is called by updateScores() when it receives a message from the server
+     * containing updated score information for all players.
+     */
     private void setScoresFields(List<SimpleStringProperty> list) {
         Platform.runLater(() -> {
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < viewModel.getViewableNames().size(); i++) {
                 if (list.get(i) != null) {
                     scoresFields.get(i).setText(list.get(i).getValue());
+                    scoresFields.get(i).setVisible(true);
                 }
             }
         });
     }
 
+    /**
+     * The setNamesFields function is used to set the names of the players in their respective fields.
+     *
+     * @param ;SimpleStringProperty&gt; viewableNames Set the names of the players in the game
+     */
     private void setNamesFields(List<SimpleStringProperty> viewableNames) {
         Platform.runLater(() -> {
             for (int i = 0; i < viewableNames.size(); i++) {
                 nameFields.get(i).setText(viewableNames.get(i).getValue());
                 nameFields.get(i).setVisible(true);
-                scoresFields.get(i).setVisible(true);
                 rectanglesPlayer.get(i).setVisible(true);
             }
         });
     }
 
+    /**
+     * The setTileFieldOnBoard function is used to set the selected tile field on the board.
+     * It checks if a tile field has been selected and if it has, it sets that tile field on the board.
+     */
     private void setTileFieldOnBoard() {
-        if (selectedTileField != null && selectedTileField.isSelect() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
-            gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).letter.setText(selectedTileField.letter.getText());
-            gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).score.setText(selectedTileField.score.getText());
-            gameBoard.tileFields.get(selectedTileField.tileRow).get(selectedTileField.tileCol).setUnlocked();
-            gameBoard.redraw();
-        } else if (selectedTileField != null)
-            selectedTileField.setSelect(false);
+        if (selectedTileField != null) {
+            int tileRow = selectedTileField.tileRow;
+            int tileCol = selectedTileField.tileCol;
+            if (selectedTileField.isSelect() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
+                gameBoard.tileFields.get(tileRow).get(tileCol).copy(selectedTileField);
+                gameBoard.tileFields.get(tileRow).get(tileCol).setUnselected();
+                gameBoard.redraw();
+            } else if (selectedTileField != null)
+                selectedTileField.setSelect(false);
+        }
     }
 
     private void setYourWord() {
@@ -478,37 +594,81 @@ public class GameWindowController implements Observer, Initializable {
         t.score.setText(selectedTileField.score.getText());
         t.tileRow = selectedTileField.tileRow;
         t.tileCol = selectedTileField.tileCol;
-        t.createTile(yourWord.getWidth() / 7, yourWord.getHeight());
+        t.setSelect(true);
+        t.createTile(yourWord.getWidth() / 7, yourWord.getHeight() - 10);
         wordForTryPlace.add(t);
         redrawYourWord(wordForTryPlace);
+        selectedTileField = null;
     }
 
-    private void setWordsForChallengeOnScreen(List<SimpleStringProperty> wordsForChallenge) {
+    private void showChallengePopup(List<SimpleStringProperty> wordsForChallenge) {
         Platform.runLater(() -> {
-            // TODO: 2023-06-09  do a popUp for the client with all the words for challenge
-            // TODO: 2023-06-09  with a checkBox for each word
-            ChoiceDialog<SimpleStringProperty> dialog = new ChoiceDialog<>();
-            dialog.setTitle("Word Selection");
-            dialog.setHeaderText("Select a word to challenge");
-            dialog.setContentText("Words:");
+            Stage popupStage = new Stage();
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setTitle("Scrabble Challenge");
 
-            // Set the list of words for the choice dialog
-            dialog.getItems().add(wordsForChallenge.get(0));
+            popupStage.initStyle(StageStyle.UTILITY);
 
-            // Show the dialog and wait for the user's response
-            Optional<SimpleStringProperty> result = dialog.showAndWait();
+            VBox popupRoot = new VBox(10);
+            popupRoot.setAlignment(Pos.CENTER);
+            popupRoot.setPadding(new Insets(10));
 
-            // Process the selected word
-            result.ifPresent(selectedWord -> {
-                // TODO: 09/06/2023 sent the word to Challenge
-                viewModel.challengeRequest(selectedWord.get());
-                System.out.println("Selected Word: " + selectedWord);
+            Label titleLabel = new Label("Words for challenge:");
+            Label clockLabel = new Label("Time left: ");
+            popupRoot.getChildren().add(clockLabel);
+            popupRoot.getChildren().add(titleLabel);
+
+            StringBuilder challengeWord = new StringBuilder();
+
+            for (SimpleStringProperty simpleStringProperty : wordsForChallenge) {
+                CheckBox checkBox = new CheckBox(simpleStringProperty.get());
+                String[] word = new String[1];
+                word[0] = simpleStringProperty.getValue();
+                checkBox.setOnAction(e -> {
+                    if (checkBox.isSelected()) {
+                        challengeWord.setLength(0);
+                        challengeWord.append(word[0]);
+                        for (Node node : popupRoot.getChildren()) {
+                            if (node instanceof CheckBox && !node.equals(checkBox)) {
+                                ((CheckBox) node).setSelected(false);
+                            }
+                        }
+                    } else {
+                        challengeWord.setLength(0);
+                    }
+                });
+
+                popupRoot.getChildren().add(checkBox);
+            }
+
+            Button challengeButton = new Button("Challenge");
+            challengeButton.setOnAction(e -> {
+                viewModel.challengeRequest(challengeWord.toString());
+                popupStage.close();
             });
-        });
-    }
 
-    public void ChallengeOnScreen(ActionEvent actionEvent) {
-        setWordsForChallengeOnScreen(viewModel.getViewableWordsForChallenge());
+            popupRoot.getChildren().add(challengeButton);
+
+            popupStage.setScene(new Scene(popupRoot, 350, 250));
+
+            popupStage.show();
+
+
+            AtomicInteger timeLeft = new AtomicInteger(7); // Time in seconds
+            clockLabel.setText("Time left: " + timeLeft);
+
+            Timeline popupTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                timeLeft.getAndDecrement();
+                clockLabel.setText("Time left: " + timeLeft);
+                if (timeLeft.get() == 0) {
+                    popupStage.close();
+                }
+            }));
+            popupTimer.setCycleCount(timeLeft.get());
+
+            popupTimer.play();
+        });
+        viewModel.unPark();
     }
 
     private void passTurn(String indexCurrentPlayer) {
@@ -519,6 +679,7 @@ public class GameWindowController implements Observer, Initializable {
             tryPlaceBtn.setDisable(false);
             passTurnBtn.setDisable(false);
         }
+
     }
 
     private void removeFromYourWord(TileField removedTile) {
@@ -527,13 +688,23 @@ public class GameWindowController implements Observer, Initializable {
 
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
-       Platform.runLater(() -> {
+        Platform.runLater(() -> {
+            for (TileField t : wordForTryPlace) {
+                if (gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
+                } else
+                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+            }
+            gameBoard.redraw();
+            wordForTryPlace.clear();
+            yourWord.getChildren().clear();
+            unselectedHand();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(header);
             alert.setContentText(text);
+
             alert.showAndWait();
-            rollBack();
         });
     }
 
@@ -548,6 +719,14 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
+    /**
+     * The redrawYourWord function is called when the user clicks on a tile in their hand.
+     * It redraws the word that they are currently building.
+     * If a tile from their hand is clicked, then it will be added to yourWord from the board.
+     * If a tile from the board is clicked, then its text will be updated with "_" we do this so to send the server in the right format.
+     * The tile will be added to yourWord with the right letter from the board.
+     * @param //List&lt;TileField&gt; list Store the tiles that are currently in your word
+     */
     private void redrawYourWord(List<TileField> list) {
         Platform.runLater(() -> {
             yourWord.getChildren().clear();
@@ -556,75 +735,96 @@ public class GameWindowController implements Observer, Initializable {
                     TileField t = gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol);
                     t.letter.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).letter.getText());
                     t.score.setText(gameBoard.tileFields.get(list.get(i).tileRow).get(list.get(i).tileCol).score.getText());
-                    yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+                    yourWord.add(t.createTile(yourWord.getWidth() / 7, yourWord.getHeight() - 8), i, 0);
                 } else //tile from hand//
-                    yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight()), i, 0);
+                    yourWord.add(list.get(i).createTile(yourWord.getWidth() / 7, yourWord.getHeight() - 8), i, 0);
             }
         });
     }
 
-    private void rollBack() {
-       Platform.runLater(() -> {
-            for (TileField t : wordForTryPlace) {
-                if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
-                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
-                }
-            }
-            gameBoard.redraw();
-            wordForTryPlace.clear();
-            yourWord.getChildren().clear();
-            unlockHand();
-        });
-    }
 
+    /**
+     * The checkFirstWord function checks to see if the first word has been placed on Row 7 and Col 7.
+     * like the rules of the game say.
+     * @return True if the first word has been placed, false otherwise
+     */
     private boolean checkFirstWord() {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
     }
 
     //check if these methods is needed
+    /**
+     * The isVertical function checks if the word is vertical or not.
+     * @param //List&lt;TileField&gt; wordTryPlace Determine if the word is vertical or horizontal
+     * @return A boolean value
+     */
     private boolean isVertical(List<TileField> wordTryPlace) {
         return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
-    private boolean ifConnected(TileField t) {
-        if (wordForTryPlace.isEmpty()) {
-            return true;
-        }
 
-        TileField lastTile = wordForTryPlace.get(wordForTryPlace.size() - 1);
-        int lastTileRow = lastTile.tileRow;
-        int lastTileCol = lastTile.tileCol;
-
-        boolean adjacent = ((t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
-                || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1)) && wordForTryPlace.get(0).tileCol <= t.tileCol;
-
-        boolean vertical = false;
-
-        if (adjacent && wordForTryPlace.size() > 1) {
-            // Check if the word is horizontal or vertical
-            vertical = isVertical(wordForTryPlace);
-        } else
-            return adjacent;
-
-        if (vertical) {
-            for (TileField tile : wordForTryPlace) {
-                if (tile.tileCol != t.tileCol) {
-                    return false;
-                }
-            }
-        } else {
-            for (TileField tile : wordForTryPlace) {
-                if (tile.tileRow != t.tileRow) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    public void unlockHand(){
+    /**
+     * The unselectedHand function is used to unlock all the tiles in the player's hand.
+     * This function is called when a tile has been selected and then unselected, or when
+     * a player has finished their turn.
+     * It allows for any tile in the hand to be selected again.
+     */
+    public void unselectedHand() {
         for (TileField t : handFields) {
-            t.setUnlocked();
+            t.setUnselected();
         }
+    }
+
+    /**
+     * The endGamePopUp function creates a pop-up window that displays the winner of the game.
+     * @param //String title Set the title of the pop-up window
+     * @param //String header Set the text of the header label
+     * @param //String text Set the text of the content label
+     */
+    public void endGamePopUp(String title, String header, String text) {
+        Platform.runLater(() -> {
+            Stage primaryStage = new Stage();
+
+            // Set the stage style to a utility window
+            primaryStage.initStyle(StageStyle.UTILITY);
+
+            // Create the header label
+            Label headerLabel = new Label(header);
+            headerLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+            // Create the content label
+            Label contentLabel = new Label(text);
+
+            // Create the button and add an event handler
+            Button closeButton = new Button("Exit Game");
+            closeButton.setOnAction(event -> {
+                // Close the pop-up window and exit the program
+                primaryStage.close();
+                System.exit(0);
+            });
+
+            // Create a layout container for the header, content, and button
+            VBox layout = new VBox(headerLabel, contentLabel, closeButton);
+            layout.setSpacing(10);
+            layout.setAlignment(Pos.CENTER);
+
+            // Create the scene and set the layout
+            Scene scene = new Scene(layout);
+
+            // Set the scene background color to white
+            scene.setFill(javafx.scene.paint.Color.WHITE);
+
+            // Set the pop-up window as a modal dialog
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.setTitle(title);
+
+            primaryStage.setWidth(300);
+            primaryStage.setHeight(200);
+            primaryStage.setScene(scene);
+
+            // Show the pop-up window
+            primaryStage.show();
+        });
     }
 }
 
