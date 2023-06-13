@@ -145,7 +145,7 @@ public class GameWindowController implements Observer, Initializable {
         nameFields.add(namePlayer1);
         scoresFields.add(scorePlayer1);
         rectanglesPlayer.add(player1Rect);
-        rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
+       // rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
         namePlayer1.getStyleClass().add("player-name");
 
         nameFields.add(namePlayer2);
@@ -477,6 +477,8 @@ public class GameWindowController implements Observer, Initializable {
             alertPopUp("Word Error", "Word Error", "Word has to be at least two letters long");
 
         Platform.runLater(() -> gameBoard.requestFocus());
+        String name = viewModel.getViewableNames().get(viewModel.getPlayerIndex()).toString();
+
     }
 
     @FXML

@@ -108,7 +108,8 @@ public class HostController {
         controller.setViewModel(host);
         stage = (Stage) welcomeText.getScene().getWindow();
         scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/resources/buttonStyleSheets.css").toExternalForm());
+        //scene.getStylesheets().add(String.valueOf(getClass().getResource("../resources/buttonStyleSheets.css")));
+        scene.getStylesheets().add(getClass().getResource("/background.css").toExternalForm());
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.setScene(scene);
