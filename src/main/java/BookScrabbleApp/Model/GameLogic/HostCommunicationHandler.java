@@ -32,7 +32,7 @@ public class HostCommunicationHandler implements ClientHandler {
     public HostCommunicationHandler() {
         //put all the methods in the map for being able to invoke them in handleRequests
         handlers.put("passTurn", message ->
-                BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
+            BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
 
         handlers.put("addPlayer", message -> {
             Player p = new Player();
@@ -61,9 +61,11 @@ public class HostCommunicationHandler implements ClientHandler {
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch(w1 -> w1.toString().equals(word));
             if (exist) {
                 String challengeInfo = PlayerIndex + ":" + word;
-                BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
-            } else {
-                BS_Host_Model.getModel().hostLogger.log(System.Logger.Level.ERROR, "Player " + PlayerIndex + " tried to challenge a word that doesn't exist");
+               executor.submit(()->BS_Host_Model.getModel().requestChallengeActivation(challengeInfo));
+            }
+            else
+            {
+                BS_Host_Model.getModel().hostLogger.log(System.Logger.Level.ERROR,"Player " + PlayerIndex + " tried to challenge a word that doesn't exist");
             }
         });
 
@@ -181,9 +183,11 @@ public class HostCommunicationHandler implements ClientHandler {
 
     /**
      * The messagesFromGameServer function is used to receive messages from the game server.
-     * <p>
+     *<p>
+     *
      *
      * @return A string containing the message from the game server
+     *
      */
     public String messagesFromGameServer() {
         try {

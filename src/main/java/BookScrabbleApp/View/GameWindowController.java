@@ -57,7 +57,6 @@ public class GameWindowController implements Observer, Initializable {
     Label scorePlayer3 = new Label();
     @FXML
     Label scorePlayer4 = new Label();
-
     @FXML
     GridPane handGrid = new GridPane();
     @FXML
@@ -146,6 +145,9 @@ public class GameWindowController implements Observer, Initializable {
         nameFields.add(namePlayer1);
         scoresFields.add(scorePlayer1);
         rectanglesPlayer.add(player1Rect);
+        rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
+        namePlayer1.getStyleClass().add("player-name");
+
         nameFields.add(namePlayer2);
         scoresFields.add(scorePlayer2);
         rectanglesPlayer.add(player2Rect);
@@ -267,7 +269,7 @@ public class GameWindowController implements Observer, Initializable {
         });
 
         updatesMap.put("wordsForChallenge updated", message -> {
-            Platform.runLater(() -> showChallengePopup(viewModel.getViewableWordsForChallenge()));
+            showChallengePopup(viewModel.getViewableWordsForChallenge());
         });
 
         updatesMap.put("challengeAlreadyActivated", message -> {

@@ -706,8 +706,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
             }catch (IllegalMonitorStateException e)
             {
                 hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
-                Platform.runLater(() -> {
-                });
+
             }
 //                lock.unlock();
 

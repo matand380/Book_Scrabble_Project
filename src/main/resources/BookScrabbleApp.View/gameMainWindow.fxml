@@ -194,7 +194,7 @@
             <children>
                <Group>
                   <children>
-                      <Rectangle fx:id="player1Rect" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
+                      <Rectangle fx:id="player1Rect"  styleClass="player-rectangle"  arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
                                  <Label fx:id="namePlayer1" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="Player1" visible="false">
                                      <font>
                                          <Font size="18.0" />

@@ -18,6 +18,7 @@ public class BookScrabbleApp extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(BookScrabbleApp.class.getResource("/BookScrabbleApp.View/welcomeWindow.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), screenSize()[0], screenSize()[1]);
         scene.getStylesheets().add(getClass().getResource("/background.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/buttonStyleSheets.css").toExternalForm());
         stage.setOnCloseRequest(e -> Platform.exit());
         stage.setScene(scene);
         stage.setMinWidth(MIN_WIDTH);
