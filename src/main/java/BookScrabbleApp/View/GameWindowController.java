@@ -550,6 +550,7 @@ public class GameWindowController implements Observer, Initializable {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i) != null) {
                     scoresFields.get(i).setText(list.get(i).getValue());
+                    scoresFields.get(i).setVisible(true);
                 }
             }
         });
@@ -565,7 +566,6 @@ public class GameWindowController implements Observer, Initializable {
             for (int i = 0; i < viewableNames.size(); i++) {
                 nameFields.get(i).setText(viewableNames.get(i).getValue());
                 nameFields.get(i).setVisible(true);
-                scoresFields.get(i).setVisible(true);
                 rectanglesPlayer.get(i).setVisible(true);
             }
         });

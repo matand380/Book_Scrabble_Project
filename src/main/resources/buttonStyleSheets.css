@@ -48,8 +48,10 @@
 }
 
 .player-score {
-    -fx-font-size: 14px; /* Font size of the player score */
-    -fx-text-fill: #000000; /* Color of the player score */
+    -fx-font-size: 14px;
+    -fx-text-fill: #000000;
+    -fx-background-color: rgb(64, 2, 1, 0.2);
+    -fx-background-radius: 20px;
 }
 .text{
 
