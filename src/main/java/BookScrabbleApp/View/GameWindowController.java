@@ -696,6 +696,9 @@ public class GameWindowController implements Observer, Initializable {
         Platform.runLater(() -> {
             Stage primaryStage = new Stage();
 
+            // Set the stage style to a utility window
+            primaryStage.initStyle(StageStyle.UTILITY);
+
             // Create the header label
             Label headerLabel = new Label(header);
             headerLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -714,13 +717,20 @@ public class GameWindowController implements Observer, Initializable {
             // Create a layout container for the header, content, and button
             VBox layout = new VBox(headerLabel, contentLabel, closeButton);
             layout.setSpacing(10);
+            layout.setAlignment(Pos.CENTER);
 
             // Create the scene and set the layout
-            Scene scene = new Scene(layout, 300, 200);
+            Scene scene = new Scene(layout);
+
+            // Set the scene background color to white
+            scene.setFill(javafx.scene.paint.Color.WHITE);
 
             // Set the pop-up window as a modal dialog
             primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle(title);
+
+            primaryStage.setWidth(300);
+            primaryStage.setHeight(200);
             primaryStage.setScene(scene);
 
             // Show the pop-up window
