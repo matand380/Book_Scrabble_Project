@@ -235,6 +235,11 @@ public class GameWindowController implements Observer, Initializable {
                     }
                 });
             });
+            Platform.runLater(() -> {
+                wordForTryPlace.clear();
+                yourWord.getChildren().clear();
+                unlockHand();
+            });
         });
 
         updatesMap.put("scores updated", message -> {
@@ -253,10 +258,14 @@ public class GameWindowController implements Observer, Initializable {
         updatesMap.put("challengeAlreadyActivated", message -> {
             alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
         });
+        updatesMap.put("challengeSuccess", message -> {
+            alertPopUp("challengeSuccess", "challengeSuccess", "challenge succeed and \nthe challenger get 10 points bonus");
+        });
 
         updatesMap.put("turnPassed", message -> {
             String currentPlayerIndex = message.split(":")[1];
             passTurn(currentPlayerIndex);
+
         });
 
         updatesMap.put("playersName updated", message -> {
@@ -428,9 +437,7 @@ public class GameWindowController implements Observer, Initializable {
                         }
                     }
                     viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-                    wordForTryPlace.clear();
-                    yourWord.getChildren().clear();
-                    unlockHand();
+
                     instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
 
                 } else
@@ -600,6 +607,7 @@ public class GameWindowController implements Observer, Initializable {
             tryPlaceBtn.setDisable(false);
             passTurnBtn.setDisable(false);
         }
+
 //        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
     }
 
@@ -610,13 +618,22 @@ public class GameWindowController implements Observer, Initializable {
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
         Platform.runLater(() -> {
+                for (TileField t : wordForTryPlace) {
+                    if (gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                        gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
+                    } else
+                        gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+                }
+                gameBoard.redraw();
+                wordForTryPlace.clear();
+                yourWord.getChildren().clear();
+                unlockHand();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(header);
             alert.setContentText(text);
-            alert.showAndWait();
 
-            rollBack();
+            alert.showAndWait();
         });
     }
 
@@ -646,20 +663,7 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
-    private void rollBack() {
-        Platform.runLater(() -> {
-            for (TileField t : wordForTryPlace) {
-                if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
-                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
-                } else
-                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
-            }
-            gameBoard.redraw();
-            wordForTryPlace.clear();
-            yourWord.getChildren().clear();
-            unlockHand();
-        });
-    }
+
 
     private boolean checkFirstWord() {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
@@ -670,40 +674,7 @@ public class GameWindowController implements Observer, Initializable {
         return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
-    private boolean ifConnected(TileField t) {
-        if (wordForTryPlace.isEmpty()) {
-            return true;
-        }
 
-        TileField lastTile = wordForTryPlace.get(wordForTryPlace.size() - 1);
-        int lastTileRow = lastTile.tileRow;
-        int lastTileCol = lastTile.tileCol;
-        boolean adjacent = ((t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
-                || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1)) && wordForTryPlace.get(0).tileCol <= t.tileCol;
-
-        boolean vertical = false;
-
-        if (adjacent && wordForTryPlace.size() > 1) {
-            // Check if the word is horizontal or vertical
-            vertical = isVertical(wordForTryPlace);
-        } else
-            return adjacent;
-
-        if (vertical) {
-            for (TileField tile : wordForTryPlace) {
-                if (tile.tileCol != t.tileCol) {
-                    return false;
-                }
-            }
-        } else {
-            for (TileField tile : wordForTryPlace) {
-                if (tile.tileRow != t.tileRow) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public void unlockHand() {
         for (TileField t : handFields) {

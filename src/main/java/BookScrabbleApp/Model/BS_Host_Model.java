@@ -338,7 +338,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     //execute challengeWord method
                     boolean result = false;
                     String challengerIndex = this.getChallengeInfo().split(":")[0];
-                    String forChallenge = this.challengeInfo.split(":")[1];
+                    String forChallenge = this.getChallengeInfo().split(":")[1];
                     result = challengeWord(forChallenge, challengerIndex);
 
                     if (result) {
@@ -475,16 +475,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
                 updateScores();
+                challengeActivated.set(false);
                 return true;
             } else {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() + 10);
                 updateScores();
+                challengeActivated.set(false);
                 return false;
             }
         } else {
             hostLogger.log(System.Logger.Level.ERROR, "GameServer response in challengeWord is not valid");
+            challengeActivated.set(false);
             return false;
         }
+
     }
 
     /**
@@ -683,8 +687,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param challengeInfo Set the challengeinfo variable
      */
     public void requestChallengeActivation(String challengeInfo) {
-        if (this.getChallengeInfo() != null) {
-            String challengerIndex = this.getChallengeInfo().split(":")[0];
+        if (challengeInfo != null) {
+            String challengerIndex = challengeInfo.split(":")[0];
             // Set the challengeRequested flag to indicate a challenge is requested
             if (challengeActivated.get()) {
                 if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
@@ -698,7 +702,14 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 this.setChallengeInfo(challengeInfo);
 //                LockSupport.unpark(tryThread);
 //                semaphore.release();
-                notifyAll();
+               try {
+                   notifyAll();
+            }catch (IllegalMonitorStateException e)
+            {
+                hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
+                Platform.runLater(() -> {
+                });
+            }
 //                lock.unlock();
 
             }
@@ -725,14 +736,14 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
     public void unPark() {
         try {
-
-
             Runnable runnable = () -> {
                 notifyAll();
                 System.out.println("@@@@ lock released @@@@");
             };
             if (isHost()) {
                 runnable.run();
+                Platform.runLater(() -> {
+                });
             } else
                 Platform.runLater(runnable);
         }catch (IllegalMonitorStateException e)
