@@ -78,7 +78,7 @@
       </VBox>
     </center>
    <top>
-          <Label fx:id="welcomeText" prefHeight="98.0" prefWidth="456.0" text="Welcome to the Guest" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" underline="true" wrapText="true" BorderPane.alignment="CENTER">
+          <Label fx:id="welcomeText" prefHeight="98.0" prefWidth="456.0" text="Welcome to the Guest" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" BorderPane.alignment="CENTER">
               <font>
                   <Font size="48.0" />
               </font>
