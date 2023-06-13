@@ -57,11 +57,11 @@ public class HostCommunicationHandler implements ClientHandler {
 
         handlers.put("challengeWord", message -> {
             String PlayerIndex = message[1];
-            String word = message[3];
+            String word = message[2];
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch(w1 -> w1.toString().equals(word));
             if (exist) {
                 String challengeInfo = PlayerIndex + ":" + word;
-               executor.submit(()->BS_Host_Model.getModel().requestChallengeActivation(challengeInfo));
+               BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
             }
             else
             {
