@@ -35,8 +35,9 @@
 
 .player-rectangle {
     -fx-fill: #234a6e00;
-    -fx-stroke: black;
+    -fx-stroke: #234a6e;
     -fx-stroke-width: 1px;
     -fx-arc-width: 10px;
     -fx-arc-height: 10px;
+    -fx-background-color: gold;
 }

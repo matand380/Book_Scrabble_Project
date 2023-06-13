@@ -147,6 +147,9 @@ public class GameWindowController implements Observer, Initializable {
         nameFields.add(namePlayer1);
         scoresFields.add(scorePlayer1);
         rectanglesPlayer.add(player1Rect);
+        rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
+        namePlayer1.getStyleClass().add("player-name");
+
         nameFields.add(namePlayer2);
         scoresFields.add(scorePlayer2);
         rectanglesPlayer.add(player2Rect);
