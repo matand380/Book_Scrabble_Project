@@ -25,7 +25,7 @@
 
 <?import BookScrabbleApp.GridCanvas?>
 
-<BorderPane maxHeight="775.0" maxWidth="1215.0" minHeight="775.0" minWidth="1215.0" prefHeight="775.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController" stylesheets="@../buttonStyleSheets.css, @../background.css" >
+<BorderPane maxHeight="775.0" maxWidth="1215.0" minHeight="775.0" minWidth="1215.0" prefHeight="775.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController" styleClass="gameWindow" stylesheets="@../buttonStyleSheets.css, @../background.css" >
     <bottom>
       <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="865.0" BorderPane.alignment="CENTER">
          <children>
@@ -195,7 +195,7 @@
                <Group>
                   <children>
                       <Rectangle fx:id="player1Rect" styleClass="player-rectangle"  arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" smooth="false" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
-                                 <Label stylesheets="@../buttonStyleSheets.css" styleClass="player-rectangle" fx:id="namePlayer1" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="Player1" visible="false">
+                                 <Label fx:id="namePlayer1" styleClass="player-name" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="Player1" visible="false">
                                      <font>
                                          <Font size="18.0"  />
                                      </font>
@@ -209,13 +209,13 @@
                            <Point3D />
                         </rotationAxis>
                                  </Label>
-                                 <Label  fx:id="scorePlayer1" alignment="CENTER" layoutX="82.0" layoutY="27.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" visible="false" />
+                                 <Label  fx:id="scorePlayer1" styleClass="player-score" alignment="CENTER" layoutX="82.0" layoutY="27.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" visible="false" />
                   </children>
                </Group>
                <Group layoutY="70.0">
                   <children>
                                  <Rectangle fx:id="player2Rect" styleClass="player-rectangle" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
-                                 <Label fx:id="namePlayer2" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player2" visible="false">
+                                 <Label fx:id="namePlayer2" styleClass="player-name" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player2" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -226,13 +226,13 @@
                            <Insets left="10.0" />
                         </padding>
                                  </Label>
-                                 <Label fx:id="scorePlayer2" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" visible="false" />
+                                 <Label fx:id="scorePlayer2" styleClass="player-score" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" textAlignment="CENTER" visible="false" />
                   </children>
                </Group>
                <Group layoutY="140.0">
                   <children>
                                  <Rectangle fx:id="player3Rect" styleClass="player-rectangle" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="200.0" />
-                                 <Label fx:id="namePlayer3" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player3" visible="false">
+                                 <Label fx:id="namePlayer3" styleClass="player-name" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player3" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -240,13 +240,13 @@
                            <Insets left="10.0" />
                         </padding>
                                  </Label>
-                                 <Label fx:id="scorePlayer3" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
+                                 <Label fx:id="scorePlayer3" styleClass="player-score" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
                   </children>
                </Group>
                <Group layoutY="210.0">
                   <children >
                                  <Rectangle  fx:id="player4Rect" styleClass="player-rectangle" arcHeight="5.0" arcWidth="5.0" fill="#234a6e00" height="50.0" stroke="BLACK" visible="false" width="200.0" />
-                                 <Label fx:id="namePlayer4" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player4" visible="false">
+                                 <Label fx:id="namePlayer4" styleClass="player-name" alignment="CENTER" centerShape="false" contentDisplay="CENTER" prefHeight="30.0" prefWidth="190.0" text="player4" visible="false">
                                      <font>
                                          <Font size="18.0" />
                                      </font>
@@ -254,7 +254,7 @@
                            <Insets left="10.0" />
                         </padding>
                                  </Label>
-                                 <Label fx:id="scorePlayer4" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
+                                 <Label fx:id="scorePlayer4" styleClass="player-score" alignment="CENTER" layoutX="82.0" layoutY="30.0" prefHeight="17.0" prefWidth="34.0" visible="false" />
                   </children>
                </Group>
             </children>

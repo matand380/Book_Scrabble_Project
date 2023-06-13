@@ -15,8 +15,8 @@ public class BookScrabbleApp extends Application {
 
     /**
      * The start function is the first function that runs when the program starts.
-     * It loads in all of the necessary files and sets up a scene for them to be displayed on.
-     * @param stage Set the stage to be displayed
+     * It loads in all the necessary files and sets up a scene for them to be displayed on.
+     * @param //stage Set the stage to be displayed
      * @return A stage, which is the main window of the application
      */
     @Override

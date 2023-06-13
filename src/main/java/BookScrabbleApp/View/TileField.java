@@ -51,7 +51,7 @@ public class TileField extends StackPane {
         isSelect = select;
     }
 
-    public void setUnlocked() {
+    public void setUnselected() {
         setSelect(false);
         isUpdate = false;
         isClick = false;
