@@ -24,10 +24,15 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
+    public static TileField selectedTileField;
     @FXML
-    public Label instructions;
+    public Text turnInstructionTitle;
     @FXML
-    public Text playingInstruction;
+    public Text turnInstruction;
+    @FXML
+    public Text CHInstructionTitle;
+    @FXML
+    public Text challengeInstructions;
     @FXML
     Label namePlayer1 = new Label();
     @FXML
@@ -52,7 +57,6 @@ public class GameWindowController implements Observer, Initializable {
     Label scorePlayer3 = new Label();
     @FXML
     Label scorePlayer4 = new Label();
-
     @FXML
     GridPane handGrid = new GridPane();
     @FXML
@@ -65,25 +69,14 @@ public class GameWindowController implements Observer, Initializable {
     Button passTurnBtn;
     @FXML
     Button tryPlaceBtn;
-
     ExecutorService executorService = Executors.newFixedThreadPool(4);
-
-
-    private Map<String, Consumer<String>> updatesMap; //map of all the updates
-
     BS_ViewModel viewModel;
-
+    List<List<TileField>> boardFields;
+    private Map<String, Consumer<String>> updatesMap; //map of all the updates
     private List<Label> scoresFields;
-
     private List<Label> nameFields;
     private List<Rectangle> rectanglesPlayer;
-
     private List<TileField> handFields;
-
-    List<List<TileField>> boardFields;
-
-    public static TileField selectedTileField;
-
     private Map<KeyCode, EventHandler<KeyEvent>> keyEventsMap;
 
     private List<TileField> wordForTryPlace;
@@ -108,9 +101,20 @@ public class GameWindowController implements Observer, Initializable {
             startNewGameBtn.setVisible(false);
 
         }
-            instructions.setText("Waiting for host to start the game");
-            instructions.setVisible(true);
-            ;
+        turnInstructionTitle.setText("Turn instructions:");
+        turnInstruction.setText("Use the arrows to position the cursor where you\n" +
+                "want to add a Tile.\n" + "Use the keyboard to type the desired Tile.\n" + "Select the Tiles with the mouse to validate them.\n" +
+                "If your word is legal, it will be placed on the board,\n" + "and you will earn points.\n" + "Bonuses will be awarded if applicable.\n");
+                CHInstructionTitle.setText("Challenge instructions:");
+                challengeInstructions.setText("When the 'Challenge' pop-up appears,\n" +"select the checkbox\n" +
+                "next to the word you want to challenge.\n" +
+                "Click the challenge button.\n" +
+                "Please note that you have only 7 seconds.\n" +
+                "After that, the window will disappear");
+        turnInstructionTitle.setVisible(true);
+        turnInstructionTitle.underlineProperty().setValue(true);
+        CHInstructionTitle.setVisible(true);
+        CHInstructionTitle.underlineProperty().setValue(true);
     }
 
     @Override
@@ -164,7 +168,7 @@ public class GameWindowController implements Observer, Initializable {
                 boolean adjacent = true;
 
                 if (wordForTryPlace.size() > 0) {
-                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size()-1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size()-1).tileCol);
+                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
                 }
 
                 if (adjacent) {
@@ -431,7 +435,6 @@ public class GameWindowController implements Observer, Initializable {
                     wordForTryPlace.clear();
                     yourWord.getChildren().clear();
                     unlockHand();
-                    instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
 
                 } else
                     alertPopUp("Word Error", "Word Error", "Must have at least one letter from your hand");
@@ -447,7 +450,6 @@ public class GameWindowController implements Observer, Initializable {
     public void onPassButtonClick() {
         viewModel.passTurn();
         Platform.runLater(() -> gameBoard.requestFocus());
-        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
     }
 
     @FXML
@@ -467,10 +469,6 @@ public class GameWindowController implements Observer, Initializable {
     public void startNewGame() {
         this.viewModel.startNewGame();
         startNewGameBtn.setVisible(false);
-        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
-        playingInstruction.setVisible(true);
-        playingInstruction.setText("choose the position you want to place the tiles\nuse the arrow keys\nselect the word with the mouse\npress tryPlace");
-
     }
 
     //setters methods
@@ -600,7 +598,7 @@ public class GameWindowController implements Observer, Initializable {
             tryPlaceBtn.setDisable(false);
             passTurnBtn.setDisable(false);
         }
-//        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
+
     }
 
     private void removeFromYourWord(TileField removedTile) {

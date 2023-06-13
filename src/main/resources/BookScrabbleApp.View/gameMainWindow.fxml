@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<!--<?import BookScrabbleApp.GridCanvas?>-->
+<?import BookScrabbleApp.GridCanvas?>
 
 <BorderPane maxHeight="775.0" maxWidth="1215.0" minHeight="775.0" minWidth="1215.0" prefHeight="775.0" prefWidth="1215.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.GameWindowController">
     <bottom>
@@ -168,14 +168,8 @@
                   <Image url="@../images/board/borderCavnvas.png" />
                </image>
             </ImageView>
-<!--                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" visible="true" />-->
-                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />
-                   <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="13.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="562.0" prefWidth="648.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
-                       <styleClass>
-                           <String fx:value="button" />
-                           <String fx:value="font" />
-                       </styleClass>
-                   </JFXButton>
+                <GridCanvas fx:id="gameBoard" height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" visible="true" />
+<!--                <Canvas height="516.0" layoutX="92.0" layoutY="39.0" width="516.0" />-->
             </children>
          <BorderPane.margin>
             <Insets />
@@ -278,18 +272,34 @@
          <children>
             <VBox>
                <children>
-                  <Label fx:id="instructions">
+                  <Text fx:id="turnInstructionTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="turn instruction title">
                      <VBox.margin>
-                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                        <Insets left="10.0" top="5.0" />
                      </VBox.margin>
-                  </Label>
-                  <Text fx:id="playingInstruction" strokeType="OUTSIDE" strokeWidth="0.0">
+                  </Text>
+                  <Text fx:id="turnInstruction" strokeType="OUTSIDE" strokeWidth="0.0" text="turn instruction ">
                      <VBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                        <Insets left="10.0" top="1.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text fx:id="CHInstructionTitle" strokeType="OUTSIDE" strokeWidth="0.0" text="CH instruction title">
+                     <VBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text fx:id="challengeInstructions" strokeType="OUTSIDE" strokeWidth="0.0" text="CH instruction ">
+                     <VBox.margin>
+                        <Insets left="10.0" top="1.0" />
                      </VBox.margin>
                   </Text>
                </children>
             </VBox>
+                   <JFXButton fx:id="startNewGameBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="76.0" layoutY="461.0" minHeight="-Infinity" minWidth="-Infinity" onAction="#startNewGame" prefHeight="45.0" prefWidth="150.0" styleClass="start-button" stylesheets="@../buttonStyleSheets.css" text="Start">
+                       <styleClass>
+                           <String fx:value="button" />
+                           <String fx:value="font" />
+                       </styleClass>
+                   </JFXButton>
          </children>
       </AnchorPane>
    </right>
