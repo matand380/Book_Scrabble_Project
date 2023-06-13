@@ -9,6 +9,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GameServer {
 
@@ -16,6 +18,8 @@ public class GameServer {
     private int port;
     private ClientHandler ch;
     private volatile boolean stop;
+
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
 
     /**
      * The MyServer function is a constructor for the MyServer class.
@@ -52,19 +56,15 @@ public class GameServer {
                 clients.add(aClient);
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
-                try {
-                        try {
-                            ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
-                            // TODO: 05/05/2023 implement it in thread
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
 
-//                    ch.handleOut(aClient.getOutputStream());
-//                    ch.handleIn(aClient.getInputStream());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                           executorService.submit(()->{
+                               try {
+                                   ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
+                               }catch (IOException e){
+                                   e.printStackTrace();
+                               }
+                               });
+
             } catch (SocketTimeoutException e) {
                 //wait for another client
             }
