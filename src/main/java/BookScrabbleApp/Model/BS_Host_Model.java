@@ -3,6 +3,7 @@ package BookScrabbleApp.Model;
 import BookScrabbleApp.Model.GameData.*;
 import BookScrabbleApp.Model.GameLogic.*;
 import com.google.gson.*;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.net.*;
@@ -31,7 +32,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Queue<Player> scoresManager = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
     String[] PlayersScores;
     private List<Player> players;
-    Thread tryThread;
+
 
     /**
      * The BS_Host_Model function is a singleton class that creates the host model for the game.
@@ -300,7 +301,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param stringWord Get the word that the player is trying to place
      */
     public void tryPlaceWord(String stringWord, int row, int col, boolean direction) {
-        tryThread = new Thread(() -> {
+        Runnable r = () -> {
             char[] buildWord = stringWord.toCharArray();
             Player current = getPlayers().get(currentPlayerIndex);
             Tile[] tiles = new Tile[stringWord.length()];
@@ -323,7 +324,16 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 notifyObservers("wordsForChallenge:" + currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
                 //if the current player is the host, then the host's viewModel wan't display the challenge words
 
-                //LockSupport.park();
+
+
+                System.out.println(Thread.currentThread().getName());
+                System.out.println(Thread.currentThread()+"going to sleep for 10 seconds");
+                try {
+                    Thread.currentThread().sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(System.currentTimeMillis());
                 if (challengeActivated.get()) {
                     //execute challengeWord method
                     boolean result = false;
@@ -383,8 +393,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     notifyObservers("invalidWord");
                 }
             }
-        });
-        tryThread.start();
+        };
+        if (isHost())
+            new Thread(r).start();
+        else
+            r.run();
     }
 
     /**
@@ -683,7 +696,11 @@ public class BS_Host_Model extends Observable implements BS_Model {
             } else {
                 challengeActivated.set(true);
                 this.setChallengeInfo(challengeInfo);
-                //LockSupport.unpark(tryThread);
+//                LockSupport.unpark(tryThread);
+//                semaphore.release();
+                notifyAll();
+//                lock.unlock();
+
             }
         }
     }
@@ -706,10 +723,25 @@ public class BS_Host_Model extends Observable implements BS_Model {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
 
-    public void unPark(){
-        //LockSupport.unpark(tryThread);
-        System.out.println("    unPark called    !!!!!!!!!!!");
+    public void unPark() {
+        try {
+
+
+            Runnable runnable = () -> {
+                notifyAll();
+                System.out.println("@@@@ lock released @@@@");
+            };
+            if (isHost()) {
+                runnable.run();
+            } else
+                Platform.runLater(runnable);
+        }catch (IllegalMonitorStateException e)
+        {
+            hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
+        }
     }
+
+
 }
 
 

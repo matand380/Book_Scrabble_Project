@@ -5,6 +5,8 @@ import BookScrabbleApp.Model.GameData.*;
 import javafx.beans.property.*;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.*;
 
 public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
@@ -23,6 +25,8 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
     public List<SimpleStringProperty> viewableWordsForChallenge; // words for challenge array
     BookScrabbleHostFacade hostFacade;
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
+
+    ExecutorService executor = Executors.newFixedThreadPool(3);
 
 
     /**
@@ -259,8 +263,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
      */
     @Override
     public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
-        // TODO: 01/06/2023 need to take care for the word binding
-        hostFacade.tryPlaceWord(word, row, col, isVertical);
+        executor.submit(()->hostFacade.tryPlaceWord(word, row, col, isVertical));
     }
 
     /**
@@ -338,7 +341,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         String updateType = messageSplit[0];
         System.out.println("HostViewModel ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
-            updatesMap.get(updateType).accept(message);
+          executor.submit(()->  updatesMap.get(updateType).accept(message));
         } else {
             setChanged();
             notifyObservers("Error in updates handling ");

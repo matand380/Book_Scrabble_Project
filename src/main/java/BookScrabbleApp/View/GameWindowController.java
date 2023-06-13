@@ -469,7 +469,7 @@ public class GameWindowController implements Observer, Initializable {
         startNewGameBtn.setVisible(false);
         instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
         playingInstruction.setVisible(true);
-        playingInstruction.setText("chose the position you want to place the tiles\nuse the arrow keys\nselect the word with the mouse\npress tryPlace");
+        playingInstruction.setText("choose the position you want to place the tiles\nuse the arrow keys\nselect the word with the mouse\npress tryPlace");
 
     }
 
@@ -600,7 +600,7 @@ public class GameWindowController implements Observer, Initializable {
             tryPlaceBtn.setDisable(false);
             passTurnBtn.setDisable(false);
         }
-        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
+//        instructions.setText("Player turn: "+ viewModel.getViewableNames().get(viewModel.getPlayerIndex()).getValue());
     }
 
     private void removeFromYourWord(TileField removedTile) {
