@@ -362,9 +362,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
                             setChanged();
                             notifyObservers("challengeSuccess");
                         }
-                        passTurn(currentPlayerIndex);
                     }
 
+                    passTurn(currentPlayerIndex);
                     challengeActivated.set(false);
                     currentPlayerWords.clear();
                     return;
@@ -733,21 +733,22 @@ public class BS_Host_Model extends Observable implements BS_Model {
     }
 
     public void unPark() {
-        try {
-            Runnable runnable = () -> {
-                notifyAll();
-                System.out.println("@@@@ lock released @@@@");
-            };
-            if (isHost()) {
-                runnable.run();
-                Platform.runLater(() -> {
-                });
-            } else
-                Platform.runLater(runnable);
-        }catch (IllegalMonitorStateException e)
-        {
-            hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
-        }
+//        try {
+//            Runnable runnable = () -> {
+//                notifyAll();
+//                System.out.println("@@@@ lock released @@@@");
+//            };
+//            if (isHost()) {
+//                runnable.run();
+//                Platform.runLater(() -> {
+//                });
+//            } else
+//                Platform.runLater(runnable);
+//        }catch (IllegalMonitorStateException e)
+//        {
+//            hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
+//        }
+        System.out.println("unparking");
     }
 
 

@@ -19,6 +19,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; //score array
     public List<SimpleStringProperty> viewableName; //score array
+
     public SimpleStringProperty challengeWord; //word for challenge
     public List<SimpleStringProperty> viewableWordsForChallenge; //words for challenge
     public StringProperty winnerProperty; //winner of the game
@@ -156,8 +157,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     @Override
     public void challengeRequest(String challengeWord) {
         int playerIndex = guestFacade.getPlayer().get_index();
-        String challengeRequest = playerIndex + ":" + challengeWord;
-        guestFacade.challengeWord(challengeRequest);
+        guestFacade.challengeWord(playerIndex + ":" + challengeWord);
         viewableWordsForChallenge.clear();
     }
 
@@ -168,6 +168,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     @Override
     public void endGame() {
         guestFacade.endGame();
+
     }
 
     /**
