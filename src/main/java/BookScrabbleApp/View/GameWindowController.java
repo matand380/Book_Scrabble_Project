@@ -717,7 +717,7 @@ public class GameWindowController implements Observer, Initializable {
      * each letter in their word. If a tile from their hand is clicked, then it will be added to
      * yourWord gridpane. If a tile from the board is clicked, then its text will be updated with
      * whatever letter was previously there (if any). The function also checks if all tiles have been placed on board; if so, it calls endGame().
-     * @param List&lt;TileField&gt; list Store the tiles that are currently in your word
+     * @param &lt;TileField&gt; list Store the tiles that are currently in your word
      */
     private void redrawYourWord(List<TileField> list) {
         Platform.runLater(() -> {
@@ -743,10 +743,9 @@ public class GameWindowController implements Observer, Initializable {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
     }
 
-    //check if these methods is needed
     /**
      * The isVertical function checks if the word is vertical or not.
-     * @param List&lt;TileField&gt; wordTryPlace Determine if the word is vertical or horizontal
+     * @param  wordTryPlace Determine if the word is vertical or horizontal
      * @return A boolean value
      */
     private boolean isVertical(List<TileField> wordTryPlace) {
@@ -764,9 +763,9 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The endGamePopUp function creates a pop-up window that displays the winner of the game.
-     * @param String title Set the title of the pop-up window
-     * @param String header Set the text of the header label
-     * @param String text Set the text of the content label
+     * @param  title Set the title of the pop-up window
+     * @param  header Set the text of the header label
+     * @param  text Set the text of the content label
      */
     public void endGamePopUp(String title, String header, String text) {
         Platform.runLater(() -> {
