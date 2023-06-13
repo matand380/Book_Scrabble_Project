@@ -136,7 +136,6 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
             notifyObservers("playersName updated");
         });
 
-
         updatesMap.put("challengeSuccess", message -> {
             setChanged();
             notifyObservers("challengeSuccess");
@@ -146,7 +145,6 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
             setChanged();
             notifyObservers("endGameHost");
         });
-
     }
 
     /**
@@ -161,8 +159,6 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
             viewableWordsForChallenge.add(new SimpleStringProperty());
             viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
         }
-
-
     }
 
     /**

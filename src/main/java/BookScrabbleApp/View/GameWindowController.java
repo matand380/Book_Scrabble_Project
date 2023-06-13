@@ -94,12 +94,25 @@ public class GameWindowController implements Observer, Initializable {
 
     private List<SimpleStringProperty> wordsForChallenge;
 
+    /**
+     * The GameWindowController Constructor initialize the properties of the GameWindowController class.
+     * It also initializes two maps, one for updating and one for key events.
+     *
+     * @return A gameWindowController object
+     */
     public GameWindowController() {
         initializeProperties();
         initializeUpdateMap();
         initializeKeyEventMap();
     }
 
+    /**
+     * The setViewModel function is used to set the viewModel of the class (Host or Guest) according to what the player chose.
+     * this function is called from the host or guest controller.
+     *
+     * @param //BS_ViewModel viewModel Determine which viewmodel to use
+     * @return A bs_viewmodel object
+     */
     public void setViewModel(BS_ViewModel viewModel) {
         if (viewModel instanceof BS_Host_ViewModel) {
             this.viewModel = new BS_Host_ViewModel();
@@ -128,6 +141,17 @@ public class GameWindowController implements Observer, Initializable {
         CHInstructionTitle.underlineProperty().setValue(true);
     }
 
+    /**
+     * The update function is called by the observable object when it changes.
+     * The update function then calls a method in the updatesMap that corresponds to
+     * the type of update that was sent from the observable object.
+     * This allows for
+     * different types of updates to be handled differently.
+     *
+     * @param //Observable o Identify the observable that is calling the update function
+     * @param //Object     arg Pass the message from the observable object to this observer
+     * @return A string which is then used to determine what function to call
+     */
     @Override
     public void update(Observable o, Object arg) {
         String message = (String) arg;
@@ -139,13 +163,17 @@ public class GameWindowController implements Observer, Initializable {
         }
     }
 
-    //initialize the window
+    /**
+     * The initialize function is called when the FXML file is loaded.
+     * It sets up all the fields in the game board, and adds them to a 15*15 array.
+     * It also sets up event handlers for mouse clicks and key presses on the game board.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         nameFields.add(namePlayer1);
         scoresFields.add(scorePlayer1);
         rectanglesPlayer.add(player1Rect);
-       // rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
+        // rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
         namePlayer1.getStyleClass().add("player-name");
 
         nameFields.add(namePlayer2);
@@ -166,53 +194,8 @@ public class GameWindowController implements Observer, Initializable {
         }
         gameBoard.setTileFields(boardFields);
 
-        //focus on the board
-        gameBoard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                double xCoordinate = mouseEvent.getX();
-                double yCoordinate = mouseEvent.getY();
-
-                int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
-                int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
-
-                TileField clickedTile = gameBoard.tileFields.get(row).get(col);
-
-                boolean adjacent = true;
-
-                if (wordForTryPlace.size() > 0) {
-                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
-                }
-
-                if (adjacent) {
-                    if (!clickedTile.letter.getText().equals("") && !clickedTile.isSelect()) {
-                        clickedTile.setSelect(true);
-                        if (clickedTile.isUpdate()) {
-                            selectedTileField = new TileField();
-                            selectedTileField.copy(clickedTile);
-                            selectedTileField.letter.setText("_");
-                            setYourWord();
-                        } else {
-                            selectedTileField = new TileField();
-                            selectedTileField.copy(clickedTile);
-                            setTileFieldOnBoard();
-                            setYourWord();
-                        }
-                    }
-                }
-                gameBoard.requestFocus();
-            }
-        });
-
-        gameBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                if (keyEventsMap.containsKey(keyEvent.getCode())) {
-                    keyEventsMap.get(keyEvent.getCode()).handle(keyEvent);
-                } else
-                    System.out.println("key not found");
-            }
-        });
+        gameBoard.setOnMouseClicked(this::handleMouseClicked);
+        gameBoard.setOnKeyPressed(event -> keyEventsMap.get(event.getCode()).handle(event));
     }
 
     private void initializeProperties() {
@@ -360,6 +343,49 @@ public class GameWindowController implements Observer, Initializable {
         keyEventsMap.put(KeyCode.BACK_SPACE, functionForEachKey(KeyCode.BACK_SPACE));
         keyEventsMap.put(KeyCode.ENTER, functionForEachKey(KeyCode.ENTER));
     }
+
+    /**
+     * The handleMouseClicked function is called when the user clicks on a tile.
+     * It checks if the clicked tile is adjacent to the last selected tile, and if it is,
+     * it adds that tile to wordForTryPlace.
+     * If not, then nothing happens.
+     * @param //MouseEvent event Get the x and y coordinates of the mouse click
+     */
+    private void handleMouseClicked(MouseEvent event) {
+
+            double xCoordinate = event.getX();
+            double yCoordinate = event.getY();
+
+            int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
+            int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
+
+            TileField clickedTile = gameBoard.tileFields.get(row).get(col);
+
+            boolean adjacent = true;
+
+            if (wordForTryPlace.size() > 0) {
+                adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
+            }
+
+            if (adjacent) {
+                if (!clickedTile.letter.getText().equals("") && !clickedTile.isSelect()) {
+                    clickedTile.setSelect(true);
+                    if (clickedTile.isUpdate()) {
+                        selectedTileField = new TileField();
+                        selectedTileField.copy(clickedTile);
+                        selectedTileField.letter.setText("_");
+                        setYourWord();
+                    } else {
+                        selectedTileField = new TileField();
+                        selectedTileField.copy(clickedTile);
+                        setTileFieldOnBoard();
+                        setYourWord();
+                    }
+                }
+            }
+            gameBoard.requestFocus();
+        }
+
 
     /**
      * The functionForEachKey is a helper function that returns an EventHandler&lt;KeyEvent&gt; object.
