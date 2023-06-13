@@ -33,11 +33,23 @@
     -fx-border-radius: 25px;
 }
 
-.player-rectangle{
-      -fx-background-radius: 5,4,3,5;
-      font-weight: bold;
-      font-color: white;
+.player-rectangle {
+    -fx-fill: rgb(255, 255, 255, 0.8);
+    -fx-stroke: #000000;
+    -fx-stroke-width: 1px;
+    -fx-arc-width: 10px;
+    -fx-arc-height: 10px;
+}
 
+.player-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+.player-score {
+    -fx-font-size: 14px; /* Font size of the player score */
+    -fx-text-fill: #000000; /* Color of the player score */
 }
 .text{
 

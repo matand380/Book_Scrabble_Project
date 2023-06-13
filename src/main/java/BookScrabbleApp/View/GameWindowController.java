@@ -173,7 +173,6 @@ public class GameWindowController implements Observer, Initializable {
         nameFields.add(namePlayer1);
         scoresFields.add(scorePlayer1);
         rectanglesPlayer.add(player1Rect);
-        // rectanglesPlayer.get(0).getStyleClass().add("player-rectangle");
         namePlayer1.getStyleClass().add("player-name");
 
         nameFields.add(namePlayer2);
@@ -195,7 +194,16 @@ public class GameWindowController implements Observer, Initializable {
         gameBoard.setTileFields(boardFields);
 
         gameBoard.setOnMouseClicked(this::handleMouseClicked);
-        gameBoard.setOnKeyPressed(event -> keyEventsMap.get(event.getCode()).handle(event));
+        gameBoard.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEventsMap.containsKey(keyEvent.getCode())) {
+                    keyEventsMap.get(keyEvent.getCode()).handle(keyEvent);
+                } else
+                    System.out.println("key not found");
+            }
+        });
+
     }
 
     private void initializeProperties() {
@@ -238,7 +246,7 @@ public class GameWindowController implements Observer, Initializable {
             Platform.runLater(() -> {
                 wordForTryPlace.clear();
                 yourWord.getChildren().clear();
-                unlockHand();
+                unselectedHand();
             });
         });
 
@@ -435,7 +443,7 @@ public class GameWindowController implements Observer, Initializable {
 
                     for (TileField t : handFields) {
                         if (t.tileCol == gameBoard.getCol() && t.tileRow == gameBoard.getRow()) {
-                            t.setUnlocked();
+                            t.setUnselected();
                         }
                     }
                 }
@@ -573,7 +581,7 @@ public class GameWindowController implements Observer, Initializable {
             int tileCol = selectedTileField.tileCol;
             if (selectedTileField.isSelect() && gameBoard.tileFields.get(gameBoard.getRow()).get(gameBoard.getCol()).letter.getText().equals("")) {
                 gameBoard.tileFields.get(tileRow).get(tileCol).copy(selectedTileField);
-                gameBoard.tileFields.get(tileRow).get(tileCol).setUnlocked();
+                gameBoard.tileFields.get(tileRow).get(tileCol).setUnselected();
                 gameBoard.redraw();
             } else if (selectedTileField != null)
                 selectedTileField.setSelect(false);
@@ -690,7 +698,7 @@ public class GameWindowController implements Observer, Initializable {
             gameBoard.redraw();
             wordForTryPlace.clear();
             yourWord.getChildren().clear();
-            unlockHand();
+            unselectedHand();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(header);
@@ -713,11 +721,11 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The redrawYourWord function is called when the user clicks on a tile in their hand.
-     * It redraws the word that they are currently building, and it also updates the score of
-     * each letter in their word. If a tile from their hand is clicked, then it will be added to
-     * yourWord gridpane. If a tile from the board is clicked, then its text will be updated with
-     * whatever letter was previously there (if any). The function also checks if all tiles have been placed on board; if so, it calls endGame().
-     * @param List&lt;TileField&gt; list Store the tiles that are currently in your word
+     * It redraws the word that they are currently building.
+     * If a tile from their hand is clicked, then it will be added to yourWord from the board.
+     * If a tile from the board is clicked, then its text will be updated with "_" we do this so to send the server in the right format.
+     * The tile will be added to yourWord with the right letter from the board.
+     * @param //List&lt;TileField&gt; list Store the tiles that are currently in your word
      */
     private void redrawYourWord(List<TileField> list) {
         Platform.runLater(() -> {
@@ -736,7 +744,8 @@ public class GameWindowController implements Observer, Initializable {
 
 
     /**
-     * The checkFirstWord function checks to see if the first word has been placed on the board.
+     * The checkFirstWord function checks to see if the first word has been placed on Row 7 and Col 7.
+     * like the rules of the game say.
      * @return True if the first word has been placed, false otherwise
      */
     private boolean checkFirstWord() {
@@ -746,27 +755,31 @@ public class GameWindowController implements Observer, Initializable {
     //check if these methods is needed
     /**
      * The isVertical function checks if the word is vertical or not.
-     * @param List&lt;TileField&gt; wordTryPlace Determine if the word is vertical or horizontal
+     * @param //List&lt;TileField&gt; wordTryPlace Determine if the word is vertical or horizontal
      * @return A boolean value
      */
     private boolean isVertical(List<TileField> wordTryPlace) {
         return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
+
     /**
-     * The unlockHand function unlocks all the tiles in the player's hand.
+     * The unselectedHand function is used to unlock all the tiles in the player's hand.
+     * This function is called when a tile has been selected and then unselected, or when
+     * a player has finished their turn.
+     * It allows for any tile in the hand to be selected again.
      */
-    public void unlockHand() {
+    public void unselectedHand() {
         for (TileField t : handFields) {
-            t.setUnlocked();
+            t.setUnselected();
         }
     }
 
     /**
      * The endGamePopUp function creates a pop-up window that displays the winner of the game.
-     * @param String title Set the title of the pop-up window
-     * @param String header Set the text of the header label
-     * @param String text Set the text of the content label
+     * @param //String title Set the title of the pop-up window
+     * @param //String header Set the text of the header label
+     * @param //String text Set the text of the content label
      */
     public void endGamePopUp(String title, String header, String text) {
         Platform.runLater(() -> {
