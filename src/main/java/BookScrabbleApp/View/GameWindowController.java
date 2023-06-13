@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
-    public static TileField selectedTileField;
+
     @FXML
     public Text turnInstructionTitle;
     @FXML
@@ -57,6 +57,7 @@ public class GameWindowController implements Observer, Initializable {
     Label scorePlayer3 = new Label();
     @FXML
     Label scorePlayer4 = new Label();
+
     @FXML
     GridPane handGrid = new GridPane();
     @FXML
@@ -69,14 +70,25 @@ public class GameWindowController implements Observer, Initializable {
     Button passTurnBtn;
     @FXML
     Button tryPlaceBtn;
+
     ExecutorService executorService = Executors.newFixedThreadPool(4);
-    BS_ViewModel viewModel;
-    List<List<TileField>> boardFields;
+
+
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
+
+    BS_ViewModel viewModel;
+
     private List<Label> scoresFields;
+
     private List<Label> nameFields;
     private List<Rectangle> rectanglesPlayer;
+
     private List<TileField> handFields;
+
+    List<List<TileField>> boardFields;
+
+    public static TileField selectedTileField;
+
     private Map<KeyCode, EventHandler<KeyEvent>> keyEventsMap;
 
     private List<TileField> wordForTryPlace;
@@ -168,7 +180,7 @@ public class GameWindowController implements Observer, Initializable {
                 boolean adjacent = true;
 
                 if (wordForTryPlace.size() > 0) {
-                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
+                    adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size()-1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size()-1).tileCol);
                 }
 
                 if (adjacent) {
@@ -239,6 +251,11 @@ public class GameWindowController implements Observer, Initializable {
                     }
                 });
             });
+            Platform.runLater(() -> {
+                wordForTryPlace.clear();
+                yourWord.getChildren().clear();
+                unlockHand();
+            });
         });
 
         updatesMap.put("scores updated", message -> {
@@ -256,6 +273,9 @@ public class GameWindowController implements Observer, Initializable {
 
         updatesMap.put("challengeAlreadyActivated", message -> {
             alertPopUp("Challenge Error", "Challenge Error", "Challenge is Already Activated");
+        });
+        updatesMap.put("challengeSuccess", message -> {
+            alertPopUp("challengeSuccess", "challengeSuccess", "challenge succeed and \nthe challenger get 10 points bonus");
         });
 
         updatesMap.put("turnPassed", message -> {
@@ -432,9 +452,6 @@ public class GameWindowController implements Observer, Initializable {
                         }
                     }
                     viewModel.tryPlaceWord(word.toString(), wordForTryPlace.get(0).tileRow, wordForTryPlace.get(0).tileCol, direction);
-                    wordForTryPlace.clear();
-                    yourWord.getChildren().clear();
-                    unlockHand();
 
                 } else
                     alertPopUp("Word Error", "Word Error", "Must have at least one letter from your hand");
@@ -608,13 +625,22 @@ public class GameWindowController implements Observer, Initializable {
     //popUp methods
     private void alertPopUp(String title, String header, String text) {
         Platform.runLater(() -> {
+                for (TileField t : wordForTryPlace) {
+                    if (gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
+                        gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
+                    } else
+                        gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
+                }
+                gameBoard.redraw();
+                wordForTryPlace.clear();
+                yourWord.getChildren().clear();
+                unlockHand();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
             alert.setHeaderText(header);
             alert.setContentText(text);
-            alert.showAndWait();
 
-            rollBack();
+            alert.showAndWait();
         });
     }
 
@@ -644,20 +670,7 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
-    private void rollBack() {
-        Platform.runLater(() -> {
-            for (TileField t : wordForTryPlace) {
-                if (!gameBoard.tileFields.get(t.tileRow).get(t.tileCol).isUpdate()) {
-                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).letter.setText("");
-                } else
-                    gameBoard.tileFields.get(t.tileRow).get(t.tileCol).setSelect(false);
-            }
-            gameBoard.redraw();
-            wordForTryPlace.clear();
-            yourWord.getChildren().clear();
-            unlockHand();
-        });
-    }
+
 
     private boolean checkFirstWord() {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
@@ -668,40 +681,7 @@ public class GameWindowController implements Observer, Initializable {
         return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
-    private boolean ifConnected(TileField t) {
-        if (wordForTryPlace.isEmpty()) {
-            return true;
-        }
 
-        TileField lastTile = wordForTryPlace.get(wordForTryPlace.size() - 1);
-        int lastTileRow = lastTile.tileRow;
-        int lastTileCol = lastTile.tileCol;
-        boolean adjacent = ((t.tileRow == lastTileRow && Math.abs(t.tileCol - lastTileCol) == 1)
-                || (t.tileCol == lastTileCol && Math.abs(t.tileRow - lastTileRow) == 1)) && wordForTryPlace.get(0).tileCol <= t.tileCol;
-
-        boolean vertical = false;
-
-        if (adjacent && wordForTryPlace.size() > 1) {
-            // Check if the word is horizontal or vertical
-            vertical = isVertical(wordForTryPlace);
-        } else
-            return adjacent;
-
-        if (vertical) {
-            for (TileField tile : wordForTryPlace) {
-                if (tile.tileCol != t.tileCol) {
-                    return false;
-                }
-            }
-        } else {
-            for (TileField tile : wordForTryPlace) {
-                if (tile.tileRow != t.tileRow) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public void unlockHand() {
         for (TileField t : handFields) {

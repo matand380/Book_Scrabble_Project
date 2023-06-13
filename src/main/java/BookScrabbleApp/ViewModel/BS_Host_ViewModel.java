@@ -136,7 +136,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
             notifyObservers("playersName updated");
         });
 
-        // FIXME: 30/05/2023 check if we need this function
+
         updatesMap.put("challengeSuccess", message -> {
             setChanged();
             notifyObservers("challengeSuccess");
