@@ -59,18 +59,22 @@ public class BookScrabbleHandler implements ClientHandler {
             if (line.charAt(0) == 'Q') {
                 if (DictionaryManager.get().query(books)) {
                     out.println("Q:true\n");
+                    System.out.println("Q:true\n");
                     out.flush();
                 } else {
                     out.println("Q:false\n");
+                    System.out.println("Q:false\n");
                     out.flush();
                 }
             } else if (line.charAt(0) == 'C') {
                 if (DictionaryManager.get().challenge(books)) {
                     out.println("C:true");
+                    System.out.println("C:true\n");
                     out.println("\n");
                     out.flush();
                 } else {
                     out.println("C:false\n");
+                    System.out.println("C:false\n");
                     out.flush();
                 }
             }

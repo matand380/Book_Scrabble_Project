@@ -1,0 +1,17 @@
+
+.root {
+    -fx-background-image: url("images/screenImage.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center;
+    -fx-opacity: 0.8;
+}
+
+.gameWindow {
+    -fx-background-image: url("images/gameWindowBackground.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-background-position: center;
+    -fx-opacity: 0.8;
+}
+

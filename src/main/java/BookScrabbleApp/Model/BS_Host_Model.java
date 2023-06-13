@@ -1,21 +1,17 @@
 package BookScrabbleApp.Model;
 
 import BookScrabbleApp.Model.GameData.*;
-import BookScrabbleApp.Model.GameLogic.HostCommunicationHandler;
-import BookScrabbleApp.Model.GameLogic.MyServer;
+import BookScrabbleApp.Model.GameLogic.*;
+import com.google.gson.*;
+import javafx.application.Platform;
 
-import java.io.IOException;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.LockSupport;
-import java.util.regex.Pattern;
-
-import com.google.gson.Gson;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+import java.util.concurrent.locks.*;
+import java.util.regex.*;
 
 
 public class BS_Host_Model extends Observable implements BS_Model {
@@ -37,6 +33,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     String[] PlayersScores;
     private List<Player> players;
 
+
     /**
      * The BS_Host_Model function is a singleton class that creates the host model for the game.
      */
@@ -49,10 +46,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         player = new Player();
 
 
-        //for testing
-//        System.out.println("Pick host port number : ");
-//        Scanner scanner = new Scanner(System.in);
-//        int port = scanner.nextInt();
         communicationServer = new MyServer(23346, communicationHandler);
         //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
 
@@ -194,6 +187,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public void addPlayer(Player p) {
         this.players.add(p);
         this.scoresManager.add(p);
+
     }
 
     /**
@@ -232,15 +226,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
             if (id != null) {
                 String json = gson.toJson(tiles);
+                communicationServer.updateSpecificPlayer(id, "gameStart");
                 communicationServer.updateSpecificPlayer(id, "hand:" + json);
             } else {
-                hasChanged();
-                notifyObservers("hand updated");
+                setChanged();
+                notifyObservers("hand updated" + ":playersName");
             }
-
-
         });
-
+        StringBuilder playersName = new StringBuilder();
+        for (Player p : players) {
+            playersName.append(p.get_name()).append(":");
+        }
+        communicationServer.updateAll("playersName:" + players.size() + ":" + playersName.toString());
+        setChanged();
+        notifyObservers("playersName:" + players.size() + ":" + playersName.toString());
     }
 
     /**
@@ -259,9 +258,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
             gameIsOver = true;
             return;
         }
-        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
-        hasChanged();
-        notifyObservers("passTurn:" + getCurrentPlayerIndex());
+        communicationServer.updateAll("turnPassed:" + getCurrentPlayerIndex());// notify all clients
+        setChanged();
+        notifyObservers("turnPassed:" + getCurrentPlayerIndex());
     }
 
     /**
@@ -278,9 +277,9 @@ public class BS_Host_Model extends Observable implements BS_Model {
             gameIsOver = true;
             return;
         }
-        communicationServer.updateAll("passTurn:" + getCurrentPlayerIndex());// notify all clients
-        hasChanged();
-        notifyObservers("passTurn:" + getCurrentPlayerIndex());
+        communicationServer.updateAll("turnPassed:" + getCurrentPlayerIndex());// notify all clients
+        setChanged();
+        notifyObservers("turnPassed:" + getCurrentPlayerIndex());
     }
 
     /**
@@ -302,88 +301,103 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param stringWord Get the word that the player is trying to place
      */
     public void tryPlaceWord(String stringWord, int row, int col, boolean direction) {
-        char[] buildWord = stringWord.toCharArray();
-        Player current = getPlayers().get(currentPlayerIndex);
-        Tile[] tiles = new Tile[stringWord.length()];
-        for (int i = 0; i < stringWord.length(); i++) {
-            tiles[i] = current.charToTile(buildWord[i]);
-        }
-        Word word = new Word(tiles, row, col, direction);
-        int score = Board.getBoard().tryPlaceWord(word);
-        if (score > 0) {
-
-            // build the string of words for a challenge, send it to all clients and notify host viewModel
-            StringBuilder sb = new StringBuilder();
-            for (Word w : currentPlayerWords) {
-                sb.append(w.toString());
-                sb.append(":");
+        Runnable r = () -> {
+            char[] buildWord = stringWord.toCharArray();
+            Player current = getPlayers().get(currentPlayerIndex);
+            Tile[] tiles = new Tile[stringWord.length()];
+            for (int i = 0; i < stringWord.length(); i++) {
+                tiles[i] = current.charToTile(buildWord[i]);
             }
-            String words = sb.toString();
-            BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerWords.size() + ":" + words);
-            hasChanged();
-            notifyObservers("wordsForChallenge:" + words);
-            //if the current player is the host, then the host's viewModel wan't display the challenge words
+            Word word = new Word(tiles, row, col, direction);
+            int score = Board.getBoard().tryPlaceWord(word);
+            if (score > 0) {
 
-            LockSupport.parkNanos(10000000000L); //park for 10 seconds
-            if (challengeActivated.get()) {
-                //execute challengeWord method
-                boolean result = false;
-                String challengerIndex = this.getChallengeInfo().split(":")[0];
-                String forChallenge = this.challengeInfo.split(":")[1];
-                result = challengeWord(forChallenge, challengerIndex);
-
-                if (result) {
-                    placeAndComplete7(word.toString());
-                    players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-                    updateBoard();
-                    updateScores();
-
-                    if (isGameOver()) {
-                        gameIsOver = true;
-                        communicationServer.updateAll("endGame");
-                        hasChanged();
-                        notifyObservers("endGame");
-                        return;
-                    }
-                } else {
-                    String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
-                    if (id != null)
-                        communicationServer.updateSpecificPlayer(id, "challengeSuccess");
-                    else {
-                        hasChanged();
-                        notifyObservers("challengeSuccess");
-                    }
-                    passTurn(currentPlayerIndex);
+                // build the string of words for a challenge, send it to all clients and notify host viewModel
+                StringBuilder sb = new StringBuilder();
+                for (Word w : currentPlayerWords) {
+                    sb.append(w.toString());
+                    sb.append(",");
                 }
+                String words = sb.toString();
+                BS_Host_Model.getModel().communicationServer.updateAll("wordsForChallenge:" + currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
+                setChanged();
+                notifyObservers("wordsForChallenge:" + currentPlayerIndex + ":" + currentPlayerWords.size() + ":" + words);
+                //if the current player is the host, then the host's viewModel wan't display the challenge words
 
-                challengeActivated.set(false);
+
+
+                System.out.println(Thread.currentThread().getName());
+                System.out.println(Thread.currentThread()+"going to sleep for 10 seconds");
+                try {
+                    Thread.currentThread().sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(System.currentTimeMillis());
+                if (challengeActivated.get()) {
+                    //execute challengeWord method
+                    boolean result = false;
+                    String challengerIndex = this.getChallengeInfo().split(":")[0];
+                    String forChallenge = this.getChallengeInfo().split(":")[1];
+                    result = challengeWord(forChallenge, challengerIndex);
+
+                    if (result) {
+                        placeAndComplete7(word.toString());
+                        players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+                        updateBoard();
+                        updateScores();
+
+                        if (isGameOver()) {
+                            gameIsOver = true;
+                            communicationServer.updateAll("endGame");
+                            setChanged();
+                            notifyObservers("endGame");
+                            return;
+                        }
+                    } else {
+                        String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+                        if (id != null)
+                            communicationServer.updateSpecificPlayer(id, "challengeSuccess");
+                        else {
+                            setChanged();
+                            notifyObservers("challengeSuccess");
+                        }
+                    }
+
+                    passTurn(currentPlayerIndex);
+                    challengeActivated.set(false);
+                    currentPlayerWords.clear();
+                    return;
+                }
+                //if no challenge happened, update the board and complete the hand
+                placeAndComplete7(word.toString());
+                players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
+                updateBoard();
+                updateScores();
+                if (isGameOver()) {
+                    gameIsOver = true;
+                    return;
+                }
+                LockSupport.parkNanos(4000000000L); //park for 3 seconds
+                passTurnTryPlace(currentPlayerIndex);
                 currentPlayerWords.clear();
-                return;
-            }
-            //if no challenge happened, update the board and complete the hand
-            placeAndComplete7(word.toString());
-            players.get(currentPlayerIndex).set_score(players.get(currentPlayerIndex).get_score() + score);
-            updateBoard();
-            updateScores();
-            if (isGameOver()) {
-                gameIsOver = true;
-                return;
-            }
-            passTurnTryPlace(currentPlayerIndex);
-            currentPlayerWords.clear();
 
-        }
-        // score == 0 means that the word cannot be placed on the board
-        else {
-            String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
-            if (id != null)
-                communicationServer.updateSpecificPlayer(id, "invalidWord");
+            }
+            // score == 0 means that the word cannot be placed on the board
             else {
-                hasChanged();
-                notifyObservers("invalidWord");
+                String id = playerToSocketID.get(players.get(currentPlayerIndex).get_name());
+                if (id != null)
+                    communicationServer.updateSpecificPlayer(id, "invalidWord");
+                else {
+                    setChanged();
+                    notifyObservers("invalidWord");
+                }
             }
-        }
-
+        };
+        if (isHost())
+            new Thread(r).start();
+        else
+            r.run();
     }
 
     /**
@@ -395,7 +409,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         Gson gson = new Gson();
         String json = gson.toJson(Board.getBoard().getTiles());
         communicationServer.updateAll("tileBoard:" + json);
-        hasChanged();
+        setChanged();
         notifyObservers("tileBoard updated");
         //for testing
         System.out.println("host tileBoard");
@@ -418,15 +432,12 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * It shuts down the executor, closes the communication server, and notifies all clients that they can exit their games.
      * <p>
      */
-    void endGame() {
+    public void endGame() {
+        setChanged();
+        notifyObservers("endGameHost");
         executor.shutdown();
         getCommunicationServer().close();
-        notifyAll(); // notify the main that the game is over
-        // 16/05/2023 server will be notified about the winner;
-        // 16/05/2023 its close button will be disabled while clientsMap is not empty
-        //16/05/2023 when clientsMap will be empty the button will be enabled
-        // 16/05/2023 press the button will execute the endGame method
-
+        notifyAll();
     }
 
     /**
@@ -461,16 +472,20 @@ public class BS_Host_Model extends Observable implements BS_Model {
             if (splitResponse[1].equals("true")) {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() - 10);
                 updateScores();
+                challengeActivated.set(false);
                 return true;
             } else {
                 players.get(PlayerIndex).set_score(players.get(PlayerIndex).get_score() + 10);
                 updateScores();
+                challengeActivated.set(false);
                 return false;
             }
         } else {
             hostLogger.log(System.Logger.Level.ERROR, "GameServer response in challengeWord is not valid");
+            challengeActivated.set(false);
             return false;
         }
+
     }
 
     /**
@@ -485,7 +500,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         Gson gson = new Gson();
         String playersScores = gson.toJson(scores);
         communicationServer.updateAll("playersScores:" + playersScores);
-        hasChanged();
+        setChanged();
         notifyObservers("playersScores updated");
     }
 
@@ -498,7 +513,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).set_index(i);
         }
-        hasChanged();
+        setChanged();
         notifyObservers("sortAndSetIndex" + player.get_index()); // this is host index
         StringBuilder allPlayers = new StringBuilder();
         for (Player p : players) {
@@ -507,7 +522,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         String allPlayersString = allPlayers.toString();
 
         BS_Host_Model.getModel().communicationServer.updateAll("sortAndSetIndex:" + players.size() + ":" + allPlayersString);
-
     }
 
     /**
@@ -534,8 +548,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
         String json = gson.toJson(players.get(currentPlayerIndex).get_hand());
         communicationServer.updateSpecificPlayer(id, "hand:" + json);
         if (currentPlayerIndex == BS_Host_Model.getModel().player.get_index()) {
-            hasChanged();
-            notifyObservers("hand:" + json);
+            setChanged();
+            notifyObservers("hand updated");
         }
     }
 
@@ -558,9 +572,8 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @return True when the game is over
      */
     public boolean isGameOver() {
-        boolean isGameOver = false;
-        if (board.getPassCounter() == getPlayers().size()) //all the players pass turns
-            isGameOver = true;
+        boolean isGameOver = board.getPassCounter() == getPlayers().size();
+        //all the players pass turns
         if (Tile.Bag.getBag().size() == 0)
             for (Player p : players)
                 if (p.get_hand().isEmpty()) {
@@ -568,9 +581,21 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     break;
                 }
         if (isGameOver) {
-            communicationServer.updateAll("winner:" + getMaxScore());
-            hasChanged();
-            notifyObservers("winner:" + getMaxScore());
+            String winnerIndexAndName = getMaxScore();
+            if (!winnerIndexAndName.equals("No winner")) {
+                communicationServer.updateAll("winner:" + winnerIndexAndName);
+                String[] splitWinner = winnerIndexAndName.split(":");
+                Player winner = players.get(Integer.parseInt(splitWinner[0]));
+
+                setChanged();
+                notifyObservers("winner:" + winner.get_score()+":"+winner.get_name());
+            } else {
+                communicationServer.updateAll("endGame");
+                if (communicationServer.clients.isEmpty()){
+                    setChanged();
+                    notifyObservers("endGameHost");
+                }
+            }
         }
         return isGameOver;
     }
@@ -661,19 +686,31 @@ public class BS_Host_Model extends Observable implements BS_Model {
      * @param challengeInfo Set the challengeinfo variable
      */
     public void requestChallengeActivation(String challengeInfo) {
-        String challengerIndex = this.getChallengeInfo().split(":")[0];
-        // Set the challengeRequested flag to indicate a challenge is requested
-        if (challengeActivated.get()) {
-            if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
-                communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+        if (challengeInfo != null) {
+            String challengerIndex = challengeInfo.split(":")[0];
+            // Set the challengeRequested flag to indicate a challenge is requested
+            if (challengeActivated.get()) {
+                if ((players.get(Integer.parseInt(challengerIndex)).get_socketID() != null)) {
+                    communicationServer.updateSpecificPlayer(players.get(Integer.parseInt(challengerIndex)).get_socketID(), "challengeAlreadyActivated");
+                } else {
+                    setChanged();
+                    notifyObservers("challengeAlreadyActivated");
+                }
             } else {
-                hasChanged();
-                notifyObservers("challengeAlreadyActivated");
-            }
-        } else {
-            challengeActivated.set(true);
-            this.setChallengeInfo(challengeInfo);
+                challengeActivated.set(true);
+                this.setChallengeInfo(challengeInfo);
+//                LockSupport.unpark(tryThread);
+//                semaphore.release();
+               try {
+                   notifyAll();
+            }catch (IllegalMonitorStateException e)
+            {
+                hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
 
+            }
+//                lock.unlock();
+
+            }
         }
     }
 
@@ -694,6 +731,27 @@ public class BS_Host_Model extends Observable implements BS_Model {
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
+
+    public void unPark() {
+//        try {
+//            Runnable runnable = () -> {
+//                notifyAll();
+//                System.out.println("@@@@ lock released @@@@");
+//            };
+//            if (isHost()) {
+//                runnable.run();
+//                Platform.runLater(() -> {
+//                });
+//            } else
+//                Platform.runLater(runnable);
+//        }catch (IllegalMonitorStateException e)
+//        {
+//            hostLogger.log(System.Logger.Level.WARNING, "action made outside the javafx app thread");
+//        }
+        System.out.println("unparking");
+    }
+
+
 }
 
 

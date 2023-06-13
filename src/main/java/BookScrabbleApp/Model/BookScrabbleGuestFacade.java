@@ -76,10 +76,15 @@ public class BookScrabbleGuestFacade extends Observable implements Observer {
         return guestModel.getBoardState();
     }
 
-
     @Override
     public void update(Observable o, Object arg) {
         setChanged();
-        notifyObservers(arg);
+        String message = (String) arg;
+        System.out.println("GuestFacade ---- updateType: " + message);
+        notifyObservers(message);
+    }
+
+    public void unPark() {
+        guestModel.unPark();
     }
 }

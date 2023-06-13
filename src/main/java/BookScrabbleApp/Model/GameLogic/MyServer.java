@@ -44,14 +44,16 @@ public class MyServer {
      * @throws Exception If an exception occurred
      */
     private void runServer() throws Exception {
-        ServerSocket server = new ServerSocket(port);
+        ServerSocket server = new ServerSocket(port, 3);
         server.setSoTimeout(1000);
         logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
+        logger.log(System.Logger.Level.INFO,ip() +"  "+ port);
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
                 String clientID = UUID.randomUUID().toString().substring(0, 6);
+                clients.add(aClient);
                 clientsMap.put(clientID, aClient);
                 ping(clientID);
 
@@ -142,7 +144,7 @@ public class MyServer {
     public String getPublicIp() {
         String ip = null;
         try {
-            URL url = new URL("https://api.ipify.org");
+            URL url = new URL("https://ifconfig.me/ip");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             ip = in.readLine();
             in.close();
@@ -154,17 +156,21 @@ public class MyServer {
 
     public void updateAll(String s) {
         //foreach socket in map send s
-        clientsMap.forEach((id, socket) -> {
-            PrintWriter out;
-            try {
-                out = new PrintWriter(socket.getOutputStream());
-            } catch (IOException e) {
-                logger.log(System.Logger.Level.ERROR, "Error in update all: getting output stream");
-                throw new RuntimeException(e);
-            }
-            out.println(s);
-            out.flush();
-        });
+        for (String id : clientsMap.keySet()) {
+            updateSpecificPlayer(id, s);
+        }
+//        clientsMap.forEach((id, socket) -> {
+//
+//            PrintWriter out;
+//            try {
+//                out = new PrintWriter(socket.getOutputStream());
+//            } catch (IOException e) {
+//                logger.log(System.Logger.Level.ERROR, "Error in update all: getting output stream");
+//                throw new RuntimeException(e);
+//            }
+//            out.println(s);
+//            out.flush();
+//        });
     }
 
     public void updateSpecificPlayer(String id, Object obj) {

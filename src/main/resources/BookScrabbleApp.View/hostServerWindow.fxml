@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="610.0" prefWidth="875.0" stylesheets="@../background.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BookScrabbleApp.View.HostController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <AnchorPane prefHeight="834.0" prefWidth="1510.0">
+            <Label fx:id="invalidIPorPort" layoutX="186.0" layoutY="139.0" prefHeight="56.0" prefWidth="391.0" textAlignment="CENTER" textOverrun="CLIP" underline="true" wrapText="true">
+                <font>
+                    <Font size="39.0" />
+                </font>
+            </Label>
+    </AnchorPane>
+   <bottom>
+      <BorderPane BorderPane.alignment="CENTER">
+         <center>
+            <Pane />
+         </center>
+      </BorderPane>
+   </bottom>
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="533.0" BorderPane.alignment="CENTER">
+         <children>
+                  <Label fx:id="welcomeText" alignment="CENTER" contentDisplay="CENTER" prefHeight="98.0" prefWidth="456.0" text="Welcome to the Host" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+                      <font>
+                          <Font size="48.0" />
+                      </font>
+                  </Label>
+            <Group>
+               <children>
+                        <Label  layoutY="61.0" prefHeight="69.0" prefWidth="92.0" text="port:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" >
+                            <font>
+                                <Font size="39.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="IpTextFiled" layoutX="80.0" layoutY="24.0" prefHeight="37.0" prefWidth="321.0" text="127.0.0.1" />
+                        <Label  layoutX="36.0" prefHeight="69.0"  prefWidth="62.0" text="ip:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" >
+                            <font>
+                                <Font size="39.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="PortTextFiled" layoutX="80.0" layoutY="85.0" prefHeight="37.0" prefWidth="321.0" text="20500" />
+               </children>
+            </Group>
+            <Group>
+               <children>
+                        <Button fx:id="submitBtn" layoutX="103.0" layoutY="1.0" onAction="#onPressSubmit" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Submit" textAlignment="CENTER">
+                            <font>
+                                <Font size="39.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="nextBtn" layoutX="104.0" layoutY="116.0" onAction="#next" prefHeight="100.0" prefWidth="290.0" stylesheets="@../buttonStyleSheets.css" text="Next" visible="false">
+                            <font>
+                                <Font size="49.0" />
+                            </font>
+                        </Button>
+               </children>
+               <VBox.margin>
+                  <Insets left="70.0" top="25.0" />
+               </VBox.margin>
+            </Group>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
