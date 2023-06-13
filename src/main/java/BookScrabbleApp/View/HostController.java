@@ -15,11 +15,8 @@ public class HostController {
     private Scene scene;
     private Parent root;
     @FXML
-    public Label stringYourIp;
-    @FXML
-    public Label stringYourPort;
-    @FXML
     private Label welcomeText;
+
     //start method
     @FXML
     private Label invalidIPorPort;
@@ -27,12 +24,6 @@ public class HostController {
     private TextField IpTextFiled = new TextField();
     @FXML
     private TextField PortTextFiled = new TextField();
-    @FXML
-    private Label yourIp;
-    @FXML
-    private Label yourPort;
-    @FXML
-    private Label welcomeText1;
     @FXML
     public TextField nameTextFiled;
     @FXML
@@ -46,8 +37,14 @@ public class HostController {
     public static String name;
     BS_Host_ViewModel host = new BS_Host_ViewModel();
 
+    /**
+     * The onPressSubmit function is called when the submit button is pressed.
+     * It checks if the IP and Port fields are empty, and if they are not it will attempt to connect to a server at that address.
+     * If it fails, an alert box will pop up telling you that there was an error connecting to the server.
+     * @return The next page
+     */
     @FXML
-    public void onPressSubmit() throws Exception {
+    public void onPressSubmit(){
         ip = IpTextFiled.getText();
         port = Integer.parseInt(PortTextFiled.getText());
         if (ip.equals("") || port == 0) {
@@ -67,13 +64,18 @@ public class HostController {
                 connected = false;
             }
             if (connected) {
-//                invalidIPorPort.setText("Game server connected");
                 nextBtn.setVisible(true);
                 submitBtn.onActionProperty().set(null);
             }
         }
     }
 
+
+    /**
+     * The next function is called when the user clicks on the next button.
+     * It loads a new scene, which is hostNextWindow.fxml, and sets it as the current scene of this stage.
+     * @return The host to the main menu
+     */
     @FXML
     public void next() throws Exception {
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
@@ -85,32 +87,15 @@ public class HostController {
     }
 
 
-    public String getPublicIp() {
-        String ip = null;
-        try {
-            URL url = new URL("https://ifconfig.me/ip");
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            ip = in.readLine();
-            in.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return ip;
-    }
-
-    @FXML
-    private void initializeNextHostWindow() {
-        stringYourIp.setVisible(true);
-        stringYourPort.setVisible(true);
-        yourIp.setText(getPublicIp());
-        yourPort.setText(String.valueOf(port));//doesn't work yet
-
-    }
-
+    /**
+     * The switchToGameWindow function is responsible for switching the scene from the welcome window to
+     * the game window.
+     * It also sets up a host server and starts it, as well as setting up a player object with properties such as name, score etc.
+     * The function also passes on this player object to the GameWindowController class so that it can be used there too.
+     */
     @FXML
     public void switchToGameWindow() throws Exception {
         if (nameTextFiled.getText().equals("Enter your name here")) {
-            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
             name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
         } else {
             name = nameTextFiled.getText();

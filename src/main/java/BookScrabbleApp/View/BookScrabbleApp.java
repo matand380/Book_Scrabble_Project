@@ -29,6 +29,10 @@ public class BookScrabbleApp extends Application {
         launch();
     }
 
+    /**
+     * The screenSize function returns the width and height of the screen in an array.
+     * @return An array of doubles that contain the width and height of the screen
+     */
     public static double[] screenSize(){
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getBounds();
