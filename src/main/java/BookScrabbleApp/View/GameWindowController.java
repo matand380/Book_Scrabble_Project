@@ -711,6 +711,14 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
+    /**
+     * The redrawYourWord function is called when the user clicks on a tile in their hand.
+     * It redraws the word that they are currently building, and it also updates the score of
+     * each letter in their word. If a tile from their hand is clicked, then it will be added to
+     * yourWord gridpane. If a tile from the board is clicked, then its text will be updated with
+     * whatever letter was previously there (if any). The function also checks if all tiles have been placed on board; if so, it calls endGame().
+     * @param List&lt;TileField&gt; list Store the tiles that are currently in your word
+     */
     private void redrawYourWord(List<TileField> list) {
         Platform.runLater(() -> {
             yourWord.getChildren().clear();
@@ -727,21 +735,39 @@ public class GameWindowController implements Observer, Initializable {
     }
 
 
+    /**
+     * The checkFirstWord function checks to see if the first word has been placed on the board.
+     * @return True if the first word has been placed, false otherwise
+     */
     private boolean checkFirstWord() {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
     }
 
     //check if these methods is needed
+    /**
+     * The isVertical function checks if the word is vertical or not.
+     * @param List&lt;TileField&gt; wordTryPlace Determine if the word is vertical or horizontal
+     * @return A boolean value
+     */
     private boolean isVertical(List<TileField> wordTryPlace) {
         return wordForTryPlace.get(0).tileCol == wordForTryPlace.get(1).tileCol;
     }
 
+    /**
+     * The unlockHand function unlocks all the tiles in the player's hand.
+     */
     public void unlockHand() {
         for (TileField t : handFields) {
             t.setUnlocked();
         }
     }
 
+    /**
+     * The endGamePopUp function creates a pop-up window that displays the winner of the game.
+     * @param String title Set the title of the pop-up window
+     * @param String header Set the text of the header label
+     * @param String text Set the text of the content label
+     */
     public void endGamePopUp(String title, String header, String text) {
         Platform.runLater(() -> {
             Stage primaryStage = new Stage();
