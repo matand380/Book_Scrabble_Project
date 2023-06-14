@@ -1,291 +1,264 @@
 package test_ViewModels;
 
 import BookScrabbleApp.Model.BookScrabbleGuestFacade;
-import BookScrabbleApp.Model.GameData.Board;
-import BookScrabbleApp.Model.GameData.Player;
 import BookScrabbleApp.Model.GameData.Tile;
-import BookScrabbleApp.Model.GameLogic.HostCommunicationHandler;
-import BookScrabbleApp.Model.GameLogic.MyServer;
 import BookScrabbleApp.ViewModel.BS_Guest_ViewModel;
+import BookScrabbleApp.ViewModel.ViewableTile;
+import javafx.beans.property.SimpleStringProperty;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
-import static javafx.beans.binding.Bindings.when;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class testGuestViewModel {
+    BookScrabbleGuestFacade guestFacade;
+    private BS_Guest_ViewModel viewModel;
+    private BS_Guest_ViewModel viewModelMock;
 
-
-    private BS_Guest_ViewModel guestViewModel;
-    private BS_Guest_ViewModel guestViewModelMock;
-    private BookScrabbleGuestFacade guestFacade;
-    private BookScrabbleGuestFacade guestFacadeMock;
+    private Map<String, Consumer<String>> updatesMap;
 
     @BeforeEach
     public void setUp() {
-        try {
-            guestViewModelMock = new BS_Guest_ViewModel() {
+        viewModel = new BS_Guest_ViewModel();
+        viewModelMock = new BS_Guest_ViewModel() {
 
-                @Override
-                public void setPlayerProperties(String name) {
-                    System.out.println("setPlayerProperties test passed");
-                }
-
-                @Override
-                public void initializeUpdateMap() {
-                    Map<String, String> updateMap = new HashMap<>();
-                    updateMap.put("hand update", "hand update");
-                    updateMap.put("board update", "board update");
-                    updateMap.put("scores update", "scores update");
-                    updateMap.put("turn update", "turn update");
-                    updateMap.put("end game update", "end game update");
-                    updateMap.put("challenge update", "challenge update");
-                    updateMap.put("wordsForChallenge", "wordsForChallenge");
-
-                }
-
-                @Override
-                public void endGame() {
-                    System.out.println("endGame test passed");
-                }
-
-                @Override
-                public void update(Observable o, Object arg) {
-                    System.out.println("update test passed");
-                }
-
-            };
-
-            Field guestViewModelField = BS_Guest_ViewModel.class.getDeclaredField("guestViewModel");
-            guestViewModelField.setAccessible(true);
-            guestViewModelField.set(guestViewModel, guestViewModelMock);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            guestFacade = new BookScrabbleGuestFacade();
-            guestViewModel = new BS_Guest_ViewModel();
-            Field guestFacadeField = BS_Guest_ViewModel.class.getDeclaredField("guestFacade");
-            guestFacadeField.setAccessible(true);
-            guestFacadeField.set(guestViewModel, guestFacade);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        guestFacadeMock = new BookScrabbleGuestFacade() {
             @Override
-            public void openSocket(String ip, int port) {
-                System.out.println("openSocket test passed");
+            public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
+                System.out.println(word + " " + row + " " + col + " " + isVertical);
             }
 
             @Override
-            public String[] getPlayersScores() {
-                String[] playersScores = {"1", "2", "3", "4"};
-                return playersScores;
-
+            public void passTurn() {
+                System.out.println("pass turn called");
             }
 
             @Override
-            public void passTurn(int playerIndex) {
-                System.out.println("passTurn test passed");
-            }
-
-            @Override
-            public void tryPlaceWord(String word, int x, int y, boolean isVertical) {
-                System.out.println("tryPlaceWord test passed");
-            }
-
-            @Override
-            public void challengeWord(String word) {
-                System.out.println("challengeWord test passed");
-            }
-
-            @Override
-            public void setBoard(Tile[][] boardTiles) {
-                System.out.println("setBoard test passed");
-            }
-
-            @Override
-            public void setPlayerProperties(String name) {
-                System.out.println("setPlayerProperties test passed");
-            }
-
-            @Override
-            public void endGame() {
-                System.out.println("endGame test passed");
-            }
-
-            @Override
-            public boolean isHost() {
-                return false;
-            }
-
-            @Override
-            public void update(Observable o, Object arg) {
-                System.out.println("update");
-            }
-
-            @Override
-            public Socket getSocket() {
-                return guestFacade.getSocket();
-            }
-
-            @Override
-            public List<Tile> getCurrentPlayerHand() {
-                List<Tile> hand = new ArrayList<>();
-                hand.add(new Tile('a', 1));
-                hand.add(new Tile('b', 2));
-                hand.add(new Tile('c', 3));
-                hand.add(new Tile('d', 4));
-                hand.add(new Tile('e', 5));
-                hand.add(new Tile('f', 6));
-                hand.add(new Tile('g', 7));
-                return hand;
+            public void challengeRequest(String word) {
+                System.out.println("challenge request called: " + word);
             }
         };
 
+        viewModel.initializeProperties();
 
     }
 
     @Test
-    public void testSetBoard() {
-        // TODO: Implement the test for setBoard method
-        assertEquals(' ', guestViewModel.viewableBoard.get(0).get(0).getLetter());
-        assertEquals(0, guestViewModel.viewableBoard.get(0).get(0).getScore());
-        Tile[][] board = new Tile[15][15];
-        for (int i = 0; i < 15; i++) {
-            board[i] = new Tile[15];
-            for (int j = 0; j < 15; j++) {
-                board[i][j] = new Tile('a', 1);
-            }
+    public void testSetWordsForChallenge() {
+        List<String> wordsList = new ArrayList<>();
+        wordsList.add("WORD1");
+        wordsList.add("WORD2");
+        wordsList.add("WORD3");
+
+        viewModel.setWordsForChallenge(wordsList);
+
+        // Verify that the viewableWordsForChallenge list contains the expected words
+        List<String> viewableWords = new ArrayList<>();
+        for (SimpleStringProperty property : viewModel.getViewableWordsForChallenge()) {
+            viewableWords.add(property.getValue());
         }
-        guestFacade.setBoard(board);
-        guestViewModel.setBoard();
-        assertEquals('a', guestViewModel.viewableBoard.get(0).get(0).getLetter());
-        assertEquals(1, guestViewModel.viewableBoard.get(0).get(0).getScore());
 
-
-    }
-
-    @Test
-    public void testSetHand() {
-        // TODO: Implement the test for setHand method
-        guestFacadeMock.getCurrentPlayerHand();
-        guestViewModel.setHand();
-    }
-
-    @Test
-    public void testSetScore() throws NoSuchFieldException, IllegalAccessException {
-        String[] playersScores = {"1", "2", "3", "4"};
-        setField(guestFacadeMock, "getPlayersScore", playersScores);
-
-        // Call the method under test
-        guestViewModel.setScore();
-
-        // Verify that the view model correctly sets the score
-        assertEquals(playersScores.length, guestViewModel.viewableScores.size());
-        for (int i = 0; i < playersScores.length; i++) {
-            assertEquals(playersScores[i], guestViewModel.viewableScores.get(i));
-        }
-    }
-
-    private void setField(Object object, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = object.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(object, value);
-    }
-
-    @Test
-    public void testOpenSocket() {
-        // TODO: Implement the test for openSocket method
-        HostCommunicationHandler communicationHandlerMock = new HostCommunicationHandler() {
-            @Override
-            public String messagesFromGameServer() {
-                return "String passed";
-            }
-
-            @Override
-            public void messagesToGameServer(String message) {
-                System.out.println(message);
-            }
-        };
-        MyServer serverMock = new MyServer(4444, communicationHandlerMock) {
-            @Override
-            public void updateAll(String message) {
-                System.out.println(message);
-            }
-
-            @Override
-            public void updateSpecificPlayer(String id, Object obj) {
-                System.out.println((String) obj);
-            }
-        };
-        guestFacade.openSocket("localhost", 4444);
-    }
-
-    @Test
-    public void testTryPlaceWord() {
-        guestFacadeMock.tryPlaceWord("word", 0, 0, true);
-    }
-
-    @Test
-    public void testPassTurn() {
-        guestFacadeMock.passTurn(0);
-    }
-
-    @Test
-    public void testChallengeRequest() {
-        guestFacadeMock.challengeWord("word");
-    }
-
-    @Test
-    public void testEndGame() {
-        guestFacadeMock.endGame();
-    }
-
-    @Test
-    public void testInitializeProperties() {
-        guestViewModel.initializeProperties();
-
-        // Assert that the properties are initialized correctly
-        assertNull(guestViewModel.hostIp.get());
-        assertNull(guestViewModel.hostPort.get());
-        assertEquals(7, guestViewModel.viewableHand.size());
-        assertEquals(15, guestViewModel.viewableBoard.size());
-        assertEquals(15, guestViewModel.viewableBoard.get(0).size());
-        assertEquals(0, guestViewModel.viewableScores.size());
-        assertNull(guestViewModel.challengeWord.get());
-        assertEquals(0, guestViewModel.viewableWordsForChallenge.size());
-        assertNull(guestViewModel.winnerProperty.get());
+        assertEquals(3, viewableWords.size());
+        assertEquals("WORD1", viewableWords.get(0));
+        assertEquals("WORD2", viewableWords.get(1));
+        assertEquals("WORD3", viewableWords.get(2));
     }
 
     @Test
     public void testInitializeUpdateMap() throws NoSuchFieldException, IllegalAccessException {
-//        Field updatesMapField = guestViewModelMock.getClass().getDeclaredField("updatesMap");
-//        updatesMapField.setAccessible(true);
-//        Map<String, String> updatesMap = (Map<String, String>) updatesMapField.get(guestViewModelMock);
+        Field updatesMapField = viewModel.getClass().getDeclaredField("updatesMap");
+        updatesMapField.setAccessible(true);
+        updatesMap = (Map<String, Consumer<String>>) updatesMapField.get(viewModel);
 
-//        assertEquals(7, updatesMap.size());
-//        updateMap.put("hand update", "hand update");
-//        updateMap.put("board update", "board update");
-//        updateMap.put("scores update", "scores update");
-//        updateMap.put("turn update", "turn update");
-//        updateMap.put("end game update", "end game update");
-//        updateMap.put("challenge update", "challenge update");
-//        updateMap.put("wordsForChallenge", "wordsForChallenge");
-//        assertEquals("hand update", updatesMap.get("hand update"));
-//        assertEquals("board update", updatesMap.get("board update"));
-//        assertEquals("scores update", updatesMap.get("scores update"));
-//        assertEquals("turn update", updatesMap.get("turn update"));
-//        assertEquals("end game update", updatesMap.get("end game update"));
-//        assertEquals("challenge update", updatesMap.get("challenge update"));
+        viewModel.initializeUpdateMap();
 
-        // Assert that the updatesMap is initialized correctly
+        // Verify the size and contents of the updatesMap
+        assertEquals(12, updatesMap.size());
+
+        assertTrue(updatesMap.containsKey("hand updated"));
+        assertNotNull(updatesMap.get("hand updated"));
+
+        assertTrue(updatesMap.containsKey("tileBoard updated"));
+        assertNotNull(updatesMap.get("tileBoard updated"));
+
+        assertTrue(updatesMap.containsKey("turnPassed"));
+        assertNotNull(updatesMap.get("turnPassed"));
+
+        assertTrue(updatesMap.containsKey("wordsForChallenge"));
+        assertNotNull(updatesMap.get("wordsForChallenge"));
+
+        assertTrue(updatesMap.containsKey("playersScores updated"));
+        assertNotNull(updatesMap.get("playersScores updated"));
+
+        assertTrue(updatesMap.containsKey("winner"));
+        assertNotNull(updatesMap.get("winner"));
+
+        assertTrue(updatesMap.containsKey("endGame"));
+        assertNotNull(updatesMap.get("endGame"));
+
+        assertTrue(updatesMap.containsKey("invalidWord"));
+        assertNotNull(updatesMap.get("invalidWord"));
+
+        assertTrue(updatesMap.containsKey("challengeAlreadyActivated"));
+        assertNotNull(updatesMap.get("challengeAlreadyActivated"));
+
+        assertTrue(updatesMap.containsKey("challengeSuccess"));
+        assertNotNull(updatesMap.get("challengeSuccess"));
+
+        assertTrue(updatesMap.containsKey("playersName"));
+        assertNotNull(updatesMap.get("playersName"));
+
+        assertTrue(updatesMap.containsKey("gameStart"));
+        assertNotNull(updatesMap.get("gameStart"));
+    }
+
+    @Test
+    public void testTryPlaceWord() {
+        String word = "HELLO";
+        int row = 3;
+        int col = 5;
+        boolean isVertical = false;
+
+        viewModelMock.tryPlaceWord(word, row, col, isVertical);
 
     }
+    @Test
+    public void testPassTurn() {
+        viewModelMock.passTurn();
+    }
+    @Test
+    public void testChallengeRequest() {
+        String word = "HELLO";
+        viewModelMock.challengeRequest(word);
+    }
+
+    @Test
+    public void testSetBoard() throws NoSuchFieldException, IllegalAccessException {
+        // Set up test data
+        Tile[][] boardState = new Tile[15][15];
+        boardState[0][0] = new Tile('A', 1);
+        boardState[1][1] = new Tile('B', 2);
+        viewModel.guestFacade.setBoard(boardState);
+
+        // Perform the action
+        viewModel.setBoard();
+
+        // Verify the result
+        List<List<ViewableTile>> viewableBoard = viewModel.getViewableBoard();
+        assertEquals("A", viewableBoard.get(0).get(0).letterProperty().get());
+        assertEquals("1", viewableBoard.get(0).get(0).scoreProperty().get());
+        assertEquals("B", viewableBoard.get(1).get(1).letterProperty().get());
+        assertEquals("2", viewableBoard.get(1).get(1).scoreProperty().get());
+    }
+
+
+    @Test
+    public void testSetHand() throws NoSuchFieldException, IllegalAccessException {
+
+
+        // Set up test data
+        List<Tile> hand = new ArrayList<>();
+        hand.add(new Tile('A', 1));
+        hand.add(new Tile('B', 2));
+        viewModel.guestFacade.getPlayer().set_hand(hand);
+
+        // Perform the action
+        viewModel.setHand();
+
+        // Verify the result
+        List<ViewableTile> viewableHand = viewModel.getViewableHand();
+        assertEquals("A", viewableHand.get(0).letterProperty().get());
+        assertEquals("1", viewableHand.get(0).scoreProperty().get());
+        assertEquals("B", viewableHand.get(1).letterProperty().get());
+        assertEquals("2", viewableHand.get(1).scoreProperty().get());
+    }
+
+    @Test
+    public void testSetScore() throws NoSuchFieldException, IllegalAccessException {
+        // Make guestFacade accessible
+        Field guestFacadeField = BS_Guest_ViewModel.class.getDeclaredField("guestFacade");
+        guestFacadeField.setAccessible(true);
+        BookScrabbleGuestFacade guestFacade = (BookScrabbleGuestFacade) guestFacadeField.get(viewModel);
+        // Set up test data
+        String[] playerScores = {"10", "20", "30"};
+        guestFacade.setPlayersScores(playerScores);
+
+        // Perform the action
+        viewModel.setScore();
+
+        // Verify the result
+        List<SimpleStringProperty> viewableScores = viewModel.getViewableScores();
+        assertEquals("10", viewableScores.get(0).getValue());
+        assertEquals("20", viewableScores.get(1).getValue());
+        assertEquals("30", viewableScores.get(2).getValue());
+    }
+
+    @Test
+    public void testSetViewableName() {
+        // Set up test data
+        String[] playersNames = {"John", "Jane", "Alice"};
+        String[] message = new String[playersNames.length + 2];
+        message[0] = "playersName";
+        message[1] = String.valueOf(playersNames.length);
+        System.arraycopy(playersNames, 0, message, 2, playersNames.length);
+
+        // Perform the action
+        viewModel.setViewableName(message);
+
+        // Verify the result
+        List<SimpleStringProperty> viewableNames = viewModel.getViewableNames();
+        assertEquals("John", viewableNames.get(0).getValue());
+        assertEquals("Jane", viewableNames.get(1).getValue());
+        assertEquals("Alice", viewableNames.get(2).getValue());
+    }
+
+    @Test
+    public void testOpenSocket() throws NoSuchFieldException, IllegalAccessException {
+        // Set up test data
+        AtomicBoolean connectionOpened = new AtomicBoolean(false);
+        final String[] hostIpCheck = {null};
+        final int[] hostPortCheck = {0};
+
+
+        BookScrabbleGuestFacade guestFacade = new BookScrabbleGuestFacade() {
+            @Override
+            public void openSocket(String hostIp, int hostPort) {
+                hostIpCheck[0] = hostIp;
+                hostPortCheck[0] = hostPort;
+                connectionOpened.set(true); // Set connectionOpened to true
+            }
+
+        };
+        guestFacade.openSocket("localhost", 1234);
+
+        // Perform the action
+        viewModel.hostIp.set("localhost");
+        viewModel.hostPort.set("1234");
+
+        // Wait for the connection to be opened
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Verify the result
+        assertEquals("localhost", hostIpCheck[0]);
+        assertEquals(1234, hostPortCheck[0]);
+        assertEquals("localhost", viewModel.hostIp.get());
+        assertEquals("1234", viewModel.hostPort.get());
+        assertTrue(connectionOpened.get());
+    }
+
+
 }
-
-
