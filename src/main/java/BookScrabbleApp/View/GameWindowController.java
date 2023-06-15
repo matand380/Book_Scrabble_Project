@@ -113,15 +113,14 @@ public class GameWindowController implements Observer, Initializable {
      */
     public void setViewModel(BS_ViewModel viewModel) {
         if (viewModel instanceof BS_Host_ViewModel) {
-            this.viewModel = new BS_Host_ViewModel();
+            this.viewModel = (BS_Host_ViewModel) viewModel;
             this.viewModel.getObservable().addObserver(this);
             initializeWindow();
         } else if (viewModel instanceof BS_Guest_ViewModel) {
-            this.viewModel = new BS_Guest_ViewModel();
+            this.viewModel = (BS_Guest_ViewModel) viewModel;
             this.viewModel.getObservable().addObserver(this);
             initializeWindow();
             startNewGameBtn.setVisible(false);
-
         }
         turnInstructionTitle.setText("Turn instructions:");
         turnInstruction.setText("Use the arrows to position the cursor where you\n" +

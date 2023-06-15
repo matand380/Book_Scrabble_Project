@@ -100,7 +100,6 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     public void handleRequests() {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
-
             try {
                 String key = inputQueue.take(); //blocking call
                 String[] message = key.split(":");
@@ -158,7 +157,6 @@ public class HostCommunicationHandler implements ClientHandler {
         out.close();
         toGameServer.close();
         fromGameServer.close();
-
     }
 
     /**

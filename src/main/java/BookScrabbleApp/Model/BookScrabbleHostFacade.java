@@ -130,7 +130,7 @@ import java.util.*;
          hostModel.unPark();
      }
 
-//     public void setCommunicationServer(int port) {
-//         hostModel.setCommunicationServer(port);
-//     }
+     public void setCommunicationServer(int port) {
+         hostModel.setCommunicationServer(port);
+     }
  }

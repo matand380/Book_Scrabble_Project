@@ -391,7 +391,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
 
     public void startHostServer(int port) {
         new Thread(() -> {
-//            hostFacade.setCommunicationServer(port);
+            hostFacade.setCommunicationServer(port);
             hostFacade.getCommunicationServer().start();
         }).start();
     }

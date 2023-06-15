@@ -20,7 +20,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
     public int currentPlayerIndex = 0;
     public boolean gameIsOver = false;
     public System.Logger hostLogger = System.getLogger("HostLogger");
-    HostCommunicationHandler communicationHandler = new HostCommunicationHandler();
+    HostCommunicationHandler communicationHandler;
     MyServer communicationServer;
     Socket gameSocket;
     Board board;
@@ -44,7 +44,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
         player = new Player();
-        communicationServer = new MyServer(23346, communicationHandler);
+        //communicationServer = new MyServer(23346, communicationHandler);
     }
 
     /**
@@ -722,9 +722,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return scores;
     }
 
-//    public void setCommunicationServer(int port) {
-//        this.communicationServer = new MyServer(port, communicationHandler);
-//    }
+    public void setCommunicationServer(int port) {
+        communicationHandler = new HostCommunicationHandler();
+        this.communicationServer = new MyServer(port, communicationHandler);
+    }
 
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
