@@ -127,7 +127,6 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     /**
      * The tryPlaceWord function is used to place a word on the board.
      * It does this by taking in the word, row, column, and orientation from the GUI and passing them to the HostFacade.
-     * <p>
      *
      * @param word       Pass the word that is being placed on the board
      * @param row        Specify the row where the word is to be placed

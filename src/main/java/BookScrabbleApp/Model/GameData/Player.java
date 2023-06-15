@@ -21,9 +21,7 @@ public class Player implements Serializable, ObjectFactory {
      * It takes in a String name and sets it as the player's name,
      * initializes their score to 0, and creates an empty ArrayList of tiles called hand.
      *
-     * <p>
      *
-     * @ name Set the name of the player
      */
     public Player() {
         this._name = "Default";
@@ -109,7 +107,6 @@ public class Player implements Serializable, ObjectFactory {
      * The set_index function sets the index of a player.
      *
      * @param _index Set the index of the player
-     * @return Null
      */
     public void set_index(int _index) {
         this._index = _index;

@@ -13,11 +13,16 @@ public class TileField extends StackPane {
 
     public TextField score;
     private boolean isSelect = false;
-    private boolean isClick = false;
     private boolean isUpdate = false;
     public int tileCol;
     public int tileRow;
 
+    /**
+     * The TileField function is a constructor for the TileField class.
+     * It creates a new TextField object called letter and another called score.
+     * It also sets the size of each TileField to 135 by 200 pixels.
+     * @return A tilefield object
+     */
     public TileField() {
         super();
         this.letter = new TextField();
@@ -25,6 +30,12 @@ public class TileField extends StackPane {
         setPrefSize(135, 200);
     }
 
+    /**
+     * The createTile function creates a tile for the handGrid.
+     * @param width Set the width of the imageview
+     * @param height Set the height of the imageview
+     * @return A stackPane that contains an imageview
+     */
     public StackPane createTile(double width, double height) {
 
         ImageView imageView = new ImageView(tileToImage(this.letter.getText()));
@@ -37,6 +48,15 @@ public class TileField extends StackPane {
         return imagePane;
     }
 
+    /**
+     * The draw function draws the tile onto the GridCanvas.
+     * @param  gc Draw the image on the canvas
+     * @param  row Determine the row of the tile on the board
+     * @param  col Determine the column of the tile
+     * @param  width Set the width of the tile
+     * @param  height Set the height of the tile
+     * @param  fontSize Set the font size of the letter on the tile
+     */
     public void draw(GraphicsContext gc, int row, int col, double width, double height, int fontSize) {
         this.tileCol = col;
         this.tileRow = row;
@@ -47,46 +67,68 @@ public class TileField extends StackPane {
             gc.drawImage(tileToImage(this.letter.getText()), xCoordinate, YCoordinate, width, height);
     }
 
+    /**
+     * The setSelect function sets the boolean value of isSelect to true or false.
+     * @param select Determine whether the item is selected
+     */
     public void setSelect(boolean select) {
         isSelect = select;
     }
 
+    /**
+     * The setUnselected function sets the selected variable to false, and isUpdate to false.
+     */
     public void setUnselected() {
         setSelect(false);
         isUpdate = false;
-        isClick = false;
     }
 
+    /**
+     * The copy function copies all the parameter in Tile from one tile to another.
+     * This function was created in order to simplify the process of copying tiles.
+     * The copy function takes in a TileField object as an argument and
+     * then sets all of its own values equal to those of the inputted TileField's.
+     * @param tile Copy the values of the tile to this tile
+     */
     public void copy(TileField tile){
         this.letter.setText(tile.letter.getText());
         this.score.setText(tile.score.getText());
         this.isSelect = tile.isSelect;
-        this.isClick = tile.isClick;
         this.isUpdate = tile.isUpdate;
         this.tileCol = tile.tileCol;
         this.tileRow = tile.tileRow;
     }
 
-    public void setClick(boolean click) {
-        isClick = click;
-    }
-
-    public boolean isClick() {
-        return isClick;
-    }
-
+    /**
+     * The isUpdate function returns a boolean value that indicates whether the
+     * current tile is an update or not from the server.
+     * @return True if the tile is an update, false otherwise
+     */
     public boolean isUpdate() {
         return isUpdate;
     }
 
+    /**
+     * The setUpdate function sets the isUpdate variable to true.
+     * its purpose is to tell the controller that the tile has been updated from the server.
+     */
     public void setUpdate() {
         isUpdate = true;
     }
 
+    /**
+     * The isSelect function returns a boolean value that indicates whether the current tile is selected.
+     * @return A boolean value
+     */
     public boolean isSelect() {
         return isSelect;
     }
 
+    /**
+     * The tileToImage function takes in a tile letter and returns the corresponding image of that tile.
+     * @param  tileLetter Determine which tile image to return
+     * @return An image object
+     */
     private Image tileToImage(String tileLetter) {
         return switch (tileLetter) {
             case "A" -> new Image(getClass().getResource("/images/Tiles/aLetter.png").toExternalForm());

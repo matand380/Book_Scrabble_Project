@@ -185,7 +185,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
      * The initializeProperties function initializes all of the properties that are used in the GUI.
      * It also creates a HashMap called updatesMap, which is used to store information about what has been updated
      * and needs to be displayed on the GUI. The function also creates an ArrayList called viewableScores, which stores
-     * information about each player's score and name. This list is then bound to a List<TextField> in MainGUI so that it can be displayed there.
+     * information about each player's score and name. This list is then bound to a list of textField in MainGUI so that it can be displayed there.
      */
     @Override
     public void initializeProperties() {

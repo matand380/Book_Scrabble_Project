@@ -97,7 +97,7 @@ public class Board implements Serializable, ObjectFactory {
     /**
      * The getBoard function is a static function that returns the single instance of the Board class.
      * If there is no instance, it creates one and then returns it.
-     * <p>
+
      *
      * @return The single instance of the board class
      */
@@ -112,7 +112,7 @@ public class Board implements Serializable, ObjectFactory {
     /**
      * The getTiles function returns a copy of the mainBoard array.
      * It is used to get the current state of the board.
-     * <p>
+
      *
      * @return A copy of the mainboard array
      */
@@ -124,7 +124,7 @@ public class Board implements Serializable, ObjectFactory {
      * The boardLegal function checks if the word is legal to be placed on the board.
      * It first checks if it is inside the board, then it checks if it connects with other words.
      * If this is not true, then we check for letter replacement and return false otherwise.
-     * <p>
+
      *
      * @param w w Check if the word is inside the board
      * @return True if the word is legal and false otherwise
@@ -370,7 +370,7 @@ public class Board implements Serializable, ObjectFactory {
      * ArrayList with only one element: w itself. Otherwise, if there are other words formed by placing w on the board,
      * then these additional words will be added to newArrayWord after being checked for validity using checkVerticalWord or
      * checkHorizontalWord.
-     * <p>
+
      *
      * @param w w Check if the word is vertical or horizontal
      * @return An arraylist of word objects
@@ -475,7 +475,7 @@ public class Board implements Serializable, ObjectFactory {
     /**
      * The tryPlaceWord function takes in a Word object and checks if the word is legal.
      * If it is, then it places the word on the board and returns the score of all the words formed by placing the word on the board.
-     * <p>
+
      *
      * @param w w Determine if the word is legal on the board
      * @return The sum of the scores of all words formed by placing w on the board

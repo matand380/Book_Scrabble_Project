@@ -21,7 +21,6 @@ public class testCacheManager {
      * Finally, it checks that when a key is added to a full cache manager (with no room left),
      * the least recently used key is removed from the
      *
-     * @return True if the test passes and false otherwise
      */
     public void testCacheManager() {
         CacheManager exists = new CacheManager(3, new LRU());

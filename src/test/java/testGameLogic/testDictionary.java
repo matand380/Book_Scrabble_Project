@@ -13,7 +13,6 @@ public class testDictionary {
      * The testDictionary function tests the Dictionary class.
      * It creates a new dictionary object and checks if it contains the words "is" and "lazy".
      *
-     * @return True if the query is in the dictionary, and false otherwise
      */
     public void testDictionary() {
         Dictionary d = new Dictionary("text1.txt", "text2.txt");

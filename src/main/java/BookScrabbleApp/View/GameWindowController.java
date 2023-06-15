@@ -95,10 +95,9 @@ public class GameWindowController implements Observer, Initializable {
     private List<SimpleStringProperty> wordsForChallenge;
 
     /**
-     * The GameWindowController Constructor initialize the properties of the GameWindowController class.
+     * The GameWindowController Constructor initializes the properties of the GameWindowController class.
      * It also initializes two maps, one for updating and one for key events.
      *
-     * @return A gameWindowController object
      */
     public GameWindowController() {
         initializeProperties();
@@ -108,10 +107,9 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The setViewModel function is used to set the viewModel of the class (Host or Guest) according to what the player chose.
-     * this function is called from the host or guest controller.
+     * This function is called from the host or guest controller.
      *
-     * @param //BS_ViewModel viewModel Determine which viewmodel to use
-     * @return A bs_viewmodel object
+     * @param viewModel Determine which view model to use
      */
     public void setViewModel(BS_ViewModel viewModel) {
         if (viewModel instanceof BS_Host_ViewModel) {
@@ -147,10 +145,9 @@ public class GameWindowController implements Observer, Initializable {
      * the type of update that was sent from the observable object.
      * This allows for
      * different types of updates to be handled differently.
-     *
-     * @param //Observable o Identify the observable that is calling the update function
-     * @param //Object     arg Pass the message from the observable object to this observer
-     * @return A string which is then used to determine what function to call
+     *<p>
+     * @param o Identify the observable that is calling the update function
+     * @param arg Pass the message from the observable object to this observer
      */
     @Override
     public void update(Observable o, Object arg) {
@@ -206,6 +203,11 @@ public class GameWindowController implements Observer, Initializable {
 
     }
 
+    /**
+     * The initializeProperties function initializes the properties of the class.
+     * It creates new ArrayLists for handFields, boardFields, scoresFields and nameFields.
+     * It also creates a new HashMap called updatesMap and two ArrayLists called wordForTryPlace and wordsForChallenge.
+     */
     private void initializeProperties() {
         //initialize properties
         handFields = new ArrayList<>();
@@ -220,6 +222,12 @@ public class GameWindowController implements Observer, Initializable {
         rectanglesPlayer = new ArrayList<>();
     }
 
+    /**
+     * The initializeUpdateMap function initializes the updatesMap HashMap.
+     * The updatesMap is a Hashmap that maps between an update message from the server and a lambda function.
+     * When an update message arrives from the server, it is mapped to its corresponding lambda function in this map,
+     * which then executes.
+     */
     private void initializeUpdateMap() {
         updatesMap.put("hand updated", message -> {
             if ((viewModel.getPlayerIndex() != 0)) {
@@ -297,6 +305,12 @@ public class GameWindowController implements Observer, Initializable {
         });
     }
 
+    /**
+     * The initializeWindow function is responsible for binding the viewModel's observable lists to the text fields in
+     * our GUI.
+     * It also creates a 2D array of TileFields, which are used to display information about each tile on the board.
+     *
+     */
     public void initializeWindow() {
         //bind the scores to the text fields
         for (int i = 0; i < viewModel.getViewableScores().size(); i++) {
@@ -338,6 +352,16 @@ public class GameWindowController implements Observer, Initializable {
         }
     }
 
+    /**
+     * The initializeKeyEventMap function initializes the keyEventsMap HashMap with all the possible KeyCodes
+     * that can be pressed on a keyboard.
+     * The function then maps each KeyCode to its corresponding functionForEachKey method,
+     * which is used to determine what action should be taken when
+     * a certain key is pressed.
+     * This allows for easy access and modification of these functions in one place,
+     * rather than having them scattered throughout
+     * the codebase.
+     */
     private void initializeKeyEventMap() {
         keyEventsMap = new HashMap<>();
 
@@ -357,7 +381,7 @@ public class GameWindowController implements Observer, Initializable {
      * It checks if the clicked tile is adjacent to the last selected tile, and if it is,
      * it adds that tile to wordForTryPlace.
      * If not, then nothing happens.
-     * @param //MouseEvent event Get the x and y coordinates of the mouse click
+     * @param event Get the x and y coordinates of the mouse click
      */
     private void handleMouseClicked(MouseEvent event) {
 
@@ -397,10 +421,10 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The functionForEachKey is a helper function that returns an EventHandler&lt;KeyEvent&gt; object.
-     * The returned EventHandler&lt;KeyEvent&gt; object handles the KeyEvents for each key on the keyboard.
+     * The returned object handles the KeyEvents for each key on the keyboard.
      * If a letter key is pressed, then it will select the TileField in handFields with that letter and set selectedTileField to be this TileField.
-     * If an arrow key (up, down, left or right) is pressed, then it will move gameBoard's cursor accordingly.
-     * If backspace is pressed the function check is this tile is from the board (update from the server)
+     * If an arrow key (up, down, left or right) is pressed, then it will move the gameBoard's cursor accordingly.
+     * If backspace is pressed, the function check is this tile being from the board (update from the server)
      * or from the hand and remove it accordingly.
      *
      * @return A function that is called when a key is pressed
@@ -453,6 +477,11 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     //button handlers
+    /**
+     * The onTryButtonClick function is called when the user clicks on the button.
+     * It checks if the word that was placed by the player is valid, and if it is, it sends a message to
+     * ViewModel with all of its information (the word itself, its starting row and column coordinates).
+     */
     @FXML
     protected void onTryButtonClick() {
         TileField tile = new TileField();
@@ -515,12 +544,20 @@ public class GameWindowController implements Observer, Initializable {
 
     }
 
+    /**
+     * The onPassButtonClick function is called when the user clicks on the Pass button.
+     * It calls a function in the viewModel that passes control to the other player.
+     */
     @FXML
     public void onPassButtonClick() {
         viewModel.passTurn();
         Platform.runLater(() -> gameBoard.requestFocus());
     }
 
+    /**
+     * The onSortABCButtonClick function sorts the handFields list by the text of each letter.
+     * It then redraws the hand with this new order, and requests to focus on the gameBoard.
+     */
     @FXML
     protected void onSortABCButtonClick() {
         handFields.sort(Comparator.comparing(t -> t.letter.getText()));
@@ -528,6 +565,9 @@ public class GameWindowController implements Observer, Initializable {
         Platform.runLater(() -> gameBoard.requestFocus());
     }
 
+    /**
+     * The onSortScoreButtonClick function sorts the handFields list by score, and then redraws the hand.
+     */
     @FXML
     private void onSortScoreButtonClick() {
         handFields.sort(Comparator.comparingInt(t -> Integer.parseInt(t.score.getText())));
@@ -535,6 +575,12 @@ public class GameWindowController implements Observer, Initializable {
         Platform.runLater(() -> gameBoard.requestFocus());
     }
 
+    /**
+     * The startNewGame function is called when the user clicks on the Start New Game button.
+     * It sets up a new game by calling startNewGame() in viewModel, which resets all the
+     * necessary variables and starts a new game.
+     * It then hides this button so that it cannot be clicked again until another game has ended.
+     */
     public void startNewGame() {
         this.viewModel.startNewGame();
         startNewGameBtn.setVisible(false);
@@ -559,7 +605,7 @@ public class GameWindowController implements Observer, Initializable {
     /**
      * The setNamesFields function is used to set the names of the players in their respective fields.
      *
-     * @param ;SimpleStringProperty&gt; viewableNames Set the names of the players in the game
+     * @param viewableNames Set the names of the players in the game
      */
     private void setNamesFields(List<SimpleStringProperty> viewableNames) {
         Platform.runLater(() -> {
@@ -588,6 +634,16 @@ public class GameWindowController implements Observer, Initializable {
         }
     }
 
+    /**
+     * The setYourWord function is called when the user clicks on a tile in their rack.
+     * It creates a new TileField object, which is essentially just an image of the tile that was clicked on.
+     * The new TileField object has its letter and score set to be equal to those of the selectedTileField
+     * (the one that was clicked).
+     * Then it sets its row and column values to be equal to those of selectedTileField as well.
+     * This will allow us later on in this program
+     * (in functions like checkWord)
+     * to determine where each letter should go if we decide we want our word placed onto the board.
+     */
     private void setYourWord() {
         TileField t = new TileField();
         t.letter.setText(selectedTileField.letter.getText());
@@ -601,6 +657,17 @@ public class GameWindowController implements Observer, Initializable {
         selectedTileField = null;
     }
 
+    /**
+     * The showChallengePopup function is called when the user clicks on the Challenge button.
+     * It creates a new stage that displays all the words that were played by other players in this turn,
+     * and allows them to select one word to challenge.
+     * If they do not select any word, or if they do not click on
+     * &quot;Challenge&quot; before 7 seconds have passed, then nothing happens.
+     * Otherwise, it sends a request to challenge the selected word
+     *<p>
+     * @param wordsForChallenge Create a list of checkboxes with the words as text
+
+     */
     private void showChallengePopup(List<SimpleStringProperty> wordsForChallenge) {
         Platform.runLater(() -> {
             Stage popupStage = new Stage();
@@ -671,6 +738,12 @@ public class GameWindowController implements Observer, Initializable {
         viewModel.unPark();
     }
 
+    /**
+     * The passTurn function is used to disable the tryPlaceBtn and passTurnBtn when it's not the player's turn.
+     *<p>
+     * @param indexCurrentPlayer Check if the current player is the same as the one whose turn it is
+     *
+     */
     private void passTurn(String indexCurrentPlayer) {
         if (!(viewModel.getPlayerIndex() == Integer.parseInt(indexCurrentPlayer))) {
             tryPlaceBtn.setDisable(true);
@@ -682,11 +755,26 @@ public class GameWindowController implements Observer, Initializable {
 
     }
 
+    /**
+     * The removeFromYourWord function removes a tile from the wordForTryPlace list.
+     *<p>
+     *
+     * @param removedTile Identify the tile that is being removed from the wordForTryPlace list
+     *
+     */
     private void removeFromYourWord(TileField removedTile) {
         wordForTryPlace.removeIf(tileField -> tileField.tileRow == removedTile.tileRow && tileField.tileCol == removedTile.tileCol && tileField.letter.getText().equals(removedTile.letter.getText()));
     }
 
     //popUp methods
+    /**
+     * The alertPopUp function is used to display a pop-up window with the given title, header, and text.
+     *<p>
+     *
+     * @param title Set the title of the alert
+     * @param header Display the header of the alert
+     * @param text Display the text in the alert box
+     */
     private void alertPopUp(String title, String header, String text) {
         Platform.runLater(() -> {
             for (TileField t : wordForTryPlace) {
@@ -709,6 +797,16 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     //redraw methods
+    /**
+     * The redrawHand function is used to redraw the hand of tiles in the GUI.
+     * It takes a list of TileFields as an argument, and then clears all children from the handGrid pane.
+     * Then it iterates through each tile in the list,
+     * and adds them to the grid with their appropriate width/height ratio.
+     *<p>
+     * @param list Get the tiles from the hand and draw them on screen
+     *
+     *
+     */
     private void redrawHand(List<TileField> list) {
         Platform.runLater(() -> {
             handGrid.getChildren().clear();
@@ -725,7 +823,7 @@ public class GameWindowController implements Observer, Initializable {
      * If a tile from their hand is clicked, then it will be added to yourWord from the board.
      * If a tile from the board is clicked, then its text will be updated with "_" we do this so to send the server in the right format.
      * The tile will be added to yourWord with the right letter from the board.
-     * @param //List&lt;TileField&gt; list Store the tiles that are currently in your word
+     * @param list Store the tiles that are currently in your word
      */
     private void redrawYourWord(List<TileField> list) {
         Platform.runLater(() -> {
@@ -745,17 +843,16 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The checkFirstWord function checks to see if the first word has been placed on Row 7 and Col 7.
-     * like the rules of the game say.
+     * Like the rules of the game say.
      * @return True if the first word has been placed, false otherwise
      */
     private boolean checkFirstWord() {
         return !gameBoard.tileFields.get(7).get(7).letter.getText().equals("");
     }
 
-    //check if these methods is needed
     /**
      * The isVertical function checks if the word is vertical or not.
-     * @param //List&lt;TileField&gt; wordTryPlace Determine if the word is vertical or horizontal
+     * @param  wordTryPlace Determine if the word is vertical or horizontal
      * @return A boolean value
      */
     private boolean isVertical(List<TileField> wordTryPlace) {
@@ -777,9 +874,9 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The endGamePopUp function creates a pop-up window that displays the winner of the game.
-     * @param //String title Set the title of the pop-up window
-     * @param //String header Set the text of the header label
-     * @param //String text Set the text of the content label
+     * @param  title Set the title of the pop-up window
+     * @param  header Set the text of the header label
+     * @param  text Set the text of the content label
      */
     public void endGamePopUp(String title, String header, String text) {
         Platform.runLater(() -> {

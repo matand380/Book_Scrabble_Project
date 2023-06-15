@@ -22,7 +22,7 @@ public class BloomFilter {
     /**
      * The BloomFilter function takes in a string and hashes it using the hash functions
      * that were passed into the constructor. It then sets each of those bits to 1.
-     *<p>
+
      * @param size size Set the size of the bitset
      * @param hashFunctions hashFunctions Pass in a variable number of strings
      *
@@ -47,7 +47,7 @@ public class BloomFilter {
     /**
         * The add function takes in a string and hashes it using the hash functions
         * that were passed into the constructor. It then sets each of those bits to 1.
-        *<p>
+
         * @param word word The word to be added to the bloom filter
      *
         */
@@ -66,7 +66,7 @@ public class BloomFilter {
 
     /**
      * The contains function takes in a string and returns true if the bloom filter contains that string.
-     *<p>
+
      *
      * @param word word Get the hash value of a word
      *
@@ -88,7 +88,7 @@ public class BloomFilter {
 
     /**
      * The toString function returns a string representation of the BitSet.
-     *<p>
+
      *
      * @return A string of all the bits in the bitset
      *

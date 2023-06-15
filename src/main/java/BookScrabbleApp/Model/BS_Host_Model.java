@@ -324,7 +324,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
                 System.out.println(Thread.currentThread().getName());
                 System.out.println(Thread.currentThread()+"going to sleep for 10 seconds");
                 try {
-                    Thread.currentThread().sleep(10000);
+                    Thread.currentThread().sleep(7000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
