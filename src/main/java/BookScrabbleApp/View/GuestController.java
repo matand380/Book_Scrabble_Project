@@ -90,7 +90,11 @@ public class GuestController {
         stage.setScene(scene);
         stage.show();
     }
-
+    /**
+     * The validatePort function checks if the port number is valid.
+     * @param  port Validate the port number
+     * @return A boolean value
+     */
     private boolean validatePort(String port) {
         // Regular expression for port number (1-65535)
         String portRegex = "^([1-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$";
@@ -98,6 +102,11 @@ public class GuestController {
         return Pattern.matches(portRegex, port);
     }
 
+    /**
+     * The validateIp function takes a String as an argument and returns true if the string is a valid IPv4 address.
+     * @param  ip Pass the ip address to be validated
+     * @return A boolean value
+     */
     private boolean validateIp(String ip) {
         // Regular expression for IPv4 address
         String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";

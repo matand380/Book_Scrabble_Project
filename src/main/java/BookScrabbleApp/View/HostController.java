@@ -143,15 +143,11 @@ public class HostController {
         stage.setOnCloseRequest(e -> Platform.exit());
     }
 
+
     /**
-     * The validateIpPort function takes in a String ip and an int port.
-     * It returns true if the ip is a valid IPv4 address and the port is within range (0-65535).
-     * Otherwise, it returns false.
-     * <p>
-     *
-     * @param ip   Store the ip address of the server
-     * @param port Validate the port number
-     * @return A boolean
+     * The validatePort function checks if the port number is valid.
+     * @param  port Validate the port number
+     * @return A boolean value
      */
     private boolean validatePort(String port) {
         // Regular expression for port number (1-65535)
@@ -160,6 +156,11 @@ public class HostController {
         return Pattern.matches(portRegex, port);
     }
 
+    /**
+     * The validateIp function takes a String as an argument and returns true if the string is a valid IPv4 address.
+     * @param  ip Pass the ip address to be validated
+     * @return A boolean value
+     */
     private boolean validateIp(String ip) {
         // Regular expression for IPv4 address
         String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
