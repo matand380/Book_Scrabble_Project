@@ -18,7 +18,7 @@
     -fx-font-size: 18px;
     -fx-font-weight: 600;
     -fx-text-fill: #FFFFFF;
-    -fx-font-family: 'Montserrat';
+    -fx-font-family: "Apple Braille";
 }
 .font:hover{
     -fx-text-fill: #0AFFF0;
@@ -31,6 +31,7 @@
     -fx-border-color: #4CAF50;
     -fx-border-width: 2px;
     -fx-border-radius: 25px;
+    -fx-font-family: "Apple Braille"
 }
 
 .player-rectangle {
@@ -39,12 +40,14 @@
     -fx-stroke-width: 1px;
     -fx-arc-width: 10px;
     -fx-arc-height: 10px;
+    -fx-font-family: "Apple Braille";
 }
 
 .player-name {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #000000;
+    -fx-font-family: "Apple Braille";
 }
 
 .player-score {
@@ -52,8 +55,8 @@
     -fx-text-fill: #000000;
     -fx-background-color: rgb(64, 2, 1, 0.2);
     -fx-background-radius: 20px;
+    -fx-font-family: "Apple Braille";
 }
 .text{
-
     -fx-background-color: white;
 }

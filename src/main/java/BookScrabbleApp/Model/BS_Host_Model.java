@@ -32,22 +32,18 @@ public class BS_Host_Model extends Observable implements BS_Model {
     Queue<Player> scoresManager = new PriorityQueue<>(Comparator.comparingInt(Player::get_score).reversed());
     String[] PlayersScores;
     private List<Player> players;
+    int port;
 
 
     /**
      * The BS_Host_Model function is a singleton class that creates the host model for the game.
      */
     private BS_Host_Model() {
-
         //Game data initialization
         board = Board.getBoard();
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
         player = new Player();
-
-
-        communicationServer = new MyServer(23346, communicationHandler);
-
     }
 
     /**
@@ -727,6 +723,10 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return scores;
     }
 
+    public void setCommunicationServer(int port) {
+        communicationServer = new MyServer(port, communicationHandler);
+    }
+
     private static class HostModelHelper {
         public static final BS_Host_Model model_instance = new BS_Host_Model();
     }
@@ -749,7 +749,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 //        }
         System.out.println("unparking");
     }
-
 
 }
 

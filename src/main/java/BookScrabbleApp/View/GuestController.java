@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.stage.*;
 
 import java.util.*;
+import java.util.regex.*;
 
 public class GuestController {
     //start method
@@ -43,8 +44,7 @@ public class GuestController {
     @FXML
     public void onPressSubmit() {
         if (nameTextFiled.getText().equals("")) {
-            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
-            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
+            name = "Guest";
         } else {
             name = nameTextFiled.getText();
         }
@@ -53,7 +53,13 @@ public class GuestController {
         port = Integer.parseInt(PortTextFiled.getText());
         if (ip.equals("") || port == 0) {
             invalidIPorPort.setText("Please enter IP and Port");
-        } else {
+        } else if (!validatePort(String.valueOf(port)) && validateIp(ip)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Problem with ip or port");
+            alert.setHeaderText("Ip or port number is not valid");
+            alert.setContentText("Please enter a valid ip and port number");
+            alert.showAndWait();
+        }else {
             boolean connected = true;
             guest.hostIp.bindBidirectional(IpTextFiled.textProperty());
             guest.hostPort.bindBidirectional(PortTextFiled.textProperty());
@@ -92,5 +98,28 @@ public class GuestController {
         stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
+    }
+    /**
+     * The validatePort function checks if the port number is valid.
+     * @param  port Validate the port number
+     * @return A boolean value
+     */
+    private boolean validatePort(String port) {
+        // Regular expression for port number (1-65535)
+        String portRegex = "^([1-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$";
+        // Validate port number
+        return Pattern.matches(portRegex, port);
+    }
+
+    /**
+     * The validateIp function takes a String as an argument and returns true if the string is a valid IPv4 address.
+     * @param  ip Pass the ip address to be validated
+     * @return A boolean value
+     */
+    private boolean validateIp(String ip) {
+        // Regular expression for IPv4 address
+        String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
+        // Validate IP address
+        return Pattern.matches(ipv4Regex, ip);
     }
 }

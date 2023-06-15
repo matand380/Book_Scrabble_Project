@@ -11,15 +11,14 @@
    <bottom>
       <Group BorderPane.alignment="CENTER">
          <children>
-         <!--      <Button onAction="#switchToHostWindow" text="Host">-->
                    <Button layoutX="-83.0" layoutY="-54.0" onAction="#switchToHostWindow" prefHeight="62.0" prefWidth="151.0" stylesheets="@../buttonStyleSheets.css" text="Host">
                    <font>
-                       <Font size="49.0" />
+                       <Font name="Apple Braille" size="49.0" />
                    </font>
                </Button>
             <Button layoutX="313.0" layoutY="-54.0" onAction="#switchToGuestWindow" prefHeight="62.0" prefWidth="151.0" stylesheets="@../buttonStyleSheets.css" text="Guest">
                <font>
-                  <Font size="49.0" />
+                   <Font name="Apple Braille" size="49.0" />
                </font>
             </Button>
          </children>
@@ -29,14 +28,9 @@
       </Group>
    </bottom>
    <center>
-<!--            <ImageView fitHeight="616.0" fitWidth="723.0" layoutX="24.0" layoutY="-9.0" preserveRatio="true" >-->
-<!--               <image>-->
-<!--                  <Image url="@../images/Logo.JPG" />-->
-<!--               </image>-->
-<!--            </ImageView>-->
          <Label fx:id="welcomeText" text="Choose the mode you want to play:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true" BorderPane.alignment="CENTER">
              <font>
-                 <Font size="39.0" />
+                 <Font name="Apple Braille" size="39.0" />
              </font>
          </Label>
    </center>
