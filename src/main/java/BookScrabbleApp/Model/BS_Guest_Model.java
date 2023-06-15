@@ -212,6 +212,12 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         return tileBoard;
     }
 
+    /**
+     * The setTileBoard function takes in a string message and parses it to get the tiles.
+     * It then uses Gson to convert the tiles into a Tile[][] object, which is used as an argument for setBoard.
+     * The function then notifies observers that tileBoard has been updated.
+     * @param  message Get the information from the server
+     */
     public void setTileBoard(String message) {
         String tiles = message.substring(10);
         Gson gson = new Gson();
@@ -221,6 +227,10 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         notifyObservers("tileBoard updated");
     }
 
+    /**
+     * The setWinner function is used to set the winner of a game.
+     * @param  message Get the index of the player who won and their name
+     */
     public void setWinner(String message) {
         String[] key = message.split(":");
         int index = Integer.parseInt(key[1]);
@@ -247,8 +257,11 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         }
     }
 
+    /**
+     * The setHand function is used to update the hand of a player.
+     * @param  message Extract the new hand from the server
+     */
     public void setHand(String message) {
-
         String hand = message.substring(5);
         Gson gson = new Gson();
         Tile[] newTiles = gson.fromJson(hand, Tile[].class);
@@ -258,6 +271,11 @@ public class BS_Guest_Model extends Observable implements BS_Model {
         notifyObservers("hand updated");
     }
 
+    /**
+     * The sortAndSetIndex function takes in a string message and parses it to get the index for the guest.
+     * It then sets the player index with this new value.
+     * @param message Split the message into an array of strings
+     */
     public void sortAndSetIndex(String message) {
         String[] key = message.split(":");
         int size = Integer.parseInt(key[1]);
@@ -270,9 +288,13 @@ public class BS_Guest_Model extends Observable implements BS_Model {
                 notifyObservers("sortAndSetIndex:" + BS_Guest_Model.getModel().getPlayer().get_index());
             }
         }
-
     }
 
+    /**
+     * The setPlayersScore function takes in a string message and parses it to get the scores of all players.
+     * It then sets the playerScores array with these new values.
+     * @param  message Get the scores from the server
+     */
     public void setPlayersScore(String message) {
             String scores = message.substring(14);
         Gson gson = new Gson();
@@ -283,11 +305,18 @@ public class BS_Guest_Model extends Observable implements BS_Model {
 
     }
 
+    /**
+     * The toFacade function is used to send a message from the model to the facade.
+     * @param message Pass a message to the facade
+     */
     public void toFacade(String message) {
         setChanged();
         notifyObservers(message);
     }
 
+    /**
+     * The unPark function sends a message to the Host tryPlaceWord function and telling it to stop parking.
+     */
     public void unPark(){
         communicationHandler.outMessages("unPark:");
     }
