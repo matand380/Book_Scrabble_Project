@@ -43,6 +43,13 @@
 -[x] Test the performance of the `GameWindowController` by simulating 4 players and game events to
  ensure it can handle the load efficiently.
 -[x] Verify that the game gracefully handles network latency and delays in updating the game state on all clients.
+-[x] Negative test: Player tries to place a word on the game board without selecting any tiles and verify that an error
+ message is displayed.
+
+## Compatibility tests:
+-[x] Verify that the GUI works correctly on Windows.
+-[x] Verify that the GUI works correctly on Mac.
+-[x] Verify that the Gui on different screen sizes and resolutions.
 
 
 
