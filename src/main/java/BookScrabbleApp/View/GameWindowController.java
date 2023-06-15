@@ -155,7 +155,8 @@ public class GameWindowController implements Observer, Initializable {
         String updateType = messageSplit[0];
         System.out.println("\n -- updateType GameWindow: " + message + " -- \n");
         if (updatesMap.containsKey(updateType)) {
-            executorService.submit(() -> updatesMap.get(updateType).accept(message));
+//            executorService.submit(() -> updatesMap.get(updateType).accept(message));
+            updatesMap.get(updateType).accept(message);
         }
     }
 

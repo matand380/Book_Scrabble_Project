@@ -30,6 +30,7 @@ public class HostCommunicationHandler implements ClientHandler {
      * <p>
      */
     public HostCommunicationHandler() {
+
         //put all the methods in the map for being able to invoke them in handleRequests
         handlers.put("passTurn", message ->
             BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
@@ -84,9 +85,7 @@ public class HostCommunicationHandler implements ClientHandler {
         handlers.put("unPark", message -> {
             BS_Host_Model.getModel().unPark();
         });
-
-        executor.submit(this::handleRequests);
-        executor.submit(this::messagesFromGameServer);
+//        executor.submit(this::messagesFromGameServer);
     }
 
 
@@ -112,6 +111,7 @@ public class HostCommunicationHandler implements ClientHandler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
     }
 
@@ -133,16 +133,21 @@ public class HostCommunicationHandler implements ClientHandler {
             in = new Scanner(inputStream);
             out = new PrintWriter(outputStream);
             String key = null;
-            try {
-                if (in.hasNext()) {
-                    key = in.next();
-                }
-                if (key != null)// Read an object from the server
-                {
-                    inputQueue.put(key); // Put the received object in the queue
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (in.hasNext()) {
+                key = in.next();
+            }
+            if (key != null)// Read an object from the server
+            {
+                String finalKey = key;
+                executor.submit(()-> {
+                    try {
+                        inputQueue.put(finalKey);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }); // Put the received object in the queue
+//                handleRequests();
+                executor.submit(this::handleRequests);
             }
         }
     }
@@ -168,10 +173,10 @@ public class HostCommunicationHandler implements ClientHandler {
     public void messagesToGameServer(String key) {
         if (key != null) {
             try {
-                toGameServer = new PrintWriter(BS_Host_Model.getModel().getGameSocket().getOutputStream());
+                toGameServer = new PrintWriter(BS_Host_Model.getModel().getGameSocket().getOutputStream(), true);
                 toGameServer.println(key);
                 toGameServer.flush();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -188,17 +193,18 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     public String messagesFromGameServer() {
         try {
-            fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
             String key = null;
+            try {
+                fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             key = fromGameServer.next();
             return key;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (NoSuchElementException e) {
+            return null;
         }
-
-        return null;
     }
-
 
 }
 

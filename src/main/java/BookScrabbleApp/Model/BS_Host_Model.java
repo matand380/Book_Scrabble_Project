@@ -44,6 +44,7 @@ public class BS_Host_Model extends Observable implements BS_Model {
         bag = Tile.Bag.getBag();
         players = new ArrayList<>();
         player = new Player();
+
         //communicationServer = new MyServer(23346, communicationHandler);
     }
 
@@ -373,7 +374,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
                     gameIsOver = true;
                     return;
                 }
-                LockSupport.parkNanos(4000000000L); //park for 3 seconds
                 passTurnTryPlace(currentPlayerIndex);
                 currentPlayerWords.clear();
 
@@ -595,7 +595,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         return isGameOver;
     }
 
-
     /**
      * The getMaxScore function returns the player with the highest score.
      * <p>
@@ -612,7 +611,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
         }
 
     }
-
 
     /**
      * The getCommunicationHandler function returns the communicationHandler object.

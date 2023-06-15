@@ -157,7 +157,7 @@ public class ClientCommunicationHandler {
      */
     public void outMessages(String key) {
         if (key != null) {
-            out.println(key);
+           out.println(key);
             out.flush();
         }
     }

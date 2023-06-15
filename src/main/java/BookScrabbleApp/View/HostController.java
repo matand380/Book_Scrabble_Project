@@ -113,7 +113,6 @@ public class HostController {
                 return;
             } else {
                 hostPort = Integer.parseInt(portField.getText());
-                host.hostFacade.setCommunicationServer(hostPort);
                 host.startHostServer(hostPort);
                 host.setPlayerProperties(name);
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
