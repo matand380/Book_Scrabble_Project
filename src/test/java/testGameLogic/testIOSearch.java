@@ -22,8 +22,6 @@ public class testIOSearch {
      * It creates two text files, one with a string of words and another with a different string of words.
      * Then it searches for the word "is" in both files and prints out whether or not it was found.
      * Next, it searches for the word "cat" in both files and prints out whether or not it was found.
-     *
-     * @return False when the word is not found in any of the files and true if it is found
      * @throws Exception
      */
     public void testIOSearch() throws Exception {

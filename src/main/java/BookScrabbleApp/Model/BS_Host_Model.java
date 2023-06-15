@@ -47,7 +47,6 @@ public class BS_Host_Model extends Observable implements BS_Model {
 
 
         communicationServer = new MyServer(23346, communicationHandler);
-        //    System.out.println("Server local ip: " + communicationServer.ip() + "\n" + "Server public ip: " + communicationServer.getPublicIp() + "\n" + "Server port: " + port);
 
     }
 

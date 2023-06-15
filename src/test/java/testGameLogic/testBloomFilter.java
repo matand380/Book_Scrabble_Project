@@ -18,7 +18,6 @@ public class testBloomFilter {
      * found in the filter (since they were not added).
      * If any test fails, an error message is printed out to standard output.
      *
-     * @return A string of bits that represent the bloom filter
      */
     public void testBloomFilter() {
         BloomFilter bf = new BloomFilter(256, "MD5", "SHA1");

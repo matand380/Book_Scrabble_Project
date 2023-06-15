@@ -16,7 +16,6 @@ public class testLFU {
      * It adds 5 elements to the cache, and then removes one element from it.
      * If the removed element is not "c", then there is a problem with this implementation of LFU.
      *
-     * @return "c" because it is the least frequently used element
      */
     public void testLFU() {
         CacheReplacementPolicy lfu = new LFU();

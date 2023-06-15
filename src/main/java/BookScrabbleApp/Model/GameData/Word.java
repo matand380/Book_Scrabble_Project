@@ -30,7 +30,6 @@ public class Word implements Serializable, ObjectFactory {
 
     /**
      * The Word function is a default constructor that creates a new Word object.
-     * @return A word object
      */
     public Word() {
         this.tiles = new Tile[0];

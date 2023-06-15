@@ -16,7 +16,6 @@ public class testLRU {
      * It adds four elements to the cache, and then removes one element from it.
      * If the removed element is not "b";, then an error message is printed out.
      *
-     * @return "b";
      */
     public void testLRU() {
         CacheReplacementPolicy lru = new LRU();

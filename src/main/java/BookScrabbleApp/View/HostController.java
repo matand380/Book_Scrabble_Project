@@ -41,7 +41,7 @@ public class HostController {
      * The onPressSubmit function is called when the submit button is pressed.
      * It checks if the IP and Port fields are empty, and if they are not it will attempt to connect to a server at that address.
      * If it fails, an alert box will pop up telling you that there was an error connecting to the server.
-     * @return The next page
+
      */
     @FXML
     public void onPressSubmit(){
@@ -74,7 +74,7 @@ public class HostController {
     /**
      * The next function is called when the user clicks on the next button.
      * It loads a new scene, which is hostNextWindow.fxml, and sets it as the current scene of this stage.
-     * @return The host to the main menu
+
      */
     @FXML
     public void next() throws Exception {
