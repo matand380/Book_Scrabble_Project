@@ -42,7 +42,6 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         hostFacade.addObserver(this);
         initializeProperties();
         initializeUpdateMap();
-
     }
 
     /**
@@ -391,8 +390,10 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
     }
 
     public void startHostServer(int port) {
-        hostFacade.setCommunicationServer(port);
-        new Thread(() -> hostFacade.getCommunicationServer().start()).start();
+        new Thread(() -> {
+//            hostFacade.setCommunicationServer(port);
+            hostFacade.getCommunicationServer().start();
+        }).start();
     }
 
     @Override
