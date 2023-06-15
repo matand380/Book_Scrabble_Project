@@ -43,7 +43,10 @@
 * Project presentation video - will be added
 
 ## JavaDoc
-JavaDoc for the project can be found [here](BSP-JavaDoc/index.html)
+JavaDoc for the project can be found [here](https://matand380.github.io/Book_Scrabble_Project/BSP-JavaDoc/index.html)
+
+
+
 
 [Back to Top](#scrabble-game)
 
