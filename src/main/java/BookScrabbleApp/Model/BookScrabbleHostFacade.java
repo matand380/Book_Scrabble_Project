@@ -5,8 +5,7 @@ import BookScrabbleApp.Model.GameLogic.*;
 
 import java.net.*;
 import java.util.*;
-
-public class BookScrabbleHostFacade extends Observable implements Observer {
+ public class BookScrabbleHostFacade extends Observable implements Observer {
     private BS_Host_Model hostModel;
 
     public BookScrabbleHostFacade() {

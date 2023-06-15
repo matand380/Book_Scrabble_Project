@@ -23,7 +23,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
     public List<SimpleStringProperty> viewableName; //score array
 
     public List<SimpleStringProperty> viewableWordsForChallenge; // words for challenge array
-    BookScrabbleHostFacade hostFacade;
+    public BookScrabbleHostFacade hostFacade;
     private Map<String, Consumer<String>> updatesMap; //map of all the updates
 
     ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -240,7 +240,6 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         }
         setChanged();
         notifyObservers("scores updated");
-
     }
 
 
@@ -304,7 +303,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
 
     /**
      * The challengeRequest function is called when the user clicks on the challenge button.
-     * It sends a request to the server to activate a challenge, and then clears all of the viewable words for challenge.
+     * It sends a request to the server to activate a challenge, and then clears all the viewable words for challenge.
      *
      * @param challengeWord Pass the challenge word to the server
      */
