@@ -34,13 +34,13 @@
          <children>
                 <Group>
                     <children>
-                        <Label layoutX="-88.0" layoutY="76.0" prefHeight="53.0" prefWidth="168.0" text="Host Port:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+                        <Label layoutX="-88.0" layoutY="76.0" prefHeight="53.0" prefWidth="168.0" text="Port:" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" wrapText="true">
                             <font>
                                 <Font name="Apple Braille" size="39.0" />
                             </font>
                         </Label>
                         <TextField fx:id="IpTextFiled" layoutX="94.0" layoutY="24.0" prefHeight="37.0" prefWidth="321.0" text="127.0.0.1" />
-                        <Label layoutX="-87.0" layoutY="5.0" prefHeight="69.0" prefWidth="127.0" text="Host Ip:" textFill="WHITE" textOverrun="CLIP" wrapText="true">
+                        <Label layoutX="-87.0" layoutY="5.0" prefHeight="69.0" prefWidth="127.0" text="Ip:" textFill="WHITE" textOverrun="CLIP" wrapText="true">
                             <font>
                                 <Font name="Apple Braille" size="39.0" />
                             </font>

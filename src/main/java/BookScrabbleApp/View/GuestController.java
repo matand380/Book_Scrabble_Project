@@ -49,11 +49,11 @@ public class GuestController {
             name = nameTextFiled.getText();
         }
         guest.setPlayerProperties(name);
-        ip = IpTextFiled.getText();
-        port = Integer.parseInt(PortTextFiled.getText());
-        if (ip.equals("") || port == 0) {
-            invalidIPorPort.setText("Please enter IP and Port");
-        } else if (!validatePort(String.valueOf(port)) && validateIp(ip)) {
+//        ip = IpTextFiled.getText();
+//        port = Integer.parseInt(PortTextFiled.getText());
+//        if (ip.equals("") || port == 0) {
+//            invalidIPorPort.setText("Please enter IP and Port");
+        if (!validatePort(PortTextFiled.getText()) || !validateIp(IpTextFiled.getText())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Problem with ip or port");
             alert.setHeaderText("Ip or port number is not valid");

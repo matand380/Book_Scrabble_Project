@@ -49,12 +49,7 @@ public class HostController {
      */
     @FXML
     public void onPressSubmit() {
-        ip = IpTextFiled.getText();
-        port = Integer.parseInt(PortTextFiled.getText());
-        if (ip.equals("") || port == 0) {
-            ip = "127.0.0.1";
-            port = 20500;
-        } else if (!validatePort(String.valueOf(port)) && validateIp(ip)) {
+        if (!validatePort(PortTextFiled.getText()) || !validateIp(IpTextFiled.getText())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Problem with ip or port");
             alert.setHeaderText("Ip or port number is not valid");
