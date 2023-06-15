@@ -44,7 +44,8 @@ public class HostController {
      */
     @FXML
     public void onPressSubmit() {
-        if (!validatePort(PortTextFiled.getText()) && validateIp(IpTextFiled.getText())) {
+        if (!validatePort(PortTextFiled.getText()) || !validateIp(IpTextFiled.getText())) {
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Problem with ip or port");
             alert.setHeaderText("Ip or port number is not valid");
