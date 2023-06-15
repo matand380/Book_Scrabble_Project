@@ -29,6 +29,10 @@ public class GridCanvas extends Canvas {
             {'r', '0', '0', 'p', '0', '0', '0', 'r', '0', '0', '0', 'p', '0', '0', 'r'}
     };
 
+    /**
+     * The GridCanvas function creates a grid of tiles that are used to display the game board.
+     *
+     */
     public GridCanvas() {
         super();
         this.tileFields = new ArrayList<>();
@@ -37,16 +41,38 @@ public class GridCanvas extends Canvas {
         row = 7;
     }
 
+    /**
+     * The setTileFields function is used to set the tileFields variable in the Board class.
+     *<p>
+     * @param  tileFields Set the tilefields variable
+     *
+     */
     public void setTileFields(List<List<TileField>> tileFields) {
         this.tileFields = tileFields;
         redraw();
     }
 
+    /**
+     * The placeTileFiled function places a tile on the board.
+     *<p>
+     *
+     * @param tile draw the tile on the board
+     * @param  tileRow Specify the row in which the tile will be placed
+     * @param  tileCol Place the tile in a specific column
+     *
+     */
     public void placeTileFiled(TileField tile,int tileRow, int tileCol) {
         if(tile != null && !tile.letter.getText().equals("_"))
             tile.draw(getGraphicsContext2D(), tileRow, tileCol, this.getWidth()/15, this.getHeight()/15,15);
     }
 
+    /**
+     * The redraw function is used to redraw the board after a tile has been placed.
+     * It does this by first clearing the entire canvas,
+     * then drawing all of the tiles that have already been placed on it.
+     * Then it draws a black rectangle over the top of where you are currently placing your tile
+     *
+   */
     public void redraw() {
         Platform.runLater(()->{
             double W = getWidth();
@@ -79,6 +105,17 @@ public class GridCanvas extends Canvas {
     }
 
 
+    /**
+     * The getImageForGrid function takes in a character and returns an Image object.
+     * The function is used to set the background of each grid square on the board.
+     * The character passed into this function is determined by what score that particular grid square has,
+     * as defined in the Board class.
+     * <p>
+     *
+     * @param score Determine which image to return
+     *
+     * @return An image that is used to display the score of a grid
+     */
     private Image getImageForGrid(char score) {
         double imageSize = 70; // Set the desired image size
 
