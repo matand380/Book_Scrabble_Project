@@ -35,8 +35,13 @@ public class GuestController {
     int port;
     BS_Guest_ViewModel guest = new BS_Guest_ViewModel();
 
+    /**
+     * The onPressSubmit function is called when the user clicks on the submit button.
+     * It checks if there is a name entered in the text field, and if not it assigns a random name to that player.
+     * If there is an IP address and port number entered, then it will attempt to connect to that server using those values.
+     */
     @FXML
-    public void onPressSubmit() throws Exception {
+    public void onPressSubmit() {
         if (nameTextFiled.getText().equals("")) {
             name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
             name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
@@ -70,6 +75,10 @@ public class GuestController {
         }
     }
 
+    /**
+     * The switchToGameWindow function is called when the user clicks on the &quot;Play&quot; button.
+     * It switches to a new scene, which is the game window.
+     */
     @FXML
     public void switchToGameWindow() throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
