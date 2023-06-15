@@ -14,7 +14,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
     public SimpleStringProperty hostPort; //port of the host
 
     //player properties
-    BookScrabbleGuestFacade guestFacade;
+    public BookScrabbleGuestFacade guestFacade;
     public List<ViewableTile> viewableHand; //hand of the player
     public List<List<ViewableTile>> viewableBoard; //game board
     public List<SimpleStringProperty> viewableScores; //score array
