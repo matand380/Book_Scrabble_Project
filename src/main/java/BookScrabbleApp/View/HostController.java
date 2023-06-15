@@ -6,9 +6,11 @@ import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.regex.*;
 
 public class HostController {
     private Stage stage;
@@ -27,12 +29,15 @@ public class HostController {
     @FXML
     public TextField nameTextFiled;
     @FXML
+    public TextField portField;
+    @FXML
     private Button nextBtn;
     @FXML
     private Button submitBtn;
 
     String ip;
     int port;
+    int hostPort;
 
     public static String name;
     BS_Host_ViewModel host = new BS_Host_ViewModel();
@@ -41,14 +46,22 @@ public class HostController {
      * The onPressSubmit function is called when the submit button is pressed.
      * It checks if the IP and Port fields are empty, and if they are not it will attempt to connect to a server at that address.
      * If it fails, an alert box will pop up telling you that there was an error connecting to the server.
+     *
      * @return The next page
      */
     @FXML
-    public void onPressSubmit(){
+    public void onPressSubmit() {
         ip = IpTextFiled.getText();
         port = Integer.parseInt(PortTextFiled.getText());
         if (ip.equals("") || port == 0) {
-            invalidIPorPort.setText("Please enter IP and Port");
+            ip = "127.0.0.1";
+            port = 20500;
+        } else if (!validatePort(String.valueOf(port)) && validateIp(ip)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Problem with ip or port");
+            alert.setHeaderText("Ip or port number is not valid");
+            alert.setContentText("Please enter a valid ip and port number");
+            alert.showAndWait();
         } else {
             boolean connected = true;
             host.ip.bindBidirectional(IpTextFiled.textProperty());
@@ -74,6 +87,7 @@ public class HostController {
     /**
      * The next function is called when the user clicks on the next button.
      * It loads a new scene, which is hostNextWindow.fxml, and sets it as the current scene of this stage.
+     *
      * @return The host to the main menu
      */
     @FXML
@@ -81,7 +95,7 @@ public class HostController {
         root = FXMLLoader.load(getClass().getResource("/BookScrabbleApp.View/hostNextWindow.fxml"));
         stage = (Stage) welcomeText.getScene().getWindow();
         stage.setOnCloseRequest(e -> Platform.exit());
-        scene = new Scene(root, BookScrabbleApp.screenSize()[0],BookScrabbleApp.screenSize()[1]);
+        scene = new Scene(root, BookScrabbleApp.screenSize()[0], BookScrabbleApp.screenSize()[1]);
         stage.setScene(scene);
         stage.show();
     }
@@ -95,12 +109,24 @@ public class HostController {
      */
     @FXML
     public void switchToGameWindow() throws Exception {
-        if (nameTextFiled.getText().equals("Enter your name here")) {
-            name = "Guest" + UUID.randomUUID().toString().substring(0, 4);
+        if (nameTextFiled.getText().equals("")) {
+            name = "Host";
         } else {
             name = nameTextFiled.getText();
         }
-        host.startHostServer();
+        if (portField.getText().equals("")) {
+            hostPort = 23346;
+        } else if (!validatePort(portField.getText())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Problem with port");
+            alert.setHeaderText("port number is not valid");
+            alert.setContentText("Please enter a valid port number");
+            alert.showAndWait();
+            return;
+        } else {
+            hostPort = Integer.parseInt(portField.getText());
+        }
+        host.startHostServer(hostPort);
         host.setPlayerProperties(name);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/BookScrabbleApp.View/gameMainWindow.fxml"));
         root = loader.load();
@@ -116,4 +142,29 @@ public class HostController {
         stage.show();
         stage.setOnCloseRequest(e -> Platform.exit());
     }
+
+    /**
+     * The validateIpPort function takes in a String ip and an int port.
+     * It returns true if the ip is a valid IPv4 address and the port is within range (0-65535).
+     * Otherwise, it returns false.
+     * <p>
+     *
+     * @param ip   Store the ip address of the server
+     * @param port Validate the port number
+     * @return A boolean
+     */
+    private boolean validatePort(String port) {
+        // Regular expression for port number (1-65535)
+        String portRegex = "^([1-9]|[1-9]\\d{1,3}|[1-5]\\d{4}|6[0-4]\\d{3}|65[0-4]\\d{2}|655[0-2]\\d|6553[0-5])$";
+        // Validate port number
+        return Pattern.matches(portRegex, port);
+    }
+
+    private boolean validateIp(String ip) {
+        // Regular expression for IPv4 address
+        String ipv4Regex = "^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$";
+        // Validate IP address
+        return Pattern.matches(ipv4Regex, ip);
+    }
+
 }

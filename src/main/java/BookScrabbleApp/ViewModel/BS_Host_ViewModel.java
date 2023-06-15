@@ -390,7 +390,8 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         return this.viewableWordsForChallenge;
     }
 
-    public void startHostServer() {
+    public void startHostServer(int port) {
+        hostFacade.setCommunicationServer(port);
         new Thread(() -> hostFacade.getCommunicationServer().start()).start();
     }
 
