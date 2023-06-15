@@ -77,10 +77,15 @@ The following mitigation strategies will be implemented:
 
 ## <img width="1181" alt="Book Scrabble Project" src="https://github.com/matand380/Book_Scrabble_Project/assets/73496652/11591d3a-af3a-4918-be06-7bd709181704">
 
+## JavaDoc
+JavaDoc for the project can be found [here](BSP-JavaDoc/index.html)
+
 [Back to Top](#scrabble-game)
 
 <div align="center">
   <img src=src/main/resources/images/Logo.JPG alt="Scrabble Logo" width="100" height="100">
 </div>
+
+
 
 
