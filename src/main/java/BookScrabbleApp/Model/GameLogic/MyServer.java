@@ -48,28 +48,24 @@ public class MyServer {
         server.setSoTimeout(1000);
         logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
-        logger.log(System.Logger.Level.INFO,ip() +"  "+ port);
+        logger.log(System.Logger.Level.INFO, ip() + "  " + port);
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
                 String clientID = UUID.randomUUID().toString().substring(0, 6);
                 clients.add(aClient);
                 clientsMap.put(clientID, aClient);
-                ping(clientID);
 
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
-                try {
+                executorService.submit(() -> {
                     try {
-                        ch.handleClient((aClient.getInputStream()), (aClient.getOutputStream()));
-                        // TODO: 05/05/2023 implement it in thread
+                        ping(clientID);
+                        ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
             } catch (SocketTimeoutException e) {
                 //wait for another client
             }

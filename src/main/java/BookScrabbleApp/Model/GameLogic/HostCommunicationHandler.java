@@ -85,7 +85,7 @@ public class HostCommunicationHandler implements ClientHandler {
         handlers.put("unPark", message -> {
             BS_Host_Model.getModel().unPark();
         });
-//        executor.submit(this::messagesFromGameServer);
+        executor.submit(this::handleRequests);
     }
 
 
@@ -99,19 +99,20 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     public void handleRequests() {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
-            try {
-                String key = inputQueue.take(); //blocking call
-                String[] message = key.split(":");
-                String methodName = message[0];
-                if (handlers.get(methodName) != null) {
-                    handlers.get(methodName).accept(message);
-                } else {
-                    System.out.println("No handler for method(Host) : " + methodName);
+            executor.submit(()-> {
+                try {
+                    String key = inputQueue.take(); //blocking call
+                    String[] message = key.split(":");
+                    String methodName = message[0];
+                    if (handlers.get(methodName) != null) {
+                        handlers.get(methodName).accept(message);
+                    } else {
+                        System.out.println("No handler for method(Host) : " + methodName);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            });
         }
     }
 
@@ -143,8 +144,6 @@ public class HostCommunicationHandler implements ClientHandler {
                 } catch (InterruptedException e) {
                     System.out.println("Error(HOST) in handleClient");
                 }
-
-                executor.submit(this::handleRequests);
             }
         }
     }
