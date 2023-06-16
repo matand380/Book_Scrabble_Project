@@ -1,6 +1,9 @@
 package BookScrabbleApp.Model.GameLogic;
 
 
+import BookScrabbleApp.Model.BS_Host_Model;
+import BookScrabbleApp.ViewModel.BS_Host_ViewModel;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;

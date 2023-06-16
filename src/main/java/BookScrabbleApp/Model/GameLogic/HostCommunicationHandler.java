@@ -85,7 +85,6 @@ public class HostCommunicationHandler implements ClientHandler {
         handlers.put("unPark", message -> {
             BS_Host_Model.getModel().unPark();
         });
-        executor.submit(this::handleRequests);
     }
 
 
@@ -99,7 +98,6 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     public void handleRequests() {
         while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
-            executor.submit(()-> {
                 try {
                     String key = inputQueue.take(); //blocking call
                     String[] message = key.split(":");
@@ -112,7 +110,6 @@ public class HostCommunicationHandler implements ClientHandler {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            });
         }
     }
 
@@ -130,7 +127,7 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
-        while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
+    while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
             in = new Scanner(inputStream);
             out = new PrintWriter(outputStream);
             String key = null;
@@ -145,6 +142,7 @@ public class HostCommunicationHandler implements ClientHandler {
                     System.out.println("Error(HOST) in handleClient");
                 }
             }
+            executor.submit(()->handleRequests());
         }
     }
 
