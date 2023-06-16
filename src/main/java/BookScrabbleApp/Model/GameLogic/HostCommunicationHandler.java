@@ -138,15 +138,12 @@ public class HostCommunicationHandler implements ClientHandler {
             }
             if (key != null)// Read an object from the server
             {
-                String finalKey = key;
-                executor.submit(()-> {
-                    try {
-                        inputQueue.put(finalKey);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }); // Put the received object in the queue
-//                handleRequests();
+                try {
+                    inputQueue.put(key);
+                } catch (InterruptedException e) {
+                    System.out.println("Error(HOST) in handleClient");
+                }
+
                 executor.submit(this::handleRequests);
             }
         }

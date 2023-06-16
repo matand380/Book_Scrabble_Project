@@ -244,18 +244,16 @@ public class Board implements Serializable, ObjectFactory {
         Word forQuery = checkWordNull(w);
         String stringWord = forQuery.toString();
 
-        Future<String> res = BS_Host_Model.getModel().getCommunicationHandler().executor.submit(() -> {
-            BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
-            return BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
-        });
+        BS_Host_Model.getModel().getCommunicationHandler().messagesToGameServer("Q:" + stringWord);
+        String res = BS_Host_Model.getModel().getCommunicationHandler().messagesFromGameServer();
 
-        String response = null;
-        try {
-            response = res.get();
-        } catch (Exception e) {
-            System.out.println("Error: dictionaryLegal");
-        }
-        String[] splitResponse = response.split(":");
+//        String response = null;
+//        try {
+//            response = res.get();
+//        } catch (Exception e) {
+//            System.out.println("Error: dictionaryLegal");
+//        }
+        String[] splitResponse = res.split(":");
         if (splitResponse[0].equals("Q")) {
             return splitResponse[1].equals("true");
         } else {

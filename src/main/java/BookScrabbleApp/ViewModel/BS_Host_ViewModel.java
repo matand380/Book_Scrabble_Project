@@ -339,7 +339,8 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         String updateType = messageSplit[0];
         System.out.println("HostViewModel ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
-            executor.submit(() -> updatesMap.get(updateType).accept(message));
+//            executor.submit(() -> updatesMap.get(updateType).accept(message));
+            updatesMap.get(updateType).accept(message);
         } else {
             setChanged();
             notifyObservers("Error in updates handling ");

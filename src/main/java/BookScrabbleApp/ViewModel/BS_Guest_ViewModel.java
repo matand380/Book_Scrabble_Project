@@ -1,6 +1,7 @@
 package BookScrabbleApp.ViewModel;
 
 import BookScrabbleApp.Model.BookScrabbleGuestFacade;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 
 import java.util.*;
@@ -50,6 +51,8 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
         System.out.println("GuestViewModel ---- updateType: " + updateType);
+        if (Platform.isFxApplicationThread())
+            System.out.println("FX Thread");
         if (updatesMap.containsKey(updateType)) {
 //            executorService.submit(() -> updatesMap.get(updateType).accept(message));
             updatesMap.get(updateType).accept(message);
