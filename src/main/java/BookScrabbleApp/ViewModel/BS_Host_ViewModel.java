@@ -152,6 +152,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
      * @param wordsList Set the words for the challenge
      */
     public void setWordsForChallenge(List<String> wordsList) {
+        viewableWordsForChallenge.clear();
         for (int i = 0; i < wordsList.size(); i++) {
             viewableWordsForChallenge.add(new SimpleStringProperty());
             viewableWordsForChallenge.get(i).setValue(wordsList.get(i));

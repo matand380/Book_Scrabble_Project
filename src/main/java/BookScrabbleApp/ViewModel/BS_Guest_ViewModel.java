@@ -186,6 +186,7 @@ public class BS_Guest_ViewModel extends Observable implements BS_ViewModel {
 
     @Override
     public void setWordsForChallenge(List<String> wordsList) {
+        viewableWordsForChallenge.clear();
         for (String s : wordsList) {
             viewableWordsForChallenge.add(new SimpleStringProperty(s));
         }
