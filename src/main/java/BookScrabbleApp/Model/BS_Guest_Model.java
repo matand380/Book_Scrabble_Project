@@ -141,6 +141,9 @@ public class BS_Guest_Model extends Observable implements BS_Model {
      */
     public void setBoard(Tile[][] boardTiles) {
         this.tileBoard = boardTiles;
+
+        System.out.println("\nGuest tileBoard\n");
+        System.out.println(TestHelper.formatTiles(boardTiles));
         setChanged();
         notifyObservers("tileBoard updated");
     }

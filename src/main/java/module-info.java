@@ -2,8 +2,7 @@ module view.book_scrabble_project {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.google.gson;
-    requires org.junit.jupiter.api;
-    requires junit;
+
 
 
     opens BookScrabbleApp.Model to org.junit.jupiter, org.junit.jupiter.api;

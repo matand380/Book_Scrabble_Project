@@ -42,7 +42,6 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         hostFacade.addObserver(this);
         initializeProperties();
         initializeUpdateMap();
-
     }
 
     /**
@@ -85,9 +84,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
                 wordsList.clear();
                 setChanged();
                 notifyObservers("wordsForChallenge updated:" + playerIndex);
-            }
-            else
-            {
+            } else {
                 wordsList.clear();
             }
         });
@@ -155,6 +152,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
      * @param wordsList Set the words for the challenge
      */
     public void setWordsForChallenge(List<String> wordsList) {
+        viewableWordsForChallenge.clear();
         for (int i = 0; i < wordsList.size(); i++) {
             viewableWordsForChallenge.add(new SimpleStringProperty());
             viewableWordsForChallenge.get(i).setValue(wordsList.get(i));
@@ -264,7 +262,7 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
      */
     @Override
     public void tryPlaceWord(String word, int row, int col, boolean isVertical) {
-        executor.submit(()->hostFacade.tryPlaceWord(word, row, col, isVertical));
+        executor.submit(() -> hostFacade.tryPlaceWord(word, row, col, isVertical));
     }
 
     /**
@@ -342,7 +340,8 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
         String updateType = messageSplit[0];
         System.out.println("HostViewModel ---- updateType: " + updateType);
         if (updatesMap.containsKey(updateType)) {
-          executor.submit(()->  updatesMap.get(updateType).accept(message));
+//            executor.submit(() -> updatesMap.get(updateType).accept(message));
+            updatesMap.get(updateType).accept(message);
         } else {
             setChanged();
             notifyObservers("Error in updates handling ");
@@ -392,7 +391,9 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
 
     public void startHostServer(int port) {
         hostFacade.setCommunicationServer(port);
-        new Thread(() -> hostFacade.getCommunicationServer().start()).start();
+        new Thread(() -> {
+            hostFacade.getCommunicationServer().start();
+        }).start();
     }
 
     @Override
@@ -401,12 +402,12 @@ public class BS_Host_ViewModel extends Observable implements BS_ViewModel {
     }
 
     @Override
-    public void unPark(){
+    public void unPark() {
         hostFacade.unPark();
     }
 
     @Override
-    public boolean isHost(){
+    public boolean isHost() {
         return true;
     }
 }

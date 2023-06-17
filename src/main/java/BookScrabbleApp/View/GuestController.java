@@ -31,9 +31,6 @@ public class GuestController {
     public TextField nameTextFiled;
 
     public static String name;
-
-    String ip;
-    int port;
     BS_Guest_ViewModel guest = new BS_Guest_ViewModel();
 
     /**

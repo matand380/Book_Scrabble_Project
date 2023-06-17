@@ -1,6 +1,9 @@
 package BookScrabbleApp.Model.GameLogic;
 
 
+import BookScrabbleApp.Model.BS_Host_Model;
+import BookScrabbleApp.ViewModel.BS_Host_ViewModel;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -14,7 +17,7 @@ public class MyServer {
     ExecutorService executorService;
     Map<String, Socket> clientsMap = new HashMap<>();
     private int port;
-    private ClientHandler ch;
+    private HostCommunicationHandler ch;
     private volatile boolean stop;
 
 
@@ -28,7 +31,7 @@ public class MyServer {
      */
     public MyServer(int port, ClientHandler ch) {
         this.port = port;
-        this.ch = ch;
+        this.ch = BS_Host_Model.getModel().getCommunicationHandler();
         this.stop = false;
         this.clients = new ArrayList<>();
         executorService = Executors.newFixedThreadPool(3);
@@ -48,28 +51,24 @@ public class MyServer {
         server.setSoTimeout(1000);
         logger = System.getLogger("MyServer");
         logger.log(System.Logger.Level.INFO, "Server is alive and waiting for clients");
-        logger.log(System.Logger.Level.INFO,ip() +"  "+ port);
+        logger.log(System.Logger.Level.INFO, ip() + "  " + port);
         while (!stop) {
             try {
                 Socket aClient = server.accept(); // blocking call
                 String clientID = UUID.randomUUID().toString().substring(0, 6);
                 clients.add(aClient);
                 clientsMap.put(clientID, aClient);
-                ping(clientID);
 
                 logger.log(System.Logger.Level.INFO, "New client connected");
 
-                try {
+                executorService.submit(() -> {
                     try {
-                        ch.handleClient((aClient.getInputStream()), (aClient.getOutputStream()));
-                        // TODO: 05/05/2023 implement it in thread
+                        ping(clientID);
+                        ch.handleClient(aClient.getInputStream(), aClient.getOutputStream());
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                });
             } catch (SocketTimeoutException e) {
                 //wait for another client
             }

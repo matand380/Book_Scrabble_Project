@@ -25,6 +25,7 @@ import java.util.function.*;
 
 public class GameWindowController implements Observer, Initializable {
 
+    public static TileField selectedTileField;
     @FXML
     public Text turnInstructionTitle;
     @FXML
@@ -69,25 +70,14 @@ public class GameWindowController implements Observer, Initializable {
     Button passTurnBtn;
     @FXML
     Button tryPlaceBtn;
-
     ExecutorService executorService = Executors.newFixedThreadPool(4);
-
-
-    private Map<String, Consumer<String>> updatesMap; //map of all the updates
-
     BS_ViewModel viewModel;
-
+    List<List<TileField>> boardFields;
+    private Map<String, Consumer<String>> updatesMap; //map of all the updates
     private List<Label> scoresFields;
-
     private List<Label> nameFields;
     private List<Rectangle> rectanglesPlayer;
-
     private List<TileField> handFields;
-
-    List<List<TileField>> boardFields;
-
-    public static TileField selectedTileField;
-
     private Map<KeyCode, EventHandler<KeyEvent>> keyEventsMap;
 
     private List<TileField> wordForTryPlace;
@@ -97,7 +87,6 @@ public class GameWindowController implements Observer, Initializable {
     /**
      * The GameWindowController Constructor initializes the properties of the GameWindowController class.
      * It also initializes two maps, one for updating and one for key events.
-     *
      */
     public GameWindowController() {
         initializeProperties();
@@ -113,15 +102,14 @@ public class GameWindowController implements Observer, Initializable {
      */
     public void setViewModel(BS_ViewModel viewModel) {
         if (viewModel instanceof BS_Host_ViewModel) {
-            this.viewModel = new BS_Host_ViewModel();
+            this.viewModel = (BS_Host_ViewModel) viewModel;
             this.viewModel.getObservable().addObserver(this);
             initializeWindow();
         } else if (viewModel instanceof BS_Guest_ViewModel) {
-            this.viewModel = new BS_Guest_ViewModel();
+            this.viewModel = (BS_Guest_ViewModel) viewModel;
             this.viewModel.getObservable().addObserver(this);
             initializeWindow();
             startNewGameBtn.setVisible(false);
-
         }
         turnInstructionTitle.setText("Turn instructions:");
         turnInstruction.setText("Use the arrows to position the cursor where you\n" +
@@ -145,8 +133,9 @@ public class GameWindowController implements Observer, Initializable {
      * the type of update that was sent from the observable object.
      * This allows for
      * different types of updates to be handled differently.
-     *<p>
-     * @param o Identify the observable that is calling the update function
+     * <p>
+     *
+     * @param o   Identify the observable that is calling the update function
      * @param arg Pass the message from the observable object to this observer
      */
     @Override
@@ -155,8 +144,9 @@ public class GameWindowController implements Observer, Initializable {
         String[] messageSplit = message.split(":");
         String updateType = messageSplit[0];
         System.out.println("\n -- updateType GameWindow: " + message + " -- \n");
+        System.out.println(Thread.currentThread());
         if (updatesMap.containsKey(updateType)) {
-            executorService.submit(() -> updatesMap.get(updateType).accept(message));
+            updatesMap.get(updateType).accept(message);
         }
     }
 
@@ -309,7 +299,6 @@ public class GameWindowController implements Observer, Initializable {
      * The initializeWindow function is responsible for binding the viewModel's observable lists to the text fields in
      * our GUI.
      * It also creates a 2D array of TileFields, which are used to display information about each tile on the board.
-     *
      */
     public void initializeWindow() {
         //bind the scores to the text fields
@@ -381,42 +370,43 @@ public class GameWindowController implements Observer, Initializable {
      * It checks if the clicked tile is adjacent to the last selected tile, and if it is,
      * it adds that tile to wordForTryPlace.
      * If not, then nothing happens.
+     *
      * @param event Get the x and y coordinates of the mouse click
      */
     private void handleMouseClicked(MouseEvent event) {
 
-            double xCoordinate = event.getX();
-            double yCoordinate = event.getY();
+        double xCoordinate = event.getX();
+        double yCoordinate = event.getY();
 
-            int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
-            int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
+        int col = (int) (xCoordinate / (gameBoard.getWidth() / 15));
+        int row = (int) (yCoordinate / (gameBoard.getHeight() / 15));
 
-            TileField clickedTile = gameBoard.tileFields.get(row).get(col);
+        TileField clickedTile = gameBoard.tileFields.get(row).get(col);
 
-            boolean adjacent = true;
+        boolean adjacent = true;
 
-            if (wordForTryPlace.size() > 0) {
-                adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
-            }
+        if (wordForTryPlace.size() > 0) {
+            adjacent = (clickedTile.tileRow >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileRow && clickedTile.tileCol >= wordForTryPlace.get(wordForTryPlace.size() - 1).tileCol);
+        }
 
-            if (adjacent) {
-                if (!clickedTile.letter.getText().equals("") && !clickedTile.isSelect()) {
-                    clickedTile.setSelect(true);
-                    if (clickedTile.isUpdate()) {
-                        selectedTileField = new TileField();
-                        selectedTileField.copy(clickedTile);
-                        selectedTileField.letter.setText("_");
-                        setYourWord();
-                    } else {
-                        selectedTileField = new TileField();
-                        selectedTileField.copy(clickedTile);
-                        setTileFieldOnBoard();
-                        setYourWord();
-                    }
+        if (adjacent) {
+            if (!clickedTile.letter.getText().equals("") && !clickedTile.isSelect()) {
+                clickedTile.setSelect(true);
+                if (clickedTile.isUpdate()) {
+                    selectedTileField = new TileField();
+                    selectedTileField.copy(clickedTile);
+                    selectedTileField.letter.setText("_");
+                    setYourWord();
+                } else {
+                    selectedTileField = new TileField();
+                    selectedTileField.copy(clickedTile);
+                    setTileFieldOnBoard();
+                    setYourWord();
                 }
             }
-            gameBoard.requestFocus();
         }
+        gameBoard.requestFocus();
+    }
 
 
     /**
@@ -477,6 +467,7 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     //button handlers
+
     /**
      * The onTryButtonClick function is called when the user clicks on the button.
      * It checks if the word that was placed by the player is valid, and if it is, it sends a message to
@@ -664,9 +655,9 @@ public class GameWindowController implements Observer, Initializable {
      * If they do not select any word, or if they do not click on
      * &quot;Challenge&quot; before 7 seconds have passed, then nothing happens.
      * Otherwise, it sends a request to challenge the selected word
-     *<p>
+     * <p>
+     *
      * @param wordsForChallenge Create a list of checkboxes with the words as text
-
      */
     private void showChallengePopup(List<SimpleStringProperty> wordsForChallenge) {
         Platform.runLater(() -> {
@@ -740,9 +731,9 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The passTurn function is used to disable the tryPlaceBtn and passTurnBtn when it's not the player's turn.
-     *<p>
-     * @param indexCurrentPlayer Check if the current player is the same as the one whose turn it is
+     * <p>
      *
+     * @param indexCurrentPlayer Check if the current player is the same as the one whose turn it is
      */
     private void passTurn(String indexCurrentPlayer) {
         if (!(viewModel.getPlayerIndex() == Integer.parseInt(indexCurrentPlayer))) {
@@ -757,23 +748,23 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The removeFromYourWord function removes a tile from the wordForTryPlace list.
-     *<p>
+     * <p>
      *
      * @param removedTile Identify the tile that is being removed from the wordForTryPlace list
-     *
      */
     private void removeFromYourWord(TileField removedTile) {
         wordForTryPlace.removeIf(tileField -> tileField.tileRow == removedTile.tileRow && tileField.tileCol == removedTile.tileCol && tileField.letter.getText().equals(removedTile.letter.getText()));
     }
 
     //popUp methods
+
     /**
      * The alertPopUp function is used to display a pop-up window with the given title, header, and text.
-     *<p>
+     * <p>
      *
-     * @param title Set the title of the alert
+     * @param title  Set the title of the alert
      * @param header Display the header of the alert
-     * @param text Display the text in the alert box
+     * @param text   Display the text in the alert box
      */
     private void alertPopUp(String title, String header, String text) {
         Platform.runLater(() -> {
@@ -797,15 +788,15 @@ public class GameWindowController implements Observer, Initializable {
     }
 
     //redraw methods
+
     /**
      * The redrawHand function is used to redraw the hand of tiles in the GUI.
      * It takes a list of TileFields as an argument, and then clears all children from the handGrid pane.
      * Then it iterates through each tile in the list,
      * and adds them to the grid with their appropriate width/height ratio.
-     *<p>
+     * <p>
+     *
      * @param list Get the tiles from the hand and draw them on screen
-     *
-     *
      */
     private void redrawHand(List<TileField> list) {
         Platform.runLater(() -> {
@@ -823,6 +814,7 @@ public class GameWindowController implements Observer, Initializable {
      * If a tile from their hand is clicked, then it will be added to yourWord from the board.
      * If a tile from the board is clicked, then its text will be updated with "_" we do this so to send the server in the right format.
      * The tile will be added to yourWord with the right letter from the board.
+     *
      * @param list Store the tiles that are currently in your word
      */
     private void redrawYourWord(List<TileField> list) {
@@ -844,6 +836,7 @@ public class GameWindowController implements Observer, Initializable {
     /**
      * The checkFirstWord function checks to see if the first word has been placed on Row 7 and Col 7.
      * Like the rules of the game say.
+     *
      * @return True if the first word has been placed, false otherwise
      */
     private boolean checkFirstWord() {
@@ -852,7 +845,8 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The isVertical function checks if the word is vertical or not.
-     * @param  wordTryPlace Determine if the word is vertical or horizontal
+     *
+     * @param wordTryPlace Determine if the word is vertical or horizontal
      * @return A boolean value
      */
     private boolean isVertical(List<TileField> wordTryPlace) {
@@ -874,9 +868,10 @@ public class GameWindowController implements Observer, Initializable {
 
     /**
      * The endGamePopUp function creates a pop-up window that displays the winner of the game.
-     * @param  title Set the title of the pop-up window
-     * @param  header Set the text of the header label
-     * @param  text Set the text of the content label
+     *
+     * @param title  Set the title of the pop-up window
+     * @param header Set the text of the header label
+     * @param text   Set the text of the content label
      */
     public void endGamePopUp(String title, String header, String text) {
         Platform.runLater(() -> {

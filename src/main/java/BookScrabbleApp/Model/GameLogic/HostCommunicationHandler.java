@@ -6,6 +6,7 @@ import BookScrabbleApp.Model.GameData.Tile;
 import BookScrabbleApp.Model.GameData.Word;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -16,13 +17,11 @@ import java.util.function.Consumer;
 
 public class HostCommunicationHandler implements ClientHandler {
     Map<String, Consumer<String[]>> handlers = new HashMap<>();
-    PrintWriter out;
-    Scanner in;
     PrintWriter toGameServer;
     Scanner fromGameServer;
     BlockingQueue<String> inputQueue = new LinkedBlockingQueue<>();
     public ExecutorService executor = Executors.newFixedThreadPool(3);
-
+    volatile boolean stop = false;
 
     /**
      * The HostCommunicationHandler function is responsible for handling all the requests from the clients.
@@ -30,9 +29,11 @@ public class HostCommunicationHandler implements ClientHandler {
      * <p>
      */
     public HostCommunicationHandler() {
+        executor.submit(this::handleRequests);
+
         //put all the methods in the map for being able to invoke them in handleRequests
         handlers.put("passTurn", message ->
-            BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
+                BS_Host_Model.getModel().passTurn(Integer.parseInt(message[1])));
 
         handlers.put("addPlayer", message -> {
             Player p = new Player();
@@ -60,11 +61,9 @@ public class HostCommunicationHandler implements ClientHandler {
             boolean exist = BS_Host_Model.getModel().currentPlayerWords.stream().anyMatch(w1 -> w1.toString().equals(word));
             if (exist) {
                 String challengeInfo = PlayerIndex + ":" + word;
-               BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
-            }
-            else
-            {
-                BS_Host_Model.getModel().hostLogger.log(System.Logger.Level.ERROR,"Player " + PlayerIndex + " tried to challenge a word that doesn't exist");
+                BS_Host_Model.getModel().requestChallengeActivation(challengeInfo);
+            } else {
+                BS_Host_Model.getModel().hostLogger.log(System.Logger.Level.ERROR, "Player " + PlayerIndex + " tried to challenge a word that doesn't exist");
             }
         });
 
@@ -76,17 +75,14 @@ public class HostCommunicationHandler implements ClientHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-           if(BS_Host_Model.getModel().getCommunicationServer().clientsMap.size() == 0){
-               BS_Host_Model.getModel().endGame();
-           }
+            if (BS_Host_Model.getModel().getCommunicationServer().clientsMap.size() == 0) {
+                BS_Host_Model.getModel().endGame();
+            }
         });
 
         handlers.put("unPark", message -> {
             BS_Host_Model.getModel().unPark();
         });
-
-        executor.submit(this::handleRequests);
-        executor.submit(this::messagesFromGameServer);
     }
 
 
@@ -99,8 +95,7 @@ public class HostCommunicationHandler implements ClientHandler {
      * <p>
      */
     public void handleRequests() {
-        while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
-
+        while (!stop) {
             try {
                 String key = inputQueue.take(); //blocking call
                 String[] message = key.split(":");
@@ -130,23 +125,26 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     @Override
     public void handleClient(InputStream inputStream, OutputStream outputStream) {
-        while (BS_Host_Model.getModel().getCommunicationServer().isRunning()) {
-            in = new Scanner(inputStream);
-            out = new PrintWriter(outputStream);
-            String key = null;
-            try {
-                if (in.hasNext()) {
-                    key = in.next();
+        try (
+                Scanner newClientInput = new Scanner(inputStream);
+        ) {
+            while (!stop) {
+                String key = null;
+                if (newClientInput.hasNext()) {
+                    key = newClientInput.next();
                 }
                 if (key != null)// Read an object from the server
                 {
-                    inputQueue.put(key); // Put the received object in the queue
+                    try {
+                        inputQueue.put(key);
+                    } catch (InterruptedException e) {
+                        System.out.println("Error(HOST) in handleClient");
+                    }
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
+
 
     /**
      * The close function closes the connection to the server.
@@ -154,11 +152,11 @@ public class HostCommunicationHandler implements ClientHandler {
      */
     @Override
     public void close() {
-        in.close();
-        out.close();
+        stop = true;
+        //in.close();
+        //out.close();
         toGameServer.close();
         fromGameServer.close();
-
     }
 
     /**
@@ -170,10 +168,10 @@ public class HostCommunicationHandler implements ClientHandler {
     public void messagesToGameServer(String key) {
         if (key != null) {
             try {
-                toGameServer = new PrintWriter(BS_Host_Model.getModel().getGameSocket().getOutputStream());
+                toGameServer = new PrintWriter(BS_Host_Model.getModel().getGameSocket().getOutputStream(), true);
                 toGameServer.println(key);
                 toGameServer.flush();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -182,25 +180,24 @@ public class HostCommunicationHandler implements ClientHandler {
 
     /**
      * The messagesFromGameServer function is used to receive messages from the game server.
-     *<p>
-     *
+     * <p>
      *
      * @return A string containing the message from the game server
-     *
      */
     public String messagesFromGameServer() {
         try {
-            fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
             String key = null;
+            try {
+                fromGameServer = new Scanner(BS_Host_Model.getModel().getGameSocket().getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             key = fromGameServer.next();
             return key;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (NoSuchElementException e) {
+            return null;
         }
-
-        return null;
     }
-
 
 }
 
