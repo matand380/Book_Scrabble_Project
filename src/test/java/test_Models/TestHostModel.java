@@ -51,6 +51,8 @@ public class TestHostModel {
     @Before
     public void setup() {
         hostModelMock = BS_Host_Model.getModel();
+        hostModelMock.setCommunicationServer(4444);
+        hostModelMock.getCommunicationServer().start();
 
     }
     @Test
