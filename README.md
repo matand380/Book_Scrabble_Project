@@ -39,7 +39,7 @@ For installation files please refer to this [link](https://www.mediafire.com/fil
 
 ## Video links
 
-* Demo video - will be added
+* Demo video - [press here](https://drive.google.com/file/d/1VIqe33EuEO65ZBNI2jGxJHj92qmRD5CP/view)
 * Project presentation video - will be added
 
 ## JavaDoc
