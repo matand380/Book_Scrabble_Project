@@ -17,7 +17,7 @@ public class MyServer {
     ExecutorService executorService;
     Map<String, Socket> clientsMap = new HashMap<>();
     private int port;
-    private ClientHandler ch;
+    private HostCommunicationHandler ch;
     private volatile boolean stop;
 
 
@@ -31,7 +31,7 @@ public class MyServer {
      */
     public MyServer(int port, ClientHandler ch) {
         this.port = port;
-        this.ch = ch;
+        this.ch = BS_Host_Model.getModel().getCommunicationHandler();
         this.stop = false;
         this.clients = new ArrayList<>();
         executorService = Executors.newFixedThreadPool(3);
