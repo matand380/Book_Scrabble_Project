@@ -33,14 +33,12 @@
 6. Continue playing until all players have used all their tiles or no more valid moves are possible.
 7. The player with the highest score at the end of the game wins.
 
-For installation files please refer to this [link](https://www.mediafire.com/file/88aid4xa3uzo2g3/installations.zip/file)
-
  <img src="src/main/resources/images/board/d04bd8bd-1354-4c3c-b3fd-ac57c6fdc61c_f1600x768.jpeg" alt="Scrabble Logo" width="400" height="100">
 
 ## Video links
 
 * Demo video - [press here](https://drive.google.com/file/d/1VIqe33EuEO65ZBNI2jGxJHj92qmRD5CP/view)
-* Project presentation video - will be added
+* Project presentation video - [press here](https://drive.google.com/file/d/1ZmUmJ-pTvVMvzWfuY6j6S5ZvdNAcZ2ss/view?usp=drive_link)
 
 ## JavaDoc
 JavaDoc for the project can be found [here](https://matand380.github.io/Book_Scrabble_Project/BSP-JavaDoc/index.html)
